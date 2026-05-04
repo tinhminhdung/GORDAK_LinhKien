@@ -179,7 +179,7 @@ img{max-width:100%}
 .cat-col:last-child{border-right:0}
 .cat-item{padding:18px 6px;cursor:pointer;transition:background .15s}
 .cat-item:hover{background:#f5f8ff}
-.cat-img{height:55px;object-fit:contain;margin-bottom:8px}
+.cat-img{height:100px;object-fit:contain;margin-bottom:8px}
 .cat-item b{display:block;color:#0d2556;font-size:13px;text-transform:uppercase;margin-bottom:3px;font-weight:800}
 .cat-item small{color:#7a8aa3;font-size:12px}
 

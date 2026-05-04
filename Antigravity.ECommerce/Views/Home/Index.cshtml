@@ -91,50 +91,34 @@
 </section>
 
 <!-- ======== CATEGORIES ======== -->
+@{
+    var homeCategoriesList = ViewBag.HomeCategories as List<HomeCategorySetting> ?? new List<HomeCategorySetting>();
+    var homeCategoryProductsDict = ViewBag.HomeCategoryProducts as Dictionary<int, List<Product>> ?? new Dictionary<int, List<Product>>();
+}
+@if (homeCategoriesList.Any(x => x.IsActive))
+{
 <div class="container cat-wrap">
   <div class="row g-0 cats-row">
-    <div class="col cat-col">
-      <div class="cat-item text-center">
-        <a href="/san-pham/tram-han.html" class="text-decoration-none text-dark d-block">
-            <img src="/assets/images/z7775799444666_e6c3064af16f5e8523d496fcfb69aa96.jpg" class="cat-img" alt="Trạm hàn">
-            <b>TRẠM HÀN</b>
-        </a>
-      </div>
-    </div>
-    <div class="col cat-col">
-      <div class="cat-item text-center">
-        <a href="/san-pham/tram-kho.html" class="text-decoration-none text-dark d-block">
-            <img src="/assets/images/z7775799444689_8f1800a6e3b876668b68749dd7d280dd.jpg" class="cat-img" alt="Trạm khò">
-            <b>TRẠM KHÒ</b>
-        </a>
-      </div>
-    </div>
-    <div class="col cat-col">
-      <div class="cat-item text-center">
-        <a href="/san-pham/han-kho-ket-hop.html" class="text-decoration-none text-dark d-block">
-            <img src="/assets/images/z7775799602924_2a1c7aa1843a6dd44c0569728106accf.jpg" class="cat-img" alt="Hàn khò kết hợp">
-            <b>HÀN KHÒ<br class="d-lg-none"> KẾT HỢP</b>
-        </a>
-      </div>
-    </div>
-    <div class="col cat-col">
-      <div class="cat-item text-center">
-        <a href="/san-pham/may-hap-chip.html" class="text-decoration-none text-dark d-block">
-            <img src="/assets/images/z7775799656292_32de7169eeb75dc280647992f360f10d.jpg" class="cat-img" alt="Máy hấp chip">
-            <b>MÁY HẤP<br class="d-lg-none"> CHIP</b>
-        </a>
-      </div>
-    </div>
-    <div class="col cat-col">
-      <div class="cat-item text-center">
-        <a href="/san-pham/phu-kien.html" class="text-decoration-none text-dark d-block">
-            <img src="/assets/images/z7775799708520_212588737d9aac3941841e58fef53184.jpg" class="cat-img" alt="Phụ kiện">
-            <b>PHỤ KIỆN</b>
-        </a>
-      </div>
-    </div>
+    @foreach(var hc in homeCategoriesList.Where(x => x.IsActive).OrderBy(x => x.SortOrder))
+    {
+        int totalCount = 0;
+        if (homeCategoryProductsDict.ContainsKey(hc.CategoryId) && homeCategoryProductsDict[hc.CategoryId].Count > 0)
+        {
+            totalCount = homeCategoryProductsDict[hc.CategoryId][0].TotalCount;
+        }
+
+        <div class="col cat-col">
+          <div class="cat-item text-center">
+            <a href="/san-pham/danh-muc/@(hc.Slug).html" class="text-decoration-none text-dark d-block">
+                <img src="@(string.IsNullOrEmpty(hc.Image) ? "/assets/images/placeholder.png" : hc.Image)" class="cat-img" alt="@hc.Name">
+                <b>@hc.Name</b><small class="d-none d-lg-block">@totalCount sản phẩm</small>
+            </a>
+          </div>
+        </div>
+    }
   </div>
 </div>
+}
 
 <!-- ======== FEATURED PRODUCTS ======== -->
 @if (hotProducts != null && hotProducts.Any())

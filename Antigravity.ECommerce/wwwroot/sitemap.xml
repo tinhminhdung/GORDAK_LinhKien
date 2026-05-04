@@ -57,39 +57,39 @@
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/san-pham/linh-kien-3.html</loc>
+    <loc>https://localhost:7057/san-pham/may-hap-chip.html</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/logo.jpg</image:loc>
-      <image:title>linh kiện 3</image:title>
+      <image:loc>https://localhost:7057/uploads/SanPham/--But-thu-dien-dien-tu/638731491531483349.jpg</image:loc>
+      <image:title>Máy hấp chíp</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/san-pham/linh-kien-2.html</loc>
+    <loc>https://localhost:7057/san-pham/phu-kien.html</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/logo.jpg</image:loc>
-      <image:title>Linh kiện 2</image:title>
+      <image:loc>https://localhost:7057/uploads/sanppham/3---Copy.jpg</image:loc>
+      <image:title>Phụ kiện</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/san-pham/dung-cu-y-te.html</loc>
+    <loc>https://localhost:7057/san-pham/tram-kho.html</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/logo.jpg</image:loc>
-      <image:title>Dụng cụ y tế</image:title>
+      <image:loc>https://localhost:7057/uploads/SanPham/--Cam-bien-dong-mo-rong-cho-dong-ho-van-nang/638752245999693284.jpg</image:loc>
+      <image:title>Trạm khò</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/san-pham/thiet-bi-y-te.html</loc>
+    <loc>https://localhost:7057/san-pham/tram-han.html</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/logo.jpg</image:loc>
-      <image:title>thiết bị y  tế</image:title>
+      <image:loc>https://localhost:7057/uploads/tramhan.png</image:loc>
+      <image:title>Trạm hàn</image:title>
     </image:image>
   </url>
   <url>
@@ -138,12 +138,12 @@
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/san-pham/linh-kien-cong-nghiep.html</loc>
+    <loc>https://localhost:7057/san-pham/han-kho-ket-hop.html</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/logo.jpg</image:loc>
-      <image:title>Linh kiện công nghiệp</image:title>
+      <image:loc>https://localhost:7057/uploads/sanppham/kìm-kẹp.jpg</image:loc>
+      <image:title>Hàn khò kết hợp</image:title>
     </image:image>
   </url>
   <url>
@@ -151,7 +151,7 @@
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/logo.jpg</image:loc>
+      <image:loc>https://localhost:7057/uploads/SanPham/--Ampe-kim--Kep-dong/638731534184276425.jpg</image:loc>
       <image:title>Thiết bị đo điện</image:title>
     </image:image>
   </url>
