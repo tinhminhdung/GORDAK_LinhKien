@@ -93,7 +93,6 @@ namespace Antigravity.ECommerce.Services
                 Image_WatermarkOpacity = int.TryParse(dict.GetValueOrDefault("Image_WatermarkOpacity", "50"), out int wmo) ? wmo : 50,
                 Image_WatermarkSize = int.TryParse(dict.GetValueOrDefault("Image_WatermarkSize", "15"), out int wms) ? wms : 15,
                 Image_WatermarkExcludePaths = dict.GetValueOrDefault("Image_WatermarkExcludePaths", ""),
-
                 // Đơn hàng / Vận chuyển
                 DefaultShippingFee = decimal.TryParse(dict.GetValueOrDefault("DefaultShippingFee", "0"), out decimal dsf) ? dsf : 0
             };

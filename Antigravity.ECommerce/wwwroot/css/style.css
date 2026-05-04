@@ -258,7 +258,7 @@ img{max-width:100%}
 .section-brand{margin-bottom:40px}
 .brand-card{background:#f0f3f9;border-radius:10px;padding:20px;overflow:hidden}
 .brand-img-wrap{border-radius:8px;overflow:hidden}
-.factory-img{height:240px;object-fit:cover}
+.factory-img{height:100%;object-fit:cover}
 .brand-title{font-size:24px;color:#1a3c8a;font-weight:900;margin-bottom:12px}
 .brand-desc{font-size:14px;line-height:1.7;color:#3a4d6b;margin-bottom:6px}
 .stat-ico{font-size:22px;color:#1a3c8a;display:block;margin-bottom:6px}

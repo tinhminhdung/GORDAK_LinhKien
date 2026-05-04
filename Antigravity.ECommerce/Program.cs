@@ -98,6 +98,11 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(
+    name: "about",
+    pattern: "gioi-thieu.html",
+    defaults: new { controller = "Home", action = "About" });
+
+app.MapControllerRoute(
     name: "news_root",
     pattern: "tin-tuc.html",
     defaults: new { controller = "News", action = "Index" });

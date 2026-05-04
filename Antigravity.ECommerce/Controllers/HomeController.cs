@@ -66,6 +66,15 @@ public class HomeController : Controller
             homeCategoryProducts.Add(hc.CategoryId, products ?? new List<Product>());
         }
         
+        var whyChoose = Antigravity.ECommerce.Services.SCache.GetOrSet("Home_WhyChoose", () =>
+            Antigravity.ECommerce.Services.SAdvertising.GetByPosition("Home_WhyChoose"), 60);
+
+        var brandStats = Antigravity.ECommerce.Services.SCache.GetOrSet("Home_BrandStat", () =>
+            Antigravity.ECommerce.Services.SAdvertising.GetByPosition("Home_BrandStat"), 60);
+            
+        var brandIntro = Antigravity.ECommerce.Services.SCache.GetOrSet("Home_BrandIntro", () =>
+            Antigravity.ECommerce.Services.SAdvertising.GetByPosition("Home_BrandIntro")?.FirstOrDefault(), 60);
+
         // Truyền tất cả dữ liệu ra View
         ViewBag.HotProducts = hotProducts;
         ViewBag.Banners = banners;
@@ -78,7 +87,39 @@ public class HomeController : Controller
         ViewBag.Galleries = galleries;
         ViewBag.HomeCategories = homeCategories;
         ViewBag.HomeCategoryProducts = homeCategoryProducts;
+        ViewBag.WhyChoose = whyChoose;
+        ViewBag.BrandStats = brandStats;
+        ViewBag.BrandIntro = brandIntro;
         
+        return View();
+    }
+    #endregion
+
+    #region 1b. Trang Giới thiệu
+    /// <summary>
+    /// Trang giới thiệu thương hiệu Gordak (/gioi-thieu.html)
+    /// </summary>
+    public IActionResult About()
+    {
+        // Lấy dữ liệu BrandIntro, BrandStat, WhyChoose từ Advertising
+        var brandIntro = Antigravity.ECommerce.Services.SCache.GetOrSet("Home_BrandIntro", () =>
+            Antigravity.ECommerce.Services.SAdvertising.GetByPosition("Home_BrandIntro")?.FirstOrDefault(), 60);
+
+        var brandStats = Antigravity.ECommerce.Services.SCache.GetOrSet("Home_BrandStat", () =>
+            Antigravity.ECommerce.Services.SAdvertising.GetByPosition("Home_BrandStat"), 60);
+
+        var whyChoose = Antigravity.ECommerce.Services.SCache.GetOrSet("Home_WhyChoose", () =>
+            Antigravity.ECommerce.Services.SAdvertising.GetByPosition("Home_WhyChoose"), 60);
+
+        // Sản phẩm tiêu biểu (4 sản phẩm hot nhất)
+        var featuredProducts = Antigravity.ECommerce.Services.SCache.GetOrSet("About_FeaturedProducts", () =>
+            Antigravity.ECommerce.Framework.FProduct.Search(null, null, 1, true, null, null, "CreatedAt", "DESC", 1, 4), 60);
+
+        ViewBag.BrandIntro = brandIntro;
+        ViewBag.BrandStats = brandStats;
+        ViewBag.WhyChoose = whyChoose;
+        ViewBag.FeaturedProducts = featuredProducts;
+
         return View();
     }
     #endregion

@@ -19,6 +19,9 @@ namespace Antigravity.ECommerce.Models
         /// <summary> Đường dẫn chuyển hướng khi click </summary>
         public string? Link { get; set; }
 
+        /// <summary> Nội dung mô tả chi tiết (dùng cho các khối nội dung trang chủ) </summary>
+        public string? Description { get; set; }
+
         /// <summary> Vị trí hiển thị (VD: Home_Slide, Popup, Sidebar_Left) </summary>
         public string? Position { get; set; }
 

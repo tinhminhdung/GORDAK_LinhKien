@@ -109,7 +109,7 @@
 
         <div class="col cat-col">
           <div class="cat-item text-center">
-            <a href="/san-pham/danh-muc/@(hc.Slug).html" class="text-decoration-none text-dark d-block">
+            <a href="/san-pham/@(hc.Slug).html" class="text-decoration-none text-dark d-block">
                 <img src="@(string.IsNullOrEmpty(hc.Image) ? "/assets/images/placeholder.png" : hc.Image)" class="cat-img" alt="@hc.Name">
                 <b>@hc.Name</b><small class="d-none d-lg-block">@totalCount sản phẩm</small>
             </a>
@@ -157,82 +157,90 @@
 }
 
 <!-- ======== WHY CHOOSE ======== -->
+@{
+    var whyChooseList = ViewBag.WhyChoose as List<Antigravity.ECommerce.Models.Advertising> ?? new List<Antigravity.ECommerce.Models.Advertising>();
+}
+@if(whyChooseList.Count > 0)
+{
 <section class="container section-why mt-5">
-  <h2 class="section-title text-center mb-4">VÌ SAO CHỌN GORDAK TẠI CHÚNG TÓI?</h2>
-  <div class="row g-4 why-desktop d-none d-lg-flex">
-    <div class="col text-center">
-      <div class="why-ico"><i class="fa-solid fa-shield-halved"></i></div>
-      <b>HÀNG CHÍNH HÃNG</b><p>Cam kết 100% sản phẩm chính hãng Gordak.</p>
-    </div>
-    <div class="col text-center">
-      <div class="why-ico"><i class="fa-solid fa-certificate"></i></div>
-      <b>BẢO HÀNH CHÍNH HÃNG</b><p>Bảo hành dài hạn theo tiêu chuẩn hãng.</p>
-    </div>
-    <div class="col text-center">
-      <div class="why-ico"><i class="fa-solid fa-gear"></i></div>
-      <b>LINH KIỆN SẴN CÓ</b><p>Đầy đủ linh kiện thay thế, dễ dàng sửa chữa.</p>
-    </div>
-    <div class="col text-center">
-      <div class="why-ico"><i class="fa-solid fa-headset"></i></div>
-      <b>HỖ TRỢ KỸ THUẬT</b><p>Đội ngũ kỹ thuật giàu kinh nghiệm.</p>
-    </div>
-    <div class="col text-center">
-      <div class="why-ico"><i class="fa-solid fa-hand-holding-dollar"></i></div>
-      <b>GIÁ TỐT NHẤT</b><p>Giá cạnh tranh cho đại lý, dự án và khách hàng.</p>
-    </div>
+  <h2 class="section-title text-center mb-4">VÌ SAO CHỌN GORDAK TẠI CHÚNG TÔI?</h2>
+  <div class="row g-4 why-desktop d-none d-lg-flex justify-content-center">
+    @foreach(var item in whyChooseList)
+    {
+        <div class="col text-center">
+            <div class="why-ico">
+                @if (!string.IsNullOrEmpty(item.Image))
+                {
+                  <img src="@item.Image" alt="@item.Title" style="max-height: 100px; margin-bottom: 15px;">
+                }
+                else
+                {
+                    <i class="@item.VideoUrl"></i>
+                }
+            </div>
+            <b>@item.Title</b><p>@(item.Description ?? item.Link)</p>
+        </div>
+    }
   </div>
   <!-- Mobile: list with icon + text -->
   <div class="why-mobile d-lg-none">
-    <div class="why-m-item d-flex align-items-start gap-3">
-      <div class="why-m-ico"><i class="fa-solid fa-shield-halved"></i></div>
-      <div><b>Sản phẩm chính hãng 100%</b><p class="mb-0 small text-muted">Nhập khẩu và phân phối chính thức tại Việt Nam</p></div>
-    </div>
-    <div class="why-m-item d-flex align-items-start gap-3">
-      <div class="why-m-ico"><i class="fa-solid fa-certificate"></i></div>
-      <div><b>Bảo hành chính hãng 12 - 24 tháng</b><p class="mb-0 small text-muted">1 đổi 1 trong 7 ngày nếu có lỗi NSX</p></div>
-    </div>
-    <div class="why-m-item d-flex align-items-start gap-3">
-      <div class="why-m-ico"><i class="fa-solid fa-headset"></i></div>
-      <div><b>Hỗ trợ kỹ thuật trọn đời</b><p class="mb-0 small text-muted">Đội ngũ kỹ thuật giàu kinh nghiệm</p></div>
-    </div>
-    <div class="why-m-item d-flex align-items-start gap-3">
-      <div class="why-m-ico"><i class="fa-solid fa-truck-fast"></i></div>
-      <div><b>Giao hàng toàn quốc</b><p class="mb-0 small text-muted">Miễn phí giao hàng cho đơn từ 1 triệu</p></div>
-    </div>
+    @foreach(var item in whyChooseList)
+    {
+        <div class="why-m-item d-flex align-items-start gap-3">
+            <div class="why-m-ico">
+                @if (!string.IsNullOrEmpty(item.Image))
+                {
+                    <img src="@item.Image" alt="@item.Title" style="max-height: 30px;">
+                }
+                else
+                {
+                    <i class="@item.VideoUrl"></i>
+                }
+            </div>
+            <div><b>@item.Title</b><p class="mb-0 small text-muted">@(item.Description ?? item.Link)</p></div>
+        </div>
+    }
   </div>
 </section>
+}
 
 <!-- ======== BRAND ABOUT ======== -->
+@{
+    var brandIntro = ViewBag.BrandIntro as Antigravity.ECommerce.Models.Advertising;
+    var brandStats = ViewBag.BrandStats as List<Antigravity.ECommerce.Models.Advertising> ?? new List<Antigravity.ECommerce.Models.Advertising>();
+}
 <section class="container section-brand mt-5">
   <div class="row g-4 align-items-center brand-card">
     <div class="col-lg-5">
       <div class="brand-img-wrap">
-        <img src="/assets/images/z7775799762257_f058bd78c3b1f94e77da2c4eda69efb3.jpg" alt="Gordak Factory" class="factory-img w-100">
+        <img src="@(brandIntro?.Image ?? "/assets/images/z7775799762257_f058bd78c3b1f94e77da2c4eda69efb3.jpg")" alt="@(brandIntro?.Title ?? "VỀ THƯƠNG HIỆU GORDAK")" class="factory-img w-100">
       </div>
     </div>
     <div class="col-lg-7">
-      <h2 class="brand-title">VỀ THƯƠNG HIỆU GORDAK</h2>
-      <p class="brand-desc">Gordak là thương hiệu nổi tiếng trong lĩnh vực thiết bị hàn và sửa chữa điện tử, được thành lập từ năm 1999. Với hơn 20 năm phát triển, Gordak không ngừng nghiên cứu và cải tiến công nghệ để mang đến những sản phẩm chất lượng cao, độ bền vượt trội và hiệu suất ổn định.</p>
-      <p class="brand-desc">Các sản phẩm của Gordak được tin dùng rộng rãi trong lĩnh vực sửa chữa điện tử, sản xuất công nghiệp, phòng thí nghiệm và đào tạo nghề tại hơn 50 quốc gia trên thế giới.</p>
+      <h2 class="brand-title">@(brandIntro?.Title ?? "VỀ THƯƠNG HIỆU GORDAK")</h2>
+      <p class="brand-desc">@(brandIntro?.Description ?? "Gordak là thương hiệu nổi tiếng trong lĩnh vực thiết bị hàn và sửa chữa điện tử, được thành lập từ năm 1999. Với hơn 20 năm phát triển, Gordak không ngừng nghiên cứu và cải tiến công nghệ để mang đến những sản phẩm chất lượng cao, độ bền vượt trội và hiệu suất ổn định.")</p>
+      <p class="brand-desc">@(brandIntro?.VideoUrl ?? "Các sản phẩm của Gordak được tin dùng rộng rãi trong lĩnh vực sửa chữa điện tử, sản xuất công nghiệp, phòng thí nghiệm và đào tạo nghề tại hơn 50 quốc gia trên thế giới.")</p>
+      
+      @if(brandStats.Count > 0)
+      {
       <div class="row g-3 my-3 stats-row">
+        @foreach(var stat in brandStats)
+        {
         <div class="col-3 text-center">
-          <i class="fa-solid fa-clock-rotate-left stat-ico"></i>
-          <b class="stat-num">20+</b><small class="stat-label">NĂM KINH NGHIỆM</small>
+          @if (!string.IsNullOrEmpty(stat.Image))
+          {
+            <img src="@stat.Image" alt="@stat.Title" class="stat-ico" style="max-height:32px;">
+          }
+          else
+          {
+            <i class="@stat.VideoUrl stat-ico"></i>
+          }
+          <b class="stat-num">@stat.Title</b><small class="stat-label">@(stat.Description ?? stat.Link)</small>
         </div>
-        <div class="col-3 text-center">
-          <i class="fa-solid fa-globe stat-ico"></i>
-          <b class="stat-num">50+</b><small class="stat-label">QUỐC GIA TIN DÙNG</small>
-        </div>
-        <div class="col-3 text-center">
-          <i class="fa-solid fa-sliders stat-ico"></i>
-          <b class="stat-num">100+</b><small class="stat-label">SẢN PHẨM CHẤT LƯỢNG</small>
-        </div>
-        <div class="col-3 text-center">
-          <i class="fa-solid fa-shield-halved stat-ico"></i>
-          <b class="stat-num">100%</b><small class="stat-label">CHÍNH HÃNG</small>
-        </div>
+        }
       </div>
-      <a href="/gioi-thieu.html" class="btn-gd d-inline-flex align-items-center gap-2 px-4 py-2">Tìm hiểu thêm về Gordak <i class="fa-solid fa-arrow-right"></i></a>
+      }
+      <a href="@(brandIntro?.Link ?? "/gioi-thieu.html")" class="btn-gd d-inline-flex align-items-center gap-2 px-4 py-2">Tìm hiểu thêm về Gordak <i class="fa-solid fa-arrow-right"></i></a>
     </div>
   </div>
 </section>

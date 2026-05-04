@@ -27,6 +27,9 @@
                         <li><a class="dropdown-item text-danger" href="javascript:void(0);" onclick="bulkDelete()"><i class="ri-delete-bin-line me-1"></i> Xóa vĩnh viễn</a></li>
                     </ul>
                 </div>
+                <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#restoreModal">
+                    <i class="ri-refresh-line align-middle me-1"></i> Khôi phục mẫu gốc
+                </button>
                 <a href="/AdminAdvertising/Create" class="btn btn-primary">
                     <i class="ri-add-line align-middle me-1"></i> Thêm Banner mới
                 </a>
@@ -116,6 +119,12 @@
                                             @if (!string.IsNullOrEmpty(item.Image))
                                             {
                                                 <img src="@item.Image" alt="" class="rounded" style="width: 80px; height: 45px; object-fit: cover;">
+                                            }
+                                            else if (!string.IsNullOrEmpty(item.VideoUrl) && item.VideoUrl.Contains("fa-"))
+                                            {
+                                                <div class="bg-light text-dark rounded d-flex align-items-center justify-content-center border" style="width: 80px; height: 45px;">
+                                                    <i class="@item.VideoUrl fs-20"></i>
+                                                </div>
                                             }
                                             else if (!string.IsNullOrEmpty(item.VideoUrl))
                                             {
@@ -347,5 +356,79 @@
                 }
             });
         }
+
+        function restoreSection(section, name) {
+            bootstrap.Modal.getInstance(document.getElementById('restoreModal')).hide();
+            Swal.fire({
+                title: 'Khôi phục "' + name + '"?',
+                html: '<p class="text-muted">Dữ liệu hiện tại của phần này sẽ bị <strong class="text-danger">xóa</strong> và thay bằng mẫu gốc.</p>',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#ff9900',
+                cancelButtonColor: '#adb5bd',
+                confirmButtonText: '<i class="ri-refresh-line me-1"></i> Đồng ý khôi phục',
+                cancelButtonText: 'Hủy'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire({ title: 'Đang xử lý...', allowOutsideClick: false, didOpen: () => { Swal.showLoading(); } });
+                    $.ajax({
+                        url: '/AdminAdvertising/RestoreDefaults',
+                        type: 'POST',
+                        data: { section: section },
+                        success: function (res) {
+                            if (res.success) {
+                                Swal.fire({ icon: 'success', title: 'Thành công!', text: 'Đã khôi phục "' + name + '" về mẫu gốc.', timer: 1500, showConfirmButton: false }).then(() => { location.reload(); });
+                            } else {
+                                Swal.fire('Lỗi', res.message || 'Khôi phục thất bại', 'error');
+                            }
+                        }
+                    });
+                }
+            });
+        }
     </script>
 }
+
+<!-- Modal Khôi phục mẫu gốc -->
+<div class="modal fade" id="restoreModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
+            <div class="modal-header border-0 pb-0" style="background: linear-gradient(135deg, #fff3cd 0%, #ffeeba 100%);">
+                <h5 class="modal-title fw-bold"><i class="ri-refresh-line me-2 text-warning"></i> Khôi phục mẫu gốc</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4">
+                <p class="text-muted small mb-3">Chọn phần bạn muốn khôi phục về mẫu gốc. Dữ liệu hiện tại của phần đó sẽ bị thay thế.</p>
+                <div class="d-flex flex-column gap-2">
+                    <button type="button" class="btn btn-outline-primary text-start p-3 rounded-3 d-flex align-items-center" onclick="restoreSection('Home_BrandIntro', 'Giới thiệu Thương hiệu')">
+                        <div class="bg-primary bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center flex-shrink-0" style="width:40px;height:40px;">
+                            <i class="fas fa-building text-primary"></i>
+                        </div>
+                        <div class="ms-3">
+                            <div class="fw-bold">Giới thiệu Thương hiệu</div>
+                            <small class="text-muted">Khối "Về thương hiệu Gordak" + ảnh nhà máy</small>
+                        </div>
+                    </button>
+                    <button type="button" class="btn btn-outline-success text-start p-3 rounded-3 d-flex align-items-center" onclick="restoreSection('Home_WhyChoose', 'Vì sao chọn chúng tôi')">
+                        <div class="bg-success bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center flex-shrink-0" style="width:40px;height:40px;">
+                            <i class="fas fa-shield-halved text-success"></i>
+                        </div>
+                        <div class="ms-3">
+                            <div class="fw-bold">Vì sao chọn chúng tôi</div>
+                            <small class="text-muted">5 mục USP: Chính hãng, Bảo hành, Linh kiện...</small>
+                        </div>
+                    </button>
+                    <button type="button" class="btn btn-outline-info text-start p-3 rounded-3 d-flex align-items-center" onclick="restoreSection('Home_BrandStat', 'Thống kê Thương hiệu')">
+                        <div class="bg-info bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center flex-shrink-0" style="width:40px;height:40px;">
+                            <i class="fas fa-chart-simple text-info"></i>
+                        </div>
+                        <div class="ms-3">
+                            <div class="fw-bold">Thống kê Thương hiệu</div>
+                            <small class="text-muted">4 con số: 20+ năm, 50+ quốc gia, 100+ SP...</small>
+                        </div>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

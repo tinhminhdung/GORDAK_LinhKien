@@ -1,6 +1,6 @@
-﻿@model Antigravity.ECommerce.Models.Advertising
+@model Antigravity.ECommerce.Models.Advertising
 @{
-    ViewBag.Title = "Cập nhật Banner: " + Model.Title;
+    ViewBag.Title = "Chỉnh sửa Banner";
     Layout = "_AdminLayout";
 }
 
@@ -11,14 +11,14 @@
             <div class="card">
                 <div class="card-body">
                     <div class="mb-3">
-                        <label class="form-label">Tiêu đề Banner <span class="text-danger">*</span></label>
+                        <label class="form-label" id="label_Title">Tiêu đề Banner <span class="text-danger">*</span></label>
                         <input type="text" class="form-control" asp-for="Title" placeholder="Nhập tiêu đề banner..." required>
                     </div>
 
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-6" id="group_Image">
                             <div class="mb-3">
-                                <label class="form-label">Ảnh Banner</label>
+                                <label class="form-label" id="label_Image">Ảnh Banner</label>
                                 <div class="input-group">
                                     <input type="text" class="form-control" asp-for="Image" id="Image" readonly>
                                     <button class="btn btn-primary" type="button" onclick="browseImage('Image')">Chọn ảnh</button>
@@ -28,22 +28,27 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-6" id="group_VideoUrl">
                             <div class="mb-3">
-                                <label class="form-label">YouTube Video ID (Nếu có)</label>
-                                <input type="text" class="form-control" asp-for="VideoUrl" placeholder="VD: 60ItHLz5WEA">
+                                <label class="form-label" id="label_VideoUrl">YouTube Video ID (Nếu có)</label>
+                                <input type="text" class="form-control" asp-for="VideoUrl" id="VideoUrl" placeholder="VD: 60ItHLz5WEA">
                             </div>
                         </div>
                     </div>
 
-                    <div class="mb-3">
-                        <label class="form-label">Đường dẫn liên kết (Link)</label>
+                    <div class="mb-3" id="group_Description">
+                        <label class="form-label" id="label_Description">Mô tả <span class="text-danger">*</span></label>
+                        <textarea class="form-control" asp-for="Description" rows="3" placeholder="Nhập nội dung mô tả..."></textarea>
+                    </div>
+
+                    <div class="mb-3" id="group_Link">
+                        <label class="form-label" id="label_Link">Đường dẫn liên kết (Link)</label>
                         <input type="text" class="form-control" asp-for="Link" placeholder="https://...">
                     </div>
                 </div>
             </div>
 
-            <div class="card">
+            <div class="card" id="group_Schedule">
                 <div class="card-header">
                     <h5 class="card-title mb-0">Lịch hiển thị tự động</h5>
                 </div>
@@ -73,18 +78,20 @@
                 </div>
                 <div class="card-body">
                     <div class="mb-3">
-                        <label class="form-label">Vị trí hiển thị <span class="text-danger">*</span></label>
-                        <select class="selectpicker" data-live-search="true" asp-for="Position" required>
+                        <select class="form-select" asp-for="Position" id="Position" onchange="updateLabels()" required>
                             <option value="Home_Slide">Trang chủ - Slide lớn</option>
                             <option value="Home_Top">Trang chủ - Banner đầu trang</option>
                             <option value="Home_Middle">Trang chủ - Banner giữa</option>
+                            <option value="Home_WhyChoose">Trang chủ - Vì sao chọn Gordak</option>
+                            <option value="Home_BrandStat">Trang chủ - Thống kê Thương hiệu</option>
+                            <option value="Home_BrandIntro">Trang chủ - Giới thiệu Thương hiệu</option>
                             <option value="Sidebar_Right">Cột phải - Sidebar</option>
                             <option value="Product_Detail">Trang chi tiết sản phẩm</option>
                             <option value="Popup">Popup Quảng cáo</option>
                         </select>
                     </div>
 
-                    <div class="mb-3">
+                    <div class="mb-3" id="group_Target">
                         <label class="form-label">Cách mở trang</label>
                         <select class="form-select" asp-for="Target">
                             <option value="_self">Mở tại trang hiện tại (_self)</option>
@@ -118,8 +125,9 @@
         </div>
     </div>
 
-            </form>
+</form>
 
+<!-- Modal CKFinder -->
 <div class="modal fade" id="fileManagerModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
@@ -136,26 +144,131 @@
 
 @section Scripts {
     <script>
-        var currentFileTarget = '';
-        var fileModal = new bootstrap.Modal(document.getElementById('fileManagerModal'));
-
-        function browseImage(targetId) {
-            currentFileTarget = targetId;
-            fileModal.show();
+        // Chọn ảnh qua File Manager
+        let currentImageField = '';
+        function browseImage(fieldId) {
+            currentImageField = fieldId;
+            var myModal = bootstrap.Modal.getOrCreateInstance(document.getElementById('fileManagerModal'));
+            myModal.show();
         }
 
-        window.addEventListener('message', function(event) {
-            if (event.data && event.data.type === 'fileSelected') {
-                document.getElementById(currentFileTarget).value = event.data.url;
-                
-                var previewDiv = document.getElementById('image_preview');
-                if(previewDiv) {
-                    previewDiv.classList.remove('d-none');
-                    previewDiv.querySelector('img').src = event.data.url;
+        window.addEventListener('message', function (e) {
+            var url = null;
+            if (e.data && e.data.mceAction === 'selectFile') {
+                url = e.data.url;
+            } else if (e.data && e.data.type === 'fileSelected') {
+                url = e.data.url;
+            }
+            if (url) {
+                document.getElementById(currentImageField).value = url;
+                var preview = document.getElementById('image_preview');
+                if (preview) {
+                    preview.classList.remove('d-none');
+                    preview.querySelector('img').src = url;
                 }
-                
-                fileModal.hide();
+                bootstrap.Modal.getInstance(document.getElementById('fileManagerModal'))?.hide();
             }
         });
+
+        // Cấu hình hiển thị form theo từng loại Position
+        var fieldConfig = {
+            'Home_WhyChoose': {
+                title: 'Tiêu đề USP <span class="text-danger">*</span>',
+                image: { show: true, label: 'Ảnh thay thế icon <small class="text-muted">(ưu tiên hơn icon)</small>', col: 'col-md-6' },
+                videoUrl: { show: true, label: 'Icon FontAwesome <small class="text-muted">VD: fa-solid fa-shield</small>', col: 'col-md-6' },
+                description: { show: false },
+                link: { show: true, label: 'Mô tả phụ <span class="text-danger">*</span>' },
+                target: false, schedule: false
+            },
+            'Home_BrandStat': {
+                title: 'Con số thống kê <span class="text-danger">*</span> <small class="text-muted">VD: 20+, 100%, 50+</small>',
+                image: { show: true, label: 'Ảnh thay thế icon <small class="text-muted">(ưu tiên hơn icon)</small>', col: 'col-md-6' },
+                videoUrl: { show: true, label: 'Icon FontAwesome <small class="text-muted">VD: fa-solid fa-globe</small>', col: 'col-md-6' },
+                description: { show: false },
+                link: { show: true, label: 'Nhãn mô tả <span class="text-danger">*</span> <small class="text-muted">VD: NĂM KINH NGHIỆM</small>' },
+                target: false, schedule: false
+            },
+            'Home_BrandIntro': {
+                title: 'Tiêu đề phần giới thiệu <span class="text-danger">*</span>',
+                image: { show: true, label: 'Ảnh nhà máy / Thương hiệu', col: 'col-md-12' },
+                videoUrl: { show: true, label: 'Đoạn mô tả thứ 2 <small class="text-muted">(hiển thị bên dưới đoạn 1)</small>', col: 'col-md-12', textarea: true, rows: 3 },
+                description: { show: true, label: 'Đoạn mô tả chính <span class="text-danger">*</span>', rows: 4 },
+                link: { show: true, label: 'Đường dẫn "Tìm hiểu thêm"', placeholder: '/gioi-thieu.html' },
+                target: false, schedule: false
+            },
+            '_default': {
+                title: 'Tiêu đề Banner <span class="text-danger">*</span>',
+                image: { show: true, label: 'Ảnh Banner', col: 'col-md-6' },
+                videoUrl: { show: true, label: 'YouTube Video ID (Nếu có)', col: 'col-md-6' },
+                description: { show: false },
+                link: { show: true, label: 'Đường dẫn liên kết (Link)', placeholder: 'https://...' },
+                target: true, schedule: true
+            }
+        };
+
+        function updateLabels() {
+            var pos = document.getElementById('Position').value;
+            var cfg = fieldConfig[pos] || fieldConfig['_default'];
+
+            // Title
+            document.getElementById('label_Title').innerHTML = cfg.title;
+
+            // Image
+            var gImg = document.getElementById('group_Image');
+            gImg.style.display = cfg.image.show ? '' : 'none';
+            gImg.className = cfg.image.col || 'col-md-6';
+            document.getElementById('label_Image').innerHTML = cfg.image.label || 'Ảnh Banner';
+
+            // VideoUrl
+            var gVid = document.getElementById('group_VideoUrl');
+            gVid.style.display = cfg.videoUrl.show ? '' : 'none';
+            gVid.className = cfg.videoUrl.col || 'col-md-6';
+            document.getElementById('label_VideoUrl').innerHTML = cfg.videoUrl.label || 'YouTube Video ID';
+            
+            // Đổi input thành textarea nếu cần
+            var vidInput = document.getElementById('VideoUrl');
+            if (cfg.videoUrl.textarea && vidInput.tagName === 'INPUT') {
+                var ta = document.createElement('textarea');
+                ta.className = vidInput.className;
+                ta.name = vidInput.name;
+                ta.id = vidInput.id;
+                ta.rows = cfg.videoUrl.rows || 2;
+                ta.value = vidInput.value;
+                vidInput.parentNode.replaceChild(ta, vidInput);
+            } else if (!cfg.videoUrl.textarea && vidInput.tagName === 'TEXTAREA') {
+                var inp = document.createElement('input');
+                inp.type = 'text';
+                inp.className = vidInput.className;
+                inp.name = vidInput.name;
+                inp.id = vidInput.id;
+                inp.value = vidInput.value;
+                vidInput.parentNode.replaceChild(inp, vidInput);
+            }
+
+            // Description
+            var gDesc = document.getElementById('group_Description');
+            gDesc.style.display = cfg.description.show ? '' : 'none';
+            if (cfg.description.show) {
+                document.getElementById('label_Description').innerHTML = cfg.description.label;
+                var descArea = gDesc.querySelector('textarea');
+                if (descArea) descArea.rows = cfg.description.rows || 3;
+            }
+
+            // Link
+            var gLink = document.getElementById('group_Link');
+            gLink.style.display = cfg.link.show ? '' : 'none';
+            if (cfg.link.show) {
+                document.getElementById('label_Link').innerHTML = cfg.link.label || 'Đường dẫn liên kết (Link)';
+                var linkInput = gLink.querySelector('input');
+                if (linkInput && cfg.link.placeholder) linkInput.placeholder = cfg.link.placeholder;
+            }
+
+            // Target & Schedule
+            document.getElementById('group_Target').style.display = cfg.target ? '' : 'none';
+            document.getElementById('group_Schedule').style.display = cfg.schedule ? '' : 'none';
+        }
+
+        // Gọi ngay khi trang load để set đúng nhãn cho Position hiện tại
+        document.addEventListener('DOMContentLoaded', updateLabels);
     </script>
 }

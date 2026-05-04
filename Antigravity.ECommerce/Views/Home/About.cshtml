@@ -1,0 +1,268 @@
+@{
+    ViewBag.Title = "Về thương hiệu Gordak";
+    Layout = "_Layout";
+    var brandIntro = ViewBag.BrandIntro as Antigravity.ECommerce.Models.Advertising;
+    var brandStats = ViewBag.BrandStats as List<Antigravity.ECommerce.Models.Advertising> ?? new List<Antigravity.ECommerce.Models.Advertising>();
+    var whyChoose = ViewBag.WhyChoose as List<Antigravity.ECommerce.Models.Advertising> ?? new List<Antigravity.ECommerce.Models.Advertising>();
+    var featuredProducts = ViewBag.FeaturedProducts as List<Antigravity.ECommerce.Models.Product> ?? new List<Antigravity.ECommerce.Models.Product>();
+}
+
+@section Styles {
+<style>
+/* ══════ HERO ══════ */
+.gt-hero { background: linear-gradient(135deg, #0a1628 0%, #1a2d50 50%, #0d1f3c 100%); color: #fff; padding: 48px 0 40px; position: relative; overflow: hidden; }
+.gt-hero::before { content: ''; position: absolute; top: -50%; right: -10%; width: 500px; height: 500px; background: radial-gradient(circle, rgba(59,130,246,0.08) 0%, transparent 70%); }
+.gt-hero-label { font-size: 13px; letter-spacing: 3px; color: #94a3b8; margin-bottom: 4px; text-transform: uppercase; }
+.gt-hero-title { font-size: 52px; font-weight: 900; letter-spacing: 3px; margin-bottom: 6px; background: linear-gradient(135deg, #fff 0%, #60a5fa 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.gt-hero-subtitle { font-size: 16px; color: #60a5fa; font-weight: 500; font-style: italic; margin-bottom: 12px; }
+.gt-hero-desc { font-size: 14px; color: #cbd5e1; line-height: 1.7; max-width: 550px; }
+.gt-hero-img { border-radius: 16px; max-height: 260px; object-fit: cover; width: 100%; box-shadow: 0 20px 60px rgba(0,0,0,.4); }
+.gt-stat-col { text-align: center; }
+.gt-stat { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.gt-stat i { font-size: 22px; color: #60a5fa; margin-bottom: 4px; }
+.gt-stat strong { font-size: 13px; color: #fff; }
+.gt-stat small { font-size: 11px; color: #94a3b8; }
+
+/* ══════ ABOUT ══════ */
+.gt-about-sec { padding: 50px 0; }
+.gt-about-img { border-radius: 16px; width: 100%; object-fit: cover; box-shadow: 0 8px 30px rgba(0,0,0,.1); }
+.gt-section-title { font-size: 22px; font-weight: 800; color: #1e293b; letter-spacing: 1px; position: relative; padding-bottom: 10px; }
+.gt-section-title::after { content: ''; position: absolute; bottom: 0; left: 0; width: 50px; height: 3px; background: linear-gradient(90deg, #073e96, #60a5fa); border-radius: 2px; }
+.gt-about-desc { font-size: 14px; color: #475569; line-height: 1.8; margin-top: 16px; }
+.gt-check-list { list-style: none; padding: 0; margin: 16px 0 0; }
+.gt-check-list li { padding: 6px 0; font-size: 14px; color: #334155; }
+.gt-check-list li i { color: #10b981; margin-right: 8px; font-size: 13px; }
+.gt-about-btn { display: inline-block; border: 1.5px solid #073e96; color: #073e96; padding: 8px 20px; border-radius: 25px; font-size: 13px; font-weight: 600; text-decoration: none; transition: all .2s; }
+.gt-about-btn:hover { background: #073e96; color: #fff; }
+
+/* ══════ CORE VALUES ══════ */
+.gt-core-sec { background: #f8fafc; padding: 50px 0; }
+.gt-core-sec .gt-section-title::after { left: 50%; transform: translateX(-50%); }
+.gt-core-card { background: #fff; border-radius: 14px; padding: 28px 16px; box-shadow: 0 2px 12px rgba(0,0,0,.05); height: 100%; transition: transform .2s, box-shadow .2s; }
+.gt-core-card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(0,0,0,.1); }
+.gt-core-card i { font-size: 36px; color: #073e96; margin-bottom: 12px; display: block; }
+.gt-core-card strong { font-size: 13px; color: #1e293b; display: block; margin-bottom: 8px; }
+.gt-core-card small { font-size: 12px; color: #64748b; line-height: 1.6; }
+
+/* ══════ TIMELINE / JOURNEY ══════ */
+.gt-journey-sec { padding: 50px 0; }
+.gt-timeline { position: relative; padding-left: 28px; }
+.gt-timeline::before { content: ''; position: absolute; left: 11px; top: 8px; bottom: 8px; width: 2px; background: linear-gradient(180deg, #073e96 0%, #60a5fa 100%); }
+.gt-tl-item { display: flex; gap: 14px; margin-bottom: 20px; position: relative; }
+.gt-tl-dot { width: 24px; height: 24px; border-radius: 50%; background: linear-gradient(135deg, #073e96, #3b82f6); display: flex; align-items: center; justify-content: center; flex-shrink: 0; position: relative; left: -28px; margin-right: -28px; z-index: 1; }
+.gt-tl-dot i { font-size: 10px; color: #fff; }
+.gt-tl-item strong { font-size: 14px; color: #1e293b; display: block; margin-bottom: 2px; }
+.gt-tl-item p { font-size: 13px; color: #64748b; margin: 0; }
+.gt-quote-bar { background: linear-gradient(135deg, #1e293b, #334155); color: #cbd5e1; padding: 16px 20px; border-radius: 10px; margin-top: 10px; font-size: 13px; line-height: 1.7; border-left: 4px solid #3b82f6; }
+.gt-journey-img { width: 100%; border-radius: 12px; object-fit: cover; height: 180px; box-shadow: 0 4px 16px rgba(0,0,0,.1); }
+
+/* ══════ FEATURED PRODUCTS ══════ */
+.gt-featured-sec { background: #f8fafc; padding: 50px 0; }
+.gt-featured-sec .gt-section-title::after { left: 50%; transform: translateX(-50%); }
+
+/* ══════ CERT ══════ */
+.gt-cert-sec { padding: 50px 0; }
+.gt-cert-card { background: #fff; border-radius: 12px; padding: 16px 10px; box-shadow: 0 2px 12px rgba(0,0,0,.05); height: 100%; transition: transform .2s; }
+.gt-cert-card:hover { transform: translateY(-3px); }
+.gt-cert-card img { height: 100px; object-fit: contain; width: 100%; margin-bottom: 8px; }
+.gt-cert-card small { font-size: 12px; color: #64748b; }
+.gt-cert-text-box { background: linear-gradient(135deg, #f1f5f9, #e2e8f0); border-radius: 12px; padding: 24px; height: 100%; display: flex; flex-direction: column; justify-content: center; }
+.gt-cert-text-box p { font-size: 13px; color: #475569; line-height: 1.7; }
+.gt-cert-btn { color: #073e96; font-weight: 600; font-size: 13px; text-decoration: none; }
+.gt-cert-btn:hover { text-decoration: underline; }
+
+/* ══════ RESPONSIVE ══════ */
+@@media (max-width: 991px) {
+    .gt-hero-title { font-size: 36px; }
+    .gt-hero { padding: 30px 0; }
+}
+@@media (max-width: 575px) {
+    .gt-hero-title { font-size: 28px; }
+    .gt-section-title { font-size: 18px; }
+}
+</style>
+}
+
+<!-- ======== BREADCRUMB ======== -->
+<div class="container mt-3 mb-2">
+    <nav class="sp-breadcrumb"><a href="/">Trang chủ</a> <i class="fa-solid fa-chevron-right"></i> <span>Về thương hiệu Gordak</span></nav>
+</div>
+
+<!-- ======== HERO BANNER ======== -->
+<section class="gt-hero">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-lg-7">
+        <p class="gt-hero-label">VỀ THƯƠNG HIỆU</p>
+        <h1 class="gt-hero-title">GORDAK</h1>
+        <p class="gt-hero-subtitle">Nhà sản xuất thiết bị hàn & rework hàng đầu thế giới</p>
+        <p class="gt-hero-desc">@(brandIntro?.Description ?? "Gordak là thương hiệu nổi tiếng trong lĩnh vực thiết bị hàn và sửa chữa điện tử. Với công nghệ hiện đại, độ bền vượt trội và hiệu suất ổn định, sản phẩm của Gordak được tin dùng bởi kỹ thuật viên và doanh nghiệp tại nhiều quốc gia trên thế giới.")</p>
+        @if(brandStats.Count > 0)
+        {
+        <div class="row g-3 mt-3">
+            @foreach(var stat in brandStats)
+            {
+            <div class="col-6 col-md-3 position-relative gt-stat-col">
+                <div class="gt-stat">
+                    @if (!string.IsNullOrEmpty(stat.Image))
+                    {
+                        <img src="@stat.Image" alt="@stat.Title" style="max-height:24px;">
+                    }
+                    else
+                    {
+                        <i class="@stat.VideoUrl"></i>
+                    }
+                    <strong>@stat.Title</strong>
+                    <small>@(stat.Description ?? stat.Link)</small>
+                </div>
+            </div>
+            }
+        </div>
+        }
+      </div>
+      <div class="col-lg-5 text-center d-none d-lg-block">
+        <img src="@(brandIntro?.Image ?? "/assets/images/z7775799762257_f058bd78c3b1f94e77da2c4eda69efb3.jpg")" alt="Gordak Factory" class="gt-hero-img">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======== GIỚI THIỆU ======== -->
+<section class="container gt-about-sec">
+  <div class="row align-items-center g-4">
+    <div class="col-lg-5">
+      <img src="@(brandIntro?.Image ?? "/assets/images/z7775799762257_f058bd78c3b1f94e77da2c4eda69efb3.jpg")" alt="Gordak Products" class="gt-about-img">
+    </div>
+    <div class="col-lg-7">
+      <h2 class="gt-section-title">GIỚI THIỆU VỀ GORDAK</h2>
+      <p class="gt-about-desc">@(brandIntro?.VideoUrl ?? "Với định hướng tập trung vào chất lượng và sự đổi mới, Gordak không ngừng nghiên cứu và cải tiến công nghệ để mang đến những giải pháp hàn và sửa chữa hiệu quả, an toàn và thân thiện với người dùng.")</p>
+      <ul class="gt-check-list">
+        <li><i class="fa-solid fa-check"></i> Công nghệ kiểm soát nhiệt thông minh</li>
+        <li><i class="fa-solid fa-check"></i> Độ bền cao, hoạt động ổn định</li>
+        <li><i class="fa-solid fa-check"></i> Thiết kế tối ưu, dễ sử dụng</li>
+        <li><i class="fa-solid fa-check"></i> Đáp ứng tiêu chuẩn kỹ thuật quốc tế</li>
+      </ul>
+      <a href="/san-pham.html" class="gt-about-btn mt-3">Xem các sản phẩm Gordak <i class="fa-solid fa-chevron-right"></i></a>
+    </div>
+  </div>
+</section>
+
+<!-- ======== GIÁ TRỊ CỐT LÕI ======== -->
+<section class="gt-core-sec">
+  <div class="container text-center">
+    <h2 class="gt-section-title mb-4">GIÁ TRỊ CỐT LÕI</h2>
+    @if(whyChoose.Count > 0)
+    {
+    <div class="row g-4">
+      @foreach(var item in whyChoose.Take(4))
+      {
+      <div class="col-6 col-md-3">
+        <div class="gt-core-card">
+          @if (!string.IsNullOrEmpty(item.Image))
+          {
+            <img src="@item.Image" alt="@item.Title" style="max-height:40px; margin-bottom:12px;">
+          }
+          else
+          {
+            <i class="@item.VideoUrl"></i>
+          }
+          <strong>@item.Title</strong>
+          <small>@(item.Description ?? item.Link)</small>
+        </div>
+      </div>
+      }
+    </div>
+    }
+    else
+    {
+    <div class="row g-4">
+      <div class="col-6 col-md-3"><div class="gt-core-card"><i class="fa-solid fa-gem"></i><strong>CHẤT LƯỢNG HÀNG ĐẦU</strong><small>Kiểm soát chặt chẽ từng công đoạn để đảm bảo chất lượng sản phẩm.</small></div></div>
+      <div class="col-6 col-md-3"><div class="gt-core-card"><i class="fa-solid fa-lightbulb"></i><strong>ĐỔI MỚI CÔNG NGHỆ</strong><small>Không ngừng nghiên cứu và cải tiến để mang lại giải pháp tiên tiến.</small></div></div>
+      <div class="col-6 col-md-3"><div class="gt-core-card"><i class="fa-solid fa-users"></i><strong>KHÁCH HÀNG LÀ TRUNG TÂM</strong><small>Luôn lắng nghe và đáp ứng mọi nhu cầu của khách hàng.</small></div></div>
+      <div class="col-6 col-md-3"><div class="gt-core-card"><i class="fa-solid fa-handshake"></i><strong>HỢP TÁC BỀN VỮNG</strong><small>Xây dựng mối quan hệ lâu dài, cùng phát triển và thành công.</small></div></div>
+    </div>
+    }
+  </div>
+</section>
+
+<!-- ======== HÀNH TRÌNH ======== -->
+<section class="container gt-journey-sec">
+  <h2 class="gt-section-title mb-4">HÀNH TRÌNH PHÁT TRIỂN</h2>
+  <div class="row g-4">
+    <div class="col-lg-6">
+      <div class="gt-timeline">
+        <div class="gt-tl-item"><div class="gt-tl-dot"><i class="fa-solid fa-rocket"></i></div><div><strong>Khởi đầu & phát triển</strong><p>Tập trung nghiên cứu và phát triển thiết bị hàn chất lượng cao.</p></div></div>
+        <div class="gt-tl-item"><div class="gt-tl-dot"><i class="fa-solid fa-globe"></i></div><div><strong>Mở rộng thị trường</strong><p>Sản phẩm Gordak có mặt tại nhiều quốc gia và khu vực.</p></div></div>
+        <div class="gt-tl-item"><div class="gt-tl-dot"><i class="fa-solid fa-chart-line"></i></div><div><strong>Nâng cao chất lượng</strong><p>Liên tục cải tiến công nghệ, tối ưu hiệu suất và độ bền sản phẩm.</p></div></div>
+        <div class="gt-tl-item"><div class="gt-tl-dot"><i class="fa-solid fa-microchip"></i></div><div><strong>Đổi mới không ngừng</strong><p>Phát triển các giải pháp hàn hiện đại, phù hợp với xu hướng mới.</p></div></div>
+        <div class="gt-tl-item"><div class="gt-tl-dot"><i class="fa-solid fa-heart"></i></div><div><strong>Đồng hành cùng khách hàng</strong><p>Luôn lắng nghe và hỗ trợ để mang lại giá trị tốt nhất cho khách hàng.</p></div></div>
+      </div>
+      <div class="gt-quote-bar">
+        <p class="mb-0">Trên hành trình phát triển, Gordak luôn giữ vững cam kết mang đến sản phẩm chất lượng<br>và dịch vụ đáng tin cậy cho khách hàng toàn cầu.</p>
+      </div>
+    </div>
+    <div class="col-lg-6 d-none d-lg-block">
+      <div class="row g-3">
+        <div class="col-6"><img src="@(brandIntro?.Image ?? "/assets/images/z7775799762257_f058bd78c3b1f94e77da2c4eda69efb3.jpg")" alt="" class="gt-journey-img"></div>
+        <div class="col-6"><img src="/assets/images/z7775799762257_f058bd78c3b1f94e77da2c4eda69efb3.jpg" alt="" class="gt-journey-img"></div>
+        <div class="col-12"><img src="@(brandIntro?.Image ?? "/assets/images/z7775799762257_f058bd78c3b1f94e77da2c4eda69efb3.jpg")" alt="" class="gt-journey-img" style="height:200px"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======== SẢN PHẨM TIÊU BIỂU ======== -->
+@if(featuredProducts.Count > 0)
+{
+<section class="gt-featured-sec">
+  <div class="container text-center">
+    <h2 class="gt-section-title mb-4">SẢN PHẨM TIÊU BIỂU</h2>
+    <div class="row g-3 justify-content-center">
+      @foreach(var p in featuredProducts)
+      {
+      <div class="col-6 col-md-3">
+        <div class="sp-card">
+          <a href="/san-pham/detail/@(p.Slug).html"><img src="@p.Image" alt="@p.Title"></a>
+          <div class="sp-card-name">@p.Title</div>
+          <small class="text-muted">@(p.ShortDescription?.Length > 40 ? p.ShortDescription.Substring(0, 40) + "..." : p.ShortDescription)</small>
+          <div class="sp-card-actions mt-2">
+            <a href="/san-pham/detail/@(p.Slug).html" class="sp-btn-detail">Xem chi tiết</a>
+            <a href="javascript:void(0);" class="sp-btn-cart" onclick="addToCart(@p.ProductId)"><i class="fa-solid fa-cart-shopping"></i></a>
+          </div>
+        </div>
+      </div>
+      }
+    </div>
+    <a href="/san-pham.html" class="sp-btn-loadmore mt-4">Xem tất cả sản phẩm <i class="fa-solid fa-chevron-right"></i></a>
+  </div>
+</section>
+}
+
+<!-- ======== CHỨNG NHẬN ======== -->
+<section class="gt-cert-sec">
+  <div class="container">
+    <h2 class="gt-section-title mb-4">CHỨNG NHẬN & UY TÍN</h2>
+    <div class="row g-3 align-items-stretch">
+      <div class="col-6 col-md-2 text-center"><div class="gt-cert-card"><img src="@(brandIntro?.Image ?? "/assets/images/z7775799762257_f058bd78c3b1f94e77da2c4eda69efb3.jpg")" alt=""><small>Chứng nhận<br>đại lý chính thức</small></div></div>
+      <div class="col-6 col-md-2 text-center"><div class="gt-cert-card"><img src="@(brandIntro?.Image ?? "/assets/images/z7775799762257_f058bd78c3b1f94e77da2c4eda69efb3.jpg")" alt=""><small>Chứng nhận<br>ISO 9001:2015</small></div></div>
+      <div class="col-6 col-md-2 text-center"><div class="gt-cert-card"><img src="@(brandIntro?.Image ?? "/assets/images/z7775799762257_f058bd78c3b1f94e77da2c4eda69efb3.jpg")" alt=""><small>Chứng nhận<br>CO, CQ đầy đủ</small></div></div>
+      <div class="col-6 col-md-2 text-center"><div class="gt-cert-card"><img src="@(brandIntro?.Image ?? "/assets/images/z7775799762257_f058bd78c3b1f94e77da2c4eda69efb3.jpg")" alt=""><small>Nhà phân phối chính hãng<br>tại Việt Nam</small></div></div>
+      <div class="col-12 col-md-4">
+        <div class="gt-cert-text-box">
+          <p>Tất cả sản phẩm Gordak đều được kiểm định nghiêm ngặt trước khi đến tay khách hàng. Chúng tôi cam kết mang đến sản phẩm chính hãng, chất lượng cao và dịch vụ hỗ trợ tốt nhất.</p>
+          <div>
+            <a href="#" class="gt-cert-btn">Xem toàn bộ chứng nhận <i class="fa-solid fa-chevron-right"></i></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======== CTA BAR ======== -->
+<section class="sp-cta-bar">
+  <div class="container d-flex flex-wrap align-items-center justify-content-between gap-3">
+    <div class="d-flex align-items-center gap-3"><i class="fa-solid fa-shield-halved" style="font-size:32px;color:#fff"></i><div><strong style="font-size:16px">Nhà phân phối chính thức GORDAK tại Việt Nam</strong><br><small>Cam kết mang đến sản phẩm chính hãng, chất lượng và dịch vụ tốt nhất cho khách hàng.</small></div></div>
+    <div class="d-flex gap-2"><a href="/lien-he.html" class="sp-cta-btn sp-cta-red">NHẬN BÁO GIÁ NGAY</a><a href="tel:0963344888" class="sp-cta-btn sp-cta-outline"><i class="fa-solid fa-phone"></i> GỌI TƯ VẤN: 0963 344 888</a></div>
+  </div>
+</section>
