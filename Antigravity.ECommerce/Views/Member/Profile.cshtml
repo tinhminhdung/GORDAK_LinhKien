@@ -1,0 +1,120 @@
+@model Antigravity.ECommerce.Models.Customer
+@{
+    Layout = "_MemberLayout";
+    ViewData["Title"] = "Thông tin cá nhân";
+}
+
+<h4 class="mb-4 pb-2 border-bottom fw-bold text-dark">Hồ sơ của tôi</h4>
+
+<form asp-controller="Member" asp-action="Profile" method="post" enctype="multipart/form-data">
+    <div class="row">
+        <div class="col-md-3 mb-4 text-center">
+            <div class="mb-3">
+                @{
+                    var avatarUrl = string.IsNullOrEmpty(Model.Avatar) ? $"https://ui-avatars.com/api/?name={System.Net.WebUtility.UrlEncode(Model.FullName ?? "User")}&background=random&size=150" : Model.Avatar;
+                }
+                <img id="avatarPreview" src="@avatarUrl" alt="Avatar" class="img-thumbnail rounded-circle" style="width: 150px; height: 150px; object-fit: cover;">
+            </div>
+            <input type="file" name="AvatarFile" id="AvatarFile" accept="image/*" style="display:none;" onchange="previewImage(this)">
+            <button type="button" class="btn btn-outline-primary btn-sm" onclick="document.getElementById('AvatarFile').click()">Đổi ảnh đại diện</button>
+        </div>
+        <div class="col-md-9">
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label fw-semibold">Họ và tên <span class="text-danger">*</span></label>
+                    <input type="text" asp-for="FullName" class="form-control" required>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label fw-semibold">Email (Không thể thay đổi)</label>
+                    <input type="email" asp-for="Email" class="form-control bg-light" readonly>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label fw-semibold">Số điện thoại <span class="text-danger">*</span></label>
+                    <input type="text" asp-for="Phone" class="form-control" required>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label fw-semibold">Ngày sinh</label>
+                    <input type="date" asp-for="DateOfBirth" class="form-control" value="@(Model.DateOfBirth?.ToString("yyyy-MM-dd"))">
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label fw-semibold">Giới tính</label>
+                    <select asp-for="Gender" class="form-select">
+                        <option value="1">Nam</option>
+                        <option value="2">Nữ</option>
+                        <option value="0">Khác</option>
+                    </select>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label fw-semibold">Tỉnh / Thành phố</label>
+                    <select asp-for="ProvinceId" class="form-select" id="ProvinceId">
+                        <option value="">- Chọn Tỉnh/Thành -</option>
+                    </select>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label fw-semibold">Phường / Xã</label>
+                    <select asp-for="WardId" class="form-select" id="WardId" disabled>
+                        <option value="">- Chọn Phường/Xã -</option>
+                    </select>
+                </div>
+                <div class="col-md-12 mb-4">
+                    <label class="form-label fw-semibold">Địa chỉ</label>
+                    <textarea asp-for="Address" class="form-control" rows="2"></textarea>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary px-4">Lưu thay đổi</button>
+        </div>
+    </div>
+</form>
+
+@section MemberScripts {
+    <script>
+        function previewImage(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('avatarPreview').src = e.target.result;
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        $(document).ready(function() {
+            var currentProvince = '@(Model.ProvinceId)';
+            var currentWard = '@(Model.WardId)';
+            
+            loadTinhThanh(currentProvince, currentWard);
+
+            $('#ProvinceId').change(function() {
+                var id = $(this).val();
+                if(id) {
+                    loadPhuongXa(id, null);
+                } else {
+                    $('#WardId').empty().append('<option value="">- Chọn Phường/Xã -</option>').prop('disabled', true);
+                }
+            });
+        });
+
+        function loadTinhThanh(selectedProvince, selectedWard) {
+            $.get('/Location/GetTinhThanh', function(res) {
+                var html = '<option value="">- Chọn Tỉnh/Thành -</option>';
+                res.forEach(item => {
+                    html += `<option value="${item.ma_Tinh}" ${selectedProvince == item.ma_Tinh ? 'selected' : ''}>${item.ten_Tinh}</option>`;
+                });
+                $('#ProvinceId').html(html);
+                if (selectedProvince) {
+                    loadPhuongXa(selectedProvince, selectedWard);
+                }
+            });
+        }
+
+        function loadPhuongXa(maTinh, selectedWard) {
+            $.get('/Location/GetPhuongXa', { maTinh: maTinh }, function(res) {
+                var html = '<option value="">- Chọn Phường/Xã -</option>';
+                res.forEach(item => {
+                    html += `<option value="${item.ma_Xa}" ${selectedWard == item.ma_Xa ? 'selected' : ''}>${item.ten_Xa}</option>`;
+                });
+                $('#WardId').html(html).prop('disabled', false);
+            });
+        }
+    </script>
+}

@@ -1,0 +1,53 @@
+@model List<Antigravity.ECommerce.Models.ProductReview>
+@{
+    Layout = "_MemberLayout";
+    ViewData["Title"] = "Đánh giá của tôi";
+}
+
+<h4 class="mb-4 pb-2 border-bottom fw-bold text-dark">Đánh giá của tôi</h4>
+
+@if (Model != null && Model.Any())
+{
+    @foreach(var rv in Model)
+    {
+        <div class="d-flex mb-4 pb-3 border-bottom">
+            @if(!string.IsNullOrEmpty(rv.ProductImage)){
+                <img src="@rv.ProductImage" class="rounded-3 me-3 flex-shrink-0" style="width:56px;height:56px;object-fit:cover;">
+            }
+            <div class="flex-grow-1">
+                <div class="d-flex align-items-center mb-1">
+                    <strong style="font-size:0.9rem;">@rv.ProductName</strong>
+                    <span class="text-muted ms-auto" style="font-size:0.75rem;">@rv.CreatedAt.ToString("dd/MM/yyyy")</span>
+                </div>
+                <div class="text-warning mb-1" style="font-size:0.85rem;">
+                    @for(int s=1;s<=5;s++){<i class="ri-star-fill @(s <= rv.Rating ? "" : "opacity-25")"></i>}
+                    @if(rv.IsVerifiedPurchase){
+                        <span class="badge bg-success-subtle text-success ms-2" style="font-size:0.7rem;"><i class="ri-check-line"></i> Đã mua hàng</span>
+                    }
+                </div>
+                @if(!string.IsNullOrEmpty(rv.Title)){
+                    <div class="fw-semibold mb-1" style="font-size:0.9rem;">@rv.Title</div>
+                }
+                <p class="text-muted mb-1" style="font-size:0.85rem;">@rv.Content</p>
+                @if(!string.IsNullOrEmpty(rv.AdminReply)){
+                    <div class="bg-light rounded-3 p-3 mt-2" style="border-left:3px solid #405189;">
+                        <div class="fw-semibold mb-1" style="font-size:0.8rem;color:#405189;"><i class="ri-customer-service-2-line me-1"></i> Phản hồi từ shop</div>
+                        <p class="mb-0 text-muted" style="font-size:0.83rem;">@rv.AdminReply</p>
+                    </div>
+                }
+                @if(rv.Status == 0){
+                    <span class="badge bg-warning-subtle text-warning mt-1">Đã ẩn bởi Admin</span>
+                }
+            </div>
+        </div>
+    }
+}
+else
+{
+    <div class="text-center py-5">
+        <i class="ri-star-smile-line display-4 text-muted opacity-25"></i>
+        <h5 class="text-muted mt-3">Bạn chưa có đánh giá nào</h5>
+        <p class="text-muted" style="font-size:0.9rem;">Hãy mua sắm và chia sẻ trải nghiệm của bạn</p>
+        <a href="/" class="btn btn-primary rounded-pill px-4">Mua sắm ngay</a>
+    </div>
+}

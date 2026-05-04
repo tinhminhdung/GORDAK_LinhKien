@@ -1,0 +1,286 @@
+@model List<Antigravity.ECommerce.Models.Category>
+@{
+    ViewData["Title"] = "Danh mục Video";
+    Layout = "_AdminLayout";
+    int totalCount = ViewBag.TotalCount ?? 0;
+}
+
+<style>
+    .tree-icon-root { color: #f7b84b; }
+    .tree-icon-child { color: #0ab39c; }
+    .tree-icon-leaf { color: #299cdb; }
+    .btn-add-child { padding: 2px 7px; font-size: 12px; }
+    .level-badge { font-size: 10px; padding: 2px 6px; }
+    .tree-line { color: #adb5bd; font-size: 13px; margin-right: 2px; }
+    .tree-row:hover { background-color: rgba(247, 184, 75, 0.05); }
+</style>
+
+@Html.AntiForgeryToken()
+
+<div class="row">
+    <div class="col-12">
+        <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+            <h4 class="mb-sm-0">Danh mục Video</h4>
+            <div class="page-title-right">
+                <ol class="breadcrumb m-0">
+                    <li class="breadcrumb-item"><a href="/Admin">Admin</a></li>
+                    <li class="breadcrumb-item active">Danh mục Video</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header border-0">
+                <div class="d-flex align-items-center">
+                    <h5 class="card-title mb-0 flex-grow-1">Danh sách danh mục video (@totalCount)</h5>
+                    <div class="flex-shrink-0 d-flex gap-2">
+                        <div class="dropdown" id="bulkOptions" style="display:none;">
+                            <button class="btn btn-soft-info btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="ri-settings-3-line align-bottom me-1"></i> Thao tác nhanh (<span id="selectedCount">0</span>)
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="javascript:void(0);" onclick="bulkUpdateStatus(1)">Hiển thị danh mục</a></li>
+                                <li><a class="dropdown-item" href="javascript:void(0);" onclick="bulkUpdateStatus(0)">Ẩn danh mục</a></li>
+                                <li class="dropdown-divider"></li>
+                                <li><a class="dropdown-item text-danger" href="javascript:void(0);" onclick="bulkDelete()"><i class="ri-delete-bin-line me-1"></i> Xóa đã chọn</a></li>
+                            </ul>
+                        </div>
+                        <a href="/AdminVideoCategory/Create" class="btn btn-success btn-sm">
+                            <i class="ri-add-line me-1"></i> Thêm mới
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-body border border-dashed border-end-0 border-start-0 py-3">
+                <form id="filterForm" method="get" class="row g-2">
+                    <input type="hidden" name="sort" value="@ViewBag.SortColumn" />
+                    <input type="hidden" name="order" value="@ViewBag.SortOrder" />
+                    <input type="hidden" name="page" value="@ViewBag.PageIndex" />
+                    <div class="col-sm-5">
+                        <div class="search-box">
+                            <input type="text" name="kw" class="form-control form-control-sm" value="@ViewBag.Keyword" placeholder="Tìm tên danh mục, slug...">
+                            <i class="ri-search-line search-icon"></i>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <select class="form-select form-select-sm" name="status">
+                            <option value="">--- Trạng thái ---</option>
+                            <option value="1" selected="@(ViewBag.Status != null && ViewBag.Status.ToString() == "1" ? "selected" : null)">Hiển thị</option>
+                            <option value="0" selected="@(ViewBag.Status != null && ViewBag.Status.ToString() == "0" ? "selected" : null)">Đang ẩn</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-4 d-flex gap-2">
+                        <button type="submit" class="btn btn-primary btn-sm w-100"><i class="ri-filter-line me-1"></i>Lọc</button>
+                        <a href="/AdminVideoCategory" class="btn btn-light btn-sm w-100">Reset</a>
+                    </div>
+                </form>
+            </div>
+
+            <div class="card-body pt-0">
+                <div class="table-responsive mt-3">
+                    <table class="table table-bordered align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th style="width:40px;"><input class="form-check-input" type="checkbox" id="checkAll"></th>
+                                <th onclick="changeSort('Name')" class="sort cursor-pointer">Tên Danh mục Video <i class="ri-arrow-up-down-line sort-icon @(ViewBag.SortColumn == "Name" ? "active" : "")"></i></th>
+                                <th style="width:100px;" class="text-center">Số lượng Tin</th>
+                                <th style="width:90px;" class="text-center">Thứ tự</th>
+                                <th style="width:130px;">Trạng thái</th>
+                                <th style="width:140px;" class="text-center">Chức năng</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                async Task RenderRows(List<Antigravity.ECommerce.Models.Category> nodes, int level)
+                                {
+                                    foreach (var item in nodes)
+                                    {
+                                        bool hasChildren = item.Children != null && item.Children.Any();
+                                        string iconClass = level == 0 ? "ri-folder-2-fill tree-icon-root" : (hasChildren ? "ri-folder-fill tree-icon-child" : "ri-file-list-2-line tree-icon-leaf");
+                                        string levelBadgeClass = level == 0 ? "bg-warning-subtle text-warning" : (level == 1 ? "bg-success-subtle text-success" : "bg-info-subtle text-info");
+
+                                        <tr data-id="@item.CategoryId" data-level="@level" class="tree-row">
+                                            <td><input class="form-check-input checkItem" type="checkbox" value="@item.CategoryId"></td>
+                                            <td>
+                                                <div class="d-flex align-items-center">
+                                                    @for (int i = 0; i < level; i++)
+                                                    {
+                                                        <span class="tree-line ms-2">@(i < level - 1 ? "│" : "├─")</span>
+                                                    }
+                                                    <i class="@iconClass me-2 fs-16"></i>
+                                                    <a href="/AdminVideoCategory/Edit/@item.CategoryId" class="fw-semibold text-body text-decoration-none">@item.Name</a>
+                                                    <span class="badge @levelBadgeClass level-badge ms-2">Cấp @(level + 1)</span>
+                                                </div>
+                                                @if (!string.IsNullOrEmpty(item.Slug)) {
+                                                    <div style="padding-left: @(level * 16 + 28)px;">
+                                                        <a href="/video/@(item.Slug).html" target="_blank" class="text-muted fs-11 text-decoration-none" title="Xem trên web"><i class="ri-link me-1"></i>/video/@(item.Slug).html</a>
+                                                    </div>
+                                                }
+                                            </td>
+                                            <td class="text-center">
+                                                <span class="badge badge-soft-warning p-2 px-3 fs-12">@item.ItemCount</span>
+                                            </td>
+                                            <td class="text-center">
+                                                <input type="number" class="form-control form-control-sm text-center mx-auto" style="width:70px;"
+                                                       value="@item.SortOrder" onchange="updateSortOrder(@item.CategoryId, this.value)">
+                                            </td>
+                                            <td>
+                                                <div class="form-check form-switch form-switch-success mb-0">
+                                                    <input class="form-check-input status-switch" type="checkbox" data-id="@item.CategoryId"
+                                                           @(item.Status == 1 ? "checked" : "")
+                                                           onchange="updateQuickStatus(@item.CategoryId, this)">
+                                                    <label class="form-check-label status-label @(item.Status == 1 ? "text-success" : "text-muted")">
+                                                        @(item.Status == 1 ? "Hiện" : "Ẩn")
+                                                    </label>
+                                                </div>
+                                            </td>
+                                            <td class="text-center">
+                                                <div class="d-flex justify-content-center gap-1">
+                                                    <a href="/AdminVideoCategory/Create?parentId=@item.CategoryId"
+                                                       class="btn btn-sm btn-soft-success" title="Thêm cấp con">
+                                                        <i class="ri-add-line"></i>
+                                                    </a>
+                                                    <a href="/AdminVideoCategory/Edit/@item.CategoryId" class="btn btn-sm btn-soft-info" title="Sửa">
+                                                        <i class="ri-pencil-line"></i>
+                                                    </a>
+                                                    <button onclick="deleteItem(@item.CategoryId)" class="btn btn-sm btn-soft-danger" title="Xóa">
+                                                        <i class="ri-delete-bin-line"></i>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+
+                                        @if (hasChildren) { await RenderRows(item.Children, level + 1); }
+                                    }
+                                }
+                            }
+
+                            @if (Model != null && Model.Any()) { await RenderRows(Model, 0); }
+                            else
+                            {
+                                <tr><td colspan="6" class="text-center text-muted py-4">
+                                    <i class="ri-video-line fs-2 d-block mb-2 opacity-50"></i>
+                                    Chưa có danh mục nào. <a href="/AdminVideoCategory/Create">Thêm ngay</a>
+                                </td></tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                @await Html.PartialAsync("_Pagination", new { PageIndex = ViewBag.PageIndex, TotalPages = ViewBag.TotalPages, JsFunction = "changePage" })
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function changeSort(col) {
+            const form = document.querySelector('form');
+            if(form.id === '') form.id = 'filterForm';
+            
+            // Check if sort input exists
+            if (!form.querySelector('input[name="sort"]')) {
+                const sortInp = document.createElement('input');
+                sortInp.type = 'hidden'; sortInp.name = 'sort';
+                form.appendChild(sortInp);
+            }
+            if (!form.querySelector('input[name="order"]')) {
+                const orderInp = document.createElement('input');
+                orderInp.type = 'hidden'; orderInp.name = 'order';
+                form.appendChild(orderInp);
+            }
+
+            if (form.sort.value === col) {
+                form.order.value = form.order.value === 'ASC' ? 'DESC' : 'ASC';
+            } else {
+                form.sort.value = col;
+                form.order.value = 'ASC';
+            }
+            form.submit();
+        }
+</script>
+    <script>
+        const token = $('input[name="__RequestVerificationToken"]').val();
+        $.ajaxSetup({ headers: { 'RequestVerificationToken': token } });
+
+        $('#checkAll').change(function () { $('.checkItem').prop('checked', $(this).prop('checked')); toggleBulk(); });
+        $(document).on('change', '.checkItem', toggleBulk);
+        
+        function toggleBulk() {
+            const count = $('.checkItem:checked').length;
+            $('#selectedCount').text(count);
+            count > 0 ? $('#bulkOptions').show() : $('#bulkOptions').hide();
+        }
+
+        function updateSortOrder(id, val) {
+            $.post('/AdminVideoCategory/UpdateQuick', { id: id, sortOrder: val }, res => {
+                if (res.success) {
+                    Toastify({ text: "Đã lưu thứ tự!", duration: 2000, gravity: "top", position: "right", backgroundColor: "#0ab39c" }).showToast();
+                } else alert(res.message || 'Lỗi!');
+            });
+        }
+
+        function updateQuickStatus(id, input) {
+            const isChecked = $(input).is(':checked');
+            const status = isChecked ? 1 : 0;
+            const label = $(input).next('.status-label');
+
+            $.post('/AdminVideoCategory/UpdateQuick', { id: id, status: status }, res => {
+                if (res.success) {
+                    label.text(status == 1 ? "Hiện" : "Ẩn");
+                    label.toggleClass('text-success', status == 1).toggleClass('text-muted', status == 0);
+                    Toastify({ text: "Đã cập nhật trạng thái!", duration: 2000, gravity: "top", position: "right", backgroundColor: "#0ab39c" }).showToast();
+                } else {
+                    $(input).prop('checked', !isChecked);
+                    alert(res.message || 'Lỗi!');
+                }
+            });
+        }
+
+        function deleteItem(id) {
+            Swal.fire({ title: 'Xác nhận xóa?', text: 'Sẽ xóa danh mục này và tất cả danh mục con!', icon: 'warning', showCancelButton: true, confirmButtonColor: '#f06548', confirmButtonText: 'Xóa', cancelButtonText: 'Hủy' })
+            .then(r => {
+                if (r.isConfirmed) $.post('/AdminVideoCategory/Delete/' + id, res => { if (res.success) location.reload(); else alert(res.message); });
+            });
+        }
+
+        async function bulkDelete() {
+            const ids = $('.checkItem:checked').map((_, el) => parseInt(el.value)).get();
+            if (!ids.length) return;
+            const r = await Swal.fire({ title: `Xóa ${ids.length} mục?`, text: 'Lưu ý: Sẽ xóa tất cả danh mục con của chúng!', icon: 'warning', showCancelButton: true, confirmButtonColor: '#f06548', confirmButtonText: 'Xóa' });
+            if (r.isConfirmed) {
+                const res = await fetch('/AdminVideoCategory/BulkDelete', { 
+                    method: 'POST', 
+                    headers: { 'Content-Type': 'application/json', 'RequestVerificationToken': token }, 
+                    body: JSON.stringify(ids) 
+                });
+                const data = await res.json();
+                if (data.success) location.reload(); else alert(data.message || 'Lỗi khi xóa hàng loạt');
+            }
+        }
+
+        async function bulkUpdateStatus(status) {
+            const ids = $('.checkItem:checked').map((_, el) => parseInt(el.value)).get();
+            if (!ids.length) return;
+            const res = await fetch('/AdminVideoCategory/BulkUpdateStatus', { 
+                method: 'POST', 
+                headers: { 'Content-Type': 'application/json', 'RequestVerificationToken': token }, 
+                body: JSON.stringify({ ids: ids, status: status }) 
+            });
+            const data = await res.json();
+            if (data.success) location.reload(); else alert(data.message || 'Lỗi khi cập nhật trạng thái');
+        }
+
+        function changePage(p) {
+            const form = document.getElementById('filterForm');
+            form.page.value = p;
+            form.submit();
+        }
+    </script>
+}
+

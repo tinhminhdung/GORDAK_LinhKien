@@ -1,0 +1,131 @@
+﻿@model Antigravity.ECommerce.Models.AdminUser
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "Chỉnh sửa tài khoản: " + Model.Username;
+}
+
+<div class="row">
+    <div class="col-lg-8 offset-lg-2">
+        <div class="card shadow-lg border-0 border-top border-primary border-3">
+            <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+                <h5 class="card-title mb-0 text-primary fw-bold"><i class="ri-user-settings-line me-2"></i> Hồ sơ quản trị: @Model.Username</h5>
+                @if(Model.RoleId == 1) {
+                    <span class="badge bg-warning text-dark"><i class="ri-vip-crown-fill me-1"></i> Tài khoản Gốc</span>
+                }
+            </div>
+            <div class="card-body p-4">
+                <form action="/AdminUser/Edit" method="post" enctype="multipart/form-data"><div asp-validation-summary="All" class="text-danger mb-3 fw-bold"></div>
+                    <input type="hidden" asp-for="UserId" />
+                    <input type="hidden" asp-for="Username" />
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold">Tên đăng nhập</label>
+                            <input type="text" class="form-control bg-light" value="@Model.Username" disabled>
+                            <small class="text-muted italic">Không thể thay đổi tên đăng nhập.</small>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold">Mật khẩu mới <i class="ri-information-line text-info" data-bs-toggle="tooltip" title="Để trống nếu không muốn thay đổi mật khẩu hiện tại."></i></label>
+                            <div class="input-group">
+                                <input type="password" class="form-control border-info" asp-for="Password" id="password_input" placeholder="Nhập để đổi, trống để giữ nguyên">
+                                <button class="btn btn-outline-info" type="button" onclick="togglePassword()"><i class="ri-eye-line"></i></button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Họ và tên</label>
+                        <input type="text" class="form-control" asp-for="FullName" placeholder="Nguyễn Văn A">
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold">Email</label>
+                            <input type="email" class="form-control" asp-for="Email" placeholder="email@example.com">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold">Số điện thoại</label>
+                            <input type="text" class="form-control" asp-for="Phone" placeholder="09xx xxx xxx">
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold">Vai trò hệ thống</label>
+                            @if(Model.RoleId == 1 && Model.Username == "admin") {
+                                <input type="hidden" asp-for="RoleId" />
+                                <input type="text" class="form-control bg-light" value="Super Admin" disabled>
+                                <small class="text-warning">Không thể đổi vai trò cho tài khoản Root.</small>
+                            } else {
+                                <select class="form-select border-primary" asp-for="RoleId" required>
+                                    @if (ViewBag.Roles != null)
+                                    {
+                                        foreach (var role in (List<Antigravity.ECommerce.Models.AdminRole>)ViewBag.Roles)
+                                        {
+                                            <option value="@role.RoleId">@role.RoleName</option>
+                                        }
+                                    }
+                                </select>
+                            }
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold">Trạng thái</label>
+                            @if(Model.RoleId == 1 && Model.Username == "admin") {
+                                <input type="hidden" asp-for="Status" />
+                                <div class="form-control bg-light text-success fw-bold">Đang hoạt động</div>
+                            } else {
+                                <select class="form-select" asp-for="Status">
+                                    <option value="1">Kích hoạt (Hoạt động)</option>
+                                    <option value="0">Tạm khóa (Ngừng truy cập)</option>
+                                </select>
+                            }
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label fw-bold">Ảnh đại diện</label>
+                        <div class="input-group mb-2">
+                            <input type="text" class="form-control" asp-for="Avatar" id="Avatar" readonly>
+                            <button class="btn btn-primary" type="button" onclick="openFileManager('Avatar')">Chọn ảnh</button>
+                        </div>
+                        <img id="imgPreview" src="@(string.IsNullOrEmpty(Model.Avatar) ? "/assets/images/users/multi-user.jpg" : Model.Avatar)" style="max-width: 120px; border-radius: 50%; border: 3px solid #eee; padding: 5px;" class="mt-2 shadow-sm" />
+                    </div>
+
+                <div class="d-flex justify-content-between mt-4 border-top pt-3">
+                    <a href="/AdminUser" class="btn btn-light"><i class="ri-arrow-go-back-line me-1"></i>Quay lại</a>
+                    <button type="submit" class="btn btn-success px-4"><i class="ri-save-line me-1"></i>Lưu thay đổi</button>
+                </div>
+            </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function togglePassword() {
+            var x = document.getElementById("password_input");
+            if (x.type === "password") {
+                x.type = "text";
+            } else {
+                x.type = "password";
+            }
+        }
+
+        function openFileManager(fieldId) {
+            window.open('/FileManager?fieldId=' + fieldId, 'FileManager', 'width=1100,height=750');
+        }
+
+        function setFileUrl(url, fieldId) {
+            const input = document.getElementById(fieldId);
+            const fileUrl = Array.isArray(url) ? url[0] : url;
+            if (input) {
+                input.value = fileUrl;
+                const preview = document.getElementById('imgPreview');
+                if (preview) {
+                    preview.src = fileUrl;
+                }
+            }
+        }
+    </script>
+}

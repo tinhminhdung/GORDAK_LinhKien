@@ -1,0 +1,251 @@
+@model Antigravity.ECommerce.Models.CartViewModel
+@{
+    Layout = "_MainLayout";
+    ViewData["Title"] = "Thanh toán đơn hàng";
+}
+@section Styles {
+    <style>
+        .checkout-section { background: linear-gradient(135deg, #f8f9fc 0%, #eef1f6 100%); min-height: 100vh; }
+        .checkout-card { background: #fff; border-radius: 16px; box-shadow: 0 4px 24px rgba(0,0,0,0.06); padding: 2rem; }
+        .checkout-card h5 { font-size: 1.1rem; }
+        .form-label { font-size: 0.8rem; letter-spacing: 0.3px; margin-bottom: 0.4rem; }
+        .form-control, .form-select { font-size: 0.9rem; padding: 0.6rem 0.85rem; border-radius: 10px; border: 1px solid #dee2e6; transition: border-color 0.2s, box-shadow 0.2s; }
+        .form-control:focus, .form-select:focus { border-color: #405189; box-shadow: 0 0 0 3px rgba(64,81,137,0.1); }
+        .order-summary-header { background: linear-gradient(135deg, #405189 0%, #3a4a7a 100%); border-radius: 16px 16px 0 0; padding: 1.25rem 1.5rem; }
+        .order-item-row { padding: 0.75rem 0; border-bottom: 1px solid #f1f3f5; }
+        .order-item-row:last-child { border-bottom: none; }
+        .payment-option { cursor: pointer; transition: all 0.2s; border: 2px solid transparent !important; }
+        .payment-option:hover, .payment-option.active { border-color: #405189 !important; background: #f0f3ff !important; }
+        .btn-checkout { background: linear-gradient(135deg, #405189 0%, #0ab39c 100%); border: none; font-size: 1rem; padding: 0.9rem; border-radius: 12px; transition: transform 0.2s, box-shadow 0.2s; }
+        .btn-checkout:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(64,81,137,0.3); }
+        .secure-badge { font-size: 0.75rem; color: #878a99; }
+        .breadcrumb-checkout { font-size: 0.85rem; }
+        .breadcrumb-checkout a { color: #405189; text-decoration: none; }
+    </style>
+}
+
+<section class="checkout-section py-4">
+    <div class="container">
+        <!-- Breadcrumb -->
+        <nav class="breadcrumb-checkout mb-3">
+            <a href="/"><i class="ri-home-4-line"></i> Trang chủ</a>
+            <span class="mx-2 text-muted">/</span>
+            <a href="/gio-hang.html">Giỏ hàng</a>
+            <span class="mx-2 text-muted">/</span>
+            <span class="text-dark fw-semibold">Thanh toán</span>
+        </nav>
+
+        <h4 class="fw-bold mb-4 d-flex align-items-center gap-2">
+            <i class="ri-shield-check-line text-primary"></i> Hoàn tất đơn hàng
+        </h4>
+
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <i class="ri-error-warning-line me-2"></i> @TempData["ErrorMessage"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+        
+        <form asp-action="ProcessCheckout" method="post" id="checkoutForm">
+            <div class="row g-4">
+                <div class="col-lg-7">
+                    <!-- Shipping Info -->
+                    <div class="checkout-card mb-4">
+                        <h5 class="fw-bold mb-3 d-flex align-items-center">
+                            <i class="ri-map-pin-line me-2 text-primary"></i> Thông tin giao hàng
+                        </h5>
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <label class="form-label fw-semibold text-uppercase">Họ và tên nhận hàng <span class="text-danger">*</span></label>
+                                <input type="text" asp-for="FullName" class="form-control" placeholder="Ví dụ: Nguyễn Văn A" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold text-uppercase">Số điện thoại <span class="text-danger">*</span></label>
+                                <input type="tel" asp-for="Phone" class="form-control" placeholder="0xxx xxx xxx" pattern="^(0[3|5|7|8|9])+([0-9]{8})$" title="Số điện thoại phải có 10 chữ số và bắt đầu bằng 03, 05, 07, 08 hoặc 09" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold text-uppercase">Địa chỉ Email</label>
+                                <input type="email" asp-for="Email" class="form-control" placeholder="email@gmail.com" pattern="^[a-zA-Z0-9._%+\-]+@@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$" title="Vui lòng nhập email đúng định dạng (VD: example@gmail.com)">
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold text-uppercase">Tỉnh / Thành phố <span class="text-danger">*</span></label>
+                                <select id="ProvinceId" name="ProvinceId" class="form-select" required>
+                                    <option value="">- Chọn Tỉnh/Thành -</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold text-uppercase">Phường / Xã <span class="text-danger">*</span></label>
+                                <select id="WardId" name="WardId" class="form-select" required>
+                                    <option value="">- Chọn Phường/Xã -</option>
+                                </select>
+                            </div>
+
+                            <div class="col-12">
+                                <label class="form-label fw-semibold text-uppercase">Địa chỉ chi tiết <span class="text-danger">*</span></label>
+                                <input type="text" asp-for="Address" id="DetailAddress" class="form-control" placeholder="Số nhà, tên đường, tòa nhà..." required>
+                            </div>
+                            
+                            <input type="hidden" name="FullAddress" id="FullAddress" />
+
+                            <div class="col-12">
+                                <label class="form-label fw-semibold text-uppercase">Ghi chú cho shipper</label>
+                                <textarea asp-for="Note" class="form-control" rows="2" placeholder="Ví dụ: Giao vào giờ hành chính, để ở bảo vệ..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Payment -->
+                    <div class="checkout-card">
+                        <h5 class="fw-bold mb-3 d-flex align-items-center">
+                            <i class="ri-bank-card-line me-2 text-primary"></i> Phương thức thanh toán
+                        </h5>
+                        <div class="payment-option p-3 border rounded-3 mb-3 active" onclick="document.getElementById('cod').checked = true; document.querySelectorAll('.payment-option').forEach(e=>e.classList.remove('active')); this.classList.add('active');">
+                            <div class="d-flex align-items-center">
+                                <input class="form-check-input me-3 mt-0" type="radio" name="PaymentMethod" id="cod" value="COD" checked>
+                                <div class="bg-success-subtle p-2 rounded-3 me-3 text-success"><i class="ri-money-dollar-circle-line fs-4"></i></div>
+                                <div>
+                                    <div class="fw-bold" style="font-size:0.95rem;">Thanh toán khi nhận hàng (COD)</div>
+                                    <div class="text-muted" style="font-size:0.8rem;">Thanh toán tiền mặt cho shipper khi nhận được hàng.</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="payment-option p-3 border rounded-3 opacity-50">
+                            <div class="d-flex align-items-center">
+                                <input class="form-check-input me-3 mt-0" type="radio" name="PaymentMethod" disabled>
+                                <div class="bg-primary-subtle p-2 rounded-3 me-3 text-primary"><i class="ri-bank-line fs-4"></i></div>
+                                <div>
+                                    <div class="fw-bold" style="font-size:0.95rem;">Chuyển khoản / Ví điện tử</div>
+                                    <div class="text-muted" style="font-size:0.8rem;">Tính năng đang được phát triển.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Order Summary -->
+                <div class="col-lg-5">
+                    <div class="bg-white rounded-4 overflow-hidden shadow-sm sticky-top" style="top: 90px;">
+                        <div class="order-summary-header text-white">
+                            <h5 class="fw-bold mb-0" style="font-size:1rem;"><i class="ri-shopping-bag-3-line me-2"></i> Tóm tắt đơn hàng (@Model.Items.Count sản phẩm)</h5>
+                        </div>
+                        <div class="p-3">
+                            <div style="max-height: 280px; overflow-y: auto;">
+                                @foreach(var item in Model.Items) {
+                                    <div class="order-item-row d-flex align-items-center">
+                                        <div class="position-relative flex-shrink-0">
+                                            <img src="@item.ProductImage" class="rounded-3 border" style="width: 50px; height: 50px; object-fit: cover;">
+                                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-dark" style="font-size:0.65rem;">@item.Quantity</span>
+                                        </div>
+                                        <div class="flex-grow-1 ms-3 pe-2">
+                                            <div class="fw-semibold text-truncate" style="font-size:0.85rem; max-width: 180px;">@item.ProductName</div>
+                                        </div>
+                                        <div class="flex-shrink-0 fw-bold text-dark" style="font-size:0.85rem;">@item.TotalPrice.ToString("N0")₫</div>
+                                    </div>
+                                }
+                            </div>
+
+                            <hr class="my-3">
+                            <div class="d-flex justify-content-between mb-2" style="font-size:0.85rem;">
+                                <span class="text-muted">Tạm tính</span>
+                                <span class="fw-medium">@Model.SubTotal.ToString("N0") ₫</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-3" style="font-size:0.85rem;">
+                                <span class="text-muted">Phí vận chuyển</span>
+                                @if (Model.ShippingFee > 0) {
+                                    <span class="fw-medium">@Model.ShippingFee.ToString("N0") ₫</span>
+                                } else {
+                                    <span class="fw-medium text-success">Miễn phí</span>
+                                }
+                            </div>
+                            <hr>
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <span class="fw-bold">Tổng cộng</span>
+                                <div class="text-end">
+                                    <div class="text-danger fw-bold" style="font-size:1.3rem;">@Model.TotalAmount.ToString("N0") ₫</div>
+                                    <small class="text-muted" style="font-size:0.7rem;">(Đã bao gồm VAT nếu có)</small>
+                                </div>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-checkout btn-primary w-100 fw-bold text-white">
+                                <i class="ri-check-double-line me-1"></i> XÁC NHẬN ĐẶT HÀNG
+                            </button>
+                            <div class="text-center mt-2 secure-badge">
+                                <i class="ri-shield-check-line me-1"></i> Cam kết bảo mật thông tin 100%
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</section>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            var savedProvince = '@(Model.ProvinceId ?? 0)';
+            var savedWard = '@(Model.WardId ?? 0)';
+            
+            // Load provinces
+            $.get('/Location/GetTinhThanh', function(res) {
+                var html = '<option value="">- Chọn Tỉnh/Thành -</option>';
+                res.forEach(function(item) {
+                    var sel = (savedProvince && savedProvince == item.ma_Tinh) ? ' selected' : '';
+                    html += '<option value="' + item.ma_Tinh + '"' + sel + '>' + item.ten_Tinh + '</option>';
+                });
+                $('#ProvinceId').html(html);
+                
+                // If province was pre-selected, load wards
+                if (savedProvince && savedProvince != '0' && savedProvince != '') {
+                    loadWards(savedProvince, savedWard);
+                }
+            });
+
+            $('#ProvinceId').on('change', function() {
+                var id = $(this).val();
+                if (id) {
+                    loadWards(id, null);
+                } else {
+                    $('#WardId').html('<option value="">- Chọn Phường/Xã -</option>');
+                }
+                updateFullAddress();
+            });
+
+            $('#WardId').on('change', updateFullAddress);
+            $('#DetailAddress').on('input', updateFullAddress);
+        });
+
+        function loadWards(provinceId, selectedWard) {
+            $.get('/Location/GetPhuongXa', { maTinh: provinceId }, function(res) {
+                var html = '<option value="">- Chọn Phường/Xã -</option>';
+                res.forEach(function(item) {
+                    var sel = (selectedWard && selectedWard == item.ma_Xa) ? ' selected' : '';
+                    html += '<option value="' + item.ma_Xa + '"' + sel + '>' + item.ten_Xa + '</option>';
+                });
+                $('#WardId').html(html);
+                updateFullAddress();
+            });
+        }
+
+        function updateFullAddress() {
+            var detail = $('#DetailAddress').val() || '';
+            var xa = $('#WardId option:selected').text();
+            var tinh = $('#ProvinceId option:selected').text();
+            
+            var full = detail;
+            if ($('#WardId').val()) full += ', ' + xa;
+            if ($('#ProvinceId').val()) full += ', ' + tinh;
+            
+            $('#FullAddress').val(full);
+        }
+
+        $('#checkoutForm').on('submit', function(e) {
+            if (!$('#ProvinceId').val() || !$('#WardId').val()) {
+                e.preventDefault();
+                Swal.fire('Chú ý', 'Vui lòng chọn đầy đủ Tỉnh/Thành và Phường/Xã', 'warning');
+            }
+        });
+    </script>
+}

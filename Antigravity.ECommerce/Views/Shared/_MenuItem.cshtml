@@ -1,0 +1,110 @@
+@using Antigravity.ECommerce.Models
+@model Category
+@{
+    string GetUrl(Category cat) {
+        if (!string.IsNullOrEmpty(cat.Url)) {
+            return cat.Url.StartsWith("/") ? cat.Url : "/" + cat.Url;
+        }
+
+        if (string.IsNullOrEmpty(cat.Slug)) return "/";
+
+        switch (cat.CategoryType) {
+            case 1: return "/san-pham/" + cat.Slug + ".html";
+            case 2: return "/tin-tuc/" + cat.Slug + ".html";
+            case 3: return "/video/" + cat.Slug + ".html";
+            case 4: return "/bai-viet/" + cat.Slug + ".html";
+            case 6: return "/thu-vien-anh/" + cat.Slug + ".html";
+            case 7: return "/hoi-dap/" + cat.Slug + ".html";
+            case 11: return "/tai-lieu/" + cat.Slug + ".html";
+            case 8: return "/tai-lieu/" + cat.Slug + ".html";
+            default: return "/";
+        }
+    }
+
+    // Lấy segment đầu tiên từ URL, VD: "/tin-tuc/detail/abc.html" → "tin-tuc"
+    string GetFirstSegment(string path) {
+        if (string.IsNullOrEmpty(path)) return "";
+        var trimmed = path.TrimStart('/');
+        var idx = trimmed.IndexOf('/');
+        return idx > 0 ? trimmed.Substring(0, idx) : trimmed.Split('.')[0];
+    }
+
+    bool IsActive(Category cat) {
+        var currentPath = Context.Request.Path.Value?.TrimEnd('/') ?? "";
+        var menuUrl = GetUrl(cat).Split('?')[0].TrimEnd('/');
+        if (string.IsNullOrEmpty(menuUrl) || menuUrl == "/" || menuUrl == "") return currentPath == "" || currentPath == "/";
+
+        // 1. Exact match
+        if (string.Equals(currentPath, menuUrl, StringComparison.OrdinalIgnoreCase)) return true;
+        // 2. Prefix match: /san-pham/abc.html match parent /san-pham
+        var menuNoHtml = menuUrl.EndsWith(".html") ? menuUrl.Substring(0, menuUrl.LastIndexOf('/') + 1) : menuUrl + "/";
+        if (menuNoHtml.Length > 1 && currentPath.StartsWith(menuNoHtml, StringComparison.OrdinalIgnoreCase)) return true;
+        // 3. Segment match: cùng nhóm /tin-tuc/** → active menu /tin-tuc/*
+        var menuSeg = GetFirstSegment(menuUrl);
+        var curSeg = GetFirstSegment(currentPath);
+        if (!string.IsNullOrEmpty(menuSeg) && menuSeg.Length > 2 && string.Equals(menuSeg, curSeg, StringComparison.OrdinalIgnoreCase)) return true;
+
+        return false;
+    }
+
+    // Đệ quy kiểm tra tất cả cấp con/cháu/chắt
+    bool IsActiveTree(Category cat) {
+        if (IsActive(cat)) return true;
+        if (cat.Children != null) {
+            foreach (var child in cat.Children) {
+                if (IsActiveTree(child)) return true;
+            }
+        }
+        return false;
+    }
+
+    bool hasChildren = Model.Children != null && Model.Children.Any();
+    bool isSub = (ViewData["IsSub"] as bool?) ?? false;
+    bool isActive = IsActiveTree(Model);
+    string activeClass = isActive ? " active" : "";
+}
+
+@if (!isSub)
+{
+    if (hasChildren)
+    {
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle@(activeClass)" href="@GetUrl(Model)">@Model.Name</a>
+            <ul class="dropdown-menu">
+                @foreach (var child in Model.Children)
+                {
+                    var subViewData = new ViewDataDictionary(ViewData);
+                    subViewData["IsSub"] = true;
+                    @await Html.PartialAsync("_MenuItem", child, subViewData)
+                }
+            </ul>
+        </li>
+    }
+    else
+    {
+        <li class="nav-item"><a class="nav-link@(activeClass)" href="@GetUrl(Model)">@Model.Name</a></li>
+    }
+}
+else
+{
+    if (hasChildren)
+    {
+        <li class="dropdown-submenu">
+            <a class="dropdown-item dropdown-toggle d-flex justify-content-between align-items-center@(activeClass)" href="@GetUrl(Model)">
+                @Model.Name <i class="mdi mdi-chevron-right ms-2"></i>
+            </a>
+            <ul class="dropdown-menu shadow-lg">
+                @foreach (var child in Model.Children)
+                {
+                    var subViewData = new ViewDataDictionary(ViewData);
+                    subViewData["IsSub"] = true;
+                    @await Html.PartialAsync("_MenuItem", child, subViewData)
+                }
+            </ul>
+        </li>
+    }
+    else
+    {
+        <li><a class="dropdown-item@(activeClass)" href="@GetUrl(Model)">@Model.Name</a></li>
+    }
+}

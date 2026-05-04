@@ -1,0 +1,151 @@
+@model List<Antigravity.ECommerce.Models.Document>
+@{
+    Layout = "~/Views/Shared/_MainLayout.cshtml";
+    ViewData["Title"] = ViewBag.CurrentCategory != null ? ViewBag.CurrentCategory.Name : "Tài liệu & Ấn phẩm";
+    var categories = ViewBag.Categories as List<Antigravity.ECommerce.Models.Category>;
+    int currentPage = ViewBag.CurrentPage;
+    int totalPages = (int)Math.Ceiling((double)ViewBag.TotalCount / ViewBag.PageSize);
+}
+
+@section Styles {
+    <style>
+        .doc-card {
+            border: 1px solid #eef0f3;
+            border-radius: 10px;
+            transition: all 0.3s;
+            margin-bottom: 20px;
+            background: #fff;
+            padding: 20px;
+        }
+        .doc-card:hover {
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            border-color: #fff;
+            transform: translateY(-3px);
+        }
+        .doc-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: #ff3366;
+            background: rgba(255, 51, 102, 0.1);
+        }
+        .doc-card[data-ext="pdf"] .doc-icon { color: #f40f02; background: rgba(244,15,2,0.1); }
+        .doc-card[data-ext="doc"] .doc-icon, .doc-card[data-ext="docx"] .doc-icon { color: #2b579a; background: rgba(43,87,154,0.1); }
+        .doc-card[data-ext="xls"] .doc-icon, .doc-card[data-ext="xlsx"] .doc-icon { color: #217346; background: rgba(33,115,70,0.1); }
+        
+        .cat-sidebar {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+        }
+        .cat-link {
+            display: block;
+            padding: 10px 15px;
+            color: #495057;
+            text-decoration: none;
+            border-radius: 6px;
+            margin-bottom: 5px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        .cat-link:hover, .cat-link.active {
+            background: #25a0e2;
+            color: #fff;
+        }
+    </style>
+}
+
+<div class="row mb-5">
+    <div class="col-12 text-center">
+        <h1 class="fw-bold mb-3">Tài liệu & Ấn phẩm</h1>
+        <p class="text-muted max-w-2xl mx-auto">Kho lưu trữ các tài liệu chính thức, báo cáo, biểu mẫu và cẩm nang hướng dẫn.</p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-3 mb-4">
+        <div class="cat-sidebar">
+            <h5 class="fw-bold mb-3 pb-2 border-bottom">Danh mục Tài liệu</h5>
+            <a href="/tai-lieu.html" class="cat-link @(ViewBag.CurrentCategory == null ? "active" : "")"><i class="mdi mdi-folder-multiple-outline me-2"></i>Tất cả tài liệu</a>
+            @if (categories != null)
+            {
+                foreach (var cat in categories)
+                {
+                    <a href="/tai-lieu/@cat.Slug" class="cat-link @(ViewBag.CurrentCategory != null && ViewBag.CurrentCategory.CategoryId == cat.CategoryId ? "active" : "")">
+                        <i class="mdi mdi-folder-outline me-2"></i>@cat.Name
+                    </a>
+                }
+            }
+        </div>
+    </div>
+
+    <div class="col-lg-9">
+        @if (ViewBag.CurrentCategory != null)
+        {
+            <div class="mb-4">
+                <h4 class="fw-bold">@ViewBag.CurrentCategory.Name</h4>
+                <p class="text-muted mb-0">@ViewBag.CurrentCategory.Description</p>
+            </div>
+        }
+
+        @if (Model != null && Model.Count > 0)
+        {
+            foreach (var doc in Model)
+            {
+                string ext = "";
+                if(!string.IsNullOrEmpty(doc.FilePath) && doc.FilePath.Contains(".")){
+                    ext = doc.FilePath.Substring(doc.FilePath.LastIndexOf(".") + 1).ToLower();
+                }
+
+                <div class="doc-card d-flex align-items-center" data-ext="@ext">
+                    <div class="flex-shrink-0 me-4">
+                        <div class="doc-icon">
+                            @if(ext == "pdf") { <i class="mdi mdi-file-pdf-box"></i> }
+                            else if(ext == "doc" || ext == "docx") { <i class="mdi mdi-file-word-box"></i> }
+                            else if(ext == "xls" || ext == "xlsx") { <i class="mdi mdi-file-excel-box"></i> }
+                            else { <i class="mdi mdi-file-document-outline"></i> }
+                        </div>
+                    </div>
+                    <div class="flex-grow-1">
+                        <h5 class="fw-bold mb-1"><a href="@doc.FilePath" target="_blank" class="text-dark text-decoration-none">@doc.Title</a></h5>
+                        <div class="text-muted small d-flex gap-3">
+                            <span><i class="mdi mdi-calendar"></i> @doc.CreatedAt.ToString("dd/MM/yyyy")</span>
+                            <span><i class="mdi mdi-folder"></i> @doc.CategoryName</span>
+                            @if(!string.IsNullOrEmpty(doc.FileSize)){
+                                <span><i class="mdi mdi-weight"></i> @doc.FileSize</span>
+                            }
+                        </div>
+                    </div>
+                    <div class="flex-shrink-0 ms-3">
+                        <a href="@doc.FilePath" class="btn btn-primary" target="_blank" download><i class="mdi mdi-download me-1"></i> Tải về</a>
+                    </div>
+                </div>
+            }
+
+            if (totalPages > 1)
+            {
+                <nav class="mt-4">
+                    <ul class="pagination">
+                        @for (int i = 1; i <= totalPages; i++)
+                        {
+                            <li class="page-item @(i == currentPage ? "active" : "")">
+                                <a class="page-link" href="?page=@i">@i</a>
+                            </li>
+                        }
+                    </ul>
+                </nav>
+            }
+        }
+        else
+        {
+            <div class="text-center py-5 border rounded bg-light">
+                <i class="mdi mdi-folder-open-outline fs-1 text-muted"></i>
+                <h5 class="text-muted mt-3">Danh mục này hiện chưa có tài liệu nào.</h5>
+            </div>
+        }
+    </div>
+</div>

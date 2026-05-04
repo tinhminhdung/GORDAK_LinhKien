@@ -1,0 +1,368 @@
+@model List<Antigravity.ECommerce.Models.Order>
+@{
+    ViewData["Title"] = "Quản lý Đơn hàng";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+
+    string HelperGetStatusBadge(int status)
+    {
+        return status switch
+        {
+            0 => "<span class=\"badge bg-info\">Mới</span>",
+            1 => "<span class=\"badge bg-primary\">Xác nhận</span>",
+            2 => "<span class=\"badge bg-warning\">Đang giao</span>",
+            3 => "<span class=\"badge bg-success\">Hoàn tất</span>",
+            4 => "<span class=\"badge bg-danger\">Đã hủy</span>",
+            5 => "<span class=\"badge bg-dark\">Trả hàng</span>",
+            _ => "<span class=\"badge bg-secondary\">Chưa rõ</span>"
+        };
+    }
+}
+
+<div class="row">
+    <div class="col-12">
+        <div class="page-title-box">
+            <h4 class="page-title">Đơn hàng</h4>
+        </div>
+    </div>
+</div>
+
+<!-- Tabs -->
+<div class="card mb-4 border-0 shadow-sm" style="background: rgba(255, 255, 255, 0.6); backdrop-filter: blur(10px); border-radius: 12px;">
+    <div class="card-body p-2">
+        <ul class="nav nav-pills custom-nav-pills gap-2">
+            <li class="nav-item">
+                <a href="?status=" class="nav-link @(ViewBag.Status == null ? "active" : "")">
+                    <i class="ri-list-unordered me-1"></i> Tất cả <span class="badge rounded-pill bg-soft-dark text-dark ms-1">@ViewBag.CountAll</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="?status=0" class="nav-link @(ViewBag.Status == 0 ? "active" : "")">
+                    <i class="ri-notification-3-line me-1"></i> Mới <span class="badge rounded-pill bg-info ms-1">@ViewBag.CountNew</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="?status=1" class="nav-link @(ViewBag.Status == 1 ? "active" : "")">
+                    <i class="ri-checkbox-circle-line me-1"></i> Xác nhận <span class="badge rounded-pill bg-primary ms-1">@ViewBag.CountConfirmed</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="?status=2" class="nav-link @(ViewBag.Status == 2 ? "active" : "")">
+                    <i class="ri-truck-line me-1"></i> Đang giao <span class="badge rounded-pill bg-warning text-dark ms-1">@ViewBag.CountShipping</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="?status=3" class="nav-link @(ViewBag.Status == 3 ? "active" : "")">
+                    <i class="ri-check-double-line me-1"></i> Hoàn tất <span class="badge rounded-pill bg-success ms-1">@ViewBag.CountCompleted</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="?status=4" class="nav-link @(ViewBag.Status == 4 ? "active" : "")">
+                    <i class="ri-close-circle-line me-1"></i> Đã hủy <span class="badge rounded-pill bg-danger ms-1">@ViewBag.CountCancelled</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="?status=5" class="nav-link @(ViewBag.Status == 5 ? "active" : "")">
+                    <i class="ri-arrow-go-back-line me-1"></i> Trả hàng <span class="badge rounded-pill bg-dark ms-1">@ViewBag.CountReturned</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<!-- Filter Form -->
+<div class="card">
+    <div class="card-body">
+        <form id="filterForm" method="get">
+            <input type="hidden" name="status" value="@ViewBag.Status" />
+            <input type="hidden" name="page" id="pageIndex" value="@ViewBag.PageIndex" />
+            <div class="row g-3 mb-3">
+                <div class="col-xxl-3 col-sm-6">
+                    <div class="search-box">
+                        <input type="text" name="kw" class="form-control" value="@ViewBag.Keyword" placeholder="Mã ĐH, tên khách, SĐT...">
+                        <i class="ri-search-line search-icon"></i>
+                    </div>
+                </div>
+                <div class="col-xxl-2 col-sm-6">
+                    <select class="selectpicker" name="provinceId" id="ProvinceId" data-live-search="true">
+                        <option value="">-- Tất cả Tỉnh/Thành --</option>
+                        @if (ViewBag.Provinces != null)
+                        {
+                            foreach (Antigravity.ECommerce.Models.Province p in ViewBag.Provinces)
+                            {
+                                <option value="@p.ProvinceId" selected="@(ViewBag.ProvinceId == p.ProvinceId ? "selected" : null)">@p.Name</option>
+                            }
+                        }
+                    </select>
+                </div>
+                <div class="col-xxl-2 col-sm-6">
+                    <select class="selectpicker" name="wardId" id="WardId" data-live-search="true">
+                        <option value="">-- Tất cả Phường/Xã --</option>
+                        @if (ViewBag.Wards != null)
+                        {
+                            foreach (Antigravity.ECommerce.Models.Ward w in ViewBag.Wards)
+                            {
+                                <option value="@w.WardId" selected="@(ViewBag.WardId == w.WardId ? "selected" : null)">@w.Name</option>
+                            }
+                        }
+                    </select>
+                </div>
+                <div class="col-xxl-2 col-sm-6">
+                    <div class="input-group">
+                        <input type="date" name="dateMin" class="form-control" value="@ViewBag.DateMin" title="Từ ngày">
+                        <input type="date" name="dateMax" class="form-control" value="@ViewBag.DateMax" title="Đến ngày">
+                    </div>
+                </div>
+                <div class="col-xxl-3 col-sm-6 d-flex gap-1">
+                    <button type="submit" class="btn btn-primary flex-grow-1"><i class="mdi mdi-filter-variant"></i> Lọc</button>
+                    <a href="/AdminOrder" class="btn btn-light"><i class="mdi mdi-refresh"></i></a>
+                    <a href="/AdminOrder/ExportCSV?kw=@ViewBag.Keyword&status=@ViewBag.Status&provinceId=@ViewBag.ProvinceId&wardId=@ViewBag.WardId&dateMin=@ViewBag.DateMin&dateMax=@ViewBag.DateMax" class="btn btn-success"><i class="mdi mdi-download"></i></a>
+                    <button type="button" class="btn btn-danger d-none" id="btnBulkDelete" onclick="bulkDelete()"><i class="mdi mdi-delete"></i></button>
+                </div>
+            </div>
+        </form>
+
+        <div class="table-responsive">
+            <table class="table table-centered table-nowrap mb-0 table-hover">
+                <thead class="table-light">
+                    <tr>
+                        <th style="width: 20px;">
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="checkAll">
+                            </div>
+                        </th>
+                        <th>Mã đơn</th>
+                        <th>Khách hàng</th>
+                        <th>Ngày tạo</th>
+                        <th>Tổng tiền</th>
+                        <th>Trạng thái</th>
+                        <th>Thanh toán</th>
+                        <th class="text-center" style="width: 140px;">Hành động</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input checkItem" value="@item.OrderId">
+                                </div>
+                            </td>
+                            <td>
+                                <a href="/AdminOrder/Detail/@item.OrderId" class="text-body fw-bold">@item.OrderCode</a>
+                            </td>
+                            <td>
+                                @item.CustomerName <br/>
+                                <small class="text-muted">@item.CustomerPhone</small>
+                                @if(!string.IsNullOrEmpty(item.MemberRankName)){
+                                    <br/><span class="badge badge-outline-primary">@item.MemberRankName</span>
+                                }
+                            </td>
+                            <td>
+                                @item.CreatedAt.ToString("dd/MM/yyyy HH:mm")
+                            </td>
+                            <td>
+                                <span class="text-danger fw-bold">@item.TotalAmount.ToString("N0") ₫</span>
+                            </td>
+                            <td>
+                                @Html.Raw(HelperGetStatusBadge(item.OrderStatus))
+                            </td>
+                            <td>
+                                @if (item.PaymentStatus == 1)
+                                {
+                                    <span class="badge bg-success">Đã trả</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-warning text-dark">Chưa trả</span>
+                                }
+                                <br/><small class="text-muted">@item.PaymentMethod</small>
+                            </td>
+                            <td class="text-center">
+                                <div class="d-flex justify-content-center gap-1">
+                                    <a href="/AdminOrder/Detail/@item.OrderId" class="btn btn-sm btn-soft-secondary" title="Chi tiết">
+                                        <i class="ri-eye-line"></i>
+                                    </a>
+                                    <a href="/AdminOrder/Print/@item.OrderId" target="_blank" class="btn btn-sm btn-soft-info" title="In Hóa Đơn">
+                                        <i class="ri-printer-line"></i>
+                                    </a>
+                                    @if (item.OrderStatus == 0 || item.OrderStatus == 4)
+                                    {
+                                        <button onclick="deleteOrder(@item.OrderId)" class="btn btn-sm btn-soft-danger" title="Xóa">
+                                            <i class="ri-delete-bin-line"></i>
+                                        </button>
+                                    }
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- Pagination -->
+        @await Html.PartialAsync("_Pagination", new { PageIndex = ViewBag.PageIndex, TotalPages = ViewBag.TotalPages, TotalCount = ViewBag.TotalCount, DisplayCount = Model?.Count ?? 0 })
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(function() {
+            // Check All
+            $('#checkAll').on('change', function() {
+                $('.checkItem').prop('checked', $(this).is(':checked'));
+                toggleBulkDeleteBtn();
+            });
+
+            $('.checkItem').on('change', function() {
+                toggleBulkDeleteBtn();
+            });
+
+            function toggleBulkDeleteBtn() {
+                const count = $('.checkItem:checked').length;
+                if (count > 0) {
+                    $('#btnBulkDelete').removeClass('d-none');
+                } else {
+                    $('#btnBulkDelete').addClass('d-none');
+                }
+            }
+
+            // Reset page to 1 when form is submitted manually (not via pagination)
+            $('#filterForm').on('submit', function() {
+                if ($(this).attr('data-paging') !== 'true') {
+                    $('#pageIndex').val(1);
+                }
+                $(this).removeAttr('data-paging');
+            });
+
+            $('#ProvinceId').change(function () {
+                var provinceId = $(this).val();
+                var wardSelect = $('#WardId');
+                wardSelect.empty().append('<option value="">-- Đang nạp Phường/Xã... --</option>').selectpicker('refresh');
+
+                if (provinceId) {
+                    $.get('/Location/GetPhuongXa', { maTinh: provinceId }, function (data) {
+                        wardSelect.empty().append('<option value="">-- Tất cả Phường/Xã --</option>');
+                        $.each(data, function (i, item) {
+                            wardSelect.append('<option value="' + item.ma_Xa + '">' + item.ten_Xa + '</option>');
+                        });
+                        wardSelect.selectpicker('refresh');
+                    });
+                } else {
+                    wardSelect.empty().append('<option value="">-- Tất cả Phường/Xã --</option>').selectpicker('refresh');
+                }
+            });
+        });
+
+        function changePage(page) {
+            $('#pageIndex').val(page);
+            $('#filterForm').attr('data-paging', 'true').submit();
+        }
+
+        function deleteOrder(id) {
+            Swal.fire({
+                title: 'Bạn có chắc chắn?',
+                text: "Bạn sẽ không thể khôi phục dữ liệu nội dung này bao gồm cả lịch sử đơn hàng!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Đồng ý, xoá nó!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.post('/AdminOrder/Delete', { id: id }, function(res) {
+                        if (res.success) {
+                            location.reload();
+                        } else {
+                            Swal.fire('Lỗi', res.message, 'error');
+                        }
+                    });
+                }
+            })
+        }
+
+        function bulkDelete() {
+            const ids = [];
+            $('.checkItem:checked').each(function() {
+                ids.push(parseInt($(this).val()));
+            });
+
+            if (ids.length === 0) return;
+
+            Swal.fire({
+                title: 'Xóa ' + ids.length + ' đơn hàng?',
+                text: "Toàn bộ dữ liệu liên quan sẽ bị xóa vĩnh viễn!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Đồng ý xóa'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: '/AdminOrder/BulkDelete',
+                        type: 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify(ids),
+                        success: function(res) {
+                            if (res.success) {
+                                location.reload();
+                            } else {
+                                Swal.fire('Lỗi', res.message, 'error');
+                            }
+                        }
+                    });
+                }
+            });
+        }
+    </script>
+}
+
+<style>
+    .custom-nav-pills .nav-link {
+        padding: 0.75rem 1.25rem;
+        font-weight: 600;
+        border-radius: 10px;
+        color: #495057;
+        background: #fff;
+        border: 1px solid #e9ebec;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        display: flex;
+        align-items: center;
+        font-size: 13px;
+    }
+    .custom-nav-pills .nav-link:hover {
+        background: #f3f6f9;
+        color: #405189;
+        border-color: #d1d9e3;
+        transform: translateY(-2px);
+    }
+    .custom-nav-pills .nav-link.active {
+        background: #405189 !important;
+        color: #fff !important;
+        box-shadow: 0 8px 15px rgba(64, 81, 137, 0.2);
+        border-color: #405189;
+    }
+    .custom-nav-pills .nav-link.active .badge {
+        background: rgba(255,255,255,0.2) !important;
+        color: #fff !important;
+    }
+    .badge-outline-primary {
+        color: #405189;
+        border: 1px solid #405189;
+    }
+    
+    /* Remove strange borders from bootstrap-select text */
+    .bootstrap-select .dropdown-toggle .filter-option-inner-inner {
+        border-bottom: none !important;
+        text-decoration: none !important;
+    }
+    .bootstrap-select .dropdown-toggle::after {
+        border: none !important;
+        font-family: 'remixicon';
+        content: '\ea4c'; /* ri-arrow-down-s-line */
+        font-size: 16px;
+        top: 2px;
+        position: relative;
+    }
+</style>

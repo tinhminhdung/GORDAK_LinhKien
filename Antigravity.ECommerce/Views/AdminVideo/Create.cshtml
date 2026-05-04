@@ -1,0 +1,193 @@
+@model Antigravity.ECommerce.Models.Video
+@{ 
+    Layout = "_AdminLayout"; 
+    ViewBag.Title = "Thêm Video mới"; 
+}
+
+<div class="row">
+    <div class="col-12">
+        <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+            <h4 class="mb-sm-0">Thêm Video mới</h4>
+            <div class="page-title-right">
+                <a href="/AdminVideo" class="btn btn-soft-dark btn-sm"><i class="ri-arrow-left-line align-bottom me-1"></i> Quay lại</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<form method="post" action="/AdminVideo/Create">
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label class="form-label">Tiêu đề Video <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" asp-for="Title" id="txtTitle" required placeholder="Nhập tiêu đề video..." />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Đường dẫn thân thiện (Slug)</label>
+                        <input type="text" class="form-control" asp-for="Slug" id="txtSlug" placeholder="tieu-de-video" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Danh mục Video <span class="text-danger">*</span></label>
+                        <select class="form-control selectpicker" asp-for="CategoryId" data-live-search="true" required>
+                            <option value="">-- Chọn danh mục --</option>
+                            @if (ViewBag.Categories != null)
+                            {
+                                foreach (var c in ViewBag.Categories as List<Antigravity.ECommerce.Models.Category>)
+                                {
+                                    <option value="@c.CategoryId">@c.Name</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Youtube ID <span class="text-danger">*</span></label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light">https://youtube.com/watch?v=</span>
+                            <input type="text" class="form-control" asp-for="YoutubeId" id="YoutubeId" required placeholder="Ví dụ: dQw4w9WgXcQ" />
+                            <button type="button" class="btn btn-primary" onclick="extractThumbnail()">Tạo Thumbnail tự động</button>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Link URL Thumbnail</label>
+                        <input type="text" class="form-control" asp-for="ThumbnailUrl" id="ThumbnailUrl" placeholder="https://img.youtube.com/vi/[ID]/maxresdefault.jpg" />
+                        <div class="mt-2 text-center" id="thumbnailPreviewContainer" style="display:none;">
+                            <img id="thumbnailPreview" src="" class="img-fluid rounded shadow-sm" style="max-height: 250px;" />
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-between mt-4 border-top pt-3">
+                        <a href="/AdminVideo" class="btn btn-light"><i class="ri-arrow-go-back-line me-1"></i>Quay lại</a>
+                        <button type="submit" class="btn btn-success px-4"><i class="ri-save-line me-1"></i>Lưu thêm mới</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border shadow-none mb-0 mt-4">
+                <div class="card-header bg-light-subtle">
+                    <h5 class="card-title mb-0">Cấu hình SEO Meta</h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label class="form-label">SEO Title</label>
+                        <input type="text" class="form-control" asp-for="SeoTitle" id="SeoTitle" placeholder="Nhập tiêu đề SEO...">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">SEO Meta Description</label>
+                        <textarea class="form-control" asp-for="SeoDescription" id="SeoDescription" rows="3" placeholder="Nhập mô tả SEO..."></textarea>
+                    </div>
+                    <div class="mb-0">
+                        <label class="form-label">SEO Meta Keywords</label>
+                        <input type="text" class="form-control" asp-for="SeoKeywords" id="SeoKeywords" placeholder="Từ khóa 1, từ khóa 2...">
+                    </div>
+                    <div class="bg-light p-3 rounded mt-3">
+                        <h6 class="fs-13 text-muted mb-2 text-uppercase">Google Search Preview</h6>
+                        <div style="font-family: Arial, sans-serif;">
+                            <div class="text-primary fs-18 mb-1" id="seo_preview_title">Tiêu đề video...</div>
+                            <div class="text-success fs-13 mb-1">https://example.com/video/detail/<span id="seo_preview_slug">slug-video</span>.html</div>
+                            <div class="text-muted fs-13" id="seo_preview_desc" style="line-height:1.4;">Mô tả SEO sẽ hiển thị ở đây...</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label class="form-label">Trạng thái</label>
+                        <select class="form-select" asp-for="Status">
+                            <option value="1" selected="@(Model.Status==1)">Đang hiện</option>
+                            <option value="0" selected="@(Model.Status==0)">Đang ẩn</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Thứ tự hiển thị</label>
+                        <input type="number" class="form-control" asp-for="SortOrder" value="@(Model.SortOrder == 0 ? 1 : Model.SortOrder)" />
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+
+             
+            </form>
+
+@section Scripts {
+    <script>
+        $(function() {
+            $('#txtTitle').on('input', function() {
+                var title = $(this).val();
+                var slug = title.toLowerCase()
+                    .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+                    .replace(/[đĐ]/g, 'd')
+                    .replace(/([^0-9a-z-\s])/g, '')
+                    .replace(/(\s+)/g, '-')
+                    .replace(/-+/g, '-')
+                    .replace(/^-+|-+$/g, '');
+                
+                $('#txtSlug').val(slug);
+                updateSeoPreview();
+            });
+
+            $('#SeoTitle, #SeoDescription, #txtSlug').on('input', function() {
+                updateSeoPreview();
+            });
+        });
+
+        function updateSeoPreview() {
+            const title = $('#SeoTitle').val() || $('#txtTitle').val() || 'Tiêu đề video';
+            const desc = $('#SeoDescription').val() || 'Mô tả SEO sẽ hiển thị ở đây để thu hút khách hàng click vào trang web của bạn.';
+            const slug = $('#txtSlug').val() || 'tieu-de-video';
+            
+            $('#seo_preview_title').text(title);
+            $('#seo_preview_desc').text(desc);
+            $('#seo_preview_slug').text(slug);
+        }
+
+        function extractThumbnail() {
+            var ytId = document.getElementById('YoutubeId').value.trim();
+            if (ytId) {
+                // Handle full url
+                if (ytId.includes('v=')) {
+                    ytId = ytId.split('v=')[1];
+                    var ampersandPosition = ytId.indexOf('&');
+                    if(ampersandPosition != -1) {
+                        ytId = ytId.substring(0, ampersandPosition);
+                    }
+                    document.getElementById('YoutubeId').value = ytId;
+                } else if (ytId.includes('youtu.be/')) {
+                    ytId = ytId.split('youtu.be/')[1];
+                    var questionPosition = ytId.indexOf('?');
+                    if(questionPosition != -1) {
+                        ytId = ytId.substring(0, questionPosition);
+                    }
+                    document.getElementById('YoutubeId').value = ytId;
+                }
+
+                var url = `https://img.youtube.com/vi/${ytId}/maxresdefault.jpg`;
+                document.getElementById('ThumbnailUrl').value = url;
+                showPreview(url);
+            } else {
+                alert("Vui lòng nhập Youtube ID hoặc link Youtube trước!");
+            }
+        }
+
+        function showPreview(url) {
+            if(url) {
+                document.getElementById('thumbnailPreview').src = url;
+                document.getElementById('thumbnailPreviewContainer').style.display = 'block';
+            }
+        }
+
+        document.getElementById('ThumbnailUrl').addEventListener('input', function() {
+            showPreview(this.value);
+        });
+
+        // Initialize preview if data exists
+        if(document.getElementById('ThumbnailUrl').value) {
+            showPreview(document.getElementById('ThumbnailUrl').value);
+        }
+    </script>
+}

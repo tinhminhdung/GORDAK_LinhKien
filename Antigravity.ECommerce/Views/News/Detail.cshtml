@@ -1,0 +1,77 @@
+@model Antigravity.ECommerce.Models.News
+@{
+    Layout = "~/Views/Shared/_MainLayout.cshtml";
+    ViewBag.Title = Model.Title;
+    var related = ViewBag.RelatedNews as List<Antigravity.ECommerce.Models.News>;
+
+    // SEO Schema Setup
+    ViewData["SchemaNews"] = Model;
+    ViewData["SchemaBreadcrumbs"] = new List<Antigravity.ECommerce.Models.BreadcrumbItem> {
+        new Antigravity.ECommerce.Models.BreadcrumbItem { Name = "Trang chủ", Url = "/" },
+        new Antigravity.ECommerce.Models.BreadcrumbItem { Name = "Tin tức", Url = "/tin-tuc.html" },
+        new Antigravity.ECommerce.Models.BreadcrumbItem { Name = Model.Title, Url = Context.Request.Path }
+    };
+}
+
+<div class="container py-5">
+    <div class="row">
+        <!-- Main Content -->
+        <div class="col-lg-8">
+            <h1 class="fw-bold fs-2 mb-3">@Model.Title</h1>
+            <div class="d-flex align-items-center mb-4 text-muted">
+                <span class="me-3"><i class="ri-time-line me-1"></i> @Model.CreatedAt.ToString("dd/MM/yyyy HH:mm")</span>
+                <span><i class="ri-eye-line me-1"></i> @Model.Views lượt xem</span>
+            </div>
+            
+            <div class="mb-4">
+                <img src="@Model.Image" class="img-fluid rounded w-100" style="max-height:500px; object-fit:cover;" alt="@Model.Title" />
+            </div>
+
+            <div class="content-body mb-5" style="font-size:16px; line-height:1.8;">
+                <p class="fw-bold mb-4">@Model.ShortDescription</p>
+                <div class="main-detail-content">@Html.Raw(Model.DetailDescription)</div>
+            </div>
+
+            @if (!string.IsNullOrEmpty(Model.Tags))
+            {
+                <div class="mt-4 pt-4 border-top">
+                    <div class="d-flex align-items-center flex-wrap gap-2">
+                        <span class="fw-bold me-2"><i class="ri-price-tag-3-line me-1"></i>Từ khóa:</span>
+                        @foreach (var tag in Model.Tags.Split(',', StringSplitOptions.RemoveEmptyEntries))
+                        {
+                            <a href="/tin-tuc.html?kw=@tag.Trim()" class="badge bg-light text-primary border border-primary-subtle fw-normal text-decoration-none" style="font-size:13px; padding: 6px 12px;">#@tag.Trim()</a>
+                        }
+                    </div>
+                </div>
+            }
+            
+            <!-- Social Share -->
+            <div class="d-flex gap-2 mt-5">
+                <span class="fw-bold me-2">Chia sẻ: </span>
+                <a href="#" class="btn btn-sm" style="background:#3b5998; color:#fff"><i class="ri-facebook-fill"></i></a>
+                <a href="#" class="btn btn-sm" style="background:#1da1f2; color:#fff"><i class="ri-twitter-fill"></i></a>
+                <a href="#" class="btn btn-sm" style="background:#0a66c2; color:#fff"><i class="ri-linkedin-fill"></i></a>
+            </div>
+        </div>
+
+        <!-- Sidebar Related -->
+        <div class="col-lg-4 mt-5 mt-lg-0">
+            <div class="card border-0 shadow-sm p-4" style="border-radius:12px;">
+                <h5 class="fw-bold mb-4 border-bottom pb-2">Tin Liên Quan</h5>
+                @if(related != null) {
+                    <div class="d-flex flex-column gap-3">
+                        @foreach(var r in related) {
+                            <div class="d-flex align-items-center gap-3">
+                                <img src="@r.Image" class="rounded lazy" style="width:80px; height:60px; object-fit:cover;" alt="@r.Title">
+                                <div>
+                                    <h6 class="mb-1" style="font-size:14px;"><a href="/tin-tuc/detail/@(r.Slug).html" class="text-dark text-decoration-none">@r.Title</a></h6>
+                                    <small class="text-muted">@r.CreatedAt.ToString("dd/MM/yyyy")</small>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

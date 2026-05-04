@@ -1,0 +1,1204 @@
+@model Antigravity.ECommerce.Models.GlobalSettingsViewModel
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "Cấu hình hệ thống";
+}
+
+<div class="container-fluid p-0">
+    <div class="row mb-4">
+        <div class="col-12 d-flex justify-content-between align-items-center">
+            <div>
+                <h3 class="mb-0 text-dark fw-bold">Cấu hình hệ thống</h3>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb mb-0">
+                        <li class="breadcrumb-item"><a href="/AdminDashboard">Dashboard</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Configuration</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+
+
+    <form asp-action="Save" method="post" enctype="multipart/form-data" id="formSettings">
+        <div class="row">
+            <div class="col-xl-2 col-lg-3">
+                <div class="card border-0 shadow-sm rounded-4 mb-4">
+                    <div class="card-body p-0">
+                        <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                            <button class="nav-link text-start py-3 px-4 border-bottom rounded-0" id="nav-general-tab" data-bs-toggle="pill" data-bs-target="#nav-general" type="button" role="tab"><i class="fas fa-cog me-2"></i> Thông tin chung</button>
+                            <button class="nav-link text-start py-3 px-4 border-bottom rounded-0" id="nav-contact-tab" data-bs-toggle="pill" data-bs-target="#nav-contact" type="button" role="tab"><i class="fas fa-address-book me-2"></i> Liên hệ & Bản đồ</button>
+                            <button class="nav-link text-start py-3 px-4 border-bottom rounded-0" id="nav-invoice-tab" data-bs-toggle="pill" data-bs-target="#nav-invoice" type="button" role="tab"><i class="fas fa-file-invoice me-2"></i> Thông tin hóa đơn</button>
+                            <button class="nav-link text-start py-3 px-4 border-bottom rounded-0" id="nav-social-tab" data-bs-toggle="pill" data-bs-target="#nav-social" type="button" role="tab"><i class="fas fa-share-alt me-2"></i> Mạng xã hội</button>
+                            <button class="nav-link text-start py-3 px-4 border-bottom rounded-0" id="nav-error-tab" data-bs-toggle="pill" data-bs-target="#nav-error" type="button" role="tab"><i class="fas fa-exclamation-triangle me-2"></i> Trang lỗi & Bảo trì</button>
+                            <button class="nav-link text-start py-3 px-4 border-bottom rounded-0" id="nav-system-tab" data-bs-toggle="pill" data-bs-target="#nav-system" type="button" role="tab"><i class="fas fa-server me-2"></i> Tối ưu & Cache</button>
+                            <button class="nav-link text-start py-3 px-4 border-bottom rounded-0" id="nav-smtp-tab" data-bs-toggle="pill" data-bs-target="#nav-smtp" type="button" role="tab"><i class="fas fa-envelope me-2"></i> Cấu hình Email (SMTP)</button>
+                            <button class="nav-link text-start py-3 px-4 border-bottom rounded-0" id="nav-seo-tab" data-bs-toggle="pill" data-bs-target="#nav-seo" type="button" role="tab"><i class="fas fa-search me-2"></i> SEO & Analytics</button>
+                            <button class="nav-link text-start py-3 px-4 border-bottom rounded-0" id="nav-rank-tab" data-bs-toggle="pill" data-bs-target="#nav-rank" type="button" role="tab"><i class="fas fa-crown me-2"></i> Hạng thành viên</button>
+                            <button class="nav-link text-start py-3 px-4 rounded-0" id="nav-image-tab" data-bs-toggle="pill" data-bs-target="#nav-image" type="button" role="tab"><i class="fas fa-image me-2"></i> Cài đặt Hình ảnh</button>
+                        </div>
+                    </div>
+                </div>
+                
+                
+            </div>
+
+            <div class="col-xl-10 col-lg-9">
+                <div class="card border-0 shadow-sm rounded-4">
+                    <div class="card-body p-4">
+                        <div class="tab-content" id="v-pills-tabContent">
+                            <!-- General Settings -->
+                            <div class="tab-pane fade show active" id="nav-general" role="tabpanel">
+                                <h5 class="fw-bold mb-4">Thông tin chung</h5>
+                                <div class="row g-4">
+                                    <div class="col-md-12">
+                                        <label class="form-label fw-semibold">Tiêu đề Website</label>
+                                        <input type="text" asp-for="SiteTitle" class="form-control form-control-lg rounded-3" placeholder="Nhập tiêu đề website...">
+                                    </div>
+                                    <div class="col-md-12">
+                                        <label class="form-label fw-semibold">Mô tả Website (SEO Description)</label>
+                                        <textarea asp-for="SiteDescription" class="form-control rounded-3" rows="3" placeholder="Nhập mô tả ngắn cho website..."></textarea>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-semibold">Logo Website</label>
+                                        <div class="input-group shadow-sm">
+                                            <span class="input-group-text bg-light border-end-0"><i class="fas fa-image text-primary"></i></span>
+                                            <input type="text" asp-for="Logo" id="txtLogo" class="form-control border-start-0" placeholder="/img/logo.png">
+                                            <button type="button" class="btn btn-primary px-3" onclick="openFileManager('txtLogo')">
+                                                <i class="fas fa-folder-open me-1"></i> Chọn ảnh
+                                            </button>
+                                        </div>
+                                        <div class="mt-3 preview-image-container p-2 border rounded-3 bg-light d-flex align-items-center justify-content-center" style="height: 120px; border-style: dashed !important;">
+                                            <img id="imgLogo" src="@(string.IsNullOrEmpty(Model.Logo) ? "/img/no-image.png" : Model.Logo)" class="img-fluid rounded-2" style="max-height: 100px; object-fit: contain;">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-semibold">Favicon (Icon tab trình duyệt)</label>
+                                        <div class="input-group shadow-sm">
+                                            <span class="input-group-text bg-light border-end-0"><i class="fas fa-icons text-warning"></i></span>
+                                            <input type="text" asp-for="Favicon" id="txtFavicon" class="form-control border-start-0" placeholder="/favicon.ico">
+                                            <button type="button" class="btn btn-primary px-3" onclick="openFileManager('txtFavicon')">
+                                                <i class="fas fa-folder-open me-1"></i> Chọn ảnh
+                                            </button>
+                                        </div>
+                                        <div class="mt-3 preview-image-container p-2 border rounded-3 bg-light d-flex align-items-center justify-content-center" style="height: 120px; border-style: dashed !important;">
+                                            <img id="imgFavicon" src="@(string.IsNullOrEmpty(Model.Favicon) ? "/favicon.ico" : Model.Favicon)" class="img-fluid rounded-2" style="max-height: 48px; width: 48px; object-fit: contain;">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <label class="form-label fw-semibold">Bản quyền (Copyright)</label>
+                                        <input type="text" asp-for="Copyright" class="form-control rounded-3" placeholder="© 2026 Antigravity. All rights reserved.">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Contact Settings -->
+                            <div class="tab-pane fade" id="nav-contact" role="tabpanel">
+                                <h5 class="fw-bold mb-4">Thông tin liên hệ & Bản đồ</h5>
+                                <div class="row g-4">
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-semibold">Hotline hỗ trợ</label>
+                                        <input type="text" asp-for="Hotline" class="form-control rounded-3" placeholder="1900 1234">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-semibold">Email liên hệ</label>
+                                        <input type="email" asp-for="Email" class="form-control rounded-3" placeholder="info@domain.com">
+                                    </div>
+                                    <div class="col-md-12">
+                                        <label class="form-label fw-semibold">Địa chỉ trụ sở</label>
+                                        <input type="text" asp-for="Address" class="form-control rounded-3" placeholder="Số 123 Nguyễn Huệ, Quận 1...">
+                                    </div>
+                                    <div class="col-md-12">
+                                        <label class="form-label fw-semibold">Nhúng bản đồ Google (Iframe URL/Code)</label>
+                                        <textarea asp-for="MapCode" class="form-control rounded-3" rows="3" placeholder="Dán mã nhúng iframe bản đồ tại đây..."></textarea>
+                                        <div class="small text-muted mt-1">Lấy từ Google Maps > Chia sẻ > Nhúng bản đồ</div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <label class="form-label fw-semibold">Thông tin chân trang (Footer Info)</label>
+                                        <textarea asp-for="FooterInfo" id="editorFooter" class="form-control rounded-3" rows="4"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Invoice Settings -->
+                            <div class="tab-pane fade" id="nav-invoice" role="tabpanel">
+                                <h5 class="fw-bold mb-4">Thông tin hiển thị trên hóa đơn</h5>
+                                <div class="row g-4">
+                                    <div class="col-md-12">
+                                        <label class="form-label fw-semibold">Tiêu đề hóa đơn (Header)</label>
+                                        <textarea asp-for="InvoiceHeader" id="editorInvoiceHeader" class="form-control rounded-3" rows="3"></textarea>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <label class="form-label fw-semibold">Ghi chú chân hóa đơn (Footer)</label>
+                                        <textarea asp-for="InvoiceFooter" id="editorInvoiceFooter" class="form-control rounded-3" rows="3"></textarea>
+                                    </div>
+
+                                    <div class="col-md-6 mt-4">
+                                        <div class="card border-0 shadow-sm rounded-3" style="background: linear-gradient(135deg, #f0fff4 0%, #eefbf5 100%); border-left: 4px solid #0ab39c !important;">
+                                            <div class="card-body p-3">
+                                                <label class="form-label fw-bold mb-1"><i class="fas fa-truck me-2 text-success"></i>Phí vận chuyển mặc định</label>
+                                                <div class="input-group">
+                                                    <input type="number" asp-for="DefaultShippingFee" class="form-control rounded-start" min="0" step="1000" placeholder="0">
+                                                    <span class="input-group-text">₫</span>
+                                                </div>
+                                                <small class="text-muted mt-1 d-block"><i class="fas fa-info-circle me-1"></i>Nhập <strong>0</strong> nếu muốn <strong>Miễn phí vận chuyển</strong>. Giá trị này sẽ áp dụng cho tất cả đơn hàng.</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Social Settings -->
+                            <div class="tab-pane fade" id="nav-social" role="tabpanel">
+                                <h5 class="fw-bold mb-4">Mạng xã hội</h5>
+                                <div class="row g-4">
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-semibold"><i class="fab fa-facebook me-2 text-primary"></i> Facebook URL</label>
+                                        <input type="text" asp-for="Facebook" class="form-control rounded-3" placeholder="https://facebook.com/...">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-semibold"><i class="fab fa-youtube me-2 text-danger"></i> YouTube URL</label>
+                                        <input type="text" asp-for="YouTube" class="form-control rounded-3" placeholder="https://youtube.com/...">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-semibold"><i class="fas fa-comment me-2 text-info"></i> Zalo (Số điện thoại/Link)</label>
+                                        <input type="text" asp-for="Zalo" class="form-control rounded-3" placeholder="090123...">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-semibold"><i class="fab fa-instagram me-2 text-danger"></i> Instagram</label>
+                                        <input type="text" asp-for="Instagram" class="form-control rounded-3" placeholder="https://instagram.com/...">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Error Pages Settings -->
+                            <div class="tab-pane fade" id="nav-error" role="tabpanel">
+                                <h5 class="fw-bold mb-4">Cấu hình Trang lỗi & Bảo trì</h5>
+                                <div class="card border border-warning-subtle mb-4">
+                                    <div class="card-body bg-warning bg-opacity-10">
+                                        <div class="form-check form-switch mb-3">
+                                            <input class="form-check-input" type="checkbox" asp-for="MaintenanceMode" id="switchMaintenance">
+                                            <label class="form-check-label fw-bold" for="switchMaintenance">KÍCH HOẠT CHẾ ĐỘ BẢO TRÌ</label>
+                                        </div>
+                                        <div>
+                                            <label class="form-label small fw-bold">Nội dung thông báo bảo trì</label>
+                                            <textarea asp-for="MaintenanceMessage" id="editorMaintenance" class="form-control" rows="5"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row g-4">
+                                    <div class="col-md-12">
+                                        <label class="form-label fw-semibold">Nội dung trang 404 (Không tìm thấy)</label>
+                                        <textarea asp-for="Error404Message" id="editor404" class="form-control" rows="3"></textarea>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <label class="form-label fw-semibold">Nội dung trang 500 (Lỗi hệ thống)</label>
+                                        <textarea asp-for="Error500Message" id="editor500" class="form-control" rows="3"></textarea>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <label class="form-label fw-semibold">Nội dung trang 403 (Không có quyền)</label>
+                                        <textarea asp-for="Error403Message" id="editor403" class="form-control" rows="3"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- System/Cache Settings -->
+                            <div class="tab-pane fade" id="nav-system" role="tabpanel">
+                                <h5 class="fw-bold mb-4">Tối ưu & Cache</h5>
+                                <div class="card border border-primary-subtle mb-4">
+                                    <div class="card-body bg-primary bg-opacity-10">
+                                        <div class="form-check form-switch mb-3">
+                                            <input class="form-check-input" type="checkbox" asp-for="EnableCache" id="switchCache">
+                                            <label class="form-check-label fw-bold text-primary" for="switchCache">BẬT CACHE DỮ LIỆU</label>
+                                        </div>
+                                        <div class="row align-items-center">
+                                            <div class="col-md-6">
+                                                <label class="form-label small fw-bold">Thời gian xóa cache (Phút)</label>
+                                                <input type="number" asp-for="CacheTimeout" class="form-control border-primary">
+                                                <div class="small text-muted mt-1"><i class="fas fa-info-circle me-1"></i> Nhập <strong class="text-danger">0</strong> để luôn lấy dữ liệu mới từ Database.</div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <button type="button" class="btn btn-danger w-100 fw-bold" onclick="clearCache()">
+                                                    <i class="fas fa-trash-alt me-2"></i> XÓA CACHE THỦ CÔNG NGAY
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="alert alert-info border-0 shadow-sm rounded-4 mb-4">
+                                    <h6><i class="fas fa-info-circle me-2"></i> Chính sách lưu trữ Cache</h6>
+                                    <ul class="small mb-0 ps-3">
+                                        <li><strong>Chỉ áp dụng cho giao diện người dùng:</strong> Dữ liệu Admin CMS luôn được tải trực tiếp từ Database.</li>
+                                        <li><strong>Tự động giải phóng:</strong> Khi Admin thêm mới / chỉnh sửa xóa các bài viết, module liên quan sẽ tự xóa Cache của nó ngay lập tức.</li>
+                                        <li><strong>Các Module đang áp dụng Cache tối ưu:</strong> Sản phẩm, Danh mục, Tin tức nổi bật, Banner quảng cáo (Slider), Video, FAQ.</li>
+                                    </ul>
+                                </div>
+                                <h5 class="fw-bold mb-4 mt-4">Công cụ SEO Sitemap</h5>
+                                <div class="card border border-success-subtle mb-4">
+                                    <div class="card-body bg-success bg-opacity-10 d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <h6 class="fw-bold text-success mb-1">Cập nhật Sitemap.xml tự động</h6>
+                                            <p class="small text-muted mb-0">Hệ thống sẽ quét lại toàn bộ bài viết, tin tức, DM để sinh và ping Sitemap cho Google Webmaster.</p>
+                                        </div>
+                                        <button type="button" class="btn btn-success fw-bold px-4" onclick="generateSitemap()">
+                                            <i class="fas fa-sitemap me-2"></i> TẠO AUTO SITEMAP
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- SMTP Settings -->
+                            <div class="tab-pane fade" id="nav-smtp" role="tabpanel">
+                                <h5 class="fw-bold mb-4">Cấu hình Email gửi tự động (SMTP)</h5>
+                                <div class="alert alert-info border-0 shadow-sm rounded-4 mb-4">
+                                    <h6 class="fw-bold text-info"><i class="fas fa-info-circle me-2"></i> SMTP dùng để làm gì?</h6>
+                                    <p class="small mb-2">Tính năng này giúp website gửi email trực tiếp cho khách hàng trong các trường hợp: <strong>Quên mật khẩu</strong>, <strong>Xác nhận đơn hàng</strong>, <strong>Thông báo khuyến mãi</strong>.</p>
+                                    
+                                    <h6 class="fw-bold text-danger mt-3"><i class="fas fa-exclamation-triangle me-2"></i> Hướng dẫn sửa lỗi gửi mail (5.7.0 Authentication Required)</h6>
+                                    <div class="small">
+                                        <p class="mb-1">Lỗi này xảy ra khi máy chủ từ chối mật khẩu của bạn. <strong>Nếu bạn đang dùng Gmail để gửi:</strong> Google không còn cho phép dùng mật khẩu đăng nhập bình thường để gửi SMTP nữa.</p>
+                                        <ol class="mb-0 ps-3">
+                                            <li>Bạn phải vào <a href="https://myaccount.google.com/security" target="_blank" class="fw-bold text-decoration-none">Tài khoản Google <i class="fas fa-external-link-alt ms-1" style="font-size: 0.75rem;"></i></a> -> Bảo mật -> Bật <strong>Xác minh 2 bước</strong>.</li>
+                                            <li>Sau đó truy cập <a href="https://myaccount.google.com/apppasswords" target="_blank" class="fw-bold text-decoration-none text-danger">Trang Mật khẩu ứng dụng <i class="fas fa-external-link-alt ms-1" style="font-size: 0.75rem;"></i></a> để tạo một chuỗi 16 ký tự.</li>
+                                            <li>Mang chuỗi 16 ký tự đó dán vào ô <strong>Mật khẩu SMTP</strong> bên dưới. Lúc này web sẽ gửi được email bình thường!</li>
+                                        </ol>
+                                    </div>
+                                </div>
+                                <div class="row g-4">
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-semibold">Máy chủ SMTP (Server)</label>
+                                        <input type="text" asp-for="SmtpServer" class="form-control rounded-3" placeholder="smtp.gmail.com">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-semibold">Cổng (Port)</label>
+                                        <input type="number" asp-for="SmtpPort" class="form-control rounded-3" placeholder="587">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-semibold">Email gửi</label>
+                                        <input type="email" asp-for="SmtpEmail" class="form-control rounded-3" placeholder="email@gmail.com">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-semibold">Mật khẩu (App Password)</label>
+                                        <div class="input-group">
+                                            <input type="password" asp-for="SmtpPassword" id="SmtpPassword" class="form-control rounded-3 rounded-end-0" placeholder="Mật khẩu ứng dụng">
+                                            <button class="btn btn-outline-secondary px-3" type="button" onclick="togglePassword('SmtpPassword')">
+                                                <i class="fas fa-eye" id="eye-SmtpPassword"></i> Hiện
+                                            </button>
+                                        </div>
+                                        <div class="small text-muted mt-1">Đối với Gmail, bạn cần tạo <strong>Mật khẩu ứng dụng (App Password)</strong>.</div>
+                                    </div>
+                                </div>
+
+                                <hr class="my-4">
+                                <h5 class="fw-bold mb-3"><i class="fas fa-envelope-open-text me-2 text-primary"></i> Mẫu Email Template</h5>
+                                <div class="alert alert-light border shadow-none rounded-4 mb-3">
+                                    <h6 class="fw-bold mb-2"><i class="fas fa-code me-1"></i> Biến thay thế có thể dùng:</h6>
+                                    <div class="d-flex flex-wrap gap-2">
+                                        <code>{CustomerName}</code> <code>{OrderCode}</code> <code>{TotalAmount}</code> 
+                                        <code>{OrderDate}</code> <code>{StatusName}</code> <code>{NewPassword}</code> <code>{SiteName}</code>
+                                    </div>
+                                </div>
+                                <div class="row g-4">
+                                    <div class="col-md-12">
+                                        <label class="form-label fw-semibold">📦 Mẫu email xác nhận đơn hàng</label>
+                                        <textarea asp-for="EmailTemplateOrderConfirm" id="editorEmailOrderConfirm" class="form-control rounded-3" rows="6" placeholder="Để trống nếu muốn dùng mẫu mặc định. Hỗ trợ HTML."></textarea>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <label class="form-label fw-semibold">🚚 Mẫu email cập nhật trạng thái đơn hàng</label>
+                                        <textarea asp-for="EmailTemplateOrderStatus" id="editorEmailOrderStatus" class="form-control rounded-3" rows="6" placeholder="Để trống nếu muốn dùng mẫu mặc định. Hỗ trợ HTML."></textarea>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <label class="form-label fw-semibold">🔐 Mẫu email khôi phục mật khẩu</label>
+                                        <textarea asp-for="EmailTemplatePasswordReset" id="editorEmailPasswordReset" class="form-control rounded-3" rows="6" placeholder="Để trống nếu muốn dùng mẫu mặc định. Hỗ trợ HTML."></textarea>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- SEO & Analytics Settings -->
+                            <div class="tab-pane fade" id="nav-seo" role="tabpanel">
+                                <div class="d-flex align-items-center mb-4">
+                                     <h5 class="fw-bold mb-0">Cấu hình SEO & Analytics</h5>
+                                     <a href="https://search.google.com/search-console" target="_blank" class="btn btn-sm btn-outline-primary ms-auto">
+                                         <i class="fab fa-google me-1"></i> Google Search Console
+                                     </a>
+                                 </div>
+                                 
+                                 <div class="alert alert-info border-0 shadow-sm rounded-4 mb-4" style="background: linear-gradient(135deg, #e7f5ff 0%, #d0ebff 100%);">
+                                     <h6 class="fw-bold text-primary"><i class="fas fa-lightbulb me-2"></i> Mẹo tối ưu hóa tìm kiếm</h6>
+                                     <p class="small mb-0">
+                                         Sử dụng <strong>Mã Analytics</strong> để theo dõi lưu lượng, <strong>Robots.txt</strong> để điều hướng Bot, và <strong>Sitemap</strong> để Google lập chỉ mục nhanh hơn.
+                                         Sau khi thay đổi, bạn có thể kiểm tra hiệu quả tại <a href="https://developers.google.com/search/docs/appearance/structured-data" target="_blank" class="fw-bold text-decoration-none">Google Schema Tool</a>.
+                                     </p>
+                                 </div>
+
+                                 <div class="row g-4">
+                                     <div class="col-md-12">
+                                         <div class="card border border-warning-subtle shadow-none rounded-4">
+                                             <div class="card-header bg-warning bg-opacity-10 border-0 py-3">
+                                                 <h6 class="fw-bold text-warning-emphasis mb-0"><i class="fas fa-robot me-2"></i> Nội dung Robots.txt</h6>
+                                             </div>
+                                             <div class="card-body">
+                                                 <textarea asp-for="RobotsContent" class="form-control font-monospace border-0 bg-light" rows="5" placeholder="User-agent: *"></textarea>
+                                                 <div class="mt-3 p-2 bg-light rounded-3 small">
+                                                     <strong>Mẫu chuẩn gợi ý:</strong><br/>
+                                                     <code>User-agent: *</code><br/>
+                                                     <code>Disallow: /Admin/</code> (Chặn Bot quét trang quản trị)<br/>
+                                                     <code>Sitemap: @(Context.Request.Scheme + "://" + Context.Request.Host + "/sitemap.xml")</code>
+                                                 </div>
+                                             </div>
+                                         </div>
+                                     </div>
+
+                                     <div class="col-md-12">
+                                         <label class="form-label fw-semibold">Google Analytics Tracking ID (GA4)</label>
+                                         <div class="input-group">
+                                             <span class="input-group-text bg-light border-end-0"><i class="fab fa-google text-danger"></i></span>
+                                             <input type="text" asp-for="GoogleAnalyticsId" class="form-control border-start-0 py-2" placeholder="G-XXXXXXXXXX">
+                                             <a href="https://analytics.google.com/" target="_blank" class="btn btn-outline-secondary">Lấy mã ngay</a>
+                                         </div>
+                                         <div class="small text-muted mt-1">Hệ thống sẽ tự động chèn mã script GA4 vào toàn bộ các trang giao diện người dùng.</div>
+                                     </div>
+
+                                     <div class="col-md-6">
+                                         <label class="form-label fw-semibold text-primary">Script Header (&lt;head&gt;)</label>
+                                         <textarea asp-for="HeaderScripts" class="form-control font-monospace rounded-3" rows="5" placeholder="<!-- Dán Facebook Pixel, Google Tag Manager tại đây -->"></textarea>
+                                         <div class="small text-muted mt-1">
+                                             Dùng để xác thực <strong>Google Search Console</strong> hoặc chèn <strong>Facebook Pixel</strong>. 
+                                         </div>
+                                     </div>
+
+                                     <div class="col-md-6">
+                                         <label class="form-label fw-semibold text-danger">Script Footer (Trước &lt;/body&gt;)</label>
+                                         <textarea asp-for="FooterScripts" class="form-control font-monospace rounded-3" rows="5" placeholder="<!-- Dán Tawk.to, Zalo Chat Button tại đây -->"></textarea>
+                                         <div class="small text-muted mt-1">Thường dùng cho mã <strong>Live Chat</strong> hoặc các mã tracking chuyển đổi đơn hàng.</div>
+                                     </div>
+
+                                     <div class="col-md-12 mt-4">
+                                         <div class="card border-0 shadow-sm rounded-4" style="background: linear-gradient(135deg, #f0f7ff 0%, #eef2ff 100%); border-left: 5px solid #4a90e2 !important;">
+                                             <div class="card-body p-4">
+                                                 <div class="d-flex align-items-center mb-3">
+                                                     <div class="flex-shrink-0 bg-primary text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;">
+                                                         <i class="fas fa-magic"></i>
+                                                     </div>
+                                                     <h6 class="ms-2 mb-0 fw-bold text-dark">TRÍ TUỆ NHÂN TẠO (AI SEO)</h6>
+                                                 </div>
+                                                 <div class="row align-items-center">
+                                                     <div class="col-lg-8">
+                                                         <div class="d-flex justify-content-between align-items-center mb-2">
+                                                             <label class="form-label fw-semibold mb-0">Google Gemini API Key (Miễn phí)</label>
+                                                             <button type="button" class="btn btn-link btn-sm p-0 text-primary fw-bold text-decoration-none" data-bs-toggle="modal" data-bs-target="#geminiHelpModal">
+                                                                 <i class="fas fa-question-circle me-1"></i> Cách lấy mã?
+                                                             </button>
+                                                         </div>
+                                                         <div class="input-group shadow-sm">
+                                                             <span class="input-group-text bg-white border-end-0"><i class="fas fa-key text-warning"></i></span>
+                                                             <input type="password" id="GeminiApiKey" name="GeminiApiKey" value="@Model.GeminiApiKey" class="form-control border-start-0" placeholder="Nhập mã API Gemini tại đây...">
+                                                             <button class="btn btn-outline-secondary px-3" type="button" onclick="togglePassword('GeminiApiKey')">
+                                                                 <i class="fas fa-eye" id="eye-GeminiApiKey"></i> Hiện
+                                                             </button>
+                                                         </div>
+                                                         <p class="small text-muted mt-2 mb-0">
+                                                             <i class="fas fa-info-circle me-1"></i> Mã này giúp <strong>SEO Audit Dashboard</strong> có thể đưa ra gợi ý chuẩn SEO tự động.
+                                                         </p>
+                                                     </div>
+                                                     <div class="col-lg-4 text-center mt-3 mt-lg-0">
+                                                         <div class="p-3 bg-white rounded-3 border shadow-sm" id="ai-status-container">
+                                                             <div class="text-secondary fw-bold small mb-2"><i class="fas fa-satellite-dish me-1"></i> Trạng thái AI</div>
+                                                             <div id="ai-status-indicator">
+                                                                 <span class="badge bg-secondary px-3"><i class="fas fa-spinner fa-spin"></i> Đang kiểm tra...</span>
+                                                             </div>
+                                                         </div>
+                                                     </div>
+                                                 </div>
+                                             </div>
+                                         </div>
+                                     </div>
+
+                                     <div class="col-md-12 mt-4">
+                                         <div class="card border-0 shadow-sm rounded-4" style="background: #f8f9fa;">
+                                             <div class="card-body p-4">
+                                                 <h6 class="fw-bold mb-3"><i class="fas fa-tools me-2 text-secondary"></i> Công cụ kiểm tra (Debug)</h6>
+                                                 <div class="d-flex flex-wrap gap-2">
+                                                     <a href="https://developers.facebook.com/tools/debug/" target="_blank" class="btn btn-sm btn-white border shadow-sm rounded-pill px-3">
+                                                         <i class="fab fa-facebook me-1 text-primary"></i> Facebook Debugger (Open Graph)
+                                                     </a>
+                                                     <a href="https://cards-dev.twitter.com/validator" target="_blank" class="btn btn-sm btn-white border shadow-sm rounded-pill px-3">
+                                                         <i class="fab fa-twitter me-1 text-info"></i> Twitter Card Validator
+                                                     </a>
+                                                     <a href="https://search.google.com/test/rich-results" target="_blank" class="btn btn-sm btn-white border shadow-sm rounded-pill px-3">
+                                                         <i class="fab fa-google me-1 text-warning"></i> Rich Results Test
+                                                     </a>
+                                                 </div>
+                                             </div>
+                                         </div>
+                                     </div>
+                                 </div>
+                            </div>
+
+                            <!-- Member Rank Settings -->
+                            <div class="tab-pane fade" id="nav-rank" role="tabpanel">
+                                <div class="d-flex align-items-center mb-4">
+                                    <h5 class="fw-bold mb-0">Cấu hình Hạng thành viên</h5>
+                                    <span class="badge bg-info bg-opacity-10 text-info ms-2 px-2 py-1 rounded-pill">Tối ưu tự động</span>
+                                </div>
+                                <div class="alert alert-info border-0 shadow-sm rounded-4 mb-4">
+                                    <h6 class="fw-bold text-info"><i class="fas fa-question-circle me-2"></i> Hạng khách hàng dùng để làm gì?</h6>
+                                    <p class="small mb-2">Hạng thành viên được hệ thống tự động tính toán dựa trên <strong>Tổng chi tiêu thực tế</strong> (TotalSpent) của khách hàng sau khi đơn hàng hoàn tất.</p>
+                                    <ul class="small mb-0 ps-3">
+                                        <li><strong>Phân nhóm khách hàng:</strong> Dễ dàng lọc và chăm sóc nhóm khách hàng VIP.</li>
+                                        <li><strong>Chính sách ưu đãi:</strong> Có thể áp dụng các chương trình khuyến mãi, Voucher dành riêng cho từng hạng.</li>
+                                        <li><strong>Đặc quyền:</strong> Tăng tỷ lệ tích lũy điểm hoặc giảm phí vận chuyển cho hạng cao hơn.</li>
+                                    </ul>
+                                </div>
+
+                                <div class="row g-4 mb-4">
+                                    <div class="col-md-4">
+                                        <div class="card border-0 shadow-lg text-center h-100 overflow-hidden" style="border-radius: 20px;">
+                                            <div class="card-header border-0 py-4" style="background: linear-gradient(135deg, #e9ecef 0%, #adb5bd 100%);">
+                                                <div class="avatar-md mx-auto">
+                                                    <div class="avatar-title bg-white text-dark rounded-circle fs-2 shadow-sm">
+                                                        <i class="fas fa-medal"></i>
+                                                    </div>
+                                                </div>
+                                                <h5 class="fw-bold mb-0 mt-3 text-dark">HẠNG BẠC</h5>
+                                            </div>
+                                            <div class="card-body py-4">
+                                                <label class="form-label small fw-bold text-muted">NGƯỠNG CHI TIÊU TỐI THIỂU</label>
+                                                <div class="input-group input-group-lg shadow-sm">
+                                                    <span class="input-group-text border-0 bg-light">≥</span>
+                                                    <input type="text" class="form-control border-0 bg-light text-end fw-bold currency-input" data-target="RankSilverThreshold" value="@Model.RankSilverThreshold.ToString("N0")">
+                                                    <input type="hidden" asp-for="RankSilverThreshold" id="RankSilverThreshold">
+                                                    <span class="input-group-text border-0 bg-light text-muted small">₫</span>
+                                                </div>
+                                                <div class="mt-3 py-2 px-3 bg-light rounded-pill d-inline-block">
+                                                    <small class="text-muted"><i class="fas fa-info-circle me-1"></i> Dưới mức này là <strong>Hạng Thường</strong></small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="card border-0 shadow-lg text-center h-100 overflow-hidden" style="border-radius: 20px;">
+                                            <div class="card-header border-0 py-4" style="background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);">
+                                                <div class="avatar-md mx-auto">
+                                                    <div class="avatar-title bg-white text-warning rounded-circle fs-2 shadow-sm">
+                                                        <i class="fas fa-crown"></i>
+                                                    </div>
+                                                </div>
+                                                <h5 class="fw-bold mb-0 mt-3 text-white" style="text-shadow: 0 2px 4px rgba(0,0,0,0.1);">HẠNG VÀNG</h5>
+                                            </div>
+                                            <div class="card-body py-4">
+                                                <label class="form-label small fw-bold text-muted">NGƯỠNG CHI TIÊU TỐI THIỂU</label>
+                                                <div class="input-group input-group-lg shadow-sm">
+                                                    <span class="input-group-text border-0 bg-light">≥</span>
+                                                    <input type="text" class="form-control border-0 bg-light text-end fw-bold currency-input" data-target="RankGoldThreshold" value="@Model.RankGoldThreshold.ToString("N0")">
+                                                    <input type="hidden" asp-for="RankGoldThreshold" id="RankGoldThreshold">
+                                                    <span class="input-group-text border-0 bg-light text-muted small">₫</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="card border-0 shadow-lg text-center h-100 overflow-hidden" style="border-radius: 20px;">
+                                            <div class="card-header border-0 py-4" style="background: linear-gradient(135deg, #007bff 0%, #6610f2 100%);">
+                                                <div class="avatar-md mx-auto">
+                                                    <div class="avatar-title bg-white text-primary rounded-circle fs-2 shadow-sm">
+                                                        <i class="fas fa-gem"></i>
+                                                    </div>
+                                                </div>
+                                                <h5 class="fw-bold mb-0 mt-3 text-white" style="text-shadow: 0 2px 4px rgba(0,0,0,0.1);">KIM CƯƠNG</h5>
+                                            </div>
+                                            <div class="card-body py-4">
+                                                <label class="form-label small fw-bold text-muted">NGƯỠNG CHI TIÊU TỐI THIỂU</label>
+                                                <div class="input-group input-group-lg shadow-sm">
+                                                    <span class="input-group-text border-0 bg-light">≥</span>
+                                                    <input type="text" class="form-control border-0 bg-light text-end fw-bold currency-input" data-target="RankDiamondThreshold" value="@Model.RankDiamondThreshold.ToString("N0")">
+                                                    <input type="hidden" asp-for="RankDiamondThreshold" id="RankDiamondThreshold">
+                                                    <span class="input-group-text border-0 bg-light text-muted small">₫</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card bg-light border-0 rounded-4">
+                                    <div class="card-body">
+                                        <h6 class="fw-bold"><i class="fas fa-exclamation-triangle text-warning me-2"></i> Lưu ý quan trọng</h6>
+                                        <p class="small text-muted mb-0">Việc thay đổi các ngưỡng ở trên sẽ <strong>không làm thay đổi ngay lập tức</strong> hạng của hàng ngàn khách hàng hiện tại (để tối ưu hiệu suất). Hạng khách hàng sẽ được cập nhật tự động khi họ có đơn hàng mới, hoặc bạn có thể nhấn <strong>"Tính lại hạng"</strong> trong trang chi tiết khách hàng.</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Image Optimization Settings -->
+                            <div class="tab-pane fade" id="nav-image" role="tabpanel">
+                                <div class="d-flex align-items-center mb-4 justify-content-between">
+                                    <div class="d-flex align-items-center">
+                                        <h5 class="fw-bold mb-0"><i class="fas fa-image me-2 text-primary"></i> Cài đặt Tối ưu Hình ảnh</h5>
+                                    </div>
+                                    <div class="form-check form-switch fs-4">
+                                        <input class="form-check-input" type="checkbox" role="switch" asp-for="Image_EnableOptimization" id="enableOptimization">
+                                        <label class="form-check-label fs-6 ms-2" for="enableOptimization">Bật Tối ưu (Tự động phục vụ WebP)</label>
+                                    </div>
+                                </div>
+
+                                <div class="alert alert-info border-0 shadow-sm rounded-4 mb-4" style="background: linear-gradient(135deg, #e7f5ff 0%, #d0ebff 100%);">
+                                    <h6 class="fw-bold text-primary"><i class="fas fa-info-circle me-2"></i> Tính năng Tối ưu Hình ảnh</h6>
+                                    <ul class="small mb-0 ps-3">
+                                        <li><strong>Tự động tạo ảnh thu nhỏ (Thumbnail):</strong> Khi upload ảnh gốc, hệ thống tự động tạo bản WebP nhẹ hơn 5-40 lần.</li>
+                                        <li><strong>Ảnh gốc luôn được bảo toàn:</strong> Mọi thao tác (crop, resize, xoay, đổi chất lượng) CHỈ tác động lên thumbnail. Ảnh gốc KHÔNG BAO GIỜ bị thay đổi.</li>
+                                        <li><strong>Zero-config:</strong> Frontend tự động nhận ảnh WebP nhẹ mà không cần sửa bất kỳ code nào.</li>
+                                        <li><strong>Khi thay đổi cài đặt:</strong> Bấm nút "Tạo lại toàn bộ Thumbnail" để cập nhật theo cấu hình mới.</li>
+                                    </ul>
+                                </div>
+
+                                <div class="row g-4 mb-4">
+                                    <div class="col-md-6">
+                                        <div class="card border border-primary-subtle shadow-none rounded-4">
+                                            <div class="card-body">
+                                                <label class="form-label fw-bold"><i class="fas fa-expand-arrows-alt me-2 text-primary"></i> Cạnh dài nhất (px)</label>
+                                                <input type="number" asp-for="Image_MaxLongestSide" class="form-control form-control-lg rounded-3" min="200" max="4000" />
+                                                <div class="small text-muted mt-2">
+                                                    <i class="fas fa-info-circle me-1"></i> Cạnh nào dài hơn sẽ được co về giá trị này, cạnh còn lại tự tính theo tỷ lệ gốc. 
+                                                    <strong>Không bao giờ bóp méo ảnh.</strong>
+                                                    <br>Ví dụ: Banner 1920×400 → 1200×250 | Sản phẩm 800×800 → giữ nguyên.
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="card border border-success-subtle shadow-none rounded-4">
+                                            <div class="card-body">
+                                                <label class="form-label fw-bold"><i class="fas fa-sliders-h me-2 text-success"></i> Chất lượng nén (%)</label>
+                                                <input type="range" asp-for="Image_Quality" class="form-range mt-2" min="30" max="100" step="5" oninput="document.getElementById('qualityValue').textContent = this.value + '%'" />
+                                                <div class="d-flex justify-content-between">
+                                                    <small class="text-muted">30% (Nhẹ nhất)</small>
+                                                    <strong class="text-success fs-5" id="qualityValue">@(Model.Image_Quality)%</strong>
+                                                    <small class="text-muted">100% (Rõ nhất)</small>
+                                                </div>
+                                                <div class="small text-muted mt-2">
+                                                    <i class="fas fa-info-circle me-1"></i> Khuyến nghị: <strong>75-85%</strong> là cân bằng tốt nhất giữa chất lượng và dung lượng.
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <h6 class="fw-bold mt-5 mb-3"><i class="fas fa-stamp me-2 text-primary"></i> Cấu hình Watermark (Đóng dấu ảnh)</h6>
+                                <div class="card border border-info-subtle shadow-none rounded-4 mb-4">
+                                    <div class="card-body">
+                                        <div class="row g-4">
+                                            <div class="col-md-12">
+                                                <label class="form-label fw-bold">Logo Watermark (Để trống nếu không dùng)</label>
+                                                <div class="input-group">
+                                                    <button class="btn btn-outline-secondary" type="button" onclick="selectWatermark()"><i class="fas fa-folder-open"></i> Chọn logo</button>
+                                                    <input type="text" asp-for="Image_WatermarkUrl" class="form-control" id="watermarkUrl" placeholder="/uploads/logo.png" />
+                                                </div>
+                                                <div class="small text-muted mt-2"><i class="fas fa-info-circle"></i> Chỉ hỗ trợ ảnh PNG có nền trong suốt. <strong>Lưu ý: Logo chỉ đóng dấu lên bản Thumbnail (.webp), ảnh gốc của bạn vẫn nguyên vẹn!</strong></div>
+                                            </div>
+                                            
+                                            <div class="col-md-4">
+                                                <label class="form-label fw-bold">Vị trí đóng dấu</label>
+                                                <select asp-for="Image_WatermarkPosition" class="form-select" onchange="updateWatermarkPreview()">
+                                                    <option value="BottomRight">Góc dưới, Phải (Mặc định)</option>
+                                                    <option value="BottomLeft">Góc dưới, Trái</option>
+                                                    <option value="TopRight">Góc trên, Phải</option>
+                                                    <option value="TopLeft">Góc trên, Trái</option>
+                                                    <option value="Center">Chính giữa</option>
+                                                    <option value="Tile">Phủ kín (Lặp lại)</option>
+                                                </select>
+                                            </div>
+                                            
+                                            <div class="col-md-4">
+                                                <label class="form-label fw-bold">Kích thước logo (%)</label>
+                                                <div class="d-flex align-items-center">
+                                                    <input type="range" asp-for="Image_WatermarkSize" class="form-range me-2" min="5" max="50" step="1" oninput="document.getElementById('wmSizeVal').textContent = this.value + '%'; updateWatermarkPreview();" />
+                                                    <span id="wmSizeVal" class="fw-bold text-primary" style="min-width: 40px">@(Model.Image_WatermarkSize)%</span>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-4">
+                                                <label class="form-label fw-bold">Độ mờ (Opacity %)</label>
+                                                <div class="d-flex align-items-center">
+                                                    <input type="range" asp-for="Image_WatermarkOpacity" class="form-range me-2" min="10" max="100" step="5" oninput="document.getElementById('wmOpVal').textContent = this.value + '%'; updateWatermarkPreview();" />
+                                                    <span id="wmOpVal" class="fw-bold text-primary" style="min-width: 40px">@(Model.Image_WatermarkOpacity)%</span>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-12">
+                                                <label class="form-label fw-bold">Thư mục/Tag loại trừ (không đóng dấu)</label>
+                                                <input type="text" asp-for="Image_WatermarkExcludePaths" class="form-control" placeholder="Ví dụ: /uploads/avatar/, logo, banner" />
+                                                <div class="small text-muted mt-2">
+                                                    <i class="fas fa-info-circle"></i> Bất kỳ ảnh nào có đường dẫn chứa chuỗi này sẽ KHÔNG bị đóng dấu Watermark. Các chuỗi cách nhau bằng dấu phẩy (,).<br />
+                                                    <strong class="text-danger"><i class="fas fa-exclamation-triangle"></i> Cảnh báo:</strong> Tuyệt đối KHÔNG ĐIỀN chữ <code>Uploads</code> vào đây vì tất cả ảnh tải lên đều nằm trong thư mục gốc là /uploads/. Nếu điền Uploads, hệ thống sẽ hiểu là loại trừ toàn bộ ảnh.
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-12 mt-4">
+                                                <label class="form-label fw-bold text-primary"><i class="fas fa-eye me-2"></i> Xem trước trực tiếp (Live Preview)</label>
+                                                <div class="d-flex align-items-center mb-2">
+                                                    <button class="btn btn-sm btn-outline-secondary me-2" type="button" onclick="selectPreviewBg()"><i class="fas fa-image"></i> Chọn ảnh nền mẫu</button>
+                                                    <span class="small text-muted">Mặc định dùng nền xám nếu không chọn. <strong>Đây chỉ là xem trước, tỷ lệ thực tế phụ thuộc vào độ phân giải ảnh gốc.</strong></span>
+                                                </div>
+                                                <div id="wmPreviewBox" style="width: 100%; aspect-ratio: 16/9; background-color: #e9ecef; background-size: cover; background-position: center; position: relative; border-radius: 8px; border: 1px solid #dee2e6; overflow: hidden; max-height: 400px;">
+                                                    <img id="wmPreviewLogo" src="@Model.Image_WatermarkUrl" style="position: absolute; display: none;" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="card border border-warning-subtle shadow-none rounded-4 mt-4">
+                                    <div class="card-body bg-warning bg-opacity-10 d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <h6 class="fw-bold text-warning-emphasis mb-1"><i class="fas fa-sync-alt me-2"></i> Tạo lại toàn bộ Thumbnail</h6>
+                                            <p class="small text-muted mb-2">Xóa tất cả ảnh thu nhỏ cũ và tạo lại theo cài đặt mới (Kích thước, Chất lượng, Watermark). <strong>Ảnh gốc KHÔNG bị ảnh hưởng.</strong></p>
+                                            <p class="small text-danger fw-bold mb-0"><i class="fas fa-exclamation-triangle"></i> LƯU Ý QUAN TRỌNG: Chỉ nên sử dụng tính năng này trong thời gian đầu web còn mới hoặc ít ảnh. Khi web đã có quá nhiều ảnh (hàng ngàn ảnh), việc tạo lại toàn bộ cùng lúc có thể gây quá tải máy chủ (timeout/treo web). Đối với các web dữ liệu lớn, ảnh mới tải lên sẽ tự động áp dụng cấu hình mới mà không cần bấm nút này.</p>
+                                        </div>
+                                        <button type="button" class="btn btn-warning fw-bold px-4 flex-shrink-0 ms-4" onclick="bulkRegenerateImages()">
+                                            <i class="fas fa-redo me-2"></i> TẠO LẠI TẤT CẢ
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="sticky-top bg-white py-3 border-top mt-5 shadow-sm rounded-4" style="bottom: 20px; z-index: 100;">
+                            <div class="d-flex justify-content-end gap-3 px-4">
+                                <button type="reset" class="btn btn-light px-4 py-2 rounded-3 fw-semibold">Hủy bỏ</button>
+                                <button type="submit" class="btn btn-primary px-5 py-2 rounded-3 fw-bold shadow-lg transform-hover">
+                                    <i class="fas fa-save me-2"></i> LƯU TOÀN BỘ CẤU HÌNH
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!-- Modal Hướng dẫn Gemini API Key -->
+<div class="modal fade" id="geminiHelpModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
+            <div class="modal-header bg-primary text-white p-4">
+                <h5 class="modal-title fw-bold"><i class="fas fa-magic me-2"></i> Cách lấy mã Gemini AI Key (Miễn phí 100%)</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4">
+                <div class="row g-4">
+                    <div class="col-md-6 border-end">
+                        <h6 class="fw-bold mb-3 text-primary">Các bước lấy mã từ Google:</h6>
+                        <div class="d-flex mb-3">
+                            <div class="flex-shrink-0 bg-light text-primary rounded-circle d-flex align-items-center justify-content-center fw-bold" style="width:28px;height:28px;">1</div>
+                            <div class="ms-3 small">Truy cập vào <a href="https://aistudio.google.com/app/apikey" target="_blank" class="fw-bold">Google AI Studio</a> (Đăng nhập bằng Gmail).</div>
+                        </div>
+                        <div class="d-flex mb-3">
+                            <div class="flex-shrink-0 bg-light text-primary rounded-circle d-flex align-items-center justify-content-center fw-bold" style="width:28px;height:28px;">2</div>
+                            <div class="ms-3 small">Nhấn nút <strong>"Create API key"</strong> màu xanh ở phía bên trái.</div>
+                        </div>
+                        <div class="d-flex mb-3">
+                            <div class="flex-shrink-0 bg-light text-primary rounded-circle d-flex align-items-center justify-content-center fw-bold" style="width:28px;height:28px;">3</div>
+                            <div class="ms-3 small">Nhấn <strong>"Create API key in new project"</strong>.</div>
+                        </div>
+                        <div class="d-flex mb-3">
+                            <div class="flex-shrink-0 bg-light text-primary rounded-circle d-flex align-items-center justify-content-center fw-bold" style="width:28px;height:28px;">4</div>
+                            <div class="ms-3 small">Copy dãy mã vừa hiện ra và dán vào ô nhập mã trong trang cấu hình này.</div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="fw-bold mb-3 text-info">Tìm kiếm hỗ trợ khác:</h6>
+                        <p class="small text-muted">Nếu giao diện Google thay đổi, bạn có thể tìm kiếm theo cách sau:</p>
+                        
+                        <div class="p-3 bg-light rounded-3 mb-3">
+                            <div class="fw-bold small mb-1"><i class="fab fa-google text-danger me-1"></i> Tìm Google:</div>
+                            <code class="small text-dark">"Hướng dẫn lấy API Key Gemini AI mới nhất"</code>
+                        </div>
+
+                        <div class="p-3 bg-light rounded-3">
+                            <div class="fw-bold small mb-1"><i class="fas fa-comment-dots text-success me-1"></i> Hỏi ChatGPT / AI khác:</div>
+                            <p class="small mb-0 italic">"Hãy hướng dẫn tôi các bước lấy một API Key Gemini miễn phí từ Google AI Studio để tích hợp vào website của tôi."</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="alert alert-warning border-0 mt-4 mb-0 small">
+                    <i class="fas fa-exclamation-circle me-1"></i> <strong>Lưu ý:</strong> Gói miễn phí của Gemini có giới hạn số lần gọi/phút, nhưng hoàn toàn đủ cho nhu cầu quản trị của 1 website thông thường.
+                </div>
+            </div>
+            <div class="modal-footer border-0 p-4 pt-0">
+                <button type="button" class="btn btn-primary px-4 fw-bold rounded-3" data-bs-dismiss="modal">Đã hiểu!</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal File Manager (Reuse from previous implementation) -->
+<div class="modal fade" id="fileManagerModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg rounded-4">
+            <div class="modal-header border-0 pb-0">
+                <h5 class="modal-title fw-bold">Quản lý tệp tin</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-0" style="height: 75vh;">
+                <iframe id="fileManagerIframe" src="/FileManager" width="100%" height="100%" frameborder="0"></iframe>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        let currentInputId = '';
+        const fileManagerModal = new bootstrap.Modal(document.getElementById('fileManagerModal'));
+
+        function openFileManager(inputId) {
+            currentInputId = inputId;
+            const iframe = document.getElementById('fileManagerIframe');
+            iframe.src = '/FileManager?fieldId=' + inputId;
+            fileManagerModal.show();
+        }
+
+        // Catch message from File Manager iframe
+        window.addEventListener('message', function(event) {
+            if (event.data && event.data.type === 'fileSelected') {
+                const url = event.data.url;
+                if (currentInputId) {
+                    document.getElementById(currentInputId).value = url;
+                    
+                    // Update preview if exists
+                    const previewId = currentInputId === 'txtLogo' ? 'imgLogo' : (currentInputId === 'txtFavicon' ? 'imgFavicon' : '');
+                    if (previewId) {
+                        document.getElementById(previewId).src = url;
+                    }
+                }
+                fileManagerModal.hide();
+            }
+        });
+
+        $(function() {
+            // Ghi nhớ Tab khi nhấn
+            const activeTab = localStorage.getItem('admin_setting_active_tab');
+            if (activeTab) {
+                const tabEl = document.querySelector(`#v-pills-tab button[data-bs-target="${activeTab}"]`);
+                if (tabEl) {
+                    const tab = new bootstrap.Tab(tabEl);
+                    tab.show();
+                }
+            }
+
+            // Lưu tab vào localStorage khi thay đổi
+            const tabElements = document.querySelectorAll('#v-pills-tab button[data-bs-toggle="pill"]');
+            tabElements.forEach(el => {
+                el.addEventListener('shown.bs.tab', event => {
+                    localStorage.setItem('admin_setting_active_tab', event.target.getAttribute('data-bs-target'));
+                });
+            });
+
+            // Tự động Submit khi gạt nút Bảo trì hoặc Cache (Tùy chọn nhanh)
+            $('#switchMaintenance, #switchCache').on('change', function() {
+                const label = $(this).closest('div').find('label').text();
+                Swal.fire({
+                    title: 'Xác nhận thay đổi?',
+                    text: `Bạn có muốn áp dụng ngay ${label} không?`,
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonText: 'Áp dụng ngay'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $('form').submit();
+                    } else {
+                        $(this).prop('checked', !$(this).prop('checked'));
+                    }
+                });
+            });
+        });
+
+        function clearCache() {
+            Swal.fire({
+                title: 'Xác nhận xóa cache?',
+                text: "Toàn bộ dữ liệu tạm thời sẽ được làm mới từ Database!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Đồng ý xóa',
+                cancelButtonText: 'Hủy'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.post('/AdminSetting/ClearCache', function(res) {
+                        if(res.success) {
+                            Swal.fire('Thành công', 'Đã làm mới cache hệ thống!', 'success');
+                        } else {
+                            Swal.fire('Lỗi', res.message, 'error');
+                        }
+                    });
+                }
+            });
+        }
+
+        function generateSitemap() {
+            Swal.fire({
+                title: 'Tạo Sitemap?',
+                text: 'Hệ thống sẽ quét toàn bộ dữ liệu và có thể mất khoảng 5-10 giây.',
+                icon: 'info',
+                showCancelButton: true,
+                confirmButtonText: 'Bắt đầu quét',
+                cancelButtonText: 'Đóng'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire({
+                        title: 'Đang tạo Sitemap...',
+                        html: 'Vui lòng không đóng trình duyệt lúc này.',
+                        allowOutsideClick: false,
+                        didOpen: () => { Swal.showLoading() }
+                    });
+                    
+                    $.post('/AdminSetting/GenerateSitemap', function(res) {
+                        if(res.success) {
+                            Swal.fire('Thành công', 'Đã lưu sitemap.xml tại thư mục root!', 'success');
+                        } else {
+                            Swal.fire('Lỗi', res.message, 'error');
+                        }
+                    });
+                }
+            });
+        }
+
+        function togglePassword(inputId) {
+            const input = document.getElementById(inputId);
+            const icon = document.getElementById('eye-' + inputId);
+            const btn = icon.parentElement;
+            if (input.type === "password") {
+                input.type = "text";
+                icon.classList.replace('fa-eye', 'fa-eye-slash');
+                btn.innerHTML = `<i class="fas fa-eye-slash" id="eye-${inputId}"></i> Ẩn`;
+            } else {
+                input.type = "password";
+                icon.classList.replace('fa-eye-slash', 'fa-eye');
+                btn.innerHTML = `<i class="fas fa-eye" id="eye-${inputId}"></i> Hiện`;
+            }
+        }
+
+        // Initialize CKEditor for Settings
+        $(function() {
+            // SweetAlert2 for TempData messages
+            @if (TempData["SuccessMessage"] != null) {
+                <text>
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Thành công!',
+                    text: '@Html.Raw(TempData["SuccessMessage"])',
+                    timer: 3000,
+                    timerProgressBar: true,
+                    showConfirmButton: false
+                });
+                </text>
+            }
+            @if (TempData["ErrorMessage"] != null) {
+                <text>
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Lỗi!',
+                    text: '@Html.Raw(TempData["ErrorMessage"])',
+                    confirmButtonText: 'Đóng'
+                });
+                </text>
+            }
+
+            // Currency formatting with commas
+            $('.currency-input').on('input', function() {
+                let value = this.value.replace(/[^0-9]/g, '');
+                if (value === '') value = '0';
+                
+                const targetId = $(this).data('target');
+                document.getElementById(targetId).value = value;
+                
+                this.value = parseInt(value).toLocaleString('en-US');
+            });
+
+            // Prevent scroll on number change
+            $('.currency-input').on('wheel', function(e) {
+                e.preventDefault();
+            });
+
+            const editorConfig = {
+                filebrowserBrowseUrl: '/FileManager/Index?mode=select',
+                filebrowserImageBrowseUrl: '/FileManager/Index?mode=select&type=Images',
+                filebrowserUploadUrl: '/FileManager/Upload?type=Files',
+                filebrowserImageUploadUrl: '/FileManager/Upload?type=Images',
+                height: 250,
+                removeButtons: 'Print,NewPage,Preview,ExportPdf,Save'
+            };
+
+            if (document.getElementById('editorMaintenance')) CKEDITOR.replace('editorMaintenance', editorConfig);
+            if (document.getElementById('editorFooter')) CKEDITOR.replace('editorFooter', editorConfig);
+            if (document.getElementById('editorInvoiceHeader')) CKEDITOR.replace('editorInvoiceHeader', editorConfig);
+            if (document.getElementById('editorInvoiceFooter')) CKEDITOR.replace('editorInvoiceFooter', editorConfig);
+            if (document.getElementById('editor404')) CKEDITOR.replace('editor404', editorConfig);
+            if (document.getElementById('editor403')) CKEDITOR.replace('editor403', editorConfig);
+            if (document.getElementById('editor500')) CKEDITOR.replace('editor500', editorConfig);
+            if (document.getElementById('editorEmailOrderConfirm')) CKEDITOR.replace('editorEmailOrderConfirm', editorConfig);
+            if (document.getElementById('editorEmailOrderStatus')) CKEDITOR.replace('editorEmailOrderStatus', editorConfig);
+            if (document.getElementById('editorEmailPasswordReset')) CKEDITOR.replace('editorEmailPasswordReset', editorConfig);
+
+            $('#formSettings').on('submit', function(e) {
+                e.preventDefault();
+                // Update CKEditor instances before submitting
+                for (instance in CKEDITOR.instances) {
+                    CKEDITOR.instances[instance].updateElement();
+                }
+                
+                const activeTabName = $('#v-pills-tab .nav-link.active').text().trim();
+                const formData = new FormData(this);
+                const btn = $(this).find('button[type="submit"]');
+                const originalText = btn.html();
+                
+                btn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin me-2"></i> ĐANG LƯU...');
+
+                $.ajax({
+                    url: $(this).attr('action'),
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function(res) {
+                        if (res.success) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Thành công!',
+                                text: 'Đã lưu ' + activeTabName,
+                                timer: 3000,
+                                timerProgressBar: true,
+                                showConfirmButton: false
+                            });
+                        } else {
+                            Swal.fire('Lỗi', res.message || 'Có lỗi xảy ra', 'error');
+                        }
+                    },
+                    error: function() {
+                        Swal.fire('Lỗi', 'Lỗi kết nối máy chủ', 'error');
+                    },
+                    complete: function() {
+                        btn.prop('disabled', false).html(originalText);
+                    }
+                });
+            });
+        });
+    </script>
+}
+
+<style>
+    .nav-pills .nav-link {
+        color: #495057;
+        font-weight: 500;
+        transition: all 0.2s ease;
+        border-radius: 8px !important;
+        margin-bottom: 5px;
+    }
+    .nav-pills .nav-link:hover {
+        background-color: rgba(64, 81, 137, 0.05);
+        color: #405189;
+    }
+    .nav-pills .nav-link.active {
+        background: linear-gradient(to right, #405189, #5466a3) !important;
+        color: white !important;
+        box-shadow: 0 4px 15px rgba(64, 81, 137, 0.2);
+    }
+    .form-control:focus {
+        border-color: #405189;
+        box-shadow: 0 0 0 0.25rem rgba(64, 81, 137, 0.1);
+    }
+    .preview-image-container {
+        transition: all 0.3s ease;
+    }
+    .preview-image-container:hover {
+        border-color: #405189 !important;
+        background-color: #fff !important;
+    }
+    .transform-hover:hover {
+        transform: translateY(-2px);
+    }
+    .card {
+        transition: box-shadow 0.3s ease;
+    }
+    .card:hover {
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1) !important;
+    }
+    /* Smooth transitions for tabs */
+    .tab-pane {
+        animation: fadeIn 0.4s ease-out;
+    }
+    @@keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+</style>
+
+<script>
+    function bulkRegenerateImages() {
+        Swal.fire({
+            title: 'Tạo lại toàn bộ Thumbnail?',
+            html: '<p class="mb-1">Hệ thống sẽ xóa tất cả ảnh thu nhỏ cũ và tạo lại theo cài đặt mới.</p><p class="text-success fw-bold mb-0">⚠️ Ảnh gốc KHÔNG bị ảnh hưởng.</p>',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: '<i class="fas fa-redo me-1"></i> Bắt đầu tạo lại',
+            cancelButtonText: 'Hủy',
+            confirmButtonColor: '#f1b44c'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Swal.fire({
+                    title: 'Đang tạo lại Thumbnail...',
+                    html: 'Vui lòng không đóng trình duyệt lúc này.',
+                    allowOutsideClick: false,
+                    didOpen: () => { Swal.showLoading() }
+                });
+                $.post('/FileManager/BulkOptimize', function(data) {
+                    if (data.success) {
+                        const savedMB = (data.savedBytes / 1024 / 1024).toFixed(1);
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Hoàn tất!',
+                            html: `<div class="text-start"><p>📊 Tổng: <strong>${data.total}</strong> ảnh</p><p>✅ Đã tối ưu: <strong>${data.optimized}</strong> ảnh</p><p>💾 Tiết kiệm: <strong>${savedMB} MB</strong></p><p class="text-success fw-bold">⚠️ Ảnh gốc KHÔNG bị thay đổi.</p></div>`
+                        });
+                    } else {
+                        Swal.fire('Lỗi', 'Không thể tạo lại thumbnail.', 'error');
+                    }
+                });
+            }
+        });
+    }
+
+    function selectWatermark() {
+        // Mở popup FileManager để chọn ảnh logo
+        var width = window.innerWidth * 0.8;
+        var height = window.innerHeight * 0.8;
+        var left = (window.innerWidth - width) / 2;
+        var top = (window.innerHeight - height) / 2;
+        
+        window.open('/FileManager?fieldId=watermarkUrl', 'FileManagerWM', `width=${width},height=${height},top=${top},left=${left},scrollbars=yes,resizable=yes`);
+    }
+
+    function selectPreviewBg() {
+        var width = window.innerWidth * 0.8;
+        var height = window.innerHeight * 0.8;
+        var left = (window.innerWidth - width) / 2;
+        var top = (window.innerHeight - height) / 2;
+        window.open('/FileManager?fieldId=previewBg', 'FileManagerPreview', `width=${width},height=${height},top=${top},left=${left},scrollbars=yes,resizable=yes`);
+    }
+
+    // Callback từ FileManager
+    window.setFileUrl = function (urls, fieldId) {
+        if (urls && urls.length > 0) {
+            if (fieldId === 'watermarkUrl') {
+                document.getElementById('watermarkUrl').value = urls[0];
+                updateWatermarkPreview();
+            } else if (fieldId === 'previewBg') {
+                document.getElementById('wmPreviewBox').style.backgroundImage = `url('${urls[0]}')`;
+            }
+        }
+    };
+
+    function updateWatermarkPreview() {
+        const logoUrl = document.getElementById('watermarkUrl').value;
+        const pos = document.getElementById('Image_WatermarkPosition').value;
+        const size = document.getElementById('Image_WatermarkSize').value;
+        const opacity = document.getElementById('Image_WatermarkOpacity').value;
+        
+        const previewLogo = document.getElementById('wmPreviewLogo');
+        if (!logoUrl) {
+            previewLogo.style.display = 'none';
+            return;
+        }
+        
+        previewLogo.src = logoUrl;
+        
+        if (pos === 'Tile') {
+            previewLogo.style.display = 'none';
+            document.getElementById('wmPreviewBox').style.position = 'relative';
+            // Không hỗ trợ preview tile phức tạp trong html tĩnh dễ dàng, chỉ báo hiệu ứng mờ
+            return;
+        }
+
+        previewLogo.style.display = 'block';
+        previewLogo.style.width = size + '%';
+        previewLogo.style.opacity = opacity / 100;
+        
+        // Reset positions
+        previewLogo.style.top = 'auto';
+        previewLogo.style.bottom = 'auto';
+        previewLogo.style.left = 'auto';
+        previewLogo.style.right = 'auto';
+        previewLogo.style.transform = 'none';
+        
+        const padding = '2%';
+        
+        switch (pos) {
+            case 'TopLeft':
+                previewLogo.style.top = padding;
+                previewLogo.style.left = padding;
+                break;
+            case 'TopRight':
+                previewLogo.style.top = padding;
+                previewLogo.style.right = padding;
+                break;
+            case 'BottomLeft':
+                previewLogo.style.bottom = padding;
+                previewLogo.style.left = padding;
+                break;
+            case 'Center':
+                previewLogo.style.top = '50%';
+                previewLogo.style.left = '50%';
+                previewLogo.style.transform = 'translate(-50%, -50%)';
+                break;
+            case 'BottomRight':
+            default:
+                previewLogo.style.bottom = padding;
+                previewLogo.style.right = padding;
+                break;
+        }
+    }
+
+    // Init preview on load
+    document.addEventListener('DOMContentLoaded', function() {
+        updateWatermarkPreview();
+        const watermarkInput = document.getElementById('watermarkUrl');
+        if(watermarkInput) watermarkInput.addEventListener('input', updateWatermarkPreview);
+
+        // Init Gemini Live Check
+        let geminiInput = document.getElementById('GeminiApiKey');
+        if(geminiInput) {
+            checkGeminiConnection(geminiInput.value);
+            let timeout = null;
+            geminiInput.addEventListener('input', function() {
+                clearTimeout(timeout);
+                document.getElementById('ai-status-indicator').innerHTML = '<span class="badge bg-secondary px-3"><i class="fas fa-spinner fa-spin"></i> Đang kiểm tra...</span>';
+                timeout = setTimeout(() => { checkGeminiConnection(this.value); }, 1000);
+            });
+        }
+    });
+
+    async function checkGeminiConnection(key) {
+        const indicator = document.getElementById('ai-status-indicator');
+        if (!key || key.trim() === '') {
+            indicator.innerHTML = '<span class="badge bg-secondary px-3">Chưa có mã</span>';
+            return;
+        }
+        try {
+            const response = await fetch('/AdminSetting/CheckGeminiApi', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(key)
+            });
+            const res = await response.json();
+            if (res.success) {
+                indicator.innerHTML = '<span class="badge bg-success px-3 py-2" style="font-size:12px"><i class="fas fa-check-circle"></i> Kết nối thành công</span>';
+            } else {
+                indicator.innerHTML = '<span class="badge bg-danger px-3 py-2" style="font-size:12px" title="'+res.message+'"><i class="fas fa-times-circle"></i> Lỗi API Key</span>';
+            }
+        } catch (err) {
+            indicator.innerHTML = '<span class="badge bg-danger px-3"><i class="fas fa-wifi"></i> Lỗi mạng</span>';
+        }
+    }
+</script>

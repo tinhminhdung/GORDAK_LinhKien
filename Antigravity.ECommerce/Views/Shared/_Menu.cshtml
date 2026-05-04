@@ -1,0 +1,12 @@
+﻿@using Antigravity.ECommerce.Models
+@model List<Category>
+
+<ul class="navbar-nav me-auto mb-2 mb-lg-0">
+    @if (Model != null)
+    {
+        @foreach (var item in Model)
+        {
+            @await Html.PartialAsync("_MenuItem", item)
+        }
+    }
+</ul>

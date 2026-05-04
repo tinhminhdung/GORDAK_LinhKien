@@ -1,0 +1,512 @@
+@model Antigravity.ECommerce.Models.Order
+@{
+    ViewData["Title"] = "Chi tiết đơn hàng " + Model.OrderCode;
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    var items = ViewBag.Items as List<Antigravity.ECommerce.Models.OrderItem>;
+    var history = ViewBag.History as List<Antigravity.ECommerce.Models.OrderStatusHistory>;
+
+    string GetStatusText(int status) => status switch {
+        0 => "Mới", 1 => "Xác nhận", 2 => "Đang giao", 3 => "Hoàn tất", 4 => "Đã hủy", 5 => "Trả hàng", _ => ""
+    };
+    
+    string GetStatusColor(int status) => status switch {
+        0 => "info", 1 => "primary", 2 => "warning", 3 => "success", 4 => "danger", 5 => "dark", _ => "secondary"
+    };
+}
+
+<style>
+    /* Premium Timeline Styling */
+    .timeline-alt {
+        padding: 20px 0;
+        position: relative;
+    }
+    .timeline-alt:before {
+        content: "";
+        position: absolute;
+        width: 2px;
+        background: #e9ebec;
+        top: 0;
+        bottom: 0;
+        left: 20px;
+    }
+    .timeline-item {
+        padding: 0px 60px !important;
+        position: relative;
+        padding-left: 55px;
+        margin-bottom: 10px;
+    }
+    .timeline-icon {
+        position: absolute;
+        left: 8px;
+        top: 0;
+        width: 26px;
+        height: 26px;
+        border-radius: 50%;
+        text-align: center;
+        line-height: 26px;
+        z-index: 2;
+        box-shadow: 0 0 0 4px #fff;
+        font-size: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .timeline-item-info {
+        background: #fff;
+        padding: 15px;
+        border-radius: 10px;
+        position: relative;
+        border: 1px solid #edf2f9;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        transition: all 0.3s ease;
+    }
+    .timeline-item-info:hover {
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        transform: translateY(-2px);
+    }
+    .timeline-item-info:before {
+        content: "";
+        position: absolute;
+        left: -10px;
+        top: 8px;
+        border-top: 10px solid transparent;
+        border-bottom: 10px solid transparent;
+        border-right: 10px solid #edf2f9;
+    }
+    .timeline-title {
+        font-size: 0.9rem;
+        font-weight: 700;
+    }
+    .timeline-meta {
+        font-size: 0.75rem;
+        color: #95aac9;
+    }
+    .timeline-note {
+        font-style: italic;
+        color: #495057;
+        margin-top: 8px;
+        padding: 8px 12px;
+        background: #f8f9fa;
+        border-left: 3px solid #dee2e6;
+        border-radius: 4px;
+    }
+    
+    /* Card Enhancements */
+    .card {
+        border-radius: 12px;
+        border: none;
+        box-shadow: 0 2px 4px rgba(0,0,0,.03);
+        margin-bottom: 24px;
+    }
+    .card-header {
+        background-color: transparent;
+        padding: 1.25rem;
+    }
+    .page-title-box {
+        padding: 10px 1.5rem;
+        background: transparent;
+    }
+    .page-title {
+        font-size: 18px;
+        font-weight: 700;
+        color: #495057;
+        text-transform: uppercase;
+        margin: 0;
+    }
+    .badge-soft-primary { background-color: rgba(64,81,137,0.1); color: #405189; }
+    
+    /* Order Summary Table */
+    .table-order-summary tfoot th { border-top: 1px solid #e9ebec; }
+    .table-order-summary tfoot .total-row { border-top: 2px solid #e9ebec; }
+</style>
+
+<div class="row">
+    <div class="col-12">
+        <div class="page-title-box d-flex align-items-center justify-content-between">
+            <h4 class="page-title">Chi tiết đơn: @Model.OrderCode</h4>
+            <div class="d-flex gap-2">
+                @if (Model.OrderStatus == 0 || Model.OrderStatus == 4)
+                {
+                    <button type="button" class="btn btn-danger" onclick="deleteOrder(@Model.OrderId)">
+                        <i class="ri-delete-bin-line align-middle me-1"></i> Xóa Đơn
+                    </button>
+                }
+                <a href="/AdminOrder/Print/@Model.OrderId" target="_blank" class="btn btn-light"><i class="mdi mdi-printer"></i> In Hóa Đơn</a>
+                <a href="/AdminOrder" class="btn btn-primary">Quay lại</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-8">
+        <!-- Thông tin sản phẩm -->
+        <div class="card">
+            <div class="card-header border-bottom d-flex justify-content-between align-items-center">
+                <h4 class="header-title mb-0">Sản phẩm</h4>
+                <span class="badge bg-@GetStatusColor(Model.OrderStatus) fs-5">@GetStatusText(Model.OrderStatus)</span>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-order-summary mb-0">
+                        <thead class="table-light text-muted">
+                            <tr>
+                                <th>Sản phẩm</th>
+                                <th class="text-center">Số lượng</th>
+                                <th>Đơn giá</th>
+                                <th class="text-end">Thành tiền</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if(items != null){
+                                foreach(var item in items) {
+                                    <tr>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                @if(!string.IsNullOrEmpty(item.ProductImage)){
+                                                    <img src="@item.ProductImage" alt="" class="avatar-sm rounded me-3" style="width: 45px; height: 45px; object-fit: cover;" />
+                                                }
+                                                <p class="mb-0">@item.ProductName <br><small>SKU: @item.ProductSKU</small></p>
+                                            </div>
+                                        </td>
+                                        <td class="text-center">@item.Quantity</td>
+                                        <td>@item.Price.ToString("N0") ₫</td>
+                                        <td class="text-end fw-bold">@item.TotalPrice.ToString("N0") ₫</td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                        <tfoot class="table-light">
+                            <tr>
+                                <th colspan="3" class="text-end text-muted border-0">Tạm tính:</th>
+                                <th class="text-end border-0">@Model.SubTotal.ToString("N0") ₫</th>
+                            </tr>
+                            <tr>
+                                <th colspan="3" class="text-end text-muted border-0">Phí vận chuyển:</th>
+                                <th class="text-end border-0">+@Model.ShippingFee.ToString("N0") ₫</th>
+                            </tr>
+                            @if(Model.Discount > 0){
+                                <tr>
+                                    <th colspan="3" class="text-end text-danger border-0">Giảm giá:</th>
+                                    <th class="text-end text-danger border-0">-@Model.Discount.ToString("N0") ₫</th>
+                                </tr>
+                            }
+                            <tr class="total-row">
+                                <th colspan="3" class="text-end fw-bold fs-16">Tổng cộng:</th>
+                                <th class="text-end fw-bold fs-18 text-danger">@Model.TotalAmount.ToString("N0") ₫</th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Xử lý đơn hàng (Trạng thái) -->
+        <div class="card">
+            <div class="card-header">
+                <h4 class="header-title mb-0">Cập nhật Trạng thái</h4>
+            </div>
+            <div class="card-body">
+                <div class="row g-3 align-items-end">
+                    <div class="col-md-3">
+                        <label class="form-label text-muted small fw-bold">Trạng thái mới</label>
+                        <select id="newStatus" class="form-select">
+                            <option value="0" selected="@(Model.OrderStatus == 0)">Mới</option>
+                            <option value="1" selected="@(Model.OrderStatus == 1)">Xác nhận</option>
+                            <option value="2" selected="@(Model.OrderStatus == 2)">Đang giao</option>
+                            <option value="3" selected="@(Model.OrderStatus == 3)">Hoàn tất</option>
+                            <option value="4" selected="@(Model.OrderStatus == 4)">Hủy</option>
+                            <option value="5" selected="@(Model.OrderStatus == 5)">Trả hàng</option>
+                        </select>
+                    </div>
+                    <div class="col-md-7">
+                        <label class="form-label text-muted small fw-bold">Ghi chú xử lý</label>
+                        <input type="text" id="statusNote" class="form-control" placeholder="Nhập ghi chú cập nhật trạng thái (nếu có)..." />
+                    </div>
+                    <div class="col-md-2">
+                        <button type="button" class="btn btn-primary w-100" onclick="updateStatus()">Cập nhật</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Timeline Lịch sử -->
+        <div class="card">
+            <div class="card-header bg-transparent border-bottom">
+                <h4 class="header-title mb-0">Lịch sử đơn hàng</h4>
+            </div>
+            <div class="card-body">
+                <div class="timeline-alt">
+                    @if(history != null && history.Count > 0){
+                        foreach(var h in history){
+                            <div class="timeline-item">
+                                <i class="mdi mdi-circle bg-@GetStatusColor(h.ToStatus) text-white timeline-icon"></i>
+                                <div class="timeline-item-info">
+                                    <div class="d-flex justify-content-between align-items-center mb-1">
+                                        <span class="timeline-title text-@GetStatusColor(h.ToStatus)">@GetStatusText(h.ToStatus)</span>
+                                        <span class="timeline-meta"><i class="mdi mdi-clock-outline me-1"></i>@h.ChangedAt.ToString("dd/MM/yyyy HH:mm")</span>
+                                    </div>
+                                    <div class="text-muted small mb-2">Bởi: <span class="fw-medium text-body">@h.ChangedBy</span></div>
+                                    @if(!string.IsNullOrWhiteSpace(h.Note)){
+                                        <div class="timeline-note text-dark small">@h.Note</div>
+                                    }
+                                </div>
+                            </div>
+                        }
+                    } else {
+                        <div class="text-center text-muted py-3">Chưa có lịch sử cập nhật.</div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <!-- Thông tin Khách hàng -->
+        <div class="card">
+            <div class="card-header">
+                <h4 class="header-title mb-0">Thông tin Khách hàng</h4>
+            </div>
+            <div class="card-body">
+                <p><strong><i class="mdi mdi-account"></i></strong> @Model.CustomerName</p>
+                <p><strong><i class="mdi mdi-phone"></i></strong> @Model.CustomerPhone</p>
+                @if(!string.IsNullOrEmpty(Model.CustomerEmail)){
+                    <p><strong><i class="mdi mdi-email"></i></strong> @Model.CustomerEmail</p>
+                }
+                <hr class="text-muted opacity-25">
+                <p class="mb-1 text-muted d-flex justify-content-between align-items-center">
+                    <strong><i class="ri-map-pin-2-fill me-1"></i> Địa chỉ giao hàng:</strong>
+                    <button type="button" class="btn btn-sm btn-soft-primary" data-bs-toggle="modal" data-bs-target="#editAddressModal">Sửa</button>
+                </p>
+                <p class="mb-0 fs-14">
+                    @Model.ShippingAddress<br />
+                    @Model.WardName, @Model.ProvinceName
+                </p>
+                @if(!string.IsNullOrEmpty(Model.CustomerNote)){
+                    <div class="alert alert-soft-warning mb-0 pb-1 pt-1 mt-2 border-0">
+                        <small><strong>Ghi chú KH:</strong> @Model.CustomerNote</small>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <!-- Modal Sửa Địa Chỉ -->
+        <div class="modal fade" id="editAddressModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Cập nhật địa chỉ giao hàng</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label class="form-label">Tên người nhận</label>
+                            <input type="text" id="editName" class="form-control" value="@Model.CustomerName">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Số điện thoại</label>
+                            <input type="text" id="editPhone" class="form-control" value="@Model.CustomerPhone">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Tỉnh / Thành phố</label>
+                            <select class="selectpicker" id="editProvinceId" data-live-search="true">
+                                <option value="">-- Chọn Tỉnh / Thành --</option>
+                                @if (ViewBag.Provinces != null)
+                                {
+                                    foreach (var p in ViewBag.Provinces)
+                                    {
+                                        <option value="@p.ProvinceId" selected="@(Model.ProvinceId == p.ProvinceId ? "selected" : null)">@p.Name</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Phường / Xã</label>
+                            <select class="selectpicker" id="editWardId" data-live-search="true">
+                                <option value="">-- Chọn Phường / Xã --</option>
+                                @if (ViewBag.Wards != null)
+                                {
+                                    foreach (var w in ViewBag.Wards)
+                                    {
+                                        <option value="@w.WardId" selected="@(Model.WardId == w.WardId ? "selected" : null)">@w.Name</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Địa chỉ chi tiết</label>
+                            <input type="text" id="editAddress" class="form-control" value="@Model.ShippingAddress">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-light" data-bs-dismiss="modal">Đóng</button>
+                        <button type="button" class="btn btn-primary" onclick="saveAddress()">Lưu thay đổi</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Thông tin Vận chuyển -->
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h4 class="header-title mb-0">Vận chuyển</h4>
+            </div>
+            <div class="card-body">
+                <p><strong>Mã vận đơn:</strong> @(string.IsNullOrEmpty(Model.TrackingCode) ? "Chưa có" : Model.TrackingCode)</p>
+                <p class="mb-0"><strong>Đơn vị vận chuyển:</strong> @(string.IsNullOrEmpty(Model.ShippingMethod) ? "Chưa xác định" : Model.ShippingMethod)</p>
+            </div>
+        </div>
+
+        <!-- Thông tin Thanh toán -->
+        <div class="card">
+            <div class="card-header">
+                <h4 class="header-title mb-0">Thanh toán</h4>
+            </div>
+            <div class="card-body">
+                <p><strong>Phương thức:</strong> @Model.PaymentMethod</p>
+                <p><strong>Trạng thái:</strong> 
+                    @if(Model.PaymentStatus == 1){ <span class="badge bg-success">Đã thanh toán</span> }
+                    else { <span class="badge bg-warning text-dark">Chưa thanh toán</span> }
+                    <button type="button" class="btn btn-sm btn-link p-0 ms-1" onclick="updatePaymentStatus()">
+                        (Đổi)
+                    </button>
+                </p>
+            </div>
+        </div>
+        
+        <!-- Ghi chú Admin -->
+        <div class="card">
+            <div class="card-header">
+                <h4 class="header-title mb-0">Ghi chú Nội bộ</h4>
+            </div>
+            <div class="card-body">
+                <textarea id="adminNote" class="form-control mb-2" rows="3" placeholder="Ghi chú dành cho admin...">@Model.AdminNote</textarea>
+                <button type="button" class="btn btn-sm btn-light w-100" onclick="updateAdminNote()">Lưu Ghi chú</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function updateStatus() {
+            var newStatus = $('#newStatus').val();
+            var statusNote = $('#statusNote').val();
+            $.post('/AdminOrder/UpdateStatus', { id: @Model.OrderId, newStatus: newStatus, note: statusNote }, function(res) {
+                if(res.success) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Thành công',
+                        text: 'Trạng thái đơn hàng đã được cập nhật.',
+                        timer: 1500,
+                        showConfirmButton: false
+                    }).then(() => {
+                        location.reload();
+                    });
+                } else {
+                    Swal.fire('Lỗi', res.message, 'error');
+                }
+            });
+        }
+        
+
+
+        function updateAdminNote() {
+            var val = $('#adminNote').val();
+            $.post('/AdminOrder/UpdateAdminNote', { id: @Model.OrderId, adminNote: val }, function(res) {
+                if(res.success) {
+                    Swal.fire('Thành công', 'Ghi chú nội bộ đã được cập nhật.', 'success');
+                } else {
+                    Swal.fire('Lỗi', res.message, 'error');
+                }
+            });
+        }
+
+
+
+        function updatePaymentStatus() {
+            var currentStatus = @Model.PaymentStatus;
+            var newStatus = currentStatus == 1 ? 0 : 1;
+            var data = {
+                OrderId: @Model.OrderId,
+                PaymentStatus: newStatus,
+                CustomerName: '@Html.Raw(Model.CustomerName)',
+                CustomerPhone: '@Html.Raw(Model.CustomerPhone)',
+                ShippingAddress: '@Html.Raw(Model.ShippingAddress)'
+            };
+            $.post('/AdminOrder/Update', data, function(res) {
+                if(res.success) {
+                    location.reload();
+                } else {
+                    Swal.fire('Lỗi', res.message, 'error');
+                }
+            });
+        }
+        function deleteOrder(id) {
+            Swal.fire({
+                title: 'Xóa đơn hàng?',
+                text: "Bạn có chắc chắn muốn xóa đơn hàng này? Thao tác này không thể hoàn tác!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Xác nhận xóa',
+                cancelButtonText: 'Hủy'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: '/AdminOrder/Delete',
+                        type: 'POST',
+                        data: { id: id },
+                        success: function (res) {
+                            if (res.success) {
+                                Swal.fire('Đã xóa!', 'Đơn hàng đã được xóa thành công.', 'success').then(() => {
+                                    location.href = '/AdminOrder';
+                                });
+                            } else {
+                                Swal.fire('Lỗi', res.message, 'error');
+                            }
+                        }
+                    });
+                }
+            });
+        }
+        function saveAddress() {
+            var data = {
+                OrderId: @Model.OrderId,
+                CustomerName: $('#editName').val(),
+                CustomerPhone: $('#editPhone').val(),
+                ProvinceId: $('#editProvinceId').val(),
+                WardId: $('#editWardId').val(),
+                ShippingAddress: $('#editAddress').val()
+            };
+            $.post('/AdminOrder/Update', data, function(res) {
+                if(res.success) {
+                    location.reload();
+                } else {
+                    Swal.fire('Lỗi', res.message, 'error');
+                }
+            });
+        }
+
+        $(document).ready(function() {
+            $('#editProvinceId').change(function () {
+                var provinceId = $(this).val();
+                var wardSelect = $('#editWardId');
+                wardSelect.empty().append('<option value="">-- Đang nạp Phường/Xã... --</option>').selectpicker('refresh');
+
+                if (provinceId) {
+                    $.get('/Location/GetPhuongXa', { maTinh: provinceId }, function (data) {
+                        wardSelect.empty().append('<option value="">-- Chọn Phường/Xã --</option>');
+                        $.each(data, function (i, item) {
+                            wardSelect.append('<option value="' + item.ma_Xa + '">' + item.ten_Xa + '</option>');
+                        });
+                        wardSelect.selectpicker('refresh');
+                    });
+                } else {
+                    wardSelect.empty().append('<option value="">-- Chọn Phường/Xã --</option>').selectpicker('refresh');
+                }
+            });
+        });
+    </script>
+}

@@ -1,0 +1,180 @@
+@model Antigravity.ECommerce.Models.Order
+@{
+    Layout = "_MemberLayout";
+    ViewData["Title"] = "Chi tiết đơn hàng #" + Model.OrderCode;
+    var items = ViewBag.OrderItems as List<Antigravity.ECommerce.Models.OrderItem>;
+}
+
+@section MemberStyles {
+    <style>
+        .timeline-steps {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+            margin-bottom: 2rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid #edf2f7;
+        }
+        .timeline-steps::before {
+            content: '';
+            position: absolute;
+            top: 24px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: #e2e8f0;
+            z-index: 1;
+        }
+        .step {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            width: 25%;
+        }
+        .step-icon {
+            width: 50px;
+            height: 50px;
+            background: #fff;
+            border: 2px solid #e2e8f0;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 10px;
+            font-size: 1.5rem;
+            color: #a0aec0;
+            transition: all 0.3s;
+        }
+        .step.active .step-icon {
+            border-color: #4f46e5;
+            background: #4f46e5;
+            color: #fff;
+            box-shadow: 0 0 0 5px rgba(79, 70, 229, 0.2);
+        }
+        .step.done .step-icon {
+            border-color: #48bb78;
+            background: #48bb78;
+            color: #fff;
+        }
+        .step-label {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #4a5568;
+        }
+    </style>
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom">
+    <h4 class="fw-bold text-dark mb-0">Chi tiết đơn hàng: <span class="text-primary">@Model.OrderCode</span></h4>
+    <a href="@Url.Action("Orders", "Member")" class="btn btn-outline-secondary btn-sm"><i class="ri-arrow-left-line"></i> Quay lại</a>
+</div>
+
+<div class="timeline-steps">
+    <div class="step @(Model.OrderStatus >= 0 ? (Model.OrderStatus > 0 ? "done" : "active") : "")">
+        <div class="step-icon"><i class="ri-shopping-cart-2-line"></i></div>
+        <div class="step-label">Chờ xác nhận</div>
+    </div>
+    <div class="step @(Model.OrderStatus >= 1 ? (Model.OrderStatus > 1 ? "done" : "active") : "")">
+        <div class="step-icon"><i class="ri-box-3-line"></i></div>
+        <div class="step-label">Đang xử lý</div>
+    </div>
+    <div class="step @(Model.OrderStatus >= 2 ? (Model.OrderStatus > 2 ? "done" : "active") : "")">
+        <div class="step-icon"><i class="ri-truck-line"></i></div>
+        <div class="step-label">Đang giao</div>
+    </div>
+    <div class="step @(Model.OrderStatus == 3 ? "active" : "")">
+        <div class="step-icon"><i class="ri-checkbox-circle-line"></i></div>
+        <div class="step-label">Hoàn thành</div>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-6 mb-3">
+        <div class="card h-100 border-0 shadow-sm rounded-4">
+            <div class="card-body">
+                <h6 class="card-title text-muted mb-3"><i class="ri-map-pin-line me-2"></i>Thông tin giao hàng</h6>
+                <p class="mb-1"><strong>@Model.CustomerName</strong></p>
+                <p class="mb-1">SĐT: @Model.CustomerPhone</p>
+                <p class="mb-1">Email: @Model.CustomerEmail</p>
+                <p class="mb-0">Địa chỉ: @Model.ShippingAddress</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 mb-3">
+        <div class="card h-100 border-0 shadow-sm rounded-4">
+            <div class="card-body">
+                <h6 class="card-title text-muted mb-3"><i class="ri-bank-card-line me-2"></i>Thanh toán & Ghi chú</h6>
+                <p class="mb-1">Phương thức: <strong>@Model.PaymentMethod</strong></p>
+                <p class="mb-1">
+                    Trạng thái: 
+                    @if(Model.PaymentStatus == 1){ <span class="badge bg-success">Đã thanh toán</span> }
+                    else { <span class="badge bg-secondary">Chưa thanh toán</span> }
+                </p>
+                @if (!string.IsNullOrEmpty(Model.CustomerNote))
+                {
+                    <p class="mb-0 mt-2 text-muted"><em>Ghi chú: @Model.CustomerNote</em></p>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+    <div class="table-responsive">
+        <table class="table mb-0 align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th>Sản phẩm</th>
+                    <th class="text-center">Đơn giá</th>
+                    <th class="text-center">Số lượng</th>
+                    <th class="text-end">Thành tiền</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (items != null)
+                {
+                    foreach (var item in items)
+                    {
+                        <tr>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    @* Giả sử có đường dẫn ảnh hoặc không *@
+                                    <div class="ms-3">
+                                        <h6 class="mb-0">@item.ProductName</h6>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="text-center">@item.Price.ToString("N0")đ</td>
+                            <td class="text-center">@item.Quantity</td>
+                            <td class="text-end fw-semibold">@item.TotalPrice.ToString("N0")đ</td>
+                        </tr>
+                    }
+                }
+            </tbody>
+            <tfoot class="bg-light">
+                <tr>
+                    <td colspan="3" class="text-end">Tạm tính:</td>
+                    <td class="text-end">@Model.SubTotal.ToString("N0")đ</td>
+                </tr>
+                <tr>
+                    <td colspan="3" class="text-end">Phí vận chuyển:</td>
+                    <td class="text-end">@Model.ShippingFee.ToString("N0")đ</td>
+                </tr>
+                <tr>
+                    <td colspan="3" class="text-end fw-bold fs-5">Tổng cộng:</td>
+                    <td class="text-end fw-bold fs-5 text-danger">@Model.TotalAmount.ToString("N0")đ</td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>
+
+@if (Model.OrderStatus == 3)
+{
+    <div class="text-end mt-4">
+        <form asp-controller="Member" asp-action="Reorder" method="post">
+            <input type="hidden" name="orderId" value="@Model.OrderId" />
+            <button type="submit" class="btn btn-primary px-4 py-2"><i class="ri-shopping-cart-line me-2"></i>Mua lại đơn hàng này</button>
+        </form>
+    </div>
+}

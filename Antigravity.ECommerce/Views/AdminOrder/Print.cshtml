@@ -1,0 +1,159 @@
+@{
+    Layout = null;
+    var order = Model as Antigravity.ECommerce.Models.Order;
+    var items = ViewBag.Items as List<Antigravity.ECommerce.Models.OrderItem>;
+}
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <title>Hóa đơn - @order.OrderCode</title>
+    <style>
+        body { font-family: 'Times New Roman', Times, serif; font-size: 14px; margin: 0; padding: 20px; line-height: 1.5; color: #000; }
+        .invoice-box { max-width: 800px; margin: auto; padding: 30px; border: 1px solid #eee; box-shadow: 0 0 10px rgba(0, 0, 0, 0.15); }
+        .header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 25px; border-bottom: 2px solid #000; padding-bottom: 15px; }
+        .header h1 { margin: 0; font-size: 26px; text-transform: uppercase; color: #000; }
+        .header-left { display: flex; align-items: flex-start; gap: 20px; }
+        .company-info, .order-info { margin-bottom: 10px; }
+        .logo img { max-width: 150px; object-fit: contain; }
+        .company-info { text-align: left; }
+        .order-info { text-align: right; }
+        .customer-info { margin-bottom: 30px; border: 1px solid #ddd; padding: 10px; background-color: #f9f9f9; }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #eee; font-weight: bold; }
+        .text-center { text-align: center; }
+        .text-right { text-align: right; }
+        .fw-bold { font-weight: bold; }
+        .totals { width: 40%; float: right; }
+        .totals table th, .totals table td { border: none; padding: 5px; }
+        .totals table th { text-align: right; background: none; }
+        .clearfix::after { content: ""; clear: both; display: table; }
+        .footer { text-align: center; margin-top: 50px; font-style: italic; color: #555; }
+        @@media print {
+            body { padding: 0; }
+            .invoice-box { border: none; box-shadow: none; padding:0; width: 100%; max-width: none; }
+            .no-print { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="no-print" style="text-align: center; margin-bottom: 20px;">
+        <button onclick="window.print()" style="padding: 10px 20px; font-size: 16px; cursor: pointer; background: #007bff; color: white; border: none; border-radius: 5px;">Ra Lệnh In</button>
+    </div>
+
+    <div class="invoice-box">
+        @{
+            var settings = Antigravity.ECommerce.Services.SSetting.GetViewModel();
+        }
+        <div class="header">
+            <div class="header-left">
+                @if(!string.IsNullOrEmpty(settings.Logo)){
+                    <div class="logo">
+                        <img src="@settings.Logo" alt="Logo" />
+                    </div>
+                }
+                <div class="company-info">
+                    @if(!string.IsNullOrEmpty(settings.InvoiceHeader)){
+                        @Html.Raw(settings.InvoiceHeader)
+                    } else {
+                        <h1>HÓA ĐƠN BÁN LẺ</h1>
+                        <p style="margin: 5px 0;"><strong>@settings.SiteTitle</strong><br>
+                        Hotline: @settings.Hotline<br>
+                        Email: @settings.Email<br>
+                        Địa chỉ: @settings.Address</p>
+                    }
+                </div>
+            </div>
+            <div class="order-info">
+                <p style="margin: 5px 0;">
+                    <strong>Số Hóa Đơn:</strong> @order.OrderCode<br>
+                    <strong>Ngày Lập:</strong> @order.CreatedAt.ToString("dd/MM/yyyy HH:mm")<br>
+                    <strong>Thanh Toán:</strong> @order.PaymentMethod
+                </p>
+            </div>
+        </div>
+
+        <div class="customer-info">
+            <h3 style="margin-top: 0; margin-bottom: 10px;">THÔNG TIN KHÁCH HÀNG:</h3>
+            <strong>Họ tên:</strong> @order.CustomerName <br>
+            <strong>Điện thoại:</strong> @order.CustomerPhone <br>
+            <strong>Địa chỉ giao hàng:</strong> @order.ShippingAddress <br>
+            @if(!string.IsNullOrEmpty(order.CustomerNote)){
+                <p style="margin-top:5px; margin-bottom:0;"><strong>Ghi chú:</strong> @order.CustomerNote</p>
+            }
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th style="width: 50px;" class="text-center">STT</th>
+                    <th>Tên Sản Phẩm</th>
+                    <th class="text-center">SL</th>
+                    <th class="text-right">Đơn Giá</th>
+                    <th class="text-right">Thành Tiền</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{int stt = 1;}
+                @foreach (var item in items)
+                {
+                    <tr>
+                        <td class="text-center">@(stt++)</td>
+                        <td>@item.ProductName</td>
+                        <td class="text-center">@item.Quantity</td>
+                        <td class="text-right">@item.Price.ToString("N0") ₫</td>
+                        <td class="text-right">@item.TotalPrice.ToString("N0") ₫</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <div class="clearfix">
+            <div class="totals">
+                <table>
+                    <tr>
+                        <th>Cộng tiền hàng:</th>
+                        <td class="text-right">@order.SubTotal.ToString("N0") ₫</td>
+                    </tr>
+                    <tr>
+                        <th>Phí vận chuyển:</th>
+                        <td class="text-right">@order.ShippingFee.ToString("N0") ₫</td>
+                    </tr>
+                    @if(order.Discount > 0){
+                        <tr>
+                            <th>Giảm giá:</th>
+                            <td class="text-right">-@order.Discount.ToString("N0") ₫</td>
+                        </tr>
+                    }
+                    <tr>
+                        <th style="font-size: 16px; border-top: 1px solid #000; padding-top: 10px;">TỔNG CỘNG:</th>
+                        <td class="text-right fw-bold" style="font-size: 16px; border-top: 1px solid #000; padding-top: 10px;">@order.TotalAmount.ToString("N0") ₫</td>
+                    </tr>
+                </table>
+            </div>
+            
+            <div style="float: left; width: 50%; padding-top: 20px;">
+                <p><strong>Ngày giao dự kiến:</strong> ......................................</p>
+                <div style="text-align: center; margin-top: 30px;">
+                    <strong>Người Nhận Hàng</strong><br>
+                    <small>(Ký và ghi rõ họ tên)</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            @if(!string.IsNullOrEmpty(settings.InvoiceFooter)){
+                @Html.Raw(settings.InvoiceFooter)
+            } else {
+                <span>Cảm ơn quý khách đã tin tưởng và mua hàng tại @settings.SiteTitle!</span>
+            }
+        </div>
+    </div>
+    
+    <script>
+        // Tự động bật hộp thoại in khi trang load xong
+        window.onload = function() { window.print(); }
+    </script>
+</body>
+</html>

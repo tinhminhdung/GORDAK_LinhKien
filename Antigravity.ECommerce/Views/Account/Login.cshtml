@@ -1,0 +1,114 @@
+@{
+    Layout = "_MainLayout";
+    ViewData["Title"] = "Đăng nhập hệ thống";
+}
+@section Styles {
+    <style>
+        .auth-page {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+            padding: 2rem 0;
+        }
+        .auth-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
+            border-radius: 20px;
+            padding: 2.5rem;
+            width: 100%;
+            max-width: 550px;
+        }
+        .auth-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+        .form-control-custom {
+            border-radius: 12px;
+            padding: 0.75rem 1rem;
+            border: 1px solid #d1d5db;
+            background: rgba(255, 255, 255, 0.9);
+            transition: all 0.3s;
+        }
+        .form-control-custom:focus {
+            border-color: #4f46e5;
+            box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1);
+        }
+        .btn-auth {
+            background: linear-gradient(to right, #4f46e5, #4338ca);
+            color: white;
+            border-radius: 12px;
+            padding: 0.75rem;
+            font-weight: 600;
+            border: none;
+            width: 100%;
+            transition: all 0.3s;
+        }
+        .btn-auth:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(79, 70, 229, 0.3);
+            color: white;
+        }
+        .auth-links {
+            text-align: center;
+            margin-top: 1.5rem;
+        }
+        .auth-links a {
+            color: #4f46e5;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        .auth-links a:hover {
+            color: #3730a3;
+        }
+    </style>
+}
+
+<div class="auth-page">
+    <div class="auth-card">
+        <h1 class="auth-title">Đăng nhập</h1>
+        
+        @if (TempData["Success"] != null)
+        {
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                @TempData["Success"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+
+        @if (ViewBag.Error != null)
+        {
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                @ViewBag.Error
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+
+        <form asp-controller="Account" asp-action="Login" method="post">
+            <div class="mb-3">
+                <label class="form-label text-muted fw-semibold">Email hoặc Số điện thoại</label>
+                <input type="text" name="username" class="form-control form-control-custom" placeholder="Nhập Email hoặc Số điện thoại" required>
+            </div>
+            <div class="mb-4">
+                <label class="form-label text-muted fw-semibold d-flex justify-content-between">
+                    <span>Mật khẩu</span>
+                    <a asp-controller="Account" asp-action="ForgotPassword" class="text-decoration-none text-primary" style="font-size: 0.875rem;">Quên mật khẩu?</a>
+                </label>
+                <input type="password" name="password" class="form-control form-control-custom" placeholder="Nhập mật khẩu" required>
+            </div>
+            <button type="submit" class="btn btn-auth mb-3">Đăng nhập</button>
+        </form>
+
+        <div class="auth-links">
+            <span class="text-muted">Chưa có tài khoản?</span>
+            <a asp-controller="Account" asp-action="Register">Đăng ký ngay</a>
+        </div>
+    </div>
+</div>

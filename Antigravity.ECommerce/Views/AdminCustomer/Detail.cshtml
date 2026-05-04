@@ -1,0 +1,167 @@
+﻿@model Antigravity.ECommerce.Models.Customer
+@{
+    ViewData["Title"] = "Chi tiết Khách hàng: " + Model.FullName;
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    var orders = ViewBag.Orders as List<Antigravity.ECommerce.Models.Order>;
+}
+
+<div class="row">
+    <div class="col-12">
+        <div class="page-title-box">
+            <h4 class="page-title">Hồ sơ khách hàng: @Model.FullName</h4>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-4">
+        <!-- Profile Card -->
+        <div class="card text-center">
+            <div class="card-body">
+                <img src="@(string.IsNullOrEmpty(Model.Avatar) ? "/assets/images/users/avatar-blank.png" : Model.Avatar)" class="rounded-circle avatar-lg img-thumbnail" alt="avatar">
+                <h4 class="mb-0 mt-2">@Model.FullName</h4>
+                <p class="text-muted fs-14">@Model.Phone</p>
+
+                <div class="text-start mt-3">
+                    <p class="text-muted mb-2"><strong>Email :</strong> <span class="ms-2">@Model.Email</span></p>
+                    <p class="text-muted mb-2"><strong>Địa chỉ :</strong> <span class="ms-2">@Model.Address</span></p>
+                    <p class="text-muted mb-2"><strong>Giới tính :</strong> <span class="ms-2">@(Model.Gender == 1 ? "Nam" : (Model.Gender == 2 ? "Nữ" : "Chưa rõ"))</span></p>
+                    <p class="text-muted mb-1"><strong>Ngày sinh :</strong> <span class="ms-2">@(Model.DateOfBirth?.ToString("dd/MM/yyyy"))</span></p>
+                </div>
+                
+                <hr/>
+                <div class="row">
+                    <div class="col-4">
+                        <h5 class="mb-1 text-danger">@Model.TotalSpent.ToString("N0")</h5>
+                        <p class="mb-0 text-muted fs-12">Chi tiêu</p>
+                    </div>
+                     <div class="col-4">
+                        <h5 class="mb-1">@Model.TotalOrders</h5>
+                        <p class="mb-0 text-muted fs-12">Đơn hàng</p>
+                    </div>
+                    <div class="col-4">
+                        <h5 class="mb-1 text-info">@Model.Points</h5>
+                        <p class="mb-0 text-muted fs-12">Điểm tích lũy</p>
+                    </div>
+                </div>
+
+                <div class="mt-3">
+                    <button type="button" class="btn btn-sm btn-soft-info" onclick="Swal.fire('Tặng điểm', 'Công cụ tặng điểm đang phát triển', 'info')">
+                        <i class="mdi mdi-star-outline"></i> Tặng điểm
+                    </button>
+                    <a href="/AdminCustomer/Edit/@Model.CustomerId" class="btn btn-sm btn-soft-primary ms-1">
+                        <i class="mdi mdi-account-edit"></i> Sửa khách hàng
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-8">
+        <!-- Order History -->
+        <!-- Order History -->
+        <div class="card">
+            <div class="card-header border-bottom d-flex align-items-center justify-content-between">
+                <h4 class="header-title mb-0">Lịch sử mua hàng</h4>
+            </div>
+            <div class="card-body">
+                <form method="get" class="row gy-2 gx-2 align-items-center mb-3">
+                    <div class="col-auto">
+                        <input type="text" class="form-control form-control-sm" name="kw" value="@ViewBag.Keyword" placeholder="Mã đơn hàng...">
+                    </div>
+                    <div class="col-auto">
+                        <select class="form-select form-select-sm" name="status">
+                            <option value="">Tất cả trạng thái</option>
+                            <option value="0" selected="@(ViewBag.Status == 0)">Mới</option>
+                            <option value="1" selected="@(ViewBag.Status == 1)">Xác nhận</option>
+                            <option value="2" selected="@(ViewBag.Status == 2)">Đang giao</option>
+                            <option value="3" selected="@(ViewBag.Status == 3)">Hoàn tất</option>
+                            <option value="4" selected="@(ViewBag.Status == 4)">Đã hủy</option>
+                        </select>
+                    </div>
+                    <div class="col-auto">
+                        <button type="submit" class="btn btn-sm btn-primary"><i class="mdi mdi-magnify"></i> Tìm</button>
+                        @if (!string.IsNullOrEmpty(ViewBag.Keyword) || ViewBag.Status != null)
+                        {
+                            <a href="/AdminCustomer/Detail/@Model.CustomerId" class="btn btn-sm btn-light">Xóa</a>
+                        }
+                    </div>
+                </form>
+
+                <div class="table-responsive">
+                    <table class="table table-centered mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Mã đơn</th>
+                                <th>Ngày</th>
+                                <th>Tiền hàng</th>
+                                <th>Trạng thái</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if(orders != null && orders.Any()) {
+                                foreach(var o in orders) {
+                                    <tr>
+                                        <td>
+                                            <a href="/AdminOrder/Detail/@o.OrderId" class="fw-bold">@o.OrderCode</a>
+                                        </td>
+                                        <td>
+                                            @o.CreatedAt.ToString("dd/MM/yyyy")
+                                        </td>
+                                        <td class="text-danger fw-bold">@o.TotalAmount.ToString("N0") ₫</td>
+                                        <td>
+                                            @switch(o.OrderStatus){
+                                                case 0: <span class="badge bg-info">Mới</span> break;
+                                                case 1: <span class="badge bg-primary">Xác nhận</span> break;
+                                                case 2: <span class="badge bg-warning">Đang giao</span> break;
+                                                case 3: <span class="badge bg-success">Hoàn tất</span> break;
+                                                case 4: <span class="badge bg-danger">Đã hủy</span> break;
+                                                case 5: <span class="badge bg-dark">Trả hàng</span> break;
+                                            }
+                                        </td>
+                                        <td><a href="/AdminOrder/Detail/@o.OrderId" class="btn btn-sm btn-light">Xem</a></td>
+                                    </tr>
+                                }
+                            } else {
+                                <tr>
+                                    <td colspan="5" class="text-center">Không có đơn hàng nào.</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Phân trang -->
+                @if (ViewBag.TotalPages > 1)
+                {
+                    var pageIndex = (int)ViewBag.PageIndex;
+                    var totalPages = (int)ViewBag.TotalPages;
+                    <div class="d-flex justify-content-end mt-3">
+                        <ul class="pagination pagination-sm mb-0">
+                            @if (pageIndex > 1)
+                            {
+                                <li class="page-item"><a class="page-link" href="?page=@(pageIndex - 1)&kw=@ViewBag.Keyword&status=@ViewBag.Status">Trước</a></li>
+                            }
+                            @for (int i = 1; i <= totalPages; i++)
+                            {
+                                if (i == 1 || i == totalPages || Math.Abs(i - pageIndex) <= 2)
+                                {
+                                    <li class="page-item @(i == pageIndex ? "active" : "")"><a class="page-link" href="?page=@i&kw=@ViewBag.Keyword&status=@ViewBag.Status">@i</a></li>
+                                }
+                                else if (Math.Abs(i - pageIndex) == 3)
+                                {
+                                    <li class="page-item disabled"><span class="page-link">...</span></li>
+                                }
+                            }
+                            @if (pageIndex < totalPages)
+                            {
+                                <li class="page-item"><a class="page-link" href="?page=@(pageIndex + 1)&kw=@ViewBag.Keyword&status=@ViewBag.Status">Sau</a></li>
+                            }
+                        </ul>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

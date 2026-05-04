@@ -1,0 +1,161 @@
+﻿@model Antigravity.ECommerce.Models.Advertising
+@{
+    ViewBag.Title = "Cập nhật Banner: " + Model.Title;
+    Layout = "_AdminLayout";
+}
+
+<form asp-action="Edit" method="post">
+    <input type="hidden" asp-for="AdvertisingId" />
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label class="form-label">Tiêu đề Banner <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" asp-for="Title" placeholder="Nhập tiêu đề banner..." required>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Ảnh Banner</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" asp-for="Image" id="Image" readonly>
+                                    <button class="btn btn-primary" type="button" onclick="browseImage('Image')">Chọn ảnh</button>
+                                </div>
+                                <div id="image_preview" class="mt-2 text-center border rounded p-2 @(string.IsNullOrEmpty(Model.Image) ? "d-none" : "")">
+                                    <img src="@Model.Image" style="max-height: 150px; max-width: 100%;">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">YouTube Video ID (Nếu có)</label>
+                                <input type="text" class="form-control" asp-for="VideoUrl" placeholder="VD: 60ItHLz5WEA">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Đường dẫn liên kết (Link)</label>
+                        <input type="text" class="form-control" asp-for="Link" placeholder="https://...">
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Lịch hiển thị tự động</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Ngày bắt đầu</label>
+                                <input type="date" class="form-control" asp-for="StartDate" value="@(Model.StartDate?.ToString("yyyy-MM-dd"))">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Ngày kết thúc</label>
+                                <input type="date" class="form-control" asp-for="EndDate" value="@(Model.EndDate?.ToString("yyyy-MM-dd"))">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Thiết lập hiển thị</h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label class="form-label">Vị trí hiển thị <span class="text-danger">*</span></label>
+                        <select class="selectpicker" data-live-search="true" asp-for="Position" required>
+                            <option value="Home_Slide">Trang chủ - Slide lớn</option>
+                            <option value="Home_Top">Trang chủ - Banner đầu trang</option>
+                            <option value="Home_Middle">Trang chủ - Banner giữa</option>
+                            <option value="Sidebar_Right">Cột phải - Sidebar</option>
+                            <option value="Product_Detail">Trang chi tiết sản phẩm</option>
+                            <option value="Popup">Popup Quảng cáo</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Cách mở trang</label>
+                        <select class="form-select" asp-for="Target">
+                            <option value="_self">Mở tại trang hiện tại (_self)</option>
+                            <option value="_blank">Mở tab mới (_blank)</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Thứ tự ưu tiên</label>
+                        <input type="number" class="form-control" asp-for="SortOrder">
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Trạng thái</label>
+                        <select class="form-select" asp-for="Status">
+                            <option value="1">Kích hoạt (Hiện)</option>
+                            <option value="0">Tạm ẩn</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between mt-4 border-top pt-3">
+                        <a href="/AdminAdvertising" class="btn btn-light"><i class="ri-arrow-go-back-line me-1"></i>Quay lại</a>
+                        <button type="submit" class="btn btn-success px-4"><i class="ri-save-line me-1"></i>Lưu thay đổi</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+            </form>
+
+<div class="modal fade" id="fileManagerModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Quản lý File</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-0">
+                <iframe id="fileManagerIframe" src="/FileManager/Index?mode=select" style="width: 100%; height: 600px; border: none;"></iframe>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        var currentFileTarget = '';
+        var fileModal = new bootstrap.Modal(document.getElementById('fileManagerModal'));
+
+        function browseImage(targetId) {
+            currentFileTarget = targetId;
+            fileModal.show();
+        }
+
+        window.addEventListener('message', function(event) {
+            if (event.data && event.data.type === 'fileSelected') {
+                document.getElementById(currentFileTarget).value = event.data.url;
+                
+                var previewDiv = document.getElementById('image_preview');
+                if(previewDiv) {
+                    previewDiv.classList.remove('d-none');
+                    previewDiv.querySelector('img').src = event.data.url;
+                }
+                
+                fileModal.hide();
+            }
+        });
+    </script>
+}

@@ -1,0 +1,389 @@
+@using Antigravity.ECommerce.Models
+
+@{
+    Layout = "_MainLayout";
+    ViewData["Title"] = "Trang chủ";
+    var hotProducts = ViewBag.HotProducts as List<Product>;
+    var categories = ViewBag.Categories as List<Category>;
+    var banners = ViewBag.Banners as List<Advertising> ?? new List<Advertising>();
+    var topBanners = ViewBag.TopBanners as List<Advertising> ?? new List<Advertising>();
+    var middleBanners = ViewBag.MiddleBanners as List<Advertising> ?? new List<Advertising>();
+    var popupBanners = ViewBag.PopupBanners as List<Advertising> ?? new List<Advertising>();
+    var videos = ViewBag.Videos as List<Video> ?? new List<Video>();
+    var news = ViewBag.News as List<News> ?? new List<News>();
+    var faqs = ViewBag.FAQs as List<FAQ> ?? new List<FAQ>();
+    var galleries = ViewBag.Galleries as List<Gallery> ?? new List<Gallery>();
+    ViewData["SchemaFAQs"] = faqs;
+}
+
+<script type="application/ld+json">
+{ "@@context":"https://schema.org","@@type":"WebSite","name":"Gordak Việt Nam","url":"@(Context.Request.Scheme+"://"+Context.Request.Host)","potentialAction":{"@@type":"SearchAction","target":"@(Context.Request.Scheme+"://"+Context.Request.Host)/Product/Search?q={search_term_string}","query-input":"required name=search_term_string"}}
+</script>
+
+<!-- ======== HERO SLIDER ======== -->
+<section class="hero-section position-relative overflow-hidden">
+  <div class="hero-slider-wrap position-relative">
+    <div class="hero-slider d-flex" id="hero-slider">
+      @if(banners.Count > 0)
+      {
+          foreach(var b in banners)
+          {
+              <div class="hero-slide">
+                  <a href="@b.Link"><img src="@b.Image" class="banner-img" alt="@b.Title"></a>
+              </div>
+          }
+      }
+      else
+      {
+          <div class="hero-slide">
+            <img src="/assets/images/banner1.jpg" class="banner-img" alt="Banner 1">
+            <div class="hero-overlay container">
+              <div class="row align-items-center h-100">
+                <div class="col-lg-6 col-12">
+                  <h1 class="hero-title">NHÀ PHÂN PHỐI<br><span class="hero-gold">CHÍNH HÃNG</span>CÁC SẢN PHẨM GORDAK<br>TẠI VIỆT NAM</h1>
+                  <ul class="hero-list list-unstyled">
+                    <li><i class="fa-solid fa-check hero-check"></i> 100% sản phẩm chính hãng</li>
+                    <li><i class="fa-solid fa-check hero-check"></i> Bảo hành chính hãng 12 - 24 tháng</li>
+                    <li><i class="fa-solid fa-check hero-check"></i> Đầy đủ giấy tờ CO, CQ</li>
+                    <li><i class="fa-solid fa-check hero-check"></i> Hỗ trợ kỹ thuật chuyên sâu</li>
+                  </ul>
+                </div>
+                <div class="col-lg-6 d-none d-lg-flex justify-content-center">
+                  <img src="/assets/images/z7775799550819_90d29c67ea55bc2ff67f102c9764392b.jpg" class="hero-product-img" alt="Hero Product" />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="hero-slide"><img src="/assets/images/banner2.png" class="banner-img" alt="Banner 2"></div>
+          <div class="hero-slide"><img src="/assets/images/banner3.png" class="banner-img" alt="Banner 3"></div>
+          <div class="hero-slide"><img src="/assets/images/banner4.png" class="banner-img" alt="Banner 4"></div>
+      }
+    </div>
+    <!-- Cert box (desktop only) -->
+    <div class="cert-box d-none d-lg-block">
+      <div class="cert-gold-wrap text-center">
+        <div class="cert-label">GORDAK</div>
+        <div class="cert-sub">AUTHORIZED DISTRIBUTOR</div>
+        <div class="cert-loc">VIETNAM</div>
+        <div class="cert-stars">★★★</div>
+      </div>
+      <h3 class="cert-title">CHỨNG NHẬN ĐẠI LÝ CHÍNH THỨC TẠI VIỆT NAM</h3>
+      <p class="cert-desc">GORDAK ủy quyền NHẬT MINH ESC phân phối chính hãng các sản phẩm GORDAK tại thị trường Việt Nam.</p>
+      <a href="/gioi-thieu.html" class="btn-cert d-block text-center">Xem chứng nhận</a>
+    </div>
+    <!-- Cert box mobile (inside slider) -->
+    <div class="cert-badge-mobile d-lg-none">
+      <div class="cert-label-sm">GORDAK</div>
+      <small>AUTHORIZED DISTRIBUTOR</small>
+      <div class="cert-loc-sm">VIETNAM</div>
+      <div class="cert-stars-sm">★★★</div>
+    </div>
+    <!-- Dots -->
+    <div class="slider-dots" id="slider-dots">
+      @{
+          int dotCount = banners.Count > 0 ? banners.Count : 4;
+          for(int i = 0; i < dotCount; i++) {
+              <span class="@(i==0?"active":"")" onclick="goToSlide(@i)"></span>
+          }
+      }
+    </div>
+  </div>
+</section>
+
+<!-- ======== CATEGORIES ======== -->
+<div class="container cat-wrap">
+  <div class="row g-0 cats-row">
+    <div class="col cat-col">
+      <div class="cat-item text-center">
+        <a href="/san-pham/tram-han.html" class="text-decoration-none text-dark d-block">
+            <img src="/assets/images/z7775799444666_e6c3064af16f5e8523d496fcfb69aa96.jpg" class="cat-img" alt="Trạm hàn">
+            <b>TRẠM HÀN</b>
+        </a>
+      </div>
+    </div>
+    <div class="col cat-col">
+      <div class="cat-item text-center">
+        <a href="/san-pham/tram-kho.html" class="text-decoration-none text-dark d-block">
+            <img src="/assets/images/z7775799444689_8f1800a6e3b876668b68749dd7d280dd.jpg" class="cat-img" alt="Trạm khò">
+            <b>TRẠM KHÒ</b>
+        </a>
+      </div>
+    </div>
+    <div class="col cat-col">
+      <div class="cat-item text-center">
+        <a href="/san-pham/han-kho-ket-hop.html" class="text-decoration-none text-dark d-block">
+            <img src="/assets/images/z7775799602924_2a1c7aa1843a6dd44c0569728106accf.jpg" class="cat-img" alt="Hàn khò kết hợp">
+            <b>HÀN KHÒ<br class="d-lg-none"> KẾT HỢP</b>
+        </a>
+      </div>
+    </div>
+    <div class="col cat-col">
+      <div class="cat-item text-center">
+        <a href="/san-pham/may-hap-chip.html" class="text-decoration-none text-dark d-block">
+            <img src="/assets/images/z7775799656292_32de7169eeb75dc280647992f360f10d.jpg" class="cat-img" alt="Máy hấp chip">
+            <b>MÁY HẤP<br class="d-lg-none"> CHIP</b>
+        </a>
+      </div>
+    </div>
+    <div class="col cat-col">
+      <div class="cat-item text-center">
+        <a href="/san-pham/phu-kien.html" class="text-decoration-none text-dark d-block">
+            <img src="/assets/images/z7775799708520_212588737d9aac3941841e58fef53184.jpg" class="cat-img" alt="Phụ kiện">
+            <b>PHỤ KIỆN</b>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ======== FEATURED PRODUCTS ======== -->
+@if (hotProducts != null && hotProducts.Any())
+{
+<section class="container section-products">
+  <div class="d-flex justify-content-between align-items-center section-head">
+    <h2 class="section-title">SẢN PHẨM NỔI BẬT</h2>
+    <a href="/san-pham.html" class="view-all">Xem tất cả <i class="fa-solid fa-chevron-right"></i></a>
+  </div>
+  <div class="row g-3">
+    @{ int pCount = 0; }
+    @foreach(var p in hotProducts.Take(5))
+    {
+        pCount++;
+        <div class="col-6 col-lg @(pCount==5?"d-none d-lg-block":"")">
+          <div class="product-card position-relative">
+            @if(p.IsHot){<span class="badge-hot">HOT</span>}
+            <span class="badge-heart" onclick="toggleWishlist(@p.ProductId)" style="cursor:pointer"><i class="fa-regular fa-heart"></i></span>
+            <a href="/san-pham/detail/@(p.Slug).html" class="d-block text-center mb-2">
+                <img src="@(string.IsNullOrEmpty(p.MainImage) ? "/assets/images/placeholder.png" : p.MainImage)" class="product-img" alt="@p.Name">
+            </a>
+            <h3 class="product-name"><a href="/san-pham/detail/@(p.Slug).html" class="text-decoration-none text-dark">@p.Name</a></h3>
+            <p class="product-desc line-clamp-2" style="font-size:12px; color:#666;">@(string.IsNullOrEmpty(p.ShortDescription) ? p.Name : p.ShortDescription)</p>
+            <div class="product-price">@p.Price.ToString("N0")đ</div>
+            <div class="product-actions d-flex gap-2">
+              <a href="/san-pham/detail/@(p.Slug).html" class="btn-outline-gd flex-fill text-center">Chi tiết</a>
+              <a href="javascript:void(0)" onclick="addToCart(@p.ProductId,1)" class="btn-gd flex-fill d-flex align-items-center justify-content-center gap-1">
+                <i class="fa-solid fa-cart-shopping"></i> Mua ngay
+              </a>
+            </div>
+          </div>
+        </div>
+    }
+  </div>
+</section>
+}
+
+<!-- ======== WHY CHOOSE ======== -->
+<section class="container section-why mt-5">
+  <h2 class="section-title text-center mb-4">VÌ SAO CHỌN GORDAK TẠI CHÚNG TÓI?</h2>
+  <div class="row g-4 why-desktop d-none d-lg-flex">
+    <div class="col text-center">
+      <div class="why-ico"><i class="fa-solid fa-shield-halved"></i></div>
+      <b>HÀNG CHÍNH HÃNG</b><p>Cam kết 100% sản phẩm chính hãng Gordak.</p>
+    </div>
+    <div class="col text-center">
+      <div class="why-ico"><i class="fa-solid fa-certificate"></i></div>
+      <b>BẢO HÀNH CHÍNH HÃNG</b><p>Bảo hành dài hạn theo tiêu chuẩn hãng.</p>
+    </div>
+    <div class="col text-center">
+      <div class="why-ico"><i class="fa-solid fa-gear"></i></div>
+      <b>LINH KIỆN SẴN CÓ</b><p>Đầy đủ linh kiện thay thế, dễ dàng sửa chữa.</p>
+    </div>
+    <div class="col text-center">
+      <div class="why-ico"><i class="fa-solid fa-headset"></i></div>
+      <b>HỖ TRỢ KỸ THUẬT</b><p>Đội ngũ kỹ thuật giàu kinh nghiệm.</p>
+    </div>
+    <div class="col text-center">
+      <div class="why-ico"><i class="fa-solid fa-hand-holding-dollar"></i></div>
+      <b>GIÁ TỐT NHẤT</b><p>Giá cạnh tranh cho đại lý, dự án và khách hàng.</p>
+    </div>
+  </div>
+  <!-- Mobile: list with icon + text -->
+  <div class="why-mobile d-lg-none">
+    <div class="why-m-item d-flex align-items-start gap-3">
+      <div class="why-m-ico"><i class="fa-solid fa-shield-halved"></i></div>
+      <div><b>Sản phẩm chính hãng 100%</b><p class="mb-0 small text-muted">Nhập khẩu và phân phối chính thức tại Việt Nam</p></div>
+    </div>
+    <div class="why-m-item d-flex align-items-start gap-3">
+      <div class="why-m-ico"><i class="fa-solid fa-certificate"></i></div>
+      <div><b>Bảo hành chính hãng 12 - 24 tháng</b><p class="mb-0 small text-muted">1 đổi 1 trong 7 ngày nếu có lỗi NSX</p></div>
+    </div>
+    <div class="why-m-item d-flex align-items-start gap-3">
+      <div class="why-m-ico"><i class="fa-solid fa-headset"></i></div>
+      <div><b>Hỗ trợ kỹ thuật trọn đời</b><p class="mb-0 small text-muted">Đội ngũ kỹ thuật giàu kinh nghiệm</p></div>
+    </div>
+    <div class="why-m-item d-flex align-items-start gap-3">
+      <div class="why-m-ico"><i class="fa-solid fa-truck-fast"></i></div>
+      <div><b>Giao hàng toàn quốc</b><p class="mb-0 small text-muted">Miễn phí giao hàng cho đơn từ 1 triệu</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ======== BRAND ABOUT ======== -->
+<section class="container section-brand mt-5">
+  <div class="row g-4 align-items-center brand-card">
+    <div class="col-lg-5">
+      <div class="brand-img-wrap">
+        <img src="/assets/images/z7775799762257_f058bd78c3b1f94e77da2c4eda69efb3.jpg" alt="Gordak Factory" class="factory-img w-100">
+      </div>
+    </div>
+    <div class="col-lg-7">
+      <h2 class="brand-title">VỀ THƯƠNG HIỆU GORDAK</h2>
+      <p class="brand-desc">Gordak là thương hiệu nổi tiếng trong lĩnh vực thiết bị hàn và sửa chữa điện tử, được thành lập từ năm 1999. Với hơn 20 năm phát triển, Gordak không ngừng nghiên cứu và cải tiến công nghệ để mang đến những sản phẩm chất lượng cao, độ bền vượt trội và hiệu suất ổn định.</p>
+      <p class="brand-desc">Các sản phẩm của Gordak được tin dùng rộng rãi trong lĩnh vực sửa chữa điện tử, sản xuất công nghiệp, phòng thí nghiệm và đào tạo nghề tại hơn 50 quốc gia trên thế giới.</p>
+      <div class="row g-3 my-3 stats-row">
+        <div class="col-3 text-center">
+          <i class="fa-solid fa-clock-rotate-left stat-ico"></i>
+          <b class="stat-num">20+</b><small class="stat-label">NĂM KINH NGHIỆM</small>
+        </div>
+        <div class="col-3 text-center">
+          <i class="fa-solid fa-globe stat-ico"></i>
+          <b class="stat-num">50+</b><small class="stat-label">QUỐC GIA TIN DÙNG</small>
+        </div>
+        <div class="col-3 text-center">
+          <i class="fa-solid fa-sliders stat-ico"></i>
+          <b class="stat-num">100+</b><small class="stat-label">SẢN PHẨM CHẤT LƯỢNG</small>
+        </div>
+        <div class="col-3 text-center">
+          <i class="fa-solid fa-shield-halved stat-ico"></i>
+          <b class="stat-num">100%</b><small class="stat-label">CHÍNH HÃNG</small>
+        </div>
+      </div>
+      <a href="/gioi-thieu.html" class="btn-gd d-inline-flex align-items-center gap-2 px-4 py-2">Tìm hiểu thêm về Gordak <i class="fa-solid fa-arrow-right"></i></a>
+    </div>
+  </div>
+</section>
+
+<!-- ======== VIDEO + NEWS ======== -->
+<section class="container section-media mt-5">
+  <div class="row g-4">
+    <!-- Videos -->
+    <div class="col-lg-7">
+      <div class="d-flex justify-content-between align-items-center section-head">
+        <h2 class="section-title">VIDEO SẢN PHẨM</h2>
+        <a href="/video.html" class="view-all">Xem tất cả <i class="fa-solid fa-arrow-right"></i></a>
+      </div>
+      <div class="row g-3">
+          @if(videos.Count > 0)
+          {
+              int vCount = 0;
+              foreach(var v in videos.Take(4))
+              {
+                  vCount++;
+                  <div class="col-6 col-lg-3 @(vCount>2?"d-none d-lg-block":"")">
+                    <div class="video-card" data-bs-toggle="modal" data-bs-target="#videoModal" data-src="https://www.youtube.com/embed/@v.YoutubeId?autoplay=1" onclick="document.getElementById('videoIframe').src=this.getAttribute('data-src');" style="cursor:pointer">
+                      <div class="video-thumb position-relative">
+                        <img src="@v.ThumbnailUrl" alt="@v.Title">
+                        <i class="fa-regular fa-circle-play play-icon"></i>
+                      </div>
+                      <b class="d-block mt-2 line-clamp-2" style="font-size:13px; font-weight:600;">@v.Title</b>
+                    </div>
+                  </div>
+              }
+          }
+      </div>
+    </div>
+    <!-- News -->
+    <div class="col-lg-5 d-none d-lg-block">
+      <div class="d-flex justify-content-between align-items-center section-head">
+        <h2 class="section-title">TIN TỨC - HƯỚNG DẪN</h2>
+        <a href="/tin-tuc.html" class="view-all">Xem tất cả bài viết <i class="fa-solid fa-arrow-right"></i></a>
+      </div>
+      <div class="d-flex flex-column gap-3">
+          @if(news.Count > 0)
+          {
+              foreach(var n in news.Take(3))
+              {
+                  <a href="/tin-tuc/detail/@(n.Slug).html" class="news-item d-flex gap-3 align-items-start text-decoration-none text-dark">
+                    <img src="@n.Image" class="news-thumb" style="width:80px;height:60px;object-fit:cover;border-radius:4px;" alt="@n.Title">
+                    <div>
+                        <small class="text-muted">@n.CreatedAt.ToString("dd/MM/yyyy")</small><br>
+                        <b class="line-clamp-2" style="font-size:14px;">@n.Title</b>
+                    </div>
+                  </a>
+              }
+          }
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======== CTA ======== -->
+<section class="cta-section mt-5 mb-5">
+  <div class="container">
+    <div class="row align-items-center py-4">
+      <div class="col-lg-6 text-center text-lg-start mb-3 mb-lg-0">
+        <h2 class="cta-title">BẠN CẦN TƯ VẤN CHỌN MÁY PHÙ HỢP?</h2>
+        <p class="cta-sub">Đội ngũ kỹ thuật của chúng tôi luôn sẵn sàng hỗ trợ bạn!</p>
+      </div>
+      <div class="col-lg-6 d-flex justify-content-center justify-content-lg-end gap-3 flex-wrap">
+        <a href="/lien-he.html" class="cta-btn-white">NHẬN BÁO GIÁ NGAY</a>
+        <a href="#" class="cta-btn-outline">CHAT ZALO NGAY <i class="fa-solid fa-comment-dots"></i></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======== VIDEO MODAL ======== -->
+<div class="modal fade" id="videoModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content bg-dark border-0">
+      <div class="modal-header border-0 pb-0">
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close" onclick="document.getElementById('videoIframe').src='';"></button>
+      </div>
+      <div class="modal-body">
+        <div class="ratio ratio-16x9">
+          <iframe id="videoIframe" src="" title="Video" allowfullscreen allow="autoplay"></iframe>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+@section Scripts {
+<script>
+  let currentSlide = 0;
+  const slides = document.querySelectorAll('.hero-slide');
+  const dots = document.querySelectorAll('.slider-dots span');
+  const slider = document.getElementById('hero-slider');
+  let sliderInterval;
+
+  function goToSlide(index) {
+    if (!slides.length) return;
+    currentSlide = index;
+    slider.style.transform = `translateX(-${currentSlide * 100}%)`;
+    dots.forEach((dot, i) => dot.classList.toggle('active', i === currentSlide));
+    resetInterval();
+  }
+  function nextSlide() { goToSlide((currentSlide + 1) % slides.length); }
+  function resetInterval() { clearInterval(sliderInterval); sliderInterval = setInterval(nextSlide, 5000); }
+  if (slides.length > 0) resetInterval();
+
+  // Clear iframe src when modal is closed by clicking outside
+  document.getElementById('videoModal').addEventListener('hidden.bs.modal', function () {
+      document.getElementById('videoIframe').src = '';
+  });
+</script>
+
+@if (popupBanners.Count > 0)
+{
+    var popup = popupBanners[0];
+    <div class="modal fade" id="popupModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content border-0 rounded-4 overflow-hidden shadow-lg">
+                <button type="button" class="btn-close position-absolute top-0 end-0 m-3 z-3 bg-white rounded-circle p-2 shadow" data-bs-dismiss="modal"></button>
+                <a href="@popup.Link" target="@(popup.Target ?? "_self")">
+                    <img src="@popup.Image" class="w-100" alt="@popup.Title" style="max-height:500px;object-fit:cover;">
+                </a>
+            </div>
+        </div>
+    </div>
+    <script>
+        setTimeout(function(){
+            if(!sessionStorage.getItem('popupShown')){
+                new bootstrap.Modal(document.getElementById('popupModal')).show();
+                sessionStorage.setItem('popupShown','1');
+            }
+        }, 2000);
+    </script>
+}
+}

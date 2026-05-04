@@ -1,0 +1,248 @@
+@model List<Antigravity.ECommerce.Models.Customer>
+@{
+    ViewData["Title"] = "Quản lý Khách hàng";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+
+    string GetRankBadge(int rank) => rank switch {
+        1 => "<span class='badge bg-soft-secondary text-secondary border border-secondary'>Bạc 🥈</span>",
+        2 => "<span class='badge bg-soft-warning text-warning border border-warning'>Vàng 🥇</span>",
+        3 => "<span class='badge bg-soft-info text-info border border-info'>Kim Cương 💎</span>",
+        _ => "<span class='badge bg-light text-dark border'>Thường</span>"
+    };
+}
+
+<div class="row">
+    <div class="col-12">
+        <div class="page-title-box">
+            <h4 class="page-title">Khách hàng</h4>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="row mb-3">
+                    <div class="col-sm-4 d-flex gap-2 align-items-start">
+                        <div class="dropdown" id="bulkOptions" style="display:none;">
+                            <button class="btn btn-soft-info dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="ri-settings-3-line align-bottom me-1"></i> Thao tác (<span id="selectedCount">0</span>)
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item text-danger" href="javascript:void(0);" onclick="bulkDelete()"><i class="ri-delete-bin-line me-1"></i> Xóa đã chọn</a></li>
+                            </ul>
+                        </div>
+                        <a href="/AdminCustomer/Create" class="btn btn-danger mb-2"><i class="mdi mdi-plus-circle me-1"></i> Thêm Khách hàng</a>
+                    </div>
+                    <div class="col-sm-8">
+                        <form method="get" class="row gy-2 gx-2 align-items-center justify-content-sm-end" id="filterForm">
+                            <input type="hidden" name="page" id="pageIndex" value="@ViewBag.PageIndex" />
+                            <input type="hidden" name="sort" value="@ViewBag.SortColumn" />
+                            <input type="hidden" name="order" value="@ViewBag.SortOrder" />
+                            <div class="col-auto">
+                                <input type="search" name="kw" class="form-control" placeholder="Tìm tên, SĐT..." value="@ViewBag.Keyword">
+                            </div>
+                            <div class="col-auto">
+                                <select name="rank" class="form-select">
+                                    <option value="">-- Hạng --</option>
+                                    <option value="0" selected="@(ViewBag.Rank == 0 ? "selected" : null)">Thường</option>
+                                    <option value="1" selected="@(ViewBag.Rank == 1 ? "selected" : null)">Bạc</option>
+                                    <option value="2" selected="@(ViewBag.Rank == 2 ? "selected" : null)">Vàng</option>
+                                    <option value="3" selected="@(ViewBag.Rank == 3 ? "selected" : null)">Kim Cương</option>
+                                </select>
+                            </div>
+                            <div class="col-auto">
+                                <button type="submit" class="btn btn-primary">Lọc</button>
+                                <a href="/AdminCustomer/ExportCSV?kw=@ViewBag.Keyword&rank=@ViewBag.Rank" class="btn btn-success ms-1"><i class="mdi mdi-download"></i> Xuất CSV</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-centered table-nowrap mb-0 table-hover">
+                        <thead class="table-light">
+                            <tr>
+                                <th style="width: 40px;">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="checkAll">
+                                    </div>
+                                </th>
+                                <th onclick="changeSort('FullName')" class="sort cursor-pointer">Khách hàng <i class="ri-arrow-up-down-line sort-icon @(ViewBag.SortColumn == "FullName" ? "active" : "")"></i></th>
+                                <th onclick="changeSort('MemberRank')" class="sort cursor-pointer text-center">Hạng <i class="ri-arrow-up-down-line sort-icon @(ViewBag.SortColumn == "MemberRank" ? "active" : "")"></i></th>
+                                <th onclick="changeSort('TotalSpent')" class="sort cursor-pointer text-end">Chi tiêu <i class="ri-arrow-up-down-line sort-icon @(ViewBag.SortColumn == "TotalSpent" ? "active" : "")"></i></th>
+                                <th onclick="changeSort('TotalOrders')" class="sort cursor-pointer text-center">Đơn hàng <i class="ri-arrow-up-down-line sort-icon @(ViewBag.SortColumn == "TotalOrders" ? "active" : "")"></i></th>
+                                <th onclick="changeSort('Status')" class="sort cursor-pointer text-center">Trạng thái <i class="ri-arrow-up-down-line sort-icon @(ViewBag.SortColumn == "Status" ? "active" : "")"></i></th>
+                                <th onclick="changeSort('CreatedAt')" class="sort cursor-pointer">Ngày tham gia <i class="ri-arrow-up-down-line sort-icon @(ViewBag.SortColumn == "CreatedAt" ? "active" : "")"></i></th>
+                                <th class="text-center" style="width: 140px;">Hành động</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        <div class="form-check">
+                                            <input class="form-check-input select-item" type="checkbox" value="@item.CustomerId" onchange="toggleBulkDeleteBtn()">
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <div class="flex-shrink-0">
+                                                @if (!string.IsNullOrEmpty(item.Avatar))
+                                                {
+                                                    <img src="@item.Avatar" alt="" class="rounded-circle avatar-xs">
+                                                }
+                                                else
+                                                {
+                                                    <div class="avatar-xs">
+                                                        <span class="avatar-title rounded-circle bg-soft-primary text-primary">
+                                                            @item.FullName.Substring(0, 1).ToUpper()
+                                                        </span>
+                                                    </div>
+                                                }
+                                            </div>
+                                            <div class="flex-grow-1 ms-2">
+                                                <h5 class="my-0 fs-14">@item.FullName</h5>
+                                                <p class="mb-0 text-muted fs-12">@item.Phone</p>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="text-center">
+                                        @Html.Raw(GetRankBadge(item.MemberRank))
+                                    </td>
+                                    <td class="text-end fw-bold text-danger">@item.TotalSpent.ToString("N0") ₫</td>
+                                    <td class="text-center">@item.TotalOrders</td>
+                                    <td class="text-center">
+                                        @if (item.Status == 1)
+                                        {
+                                            <span class="badge bg-success">Hoạt động</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-danger">Khóa</span>
+                                        }
+                                    </td>
+                                    <td>@item.CreatedAt.ToString("dd/MM/yyyy")</td>
+                                    <td class="text-center">
+                                        <div class="d-flex justify-content-center gap-1">
+                                            <a href="/AdminCustomer/Detail/@item.CustomerId" class="btn btn-sm btn-soft-secondary" title="Chi tiết">
+                                                <i class="ri-eye-line"></i>
+                                            </a>
+                                            <a href="/AdminCustomer/Edit/@item.CustomerId" class="btn btn-sm btn-soft-info" title="Chỉnh sửa">
+                                                <i class="ri-pencil-line"></i>
+                                            </a>
+                                            <button onclick="deleteCustomer(@item.CustomerId)" class="btn btn-sm btn-soft-danger" title="Xóa">
+                                                <i class="ri-delete-bin-line"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Pagination -->
+                @await Html.PartialAsync("_Pagination", new { PageIndex = ViewBag.PageIndex, TotalPages = ViewBag.TotalPages, TotalCount = ViewBag.TotalCount, DisplayCount = Model?.Count ?? 0 })
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(function () {
+            $('#checkAll').change(function () {
+                $('.select-item').prop('checked', $(this).prop('checked'));
+                toggleBulkDeleteBtn();
+            });
+        });
+
+        function toggleBulkDeleteBtn() {
+            const count = $('.select-item:checked').length;
+            if (count > 0) {
+                $('#selectedCount').text(count);
+                $('#bulkOptions').fadeIn();
+            } else {
+                $('#bulkOptions').fadeOut();
+            }
+        }
+
+        function bulkDelete() {
+            const ids = [];
+            $('.select-item:checked').each(function () {
+                ids.push(parseInt($(this).val()));
+            });
+
+            if (ids.length === 0) return;
+
+            Swal.fire({
+                title: 'Xóa nhiều khách hàng?',
+                text: `Sẽ xóa ${ids.length} khách hàng đã chọn. Chỉ xóa được khách chưa có đơn hàng!`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#f06548',
+                cancelButtonColor: '#405189',
+                confirmButtonText: 'Xác nhận xóa',
+                cancelButtonText: 'Hủy'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: '/AdminCustomer/BulkDelete',
+                        type: 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify(ids),
+                        success: function (res) {
+                            if (res.success) {
+                                Swal.fire('Thành công', `Đã xóa khách hàng!`, 'success').then(() => {
+                                    location.reload();
+                                });
+                            } else {
+                                Swal.fire('Lỗi', 'Xóa thất bại. ' + (res.message || ''), 'error');
+                            }
+                        }
+                    });
+                }
+            });
+        }
+
+        function changePage(page) {
+            $('#pageIndex').val(page);
+            $('#filterForm').submit();
+        }
+        function changeSort(col) {
+            const form = document.getElementById('filterForm');
+            if (form.sort.value === col) {
+                form.order.value = form.order.value === 'ASC' ? 'DESC' : 'ASC';
+            } else {
+                form.sort.value = col;
+                form.order.value = 'ASC';
+            }
+            form.submit();
+        }
+        function deleteCustomer(id) {
+            Swal.fire({
+                title: 'Xóa khách hàng?',
+                text: "Bạn chỉ có thể xóa khách hàng chưa có đơn hàng!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Xóa ngay',
+                cancelButtonText: 'Hủy'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.post('/AdminCustomer/Delete', { id: id }, function(res) {
+                        if (res.success) {
+                            location.reload();
+                        } else {
+                            Swal.fire('Lỗi', res.message, 'error');
+                        }
+                    });
+                }
+            });
+        }
+    </script>
+}

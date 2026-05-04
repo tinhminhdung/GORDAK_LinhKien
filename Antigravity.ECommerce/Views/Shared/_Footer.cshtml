@@ -1,0 +1,92 @@
+@using Antigravity.ECommerce.Services
+@{
+    var settings = SSetting.GetViewModel();
+    var footerMenu = SCategory.GetMenuTree("Footer", 0);
+}
+
+<!-- ======== FOOTER ======== -->
+<footer class="site-footer">
+  <div class="container">
+    <div class="row g-4 py-4">
+      <div class="col-lg-3 col-12">
+        <div class="d-flex align-items-center gap-2 mb-2 logo-wrap">
+          @if(!string.IsNullOrEmpty(settings.Logo)) {
+              <img src="@settings.Logo" alt="@settings.SiteTitle" style="height: 40px; max-width: 200px; object-fit: contain; filter: brightness(0) invert(1);">
+          } else {
+              <div class="logo-mark" style="background:#fff;color:#073e96">G</div>
+              <div class="logo-text" style="color:#fff">GORDAK<small style="color:#fff">TOOLS FOR LIFE</small></div>
+          }
+        </div>
+        <p class="footer-text">@(settings.SiteDescription ?? "Nhà phân phối chính thức các sản phẩm Gordak tại Việt Nam.")</p>
+        <div class="d-flex gap-2 mt-2">
+          @if(!string.IsNullOrEmpty(settings.Facebook)) { <a href="@settings.Facebook" class="social-circle text-decoration-none text-white"><i class="fa-brands fa-facebook-f"></i></a> }
+          @if(!string.IsNullOrEmpty(settings.YouTube)) { <a href="@settings.YouTube" class="social-circle text-decoration-none text-white"><i class="fa-brands fa-youtube"></i></a> }
+          @if(!string.IsNullOrEmpty(settings.Zalo)) { <a href="https://zalo.me/@settings.Zalo" class="social-circle text-decoration-none text-white"><i class="fa-solid fa-comment-dots"></i></a> }
+        </div>
+      </div>
+      
+      <div class="col-lg-3 col-6">
+        <h3 class="footer-heading"><span class="fh-underline">LIÊN KẾT</span> NHANH</h3>
+        <ul class="footer-links list-unstyled">
+          @foreach(var item in footerMenu) {
+              string fUrl = "/";
+              if (item.LinkType == 2 && !string.IsNullOrEmpty(item.Url)) {
+                  fUrl = item.Url;
+              } else if (!string.IsNullOrEmpty(item.Slug)) {
+                  switch (item.CategoryType) {
+                      case 1: fUrl = "/san-pham/" + item.Slug + ".html"; break;
+                      case 2: fUrl = "/tin-tuc/" + item.Slug + ".html"; break;
+                      case 3: fUrl = "/video/" + item.Slug + ".html"; break;
+                      case 4: fUrl = "/bai-viet/" + item.Slug + ".html"; break;
+                      case 6: fUrl = "/thu-vien-anh/" + item.Slug + ".html"; break;
+                      case 7: fUrl = "/hoi-dap/" + item.Slug + ".html"; break;
+                      case 8: case 11: fUrl = "/tai-lieu/" + item.Slug + ".html"; break;
+                      default: fUrl = "/" + item.Slug; break;
+                  }
+              }
+              <li><a href="@fUrl">@item.Name</a></li>
+          }
+        </ul>
+      </div>
+      
+      <div class="col-lg-3 col-6">
+        <h3 class="footer-heading">HỖ TRỢ KHÁCH HÀNG</h3>
+        <ul class="footer-links list-unstyled">
+          <li><a href="#">Chính sách bảo hành</a></li>
+          <li><a href="#">Chính sách giao hàng</a></li>
+          <li><a href="#">Hướng dẫn thanh toán</a></li>
+          <li><a href="#">Đổi trả - Hoàn tiền</a></li>
+        </ul>
+      </div>
+      
+      <div class="col-lg-3 col-12">
+        <h3 class="footer-heading">@settings.SiteTitle</h3>
+        <p class="footer-text"><i class="fa-solid fa-location-dot me-2"></i>@settings.Address</p>
+        <p class="footer-text"><i class="fa-solid fa-phone me-2"></i>@settings.Hotline</p>
+        <p class="footer-text"><i class="fa-solid fa-envelope me-2"></i>@settings.Email</p>
+        <p class="footer-text"><i class="fa-solid fa-globe me-2"></i>@(Context.Request.Host.Value)</p>
+      </div>
+    </div>
+    <div class="footer-bottom text-center">
+      @(settings.Copyright ?? "© 2024 Gordak Việt Nam. All rights reserved.")
+    </div>
+  </div>
+</footer>
+
+<!-- ======== MOBILE BOTTOM NAV ======== -->
+<nav class="mobile-bottom-nav d-lg-none">
+  <a href="/" class="mnav-item @(Context.Request.Path == "/" ? "active" : "")"><i class="fa-solid fa-house"></i><span>Trang chủ</span></a>
+  <a href="/san-pham.html" class="mnav-item"><i class="fa-solid fa-box"></i><span>Sản phẩm</span></a>
+  <a href="/gio-hang.html" class="mnav-item position-relative">
+      <i class="fa-solid fa-cart-shopping"></i><span class="mnav-badge cart-badge">0</span><span>Giỏ hàng</span>
+  </a>
+  <a href="/lien-he.html" class="mnav-item"><i class="fa-solid fa-address-book"></i><span>Liên hệ</span></a>
+</nav>
+
+<!-- ======== FLOATING CHAT ======== -->
+@if(!string.IsNullOrEmpty(settings.Zalo)) {
+<a href="https://zalo.me/@settings.Zalo" target="_blank" class="chat-float d-none d-lg-flex text-decoration-none">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/a/a1/Zalo_Logo.svg" alt="Zalo" width="24" height="24">
+  <span class="text-dark">Chat Zalo</span>
+</a>
+}

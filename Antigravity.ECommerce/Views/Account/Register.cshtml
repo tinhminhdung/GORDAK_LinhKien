@@ -1,0 +1,189 @@
+@model Antigravity.ECommerce.Models.Customer
+@{
+    Layout = "_MainLayout";
+    ViewData["Title"] = "Đăng ký tài khoản";
+}
+@section Styles {
+    <style>
+        .auth-page {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+            padding: 3rem 0;
+        }
+        .auth-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
+            border-radius: 20px;
+            padding: 2.5rem;
+            width: 100%;
+            max-width: 750px;
+        }
+        .auth-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 0.5rem;
+            text-align: center;
+        }
+        .auth-subtitle {
+            text-align: center;
+            color: #6b7280;
+            margin-bottom: 2rem;
+        }
+        .form-control-custom {
+            border-radius: 12px;
+            padding: 0.75rem 1rem;
+            border: 1px solid #d1d5db;
+            background: rgba(255, 255, 255, 0.9);
+            transition: all 0.3s;
+        }
+        .form-control-custom:focus {
+            border-color: #4f46e5;
+            box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1);
+        }
+        .btn-auth {
+            background: linear-gradient(to right, #4f46e5, #4338ca);
+            color: white;
+            border-radius: 12px;
+            padding: 0.75rem;
+            font-weight: 600;
+            border: none;
+            width: 100%;
+            transition: all 0.3s;
+        }
+        .btn-auth:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(79, 70, 229, 0.3);
+            color: white;
+        }
+        .auth-links {
+            text-align: center;
+            margin-top: 1.5rem;
+        }
+        .auth-links a {
+            color: #4f46e5;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        .auth-links a:hover {
+            color: #3730a3;
+        }
+    </style>
+}
+
+<div class="auth-page">
+    <div class="auth-card">
+        <h1 class="auth-title">Tạo tài khoản</h1>
+        <p class="auth-subtitle">Trở thành thành viên để nhận nhiều ưu đãi</p>
+
+        @if (ViewBag.Error != null)
+        {
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                @ViewBag.Error
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+
+        <form asp-controller="Account" asp-action="Register" method="post" id="registerForm">
+            <div class="row">
+                <div class="col-md-12 mb-3">
+                    <label class="form-label text-muted fw-semibold">Họ và tên <span class="text-danger">*</span></label>
+                    <input type="text" asp-for="FullName" class="form-control form-control-custom" placeholder="Nhập họ tên của bạn" required>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label text-muted fw-semibold">Email</label>
+                    <input type="email" asp-for="Email" class="form-control form-control-custom" placeholder="Địa chỉ email">
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label text-muted fw-semibold">Số điện thoại <span class="text-danger">*</span></label>
+                    <input type="text" asp-for="Phone" class="form-control form-control-custom" placeholder="Số điện thoại" required>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label text-muted fw-semibold">Mật khẩu <span class="text-danger">*</span></label>
+                    <input type="password" asp-for="Password" id="Password" class="form-control form-control-custom" placeholder="Tạo mật khẩu" required minlength="6">
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label text-muted fw-semibold">Xác nhận MK <span class="text-danger">*</span></label>
+                    <input type="password" name="confirmPassword" id="ConfirmPassword" class="form-control form-control-custom" placeholder="Nhập lại mật khẩu" required minlength="6">
+                </div>
+                <div class="col-md-6 mb-4">
+                    <label class="form-label text-muted fw-semibold">Tỉnh / Thành phố <span class="text-danger">*</span></label>
+                    <select asp-for="ProvinceId" class="form-select form-control-custom" id="ProvinceId" required>
+                        <option value="">- Chọn Tỉnh/Thành -</option>
+                    </select>
+                </div>
+                <div class="col-md-6 mb-4">
+                    <label class="form-label text-muted fw-semibold">Phường / Xã <span class="text-danger">*</span></label>
+                    <select asp-for="WardId" class="form-select form-control-custom" id="WardId" disabled required>
+                        <option value="">- Chọn Phường/Xã -</option>
+                    </select>
+                </div>
+            </div>
+            
+            <button type="submit" class="btn btn-auth mb-3">Đăng ký tài khoản</button>
+        </form>
+
+        <div class="auth-links">
+            <span class="text-muted">Đã có tài khoản?</span>
+            <a asp-controller="Account" asp-action="Login">Đăng nhập</a>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.getElementById('registerForm').addEventListener('submit', function(e) {
+            var pwd = document.getElementById('Password').value;
+            var confirmPwd = document.getElementById('ConfirmPassword').value;
+            if(pwd !== confirmPwd) {
+                e.preventDefault();
+                alert('Mật khẩu xác nhận không khớp. Vui lòng kiểm tra lại.');
+            }
+        });
+
+        $(document).ready(function() {
+            var currentProvince = '@(Model?.ProvinceId ?? 0)';
+            var currentWard = '@(Model?.WardId ?? 0)';
+            
+            loadTinhThanh(currentProvince, currentWard);
+
+            $('#ProvinceId').change(function() {
+                var id = $(this).val();
+                if(id) {
+                    loadPhuongXa(id, null);
+                } else {
+                    $('#WardId').empty().append('<option value="">- Chọn Phường/Xã -</option>').prop('disabled', true);
+                }
+            });
+        });
+
+        function loadTinhThanh(selectedProvince, selectedWard) {
+            $.get('/Location/GetTinhThanh', function(res) {
+                var html = '<option value="">- Chọn Tỉnh/Thành -</option>';
+                res.forEach(item => {
+                    html += `<option value="${item.ma_Tinh}" ${selectedProvince == item.ma_Tinh ? 'selected' : ''}>${item.ten_Tinh}</option>`;
+                });
+                $('#ProvinceId').html(html);
+                if (selectedProvince && selectedProvince != 0) {
+                    loadPhuongXa(selectedProvince, selectedWard);
+                }
+            });
+        }
+
+        function loadPhuongXa(maTinh, selectedWard) {
+            $.get('/Location/GetPhuongXa', { maTinh: maTinh }, function(res) {
+                var html = '<option value="">- Chọn Phường/Xã -</option>';
+                res.forEach(item => {
+                    html += `<option value="${item.ma_Xa}" ${selectedWard == item.ma_Xa ? 'selected' : ''}>${item.ten_Xa}</option>`;
+                });
+                $('#WardId').html(html).prop('disabled', false);
+            });
+        }
+    </script>
+}

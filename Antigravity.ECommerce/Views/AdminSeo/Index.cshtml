@@ -1,0 +1,593 @@
+@using Antigravity.ECommerce.Controllers
+@model SeoAuditReport
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "SEO Audit Dashboard";
+    
+    int pageSize = 50;
+    var allItemsCount = Model.TotalItems;
+    var pagedItems = Model.PagedItems;
+    var totalPages = Model.TotalPages;
+    var currentPage = Model.CurrentPage;
+    var currentModule = Model.CurrentModule;
+    var currentKw = Model.CurrentKw;
+    var currentScoreFilter = Model.CurrentScoreFilter;
+}
+
+<style>
+    .seo-gauge { position: relative; width: 160px; height: 160px; margin: 0 auto; }
+    .seo-gauge svg { transform: rotate(-90deg); }
+    .seo-gauge circle { fill: none; stroke-width: 12; stroke-linecap: round; }
+    .seo-gauge .bg-ring { stroke: #e9ecef; }
+    .seo-gauge .score-ring { transition: stroke-dashoffset 1.5s ease; }
+    .seo-gauge .score-text { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; }
+    .seo-gauge .score-text h2 { font-size: 42px; font-weight: 800; margin: 0; line-height: 1; }
+    .seo-gauge .score-text span { font-size: 13px; color: #878a99; }
+
+    .module-card { text-align: center; padding: 15px 10px; border-radius: 10px; background: #fff; border: 1px solid #e9ecef; transition: all 0.3s; cursor: pointer; }
+    .module-card:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.06); }
+    .module-card .score-num { font-size: 28px; font-weight: 800; }
+    .module-card .module-label { font-size: 11px; color: #878a99; margin-top: 3px; }
+    .progress-thin { height: 5px; border-radius: 3px; }
+
+    .issue-badge { font-size: 11px; padding: 3px 8px; border-radius: 6px; cursor: pointer; }
+    .issue-error { background: #fef4f4; color: #f06548; border: 1px solid #fde1dc; }
+    .issue-warning { background: #fef9f0; color: #f7b84b; border: 1px solid #fdefcf; }
+    .issue-info { background: #eef6fc; color: #299cdb; border: 1px solid #d0e8f7; }
+    .issue-good { background: #eefbf5; color: #0ab39c; border: 1px solid #c8f0e5; }
+
+    .filter-pill { padding: 5px 14px; border-radius: 20px; font-size: 12px; border: 1px solid #e9ecef; background: white; cursor: pointer; transition: all 0.2s; text-decoration: none; color: #495057; display: inline-flex; align-items: center; gap: 4px; }
+    .filter-pill:hover, .filter-pill.active { background: #405189; color: white; border-color: #405189; }
+
+    .fix-panel { background: linear-gradient(135deg, #f0f4ff 0%, #fff8f0 100%); border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px; margin-top: 10px; display: none; animation: slideDown 0.3s ease; }
+    .fix-panel.show { display: block; }
+    @@keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+
+    .fix-step { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 12px; padding: 10px; background: white; border-radius: 8px; border: 1px solid #eee; }
+    .fix-step .step-num { width: 28px; height: 28px; border-radius: 50%; background: #405189; color: white; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; flex-shrink: 0; }
+    .fix-step .step-text { font-size: 13px; line-height: 1.6; color: #495057; }
+
+    .ai-suggest-btn { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; padding: 8px 16px; border-radius: 20px; font-size: 12px; cursor: pointer; transition: all 0.3s; display: inline-flex; align-items: center; gap: 6px; }
+    .ai-suggest-btn:hover { transform: scale(1.05); box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4); }
+    .ai-result { background: #f8f7ff; border: 1px solid #e0daff; border-radius: 10px; padding: 15px; margin-top: 10px; font-size: 13px; line-height: 1.6; position: relative; }
+    .ai-loading { text-align: center; padding: 20px; color: #878a99; }
+    .ai-loading .spinner-border { width: 20px; height: 20px; }
+
+    .ai-parsed-box { background: #fff; border: 1px solid #d1d9e6; border-radius: 8px; margin-top: 10px; padding: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+    .ai-field-label { font-size: 11px; font-weight: 700; color: #405189; text-transform: uppercase; margin-bottom: 4px; display: flex; align-items: center; gap: 4px; }
+    .ai-field-value { font-size: 13px; color: #333; margin-bottom: 0px; padding: 8px 10px; background: #fff; border-radius: 4px; border: 1px solid #ced4da; transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out; }
+    .ai-field-value:focus { border-color: #86b7fe; outline: 0; box-shadow: 0 0 0 0.25rem rgba(13,110,253,.25); }
+</style>
+
+<div class="row">
+    <div class="col-12">
+        <div class="page-title-box d-flex align-items-center justify-content-between">
+            <h4 class="mb-sm-0">🔍 SEO Audit Dashboard</h4>
+            <div class="d-flex gap-2 align-items-center">
+                <span class="text-muted small">Quét lúc: @DateTime.Now.ToString("HH:mm dd/MM/yyyy")</span>
+                <button type="button" class="btn btn-soft-danger btn-sm" onclick="clearSystemCache()">
+                    <i class="bx bx-trash me-1"></i>Xóa Cache
+                </button>
+                <a href="/AdminSeo" class="btn btn-soft-primary btn-sm"><i class="bx bx-refresh me-1"></i>Quét lại</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Overall Score + Module Grid -->
+<div class="row">
+    <div class="col-xl-3 col-lg-4">
+        <div class="card">
+            <div class="card-body text-center py-4">
+                <h6 class="text-muted text-uppercase mb-3 fs-11">Điểm SEO Tổng</h6>
+                <div class="seo-gauge">
+                    <svg width="160" height="160" viewBox="0 0 160 160">
+                        <circle class="bg-ring" cx="80" cy="80" r="70" />
+                        <circle class="score-ring" cx="80" cy="80" r="70"
+                                stroke="@(Model.OverallScore >= 80 ? "#0ab39c" : Model.OverallScore >= 50 ? "#f7b84b" : "#f06548")"
+                                stroke-dasharray="@(2 * Math.PI * 70)"
+                                stroke-dashoffset="@(2 * Math.PI * 70 * (1 - Model.OverallScore / 100.0))" />
+                    </svg>
+                    <div class="score-text">
+                        <h2 style="color: @(Model.OverallScore >= 80 ? "#0ab39c" : Model.OverallScore >= 50 ? "#f7b84b" : "#f06548")">@Model.OverallScore</h2>
+                        <span>/100</span>
+                    </div>
+                </div>
+                <div class="row text-center mt-4 g-2">
+                    <div class="col-4"><h6 class="text-danger mb-0">@Model.TotalErrors</h6><small class="text-muted" style="font-size:10px">Lỗi</small></div>
+                    <div class="col-4"><h6 class="text-warning mb-0">@Model.TotalWarnings</h6><small class="text-muted" style="font-size:10px">Cảnh báo</small></div>
+                    <div class="col-4"><h6 class="text-success mb-0">@Model.TotalGood</h6><small class="text-muted" style="font-size:10px">Đạt chuẩn</small></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-9 col-lg-8">
+        <div class="row g-2">
+            @{
+                var modules = new[] {
+                    ("product", "Sản phẩm", Model.AvgProductScore, Model.Products.Count, "bx-package", "primary"),
+                    ("news", "Tin tức", Model.AvgNewsScore, Model.News.Count, "bx-news", "info"),
+                    ("category", "Danh mục", Model.AvgCategoryScore, Model.Categories.Count, "bx-category", "warning"),
+                    ("video", "Video", Model.AvgVideoScore, Model.Videos.Count, "bx-video", "danger"),
+                    ("gallery", "Thư viện ảnh", Model.AvgGalleryScore, Model.Galleries.Count, "bx-images", "success"),
+                    ("faq", "FAQ", Model.AvgFAQScore, Model.FAQs.Count, "bx-help-circle", "secondary"),
+                    ("document", "Tài liệu", Model.AvgDocumentScore, Model.Documents.Count, "bx-file", "dark")
+                };
+            }
+            @foreach (var (key, name, score, count, icon, color) in modules)
+            {
+                <div class="col-xl-3 col-md-3 col-sm-4 col-6">
+                    <div class="module-card @(currentModule == key ? "active shadow border-primary" : "")" onclick="filterModule('@key')">
+                        <i class="bx @icon fs-4 text-@color d-block mb-1"></i>
+                        <div class="score-num text-@(score >= 80 ? "success" : score >= 50 ? "warning" : "danger")">@score</div>
+                        <div class="module-label">@name (@count)</div>
+                        <div class="progress progress-thin mt-2">
+                            <div class="progress-bar bg-@(score >= 80 ? "success" : score >= 50 ? "warning" : "danger")" style="width: @score%"></div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<!-- Filters + Search -->
+<div class="row mt-2">
+    <div class="col-12">
+        <div class="card mb-2">
+            <div class="card-body py-2">
+                <div class="d-flex flex-wrap gap-2 align-items-center">
+                    <span class="text-muted small me-1">Lọc:</span>
+                    <button class="filter-pill @(currentModule == "all" && currentScoreFilter == "all" ? "active" : "")" onclick="filterModule('all')">Tất cả</button>
+                    <span class="mx-1 text-muted">|</span>
+                    <button class="filter-pill @(currentScoreFilter == "bad" ? "active" : "")" onclick="filterScore('bad')">🔴 Yếu</button>
+                    <button class="filter-pill @(currentScoreFilter == "medium" ? "active" : "")" onclick="filterScore('medium')">🟡 TB</button>
+                    <button class="filter-pill @(currentScoreFilter == "good" ? "active" : "")" onclick="filterScore('good')">🟢 Tốt</button>
+                    <div class="ms-auto">
+                        <input type="text" class="form-control form-control-sm" id="searchInput" 
+                               value="@currentKw"
+                               onkeypress="if(event.keyCode==13) searchItems()" 
+                               placeholder="🔍 Tìm kiếm và Enter..." style="width: 200px; border-radius: 20px;">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Hướng dẫn sử dụng AI -->
+<div class="row mt-2">
+    <div class="col-12">
+        <div class="alert border-0 shadow-sm d-flex align-items-center mb-3" style="background-color: #f3f6fa; border-left: 4px solid #299cdb !important;">
+            <div class="fs-1 text-primary me-3"><i class="bx bx-bot"></i></div>
+            <div>
+                <h6 class="fw-bold mb-1 text-primary">💡 Hướng dẫn dùng Trợ lý AI SEO:</h6>
+                <p class="mb-0 fs-13 text-secondary">
+                    Để AI giúp bạn viết lại Tiêu đề, Mô tả và Từ khóa tự động, hãy thực hiện 2 bước đơn giản:<br>
+                    <b>👉 Bước 1:</b> Nhấp chuột vào bất kỳ dòng dữ liệu nào ở bảng dưới đây để mở bảng công cụ chi tiết.<br>
+                    <b>👉 Bước 2:</b> Bấm nút <span class="badge bg-primary px-2 py-1"><i class="bx bx-magic-wand"></i> Gợi ý từ AI</span>. Hệ thống sẽ tự động phân tích và điền sẵn nội dung SEO chuẩn nhất để bạn "Lưu Nhanh".
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Audit Table -->
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0" id="auditTable">
+                        <thead class="table-light">
+                            <tr>
+                                <th style="width:40px" class="text-center">#</th>
+                                <th>Nội dung</th>
+                                <th style="width:90px" class="text-center">Module</th>
+                                <th style="width:100px" class="text-center">Điểm</th>
+                                <th>Vấn đề phát hiện</th>
+                                <th style="width:70px" class="text-center">Sửa</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{ int idx = (currentPage - 1) * pageSize; }
+                            @foreach (var item in pagedItems)
+                            {
+                                idx++;
+                                string rowId = $"row-{item.Module}-{item.ItemId}";
+                                
+                                <tr onclick="toggleFixPanel('@rowId')" style="cursor: pointer;" title="Nhấp vào đây để xem chi tiết Lỗi SEO và sử dụng công cụ Gợi ý từ AI" data-bs-toggle="tooltip" data-bs-placement="top">
+                                    <td class="text-center text-muted small">@idx</td>
+                                    <td>
+                                        <div class="d-flex align-items-center gap-2">
+                                            @if (!string.IsNullOrEmpty(item.ImageUrl))
+                                            {
+                                                <img src="@item.ImageUrl" width="36" height="36" class="rounded" style="object-fit:cover;" />
+                                            }
+                                            else
+                                            {
+                                                <div style="width:36px;height:36px;background:#f3f3f9;border-radius:6px;display:flex;align-items:center;justify-content:center;"><i class="bx @item.ModuleIcon text-muted"></i></div>
+                                            }
+                                            <div>
+                                                <h6 class="mb-0 fs-13" style="max-width:280px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">@item.ItemName</h6>
+                                                @if (!string.IsNullOrEmpty(item.Slug)) { <small class="text-muted">/@item.Slug</small> }
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="text-center"><span class="badge bg-@(item.ModuleColor)-subtle text-@item.ModuleColor" style="font-size:10px;">@item.Module</span></td>
+                                    <td class="text-center">
+                                        <div class="d-flex align-items-center justify-content-center gap-1">
+                                            <div style="width:45px"><div class="progress progress-thin"><div class="progress-bar bg-@item.ScoreClass" style="width:@item.Score%"></div></div></div>
+                                            <span class="fw-bold text-@item.ScoreClass" style="font-size:13px;">@item.Score</span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="d-flex flex-wrap gap-1">
+                                            @foreach (var issue in item.Issues.Take(3))
+                                            {
+                                                var css = issue.Severity switch { SeoSeverity.Error => "issue-error", SeoSeverity.Warning => "issue-warning", SeoSeverity.Info => "issue-info", _ => "issue-good" };
+                                                var ic = issue.Severity switch { SeoSeverity.Error => "bx-x-circle", SeoSeverity.Warning => "bx-error", SeoSeverity.Info => "bx-info-circle", _ => "bx-check-circle" };
+                                                <span class="issue-badge @css" title="@issue.Description"><i class="bx @ic me-1"></i>@issue.Title</span>
+                                            }
+                                            @if (item.Issues.Count > 3) { <span class="issue-badge issue-info">+@(item.Issues.Count - 3)</span> }
+                                            @if (!item.Issues.Any()) { <span class="issue-badge issue-good"><i class="bx bx-check-circle me-1"></i>Hoàn hảo!</span> }
+                                        </div>
+                                    </td>
+                                    <td class="text-center"><a href="@item.EditUrl" class="btn btn-sm btn-soft-primary" onclick="event.stopPropagation()"><i class="bx bx-edit-alt"></i></a></td>
+                                </tr>
+                                <!-- Fix Panel (hidden, toggles on click) -->
+                                <tr class="fix-row" id="@rowId" style="display:none;" data-module="@item.Module" data-score="@item.Score">
+                                    <td colspan="6" class="p-0 border-0">
+                                            <div class="fix-panel show" style="margin: 0 15px 15px 15px;">
+                                                <div class="row">
+                                                    <div class="col-lg-7">
+                                                        <h6 class="fw-bold mb-3"><i class="bx bx-wrench text-primary me-1"></i>Hướng dẫn khắc phục: @item.ItemName</h6>
+                                                        @{ int step = 0; }
+                                                        @if (item.Issues.Any(i => i.Severity != SeoSeverity.Good))
+                                                        {
+                                                            @foreach (var issue in item.Issues.Where(i => i.Severity != SeoSeverity.Good))
+                                                            {
+                                                                step++;
+                                                                var sevColor = issue.Severity switch { SeoSeverity.Error => "danger", SeoSeverity.Warning => "warning", _ => "info" };
+                                                                <div class="fix-step">
+                                                                    <div class="step-num bg-@sevColor">@step</div>
+                                                                    <div class="step-text">
+                                                                        <strong class="text-@sevColor">@issue.Title</strong>
+                                                                        <div class="text-muted mb-1" style="font-size:12px;">@issue.Description</div>
+                                                                        @if (!string.IsNullOrEmpty(issue.HowToFix))
+                                                                        {
+                                                                            <div style="background:#fff;padding:8px 12px;border-radius:6px;border-left:3px solid var(--bs-@sevColor);font-size:12px;">
+                                                                                💡 <strong>Cách sửa:</strong> @issue.HowToFix
+                                                                            </div>
+                                                                        }
+                                                                        @if (!string.IsNullOrEmpty(issue.FixUrl))
+                                                                        {
+                                                                            <a href="@issue.FixUrl" class="btn btn-sm btn-outline-primary mt-2" style="font-size:11px;" onclick="event.stopPropagation()">
+                                                                                <i class="bx bx-link-external me-1"></i>Đi đến trang sửa
+                                                                            </a>
+                                                                        }
+                                                                    </div>
+                                                                </div>
+                                                            }
+                                                        }
+                                                        else
+                                                        {
+                                                            <div class="alert alert-success fs-13 border-0 shadow-sm"><i class="bx bx-check-circle me-1"></i>Tuyệt vời, mục này đã đạt 100 điểm SEO! Bạn vẫn có thể dùng AI bên cạnh để tham khảo các gợi ý sáng tạo hơn.</div>
+                                                        }
+                                                    </div>
+                                                    <div class="col-lg-5">
+                                                        <div class="p-3 rounded-3" style="background: linear-gradient(135deg, #667eea15, #764ba215); border: 1px solid #e0daff;">
+                                                            <h6 class="fw-bold mb-2"><i class="bx bx-bot me-1"></i>🤖 AI Gợi ý SEO</h6>
+                                                            @if (!string.IsNullOrEmpty(ViewBag.GeminiApiKey as string))
+                                                            {
+                                                                <p class="text-muted mb-2" style="font-size:13px; line-height: 1.5;"><span class="badge bg-success-subtle text-success fs-12 px-2 py-1 me-1"><i class="bx bx-check-double"></i> Đã kích hoạt AI</span><br><small>Dữ liệu thực từ DB → Gemini AI → Gợi ý thông minh, độc đáo</small></p>
+                                                            }
+                                                            else
+                                                            {
+                                                                <p class="text-muted mb-2" style="font-size:13px; line-height: 1.5;"><span class="badge bg-danger-subtle text-danger fs-12 px-2 py-1 me-1"><i class="bx bx-error-alt"></i> AI đang TẮT</span><br><small>Hiện tại chỉ hỗ trợ <b>văn bản mẫu cứng</b> do thiếu API Key. Để kích hoạt AI, <a href="/AdminSetting" onclick="event.stopPropagation()" class="fw-bold text-danger text-decoration-underline">nhập API Key tại đây</a>.</small></p>
+                                                            }
+                                                            <button class="ai-suggest-btn" onclick="event.stopPropagation(); getAISuggestion('@item.Module', @item.ItemId, '@System.Web.HttpUtility.JavaScriptStringEncode(item.ItemName)', '@rowId-ai')">
+                                                                <i class="bx bx-magic-wand"></i> Gợi ý từ AI
+                                                            </button>
+                                                            <div id="@(rowId)-ai" class="mt-2"></div>
+                                                        </div>
+
+                                                        <!-- Quick Checklist -->
+                                                        <div class="mt-3 p-3 bg-light rounded-3">
+                                                            <h6 class="fw-bold mb-2" style="font-size:13px;"><i class="bx bx-list-check me-1"></i>Checklist nhanh</h6>
+                                                            <div style="font-size:12px; line-height: 2;">
+                                                                @{
+                                                                    var hasTitle = !item.Issues.Any(i => i.Title.Contains("SEO Title"));
+                                                                    var hasDesc = !item.Issues.Any(i => i.Title.Contains("SEO Description"));
+                                                                    var hasImg = !item.Issues.Any(i => i.Title.Contains("ảnh"));
+                                                                    var hasSlug = !item.Issues.Any(i => i.Title.Contains("Slug"));
+                                                                    var hasContent = !item.Issues.Any(i => i.Title.Contains("nội dung") || i.Title.Contains("Nội dung"));
+                                                                }
+                                                                <div>@(hasTitle ? "✅" : "❌") SEO Title (30-60 ký tự)</div>
+                                                                <div>@(hasDesc ? "✅" : "❌") SEO Description (120-160 ký tự)</div>
+                                                                <div>@(hasImg ? "✅" : "❌") Có ảnh đại diện</div>
+                                                                <div>@(hasSlug ? "✅" : "❌") Slug URL thân thiện</div>
+                                                                <div>@(hasContent ? "✅" : "❌") Nội dung đầy đủ</div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+                @if (totalPages > 1)
+                {
+                    <div class="card-footer py-2 border-top-0">
+                        <div class="row align-items-center">
+                            <div class="col-sm">
+                                <p class="text-muted mb-0" style="font-size:12px;">Hiển thị <b>@( (currentPage - 1) * pageSize + 1 )</b> đến <b>@( Math.Min(currentPage * pageSize, Model.TotalItems) )</b> của <b>@Model.TotalItems</b> mục</p>
+                            </div>
+                            <div class="col-sm-auto">
+                                <ul class="pagination pagination-separated pagination-sm justify-content-center justify-content-sm-start mb-0">
+                                    <li class="page-item @(currentPage == 1 ? "disabled" : "")">
+                                        <a class="page-link" href="?module=@currentModule&scoreFilter=@currentScoreFilter&kw=@currentKw&page=@(currentPage - 1)">Trước</a>
+                                    </li>
+                                    @for (int i = 1; i <= totalPages; i++)
+                                    {
+                                        if (i == 1 || i == totalPages || (i >= currentPage - 2 && i <= currentPage + 2))
+                                        {
+                                            <li class="page-item @(i == currentPage ? "active" : "")">
+                                                <a class="page-link" href="?module=@currentModule&scoreFilter=@currentScoreFilter&kw=@currentKw&page=@i">@i</a>
+                                            </li>
+                                        }
+                                        else if (i == currentPage - 3 || i == currentPage + 3)
+                                        {
+                                            <li class="page-item disabled"><span class="page-link">...</span></li>
+                                        }
+                                    }
+                                    <li class="page-item @(currentPage == totalPages ? "disabled" : "")">
+                                        <a class="page-link" href="?module=@currentModule&scoreFilter=@currentScoreFilter&kw=@currentKw&page=@(currentPage + 1)">Sau</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Tips & Tools -->
+<div class="row">
+    <div class="col-lg-6">
+        <div class="card border-success border-opacity-25">
+            <div class="card-header bg-success-subtle"><h6 class="card-title mb-0 text-success"><i class="bx bx-bulb me-1"></i>Mẹo tăng điểm SEO nhanh nhất</h6></div>
+            <div class="card-body" style="font-size:13px; line-height: 2.2;">
+                <ol class="mb-0">
+                    <li><strong>SEO Title:</strong> 30-60 ký tự, chứa từ khóa chính ở đầu, thêm tên thương hiệu cuối</li>
+                    <li><strong>SEO Description:</strong> 120-160 ký tự, hấp dẫn, có CTA (Mua ngay, Xem chi tiết)</li>
+                    <li><strong>Ảnh đại diện:</strong> Mỗi nội dung cần 1 ảnh chất lượng cao (≥600x600px)</li>
+                    <li><strong>Nội dung:</strong> Sản phẩm ≥ 300 ký tự, Bài viết ≥ 500 ký tự, FAQ ≥ 50 ký tự</li>
+                    <li><strong>Slug:</strong> URL ngắn gọn, chứa từ khóa, dạng: ten-san-pham-chinh-hang</li>
+                    <li><strong>FAQ:</strong> Viết câu hỏi đầy đủ tự nhiên, trả lời chi tiết để có Rich Snippet</li>
+                    <li><strong>Video:</strong> Thêm thumbnail riêng, tiêu đề mô tả đầy đủ nội dung</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="card border-info border-opacity-25">
+            <div class="card-header bg-info-subtle"><h6 class="card-title mb-0 text-info"><i class="bx bx-link-external me-1"></i>Công cụ kiểm tra bên ngoài</h6></div>
+            <div class="card-body">
+                <div class="d-flex flex-column gap-3">
+                    @{
+                        var tools = new[] {
+                            ("Google Rich Results Test", "Kiểm tra Schema (Product, FAQ, Video)", "https://search.google.com/test/rich-results", "danger", "G"),
+                            ("Google PageSpeed Insights", "Kiểm tra tốc độ tải trang & Core Web Vitals", "https://pagespeed.web.dev/", "success", "P"),
+                            ("Facebook Sharing Debugger", "Kiểm tra Open Graph khi chia sẻ link", "https://developers.facebook.com/tools/debug/", "primary", "F"),
+                            ("Google Search Console", "Theo dõi hiệu suất SEO & Submit Sitemap", "https://search.google.com/search-console", "warning", "S"),
+                            ("Schema Markup Validator", "Validate JSON-LD trên trang web", "https://validator.schema.org/", "info", "V")
+                        };
+                    }
+                    @foreach (var (tname, tdesc, turl, tcolor, tletter) in tools)
+                    {
+                        <a href="@turl" target="_blank" class="d-flex align-items-center gap-2 text-decoration-none text-dark" style="font-size:13px;">
+                            <div class="avatar-xs"><span class="avatar-title bg-@(tcolor)-subtle text-@tcolor rounded fw-bold">@tletter</span></div>
+                            <div><strong>@tname</strong><br /><small class="text-muted">@tdesc</small></div>
+                        </a>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function toggleFixPanel(id) {
+            const row = document.getElementById(id);
+            if (!row) return;
+            const isVisible = row.style.display !== 'none';
+            document.querySelectorAll('.fix-row').forEach(r => r.style.display = 'none');
+            if (!isVisible) row.style.display = '';
+        }
+
+        function filterModule(module) {
+            const kw = document.getElementById('searchInput').value;
+            location.href = `?module=${encodeURIComponent(module)}&scoreFilter=all&kw=${encodeURIComponent(kw)}&page=1`;
+        }
+
+        function filterScore(level) {
+            const module = '@currentModule';
+            const kw = document.getElementById('searchInput').value;
+            location.href = `?module=${encodeURIComponent(module)}&scoreFilter=${level}&kw=${encodeURIComponent(kw)}&page=1`;
+        }
+
+        function searchItems() {
+            const kw = document.getElementById('searchInput').value;
+            const module = '@currentModule';
+            const scoreFilter = '@currentScoreFilter';
+            location.href = `?module=${encodeURIComponent(module)}&scoreFilter=${scoreFilter}&kw=${encodeURIComponent(kw)}&page=1`;
+        }
+
+        // ── AI SEO Suggestion - Gọi Server-side API (Gemini hoặc Local Fallback) ──
+        async function getAISuggestion(module, itemId, itemName, targetId) {
+            const container = document.getElementById(targetId);
+            const btn = event.currentTarget;
+            
+            if (btn && btn.tagName === 'BUTTON') {
+                btn.disabled = true;
+                btn.innerHTML = '<i class="bx bx-loader-alt bx-spin me-1"></i> Đang phân tích...';
+            }
+
+            container.innerHTML = `<div class="ai-loading">
+                <div class="spinner-border text-primary" role="status"></div>
+                <div class="mt-2">🤖 Đang phân tích dữ liệu thực từ DB...</div>
+            </div>`;
+
+            try {
+                const response = await fetch('/AdminSeo/AISuggest', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ Module: module, ItemId: itemId, ItemName: itemName })
+                });
+
+                const data = await response.json();
+                
+                if (btn && btn.tagName === 'BUTTON') {
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="bx bx-magic-wand"></i> Gợi ý từ AI';
+                }
+
+                let isGemini = data.source === 'gemini';
+                let sourceLabel = isGemini 
+                    ? '<span class="badge bg-success px-3 py-2 text-white shadow-sm rounded-pill"><i class="bx bx-bot me-1"></i> Google Gemini AI (Trí Tuệ Nhân Tạo)</span>'
+                    : '<span class="badge bg-secondary px-3 py-2 text-white shadow-sm rounded-pill"><i class="bx bx-file me-1"></i> Bản Mẫu Cứng (Offline Local)</span>';
+
+                let resultText = data.result || '';
+                
+                // Loại bỏ markdown (vd: ```html, ```) phòng trường hợp AI vẫn tự ý thêm vào
+                let cleanResultText = resultText.replace(/```[a-z]*\n?/g, '').replace(/```/g, '');
+
+                // Trích xuất dữ liệu từ các thẻ [TITLE], [DESC], [KEY]
+                const titleMatch = cleanResultText.match(/\[TITLE\](.*?)\[\/TITLE\]/is);
+                const descMatch = cleanResultText.match(/\[DESC\](.*?)\[\/DESC\]/is);
+                const keyMatch = cleanResultText.match(/\[KEY\](.*?)\[\/KEY\]/is);
+
+                const suggestedTitle = titleMatch ? titleMatch[1].trim() : "";
+                const suggestedDesc = descMatch ? descMatch[1].trim() : "";
+                const suggestedKey = keyMatch ? keyMatch[1].trim() : "";
+
+                // Loại bỏ các thẻ tag khỏi văn bản hiển thị để sạch sẽ
+                let displayHtml = resultText
+                    .replace(/\[TITLE\].*?\[\/TITLE\]/is, '')
+                    .replace(/\[DESC\].*?\[\/DESC\]/is, '')
+                    .replace(/\[KEY\].*?\[\/KEY\]/is, '')
+                    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                    .trim();
+
+                let html = `<div class="ai-result" style="border: 2px solid ${isGemini ? '#198754' : '#ced4da'}; background: ${isGemini ? '#f8fff9' : '#f8f9fa'};">
+                    <div class="d-flex flex-column mb-3 border-bottom pb-2">
+                        <div class="d-flex align-items-center flex-wrap gap-2 mb-2">${sourceLabel}<span class="fw-bold text-dark fs-6 ms-2">Gợi ý cho: "${itemName}"</span></div>
+                        ${!isGemini ? `<div class="alert alert-danger p-2 mb-0 mt-2" style="font-size: 13px; line-height: 1.5; border-left: 4px solid #dc3545;"><i class="bx bx-error-circle me-1 fs-5 align-middle"></i> <b>CẢNH BÁO:</b> Hệ thống không thể kết nối tới Google Gemini (thiếu API Key hoặc Key bị lỗi). Dữ liệu dưới đây <b>KHÔNG PHẢI</b> do AI sinh ra, nó chỉ là <b>bản mẫu tự động cứng</b> được lập trình sẵn. Để có nội dung độc đáo và thông minh nhất, vui lòng kiểm tra lại <a href="/AdminSetting" class="fw-bold text-danger text-decoration-underline">API Key tại Cài đặt</a>.</div>` : ''}
+                        ${data.errorLog ? `<div class="alert alert-warning p-2 mb-0 mt-2 text-wrap text-break" style="font-size: 11px; font-family: monospace; max-height: 150px; overflow-y: auto;"><b>LOG LỖI TỪ GOOGLE (Dành cho Debug):</b><br>${data.errorLog}</div>` : ''}
+                    </div>`;
+                
+                if (suggestedTitle || suggestedDesc || suggestedKey) {
+                    html += `
+                    <div class="ai-parsed-box">
+                        <div class="fw-bold text-primary mb-1" style="font-size:12px;"><i class="bx bx-check-double me-1"></i>DỮ LIỆU CÓ THỂ LƯU NHANH:</div>
+                        <div class="ai-field-label mt-2"><i class="bx bx-heading text-primary"></i> SEO Title</div>
+                        <textarea class="form-control ai-field-value mb-2" id="ai-title-${itemId}" rows="2">${suggestedTitle || "(Không có)"}</textarea>
+                        <div class="ai-field-label"><i class="bx bx-text text-success"></i> SEO Description</div>
+                        <textarea class="form-control ai-field-value mb-2" id="ai-desc-${itemId}" rows="4">${suggestedDesc || "(Không có)"}</textarea>
+                        <div class="ai-field-label"><i class="bx bx-key text-warning"></i> Từ khóa</div>
+                        <textarea class="form-control ai-field-value mb-2" id="ai-key-${itemId}" rows="3">${suggestedKey || "(Không có)"}</textarea>
+
+                        <button class="btn btn-primary btn-sm w-100 mt-1 shadow-sm" onclick="applyQuickSeo('${module}', ${itemId}, '${targetId}')">
+                            <i class="bx bx-save me-1"></i> LƯU THAY ĐỔI VÀO HỆ THỐNG
+                        </button>
+                    </div>`;
+                }
+
+                if (displayHtml) {
+                    html += `<div class="mt-3 border-top pt-2"><div class="fw-bold mb-1" style="font-size:12px;">💡 PHÂN TÍCH & MẸO:</div>${displayHtml.replace(/\n/g, '<br>')}</div>`;
+                }
+
+                html += `</div>`;
+                container.innerHTML = html;
+
+            } catch (err) {
+                if (btn && btn.tagName === 'BUTTON') {
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="bx bx-magic-wand"></i> Gợi ý từ AI';
+                }
+                container.innerHTML = `<div class="ai-result" style="border-color: #fde1dc;"><span class="text-danger">⚠️ Lỗi: ${err.message}</span></div>`;
+            }
+        }
+
+        async function applyQuickSeo(module, itemId, targetId) {
+            const title = document.getElementById(`ai-title-${itemId}`).value.trim();
+            const desc = document.getElementById(`ai-desc-${itemId}`).value.trim();
+            const key = document.getElementById(`ai-key-${itemId}`).value.trim();
+
+            if (title === "(Không có)" && desc === "(Không có)") {
+                Swal.fire("Thông báo", "Không có dữ liệu SEO để lưu!", "warning");
+                return;
+            }
+
+            try {
+                // Hiển thị loading bằng SweetAlert2
+                Swal.fire({ title: 'Đang lưu...', allowOutsideClick: false, didOpen: () => { Swal.showLoading(); } });
+
+                const response = await fetch('/AdminSeo/ApplySeo', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        Module: module,
+                        ItemId: itemId,
+                        SeoTitle: title === "(Không có)" ? "" : title,
+                        SeoDescription: desc === "(Không có)" ? "" : desc,
+                        SeoKeywords: key === "(Không có)" ? "" : key
+                    })
+                });
+
+                const res = await response.json();
+                if (res.success) {
+                    Swal.fire("Thành công!", res.message, "success");
+                    // Ẩn panel gợi ý
+                    document.getElementById(targetId).innerHTML = `<div class="alert alert-success fs-12 mb-0"><i class="bx bx-check-circle me-1"></i> ${res.message}</div>`;
+                } else {
+                    Swal.fire("Lỗi", res.message, "error");
+                }
+            } catch (err) {
+                Swal.fire("Lỗi kết nối", err.message, "error");
+            }
+        }
+        async function clearSystemCache() {
+            if (!confirm("Bạn có chắc chắn muốn xóa toàn bộ bộ nhớ đệm hệ thống không?")) return;
+            try {
+                Swal.fire({ title: 'Đang xóa cache...', allowOutsideClick: false, didOpen: () => { Swal.showLoading(); } });
+                const response = await fetch('/AdminSeo/ClearCache');
+                const res = await response.json();
+                if (res.success) {
+                    Swal.fire("Thành công!", res.message, "success").then(() => {
+                        location.reload();
+                    });
+                } else {
+                    Swal.fire("Lỗi", "Không thể xóa cache.", "error");
+                }
+            } catch (err) {
+                Swal.fire("Lỗi kết nối", err.message, "error");
+            }
+        }
+        // Init Tooltips
+    document.addEventListener("DOMContentLoaded", function () {
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl);
+        });
+    });
+</script>
+}

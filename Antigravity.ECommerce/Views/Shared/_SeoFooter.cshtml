@@ -1,0 +1,32 @@
+@using Antigravity.ECommerce.Services
+@{
+    var settings = SSetting.GetViewModel();
+}
+
+<!-- LazyLoad Initialization -->
+<script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@17.8.3/dist/lazyload.min.js"></script>
+<script>
+    (function() {
+        var lazyLoadInstance = new LazyLoad({
+            elements_selector: ".lazy"
+        });
+    })();
+</script>
+
+<!-- Instant Page Pre-fetch (UX Boost) -->
+<script src="https://instant.page/5.2.0" type="module" integrity="sha384-JnE3diBhS96pW7yidUisSPl1mZutF8b3W5zHIswoiS2zXs1oF5Fq1g24K0b7b1G5"></script>
+
+<!-- Custom Footer Scripts from Admin Panel -->
+@if (!string.IsNullOrEmpty(settings.FooterScripts))
+{
+    @Html.Raw(settings.FooterScripts)
+}
+
+<!-- Global Application Scripts (Cart Count, etc.) -->
+<script>
+    $(document).ready(function() {
+        $.get('/Cart/GetCartCount', function(count) {
+            $('#cartCount').text(count);
+        });
+    });
+</script>

@@ -1,0 +1,523 @@
+@model Antigravity.ECommerce.Models.Product
+@{
+    ViewData["Title"] = "Thêm mới Sản phẩm";
+    Layout = "_AdminLayout";
+}
+
+<div class="row">
+    <div class="col-12">
+        <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+            <h4 class="mb-sm-0">Thêm Sản phẩm mới</h4>
+            <div class="page-title-right">
+                <ol class="breadcrumb m-0">
+                    <li class="breadcrumb-item"><a href="/AdminProduct" class="btn btn-soft-dark btn-sm"><i class="ri-arrow-left-line align-bottom me-1"></i> Quay lại danh sách</a></li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+
+<form action="/AdminProduct/Create" method="post" id="productForm">
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label class="form-label">Tên sản phẩm <span class="text-danger">*</span> <i class="mdi mdi-information text-primary" data-bs-toggle="tooltip" title="Tên chính thức hiển thị cho khách hàng"></i></label>
+                        <input type="text" class="form-control" asp-for="Name" id="Name" placeholder="Nhập tên sản phẩm">
+                        <span asp-validation-for="Name" class="text-danger mt-1 d-block"></span>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label">SKU (Mã sản phẩm)</label>
+                            <input type="text" class="form-control" asp-for="SKU" placeholder="Ví dụ: LAP-DELL-001">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Danh mục <span class="text-danger">*</span> <i class="mdi mdi-information text-primary" data-bs-toggle="tooltip" title="Nơi sản phẩm này sẽ thuộc về để dễ dàng duyệt web"></i></label>
+                            <select class="form-control selectpicker" data-live-search="true" multiple data-selected-text-format="count > 3" id="multi_categories_select" data-actions-box="true" title="Chọn danh mục...">
+                                @if(ViewBag.Categories != null)
+                                {
+                                    foreach(var item in ViewBag.Categories as List<Antigravity.ECommerce.Models.Category>)
+                                    {
+                                        <option value="@item.CategoryId">@item.Name</option>
+                                    }
+                                }
+                            </select>
+                            <input type="hidden" asp-for="CategoryIds" id="CategoryIds" />
+                            <small class="text-muted">Có thể chọn nhiều danh mục cho sản phẩm này.</small>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Mô tả ngắn</label>
+                        <textarea class="form-control" id="ShortDescription" asp-for="ShortDescription" rows="4" placeholder="Nhập mô tả ngắn gọn về sản phẩm..."></textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Chi tiết sản phẩm</label>
+                        <textarea id="ckeditor-classic" asp-for="DetailDescription"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header"><h5 class="card-title mb-0">Giá bán & Tồn kho</h5></div>
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <label class="form-label">Giá gốc nhập (VNĐ) <i class="mdi mdi-information text-primary" data-bs-toggle="tooltip" title="Giá vốn để tính toán tỷ suất lợi nhuận (khách không thấy)"></i></label>
+                            <input type="text" class="form-control text-muted fs-14" id="display_PurchasePrice" placeholder="0">
+                            <input type="hidden" asp-for="PurchasePrice" id="PurchasePrice">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Giá niêm yết (Cũ) <i class="mdi mdi-information text-primary" data-bs-toggle="tooltip" title="Giá bị gạch ngang trên giao diện để thể hiện khuyến mãi"></i></label>
+                            <input type="text" class="form-control text-decoration-line-through fs-14" id="display_OldPrice" placeholder="0">
+                            <input type="hidden" asp-for="OldPrice" id="OldPrice">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Giá bán lẻ (VNĐ) <span class="text-danger">*</span> <i class="mdi mdi-information text-primary" data-bs-toggle="tooltip" title="Số tiền thực tế khách hàng phải trả khi mua"></i></label>
+                            <input type="text" class="form-control fw-bold text-success fs-16" id="display_Price" placeholder="0">
+                            <input type="hidden" asp-for="Price" id="Price">
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <label class="form-label">Số lượng trong kho <i class="mdi mdi-information text-primary" data-bs-toggle="tooltip" title="Hiển thị hết hàng nếu bằng 0"></i></label>
+                            <input type="number" class="form-control" asp-for="Stock" value="999">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Đơn vị tính</label>
+                            <input type="text" class="form-control" asp-for="Unit" placeholder="Cái, Hộp, Bộ...">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Trọng lượng (gram)</label>
+                            <input type="number" class="form-control" asp-for="Weight" value="0">
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center">
+                        <a href="/AdminProduct" class="btn btn-light px-4"><i class="ri-arrow-go-back-line me-1"></i>Quay lại</a>
+                        <button type="submit" class="btn btn-success px-5"><i class="ri-save-line me-1"></i>Lưu sản phẩm</button>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- MULTIMEDIA GALLERY -->
+            <div class="card">
+                <div class="card-header d-flex align-items-center">
+                    <h5 class="card-title mb-0 flex-grow-1">Thư viện Ảnh & Video (Gallery)</h5>
+                    <div class="flex-shrink-0 d-flex gap-2">
+                        <button class="btn btn-soft-danger btn-sm" type="button" onclick="addVideoPrompt()"><i class="ri-youtube-line align-bottom me-1"></i>Thêm Video Youtube</button>
+                        <button class="btn btn-soft-primary btn-sm" type="button" onclick="openFileManager('AlbumImage')"><i class="ri-image-add-line align-bottom me-1"></i>Thêm Ảnh Album</button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div id="multimedia-preview" class="row g-3">
+                        <!-- Preview items will be injected here -->
+                        <div class="col-12 text-center py-4 border border-dashed rounded empty-gallery">
+                            <i class="ri-gallery-line fs-24 text-muted"></i>
+                            <p class="text-muted mt-2">Chưa có ảnh hoặc video nào được chọn.</p>
+                        </div>
+                    </div>
+                    <input type="hidden" id="ImageGallery" asp-for="ImageGallery" />
+                    <input type="hidden" id="YoutubeVideo" asp-for="YoutubeVideo" />
+                </div>
+            </div>
+
+            <div class="card border-0 bg-transparent">
+                <div class="card-body p-0 d-flex justify-content-between">
+                    
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+             <div class="card">
+                <div class="card-header"><h5 class="card-title mb-0">Thiết lập & Trạng thái</h5></div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label class="form-label">Trạng thái hiển thị</label>
+                        <select class="form-control" asp-for="Status">
+                            <option value="1">Kích hoạt / Đang bán</option>
+                            <option value="0">Tạm ẩn</option>
+                            <option value="2">Hết hàng</option>
+                        </select>
+                    </div>
+                    <div class="form-check form-switch mb-2">
+                        <input class="form-check-input" type="checkbox" role="switch" id="IsHot" name="IsHot" value="true">
+                        <label class="form-check-label" for="IsHot">Hiện ở Slider Nổi bật (HOT) <i class="mdi mdi-information text-primary" data-bs-toggle="tooltip" title="Nếu bật, sản phẩm này sẽ chễm chệ nằm ở Banner Slide siêu to khổng lồ ngay Trang chủ"></i></label>
+                    </div>
+                    <div class="form-check form-switch mb-2">
+                        <input class="form-check-input" type="checkbox" role="switch" id="IsNew" name="IsNew" value="true">
+                        <label class="form-check-label" for="IsNew">Sản phẩm Mới (NEW)</label>
+                    </div>
+                    <div class="form-check form-switch mb-2">
+                        <input class="form-check-input" type="checkbox" role="switch" id="IsBestSeller" name="IsBestSeller" value="true">
+                        <label class="form-check-label" for="IsBestSeller">Bán chạy (Best Seller)</label>
+                    </div>
+
+                 
+                </div>
+            </div>
+
+            <div class="card shadow-sm border-primary border-opacity-25">
+                <div class="card-header bg-primary bg-opacity-10"><h5 class="card-title mb-0">Ảnh đại diện chính</h5></div>
+                <div class="card-body">
+                    <div class="text-center mb-3">
+                        <img id="imgPreview" src="/assets/images/no-image.png" class="img-thumbnail" style="height: 200px; width: 100%; object-fit: contain;" />
+                    </div>
+                    <div class="input-group">
+                        <input type="text" class="form-control" asp-for="MainImage" id="MainImage" readonly>
+                        <button class="btn btn-primary" type="button" onclick="openFileManager('MainImage')">Chọn ảnh</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Xóa bỏ Pricing cũ vì đã chuyển sang cột trái -->
+
+            <div class="card">
+                <div class="card-header"><h5 class="card-title mb-0">Cấu hình SEO & Metadata</h5></div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label class="form-label">Slug (Đường dẫn URL)</label>
+                        <input type="text" class="form-control" id="Slug" asp-for="Slug" placeholder="tu-dong-theo-ten">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Từ khóa (Tags) - Nhấn Enter hoặc Dấu phẩy để ngăn cách <i class="mdi mdi-information text-primary" data-bs-toggle="tooltip" title="Giúp người dùng dễ tìm kiếm, mỗi tag cách nhau bằng dấu phẩy. VD: Áo thun, Mùa hè"></i></label>
+                        <div class="tag-input-container form-control d-flex flex-wrap gap-2 align-items-center" id="tags-container" onclick="document.getElementById('tags-input').focus()">
+                            <input type="text" id="tags-input" style="border:none; outline:none; flex-grow:1; min-width:100px;" placeholder="Thêm từ khóa...">
+                        </div>
+                        <input type="hidden" asp-for="Tags" id="Tags">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Sản phẩm liên quan (Hiển thị như Tags)</label>
+                        <select class="form-control selectpicker" data-live-search="true" multiple data-selected-text-format="count > 3" id="related_products_select" title="Tìm & chọn SP..." data-actions-box="true">
+                            @if(ViewBag.AllProducts != null)
+                            {
+                                foreach(var item in ViewBag.AllProducts as List<Antigravity.ECommerce.Models.Product>)
+                                {
+                                    <option value="@item.SKU" data-subtext="@item.Name">@item.SKU</option>
+                                }
+                            }
+                        </select>
+                        <input type="hidden" asp-for="RelatedProducts" id="RelatedProducts">
+                    </div>
+                    <hr>
+                    <div class="mb-3">
+                        <label class="form-label">Tiêu đề SEO (Seo Title)</label>
+                        <input type="text" class="form-control" asp-for="SeoTitle" id="SeoTitle" placeholder="Tiêu đề hiển thị trên Google">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Mô tả SEO (Seo Description)</label>
+                        <textarea class="form-control" asp-for="SeoDescription" id="SeoDescription" rows="3" placeholder="Đoạn văn ngắn xuất hiện trên tìm kiếm"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Từ khóa SEO (Seo Keywords)</label>
+                        <input type="text" class="form-control" asp-for="SeoKeywords" placeholder="laptop, dell, xps...">
+                    </div>
+                    <div class="bg-light p-3 rounded mt-3">
+                        <h6 class="fs-13 text-muted mb-2 text-uppercase">Google Search Preview</h6>
+                        <div style="font-family: Arial, sans-serif;">
+                            <div class="text-primary fs-18 mb-1" id="seo_preview_title">Tiêu đề SEO sẽ hiển thị ở đây...</div>
+                            <div class="text-success fs-13 mb-1">https://example.com/san-pham/<span id="seo_preview_slug">slug-cua-san-pham</span></div>
+                            <div class="text-muted fs-13" id="seo_preview_desc" style="line-height:1.4;">Mô tả SEO sẽ hiển thị ở đây. Độ dài tối ưu khoảng 150-160 ký tự.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+			
+            
+        </div>
+    </div>
+               
+            </form>
+
+<!-- Modal Youtube -->
+<div class="modal fade" id="videoModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg">
+            <div class="modal-header bg-danger bg-opacity-10">
+                <h5 class="modal-title text-danger"><i class="ri-youtube-fill align-middle me-2"></i>Thêm Video từ YouTube</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4">
+                <div class="text-center mb-4">
+                    <div class="avatar-md mx-auto">
+                        <div class="avatar-title bg-danger bg-opacity-10 text-danger rounded-circle fs-24">
+                            <i class="ri-video-add-line"></i>
+                        </div>
+                    </div>
+                    <h5 class="mt-3">Dán liên kết video</h5>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Link YouTube</label>
+                    <input type="text" id="youtube_url_input" class="form-control form-control-lg" placeholder="https://www.youtube.com/watch?v=...">
+                    <div id="video_preview_box" class="mt-3 d-none">
+                        <img id="video_preview_img" src="" class="img-thumbnail w-100" style="height: 150px; object-fit: cover;">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer bg-light p-3">
+                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Hủy</button>
+                <button type="button" class="btn btn-danger" onclick="confirmAddVideo()">Thêm vào album</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+    <script>
+        function initEditor(id, height = 300) {
+            if (!document.getElementById(id)) return;
+            CKEDITOR.replace(id, {
+                language: 'vi',
+                height: height,
+                filebrowserBrowseUrl: '/FileManager',
+                filebrowserImageBrowseUrl: '/FileManager'
+            });
+        }
+    
+        document.addEventListener("DOMContentLoaded", function() {
+            initEditor('ckeditor-classic', 500);
+
+            // Load Existing Tags
+            // Init Related Products
+            const relSkus = '@Model.RelatedProducts' ? '@Model.RelatedProducts'.split(',') : [];
+            $('#related_products_select').selectpicker('val', relSkus);
+
+            initPriceFormatting();
+            initTagsSystem();
+            initGallerySortable();
+        });
+
+        $('#related_products_select').on('change', function() {
+            $('#RelatedProducts').val($(this).val() ? $(this).val().join(',') : '');
+        });
+
+        function openFileManager(fieldId) {
+            window.open('/FileManager?fieldId=' + fieldId, 'FileManager', 'width=1100,height=750');
+        }
+
+        function setFileUrl(url, fieldId) {
+            const finalUrl = Array.isArray(url) ? url[0] : url;
+            if (CKEDITOR.instances[fieldId]) {
+                CKEDITOR.instances[fieldId].insertHtml(`<img src="${finalUrl}" />`);
+            } else if (fieldId === 'AlbumImage') {
+                if (Array.isArray(url)) url.forEach(u => addMedia('image', u));
+                else addMedia('image', url);
+            } else {
+                const input = document.getElementById(fieldId);
+                if (input) {
+                    input.value = finalUrl;
+                    if (fieldId === 'MainImage') document.getElementById('imgPreview').src = finalUrl;
+                }
+            }
+        }
+
+        let mediaItems = [];
+        function addMedia(type, url) {
+            if (mediaItems.some(m => m.url === url)) return;
+            mediaItems.push({ type, url });
+            renderGallery();
+        }
+
+        function addVideoPrompt() {
+            document.getElementById('youtube_url_input').value = '';
+            document.getElementById('video_preview_box').classList.add('d-none');
+            new bootstrap.Modal(document.getElementById('videoModal')).show();
+        }
+
+        document.getElementById('youtube_url_input').addEventListener('input', function() {
+            const id = getYoutubeId(this.value);
+            const box = document.getElementById('video_preview_box');
+            const img = document.getElementById('video_preview_img');
+            if (id) {
+                img.src = `https://img.youtube.com/vi/${id}/mqdefault.jpg`;
+                box.classList.remove('d-none');
+            } else {
+                box.classList.add('d-none');
+            }
+        });
+
+        function confirmAddVideo() {
+            const url = document.getElementById('youtube_url_input').value;
+            if (getYoutubeId(url)) {
+                addMedia('video', url);
+                bootstrap.Modal.getInstance(document.getElementById('videoModal')).hide();
+            } else alert("Link YouTube không hợp lệ!");
+        }
+
+        function removeMedia(index) {
+            mediaItems.splice(index, 1);
+            renderGallery();
+        }
+
+        function renderGallery() {
+            const preview = document.getElementById('multimedia-preview');
+            if (mediaItems.length === 0) {
+                preview.innerHTML = '<div class="col-12 text-center py-4 border border-dashed rounded empty-gallery"><i class="ri-gallery-line fs-24 text-muted"></i><p class="text-muted mt-2">Chưa có ảnh hoặc video nào được chọn.</p></div>';
+            } else {
+                preview.innerHTML = '';
+                mediaItems.forEach((m, i) => {
+                    const thumb = m.type === 'video' ? 'https://img.youtube.com/vi/' + getYoutubeId(m.url) + '/mqdefault.jpg' : m.url;
+                    preview.innerHTML += `
+                        <div class="col-md-3 gallery-item" data-url="${m.url}" data-type="${m.type}">
+                            <div class="card m-0 border shadow-none">
+                                <div class="position-relative">
+                                    <div class="drag-handle position-absolute top-0 start-0 m-1 bg-white bg-opacity-75 rounded px-1 cursor-move" style="z-index:10;"><i class="ri-drag-move-fill"></i></div>
+                                    <img src="${thumb}" class="card-img-top rounded" style="height: 120px; object-fit: cover;">
+                                    ${m.type === 'video' ? '<div class="position-absolute top-50 start-50 translate-middle pointer-events-none"><i class="ri-play-circle-fill text-white fs-40 opacity-75"></i></div>' : ''}
+                                    <button type="button" onclick="removeMedia(${i})" class="btn btn-danger btn-sm position-absolute top-0 end-0 m-1"><i class="ri-delete-bin-line"></i></button>
+                                </div>
+                            </div>
+                        </div>`;
+                });
+            }
+            updateMediaOrder();
+        }
+
+        function initGallerySortable() {
+            const el = document.getElementById('multimedia-preview');
+            new Sortable(el, {
+                animation: 150,
+                handle: '.drag-handle',
+                draggable: '.gallery-item',
+                onEnd: function() {
+                    updateMediaOrder();
+                }
+            });
+        }
+
+        $(document).ready(function() {
+            // Beforeunload logic
+            window.isDirty = false;
+            $('#productForm').on('change input', () => window.isDirty = true);
+            window.addEventListener('beforeunload', function (e) {
+                if (window.isDirty) {
+                    e.preventDefault();
+                    e.returnValue = '';
+                }
+            });
+            $('#productForm').on('submit', function() {
+                const price = parseFloat($('#Price').val()) || 0;
+                const purchasePrice = parseFloat($('input[name="PurchasePrice"]').val()) || 0;
+                
+                if (price > 0 && purchasePrice > price) {
+                    if (!confirm('Cảnh báo: Giá bán đang thấp hơn giá nhập. Bạn vẫn muốn tiếp tục?')) {
+                        return false;
+                    }
+                }
+                window.isDirty = false;
+            });
+        });
+
+        function updateMediaOrder() {
+            const items = document.querySelectorAll('#multimedia-preview .gallery-item');
+            const newMediaList = [];
+            items.forEach(el => {
+                newMediaList.push({
+                    url: el.getAttribute('data-url'),
+                    type: el.getAttribute('data-type')
+                });
+            });
+            
+            // Only update mediaItems if we are NOT in the middle of a render
+            // This prevents recursive loops, but actually since we re-render on change, 
+            // we should be careful. Better to just update hidden inputs.
+            
+            document.getElementById('ImageGallery').value = newMediaList.filter(m => m.type === 'image').map(m => m.url).join(',');
+            document.getElementById('YoutubeVideo').value = newMediaList.filter(m => m.type === 'video').map(m => m.url).join(',');
+            
+            // Sync the internal array
+            mediaItems = newMediaList;
+        }
+
+        function getYoutubeId(url) {
+            const match = url.match(/^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/);
+            return (match && match[2].length === 11) ? match[2] : null;
+        }
+
+        document.getElementById('Name').addEventListener('input', function() {
+            var slug = this.value.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[đĐ]/g, 'd').replace(/([^a-z0-9\s])/g, '').replace(/\s+/g, '-').replace(/-+/g, '-').replace(/^-+|-+$/g, '');
+            document.getElementById('Slug').value = slug;
+            updateSeoPreview();
+        });
+
+        function updateSeoPreview() {
+            const title = document.getElementById('SeoTitle').value || document.getElementById('Name').value || 'Tiêu đề sản phẩm';
+            let desc = document.getElementById('SeoDescription').value;
+            if (!desc) {
+                desc = document.getElementById('ShortDescription').value || 'Mô tả ngắn gọn về sản phẩm sẽ hiển thị tại đây để thu hút khách hàng click vào trang web của bạn.';
+            }
+            // Loại bỏ HTML Tags nếu có
+            desc = desc.replace(/<[^>]*>?/gm, '').trim();
+            const slug = document.getElementById('Slug').value || 'slug-san-pham';
+            
+            document.getElementById('seo_preview_title').innerText = title;
+            document.getElementById('seo_preview_desc').innerText = desc;
+            document.getElementById('seo_preview_slug').innerText = slug;
+        }
+
+        document.getElementById('SeoTitle').addEventListener('input', updateSeoPreview);
+        document.getElementById('SeoDescription').addEventListener('input', updateSeoPreview);
+        document.getElementById('ShortDescription').addEventListener('input', updateSeoPreview);
+        document.getElementById('Slug').addEventListener('input', updateSeoPreview);
+
+        function initPriceFormatting() {
+            const display = document.getElementById('display_Price'), hidden = document.getElementById('Price');
+            const displayOld = document.getElementById('display_OldPrice'), hiddenOld = document.getElementById('OldPrice');
+            const displayPur = document.getElementById('display_PurchasePrice'), hiddenPur = document.getElementById('PurchasePrice');
+            
+            function formatNumber(inputDisplay, inputHidden) {
+                if(!inputDisplay || !inputHidden) return;
+                inputDisplay.addEventListener('input', function() {
+                    let val = this.value.replace(/,/g, '');
+                    inputHidden.value = isNaN(val) || val === '' ? 0 : val;
+                    this.value = val.toString().replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                });
+            }
+            
+            formatNumber(display, hidden);
+            formatNumber(displayOld, hiddenOld);
+            formatNumber(displayPur, hiddenPur);
+        }
+
+        let tagsList = [];
+        function initTagsSystem() {
+            const input = document.getElementById('tags-input'), container = document.getElementById('tags-container'), hidden = document.getElementById('Tags');
+            input.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' || e.key === ',') {
+                    e.preventDefault();
+                    let val = this.value.replace(/,/g, '').trim();
+                    if (val && !tagsList.includes(val)) { tagsList.push(val); renderTags(); }
+                    this.value = '';
+                } else if (e.key === 'Backspace' && this.value === '' && tagsList.length > 0) {
+                    tagsList.pop(); renderTags();
+                }
+            });
+        }
+
+        function removeTag(index) { tagsList.splice(index, 1); renderTags(); }
+
+        function renderTags() {
+            const container = document.getElementById('tags-container'), input = document.getElementById('tags-input');
+            container.querySelectorAll('.visual-tag').forEach(el => el.remove());
+            tagsList.forEach((tag, i) => {
+                let el = document.createElement('span');
+                el.className = 'visual-tag badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25 px-2 py-1 fs-12 d-flex align-items-center gap-1';
+                el.innerHTML = `${tag} <i class="ri-close-line cursor-pointer" onclick="removeTag(${i})"></i>`;
+                container.insertBefore(el, input);
+            });
+            document.getElementById('Tags').value = tagsList.join(',');
+        }
+
+        $('#multi_categories_select').on('change', function() {
+            $('#CategoryIds').val($(this).val() ? $(this).val().join(',') : '');
+        });
+    </script>
+}

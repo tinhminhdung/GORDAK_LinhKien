@@ -1,0 +1,164 @@
+﻿@{
+    ViewBag.Title = "Quản trị Tỉnh thành - Địa giới hành chính 2026";
+    Layout = "_AdminLayout";
+}
+
+<div class="row">
+    <div class="col-12">
+        <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+            <h4 class="mb-sm-0">Quản trị Địa giới hành chính</h4>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <a href="/AdminLocation?type=province" class="text-decoration-none">
+            <div class="card border-primary hover-shadow transition-300">
+                <div class="card-body text-center py-4">
+                    <h1 class="text-primary fw-bold" id="provinceCount">@ViewBag.ProvinceCount</h1>
+                    <p class="mb-0 text-muted fs-5">Tỉnh / Thành phố (Cấp 1)</p>
+                </div>
+            </div>
+        </a>
+    </div>
+    <div class="col-md-6">
+        <a href="/AdminLocation?type=ward" class="text-decoration-none">
+            <div class="card border-warning hover-shadow transition-300">
+                <div class="card-body text-center py-4">
+                    <h1 class="text-warning fw-bold" id="wardCount">@ViewBag.WardCount</h1>
+                    <p class="mb-0 text-muted fs-5">Phường / Xã (Cấp 2)</p>
+                </div>
+            </div>
+        </a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-soft-primary border-bottom-0">
+                <h5 class="card-title mb-0">Hệ thống địa giới hành chính sáp nhập 2026</h5>
+            </div>
+            <div class="card-body">
+                @if (ViewBag.Type == "ward")
+                {
+                    <div class="row mb-4">
+                        <div class="col-md-4">
+                            <form method="get" action="/AdminLocation" id="filterForm">
+                                <input type="hidden" name="type" value="ward" />
+                                <select name="provinceId" class="form-select" onchange="document.getElementById('filterForm').submit();">
+                                    <option value="">-- Tất cả Tỉnh/Thành phố --</option>
+                                    @foreach (var p in ViewBag.AllProvinces)
+                                    {
+                                        if (ViewBag.ProvinceId == p.ProvinceId)
+                                        {
+                                            <option value="@p.ProvinceId" selected>@p.Name</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@p.ProvinceId">@p.Name</option>
+                                        }
+                                    }
+                                </select>
+                            </form>
+                        </div>
+                    </div>
+                }
+                
+                <div class="alert alert-soft-info border-0 mb-4">
+                    <i class="ri-information-line me-2 align-middle fs-5"></i> Toàn bộ dữ liệu được cập nhật dựa trên quyết định sáp nhập đơn vị hành chính cấp Huyện - Xã năm 2026. Chuyển đổi sang cấu trúc <b>2 cấp quản lý</b> trực tiếp.
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-hover table-striped align-middle mb-0">
+                        <thead class="table-light text-uppercase fs-12">
+                            <tr>
+                                @if (ViewBag.Type == "province")
+                                {
+                                    <th style="width: 100px;">Mã Tỉnh</th>
+                                    <th>Tên Tỉnh/Thành phố</th>
+                                    <th>Loại đơn vị</th>
+                                    <th class="text-end">Hành động</th>
+                                }
+                                else
+                                {
+                                    <th style="width: 100px;">Mã Xã</th>
+                                    <th>Tên Phường/Xã</th>
+                                    <th>Thuộc Tỉnh/Thành</th>
+                                    <th>Loại đơn vị</th>
+                                }
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (ViewBag.Type == "province" && ViewBag.Provinces != null)
+                            {
+                                foreach (Antigravity.ECommerce.Models.Province p in ViewBag.Provinces)
+                                {
+                                    <tr>
+                                        <td><span class="badge badge-soft-primary fs-12">#@p.ProvinceId</span></td>
+                                        <td class="fw-bold fs-15 text-dark">
+                                            <a href="/AdminLocation?type=ward&provinceId=@p.ProvinceId" class="text-dark">@p.Name</a>
+                                        </td>
+                                        <td><span class="badge badge-soft-info fs-12">@p.Type</span></td>
+                                        <td class="text-end">
+                                            <a href="/AdminLocation?type=ward&provinceId=@p.ProvinceId" class="btn btn-sm btn-soft-primary">Xem Phường/Xã</a>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else if (ViewBag.Type == "ward" && ViewBag.Wards != null)
+                            {
+                                foreach (Antigravity.ECommerce.Models.Ward w in ViewBag.Wards)
+                                {
+                                    <tr>
+                                        <td><span class="badge badge-soft-warning fs-12">#@w.WardId</span></td>
+                                        <td class="fw-bold fs-15 text-dark">@w.Name</td>
+                                        <td><a href="/AdminLocation?type=ward&provinceId=@w.ProvinceId">@w.ProvinceName</a></td>
+                                        <td><span class="badge badge-soft-info fs-12">@w.Type</span></td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                
+                @if (ViewBag.Type == "ward" && ViewBag.TotalPages > 1)
+                {
+                    <div class="mt-4 d-flex justify-content-center">
+                        <nav>
+                            <ul class="pagination">
+                                @if (ViewBag.CurrentPage > 1)
+                                {
+                                    <li class="page-item"><a class="page-link" href="/AdminLocation?type=ward&provinceId=@ViewBag.ProvinceId&page=@(ViewBag.CurrentPage - 1)">Trước</a></li>
+                                }
+                                
+                                @{
+                                    int startPage = Math.Max(1, ViewBag.CurrentPage - 2);
+                                    int endPage = Math.Min(ViewBag.TotalPages, startPage + 4);
+                                }
+                                
+                                @for (int i = startPage; i <= endPage; i++)
+                                {
+                                    <li class="page-item @(i == ViewBag.CurrentPage ? "active" : "")">
+                                        <a class="page-link" href="/AdminLocation?type=ward&provinceId=@ViewBag.ProvinceId&page=@i">@i</a>
+                                    </li>
+                                }
+                                
+                                @if (ViewBag.CurrentPage < ViewBag.TotalPages)
+                                {
+                                    <li class="page-item"><a class="page-link" href="/AdminLocation?type=ward&provinceId=@ViewBag.ProvinceId&page=@(ViewBag.CurrentPage + 1)">Sau</a></li>
+                                }
+                            </ul>
+                        </nav>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+    </script>
+}

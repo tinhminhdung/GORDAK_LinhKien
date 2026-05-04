@@ -1,0 +1,102 @@
+﻿@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = "SQL Terminal (Bí mật)";
+    var isAuthenticated = Context.Session.GetString("TerminalAuth") == "true";
+}
+
+<div class="row">
+    <div class="col-12">
+        <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+            <h4 class="mb-sm-0"><i class="ri-terminal-window-line me-1"></i> Database Terminal</h4>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xl-12">
+        <div class="card shadow-sm border-0 border-top border-danger border-3">
+            <div class="card-header bg-soft-danger">
+                <h6 class="card-title mb-0 text-danger"><i class="ri-alert-line me-1"></i> KHU VỰC NGUY HIỂM - CHỈ DÀNH CHO ROOT ADMIN</h6>
+            </div>
+            <div class="card-body">
+                @if (ViewBag.Error != null)
+                {
+                    <div class="alert alert-danger">@ViewBag.Error</div>
+                }
+                @if (ViewBag.Success != null)
+                {
+                    <div class="alert alert-success">@ViewBag.Success</div>
+                }
+
+                <form method="post" action="/AdminTerminal/Execute">
+                    <div class="row g-3">
+                        @if (!isAuthenticated)
+                        {
+                            <div class="col-md-3">
+                                <label class="form-label fw-bold text-danger">Mật khẩu cấp 2 (*)</label>
+                                <input type="password" name="secretKey" class="form-control border-danger" required placeholder="Nhập mã bí mật..." />
+                            </div>
+                            <div class="col-md-9">
+                                <label class="form-label fw-bold">Câu lệnh SQL</label>
+                                <textarea name="query" class="form-control font-monospace" rows="5" required placeholder="SELECT * FROM Users...">@(ViewBag.Query)</textarea>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="col-12">
+                                <label class="form-label fw-bold">Câu lệnh SQL <span class="badge bg-success ms-2">Đã mở khóa</span></label>
+                                <textarea name="query" class="form-control font-monospace border-success" rows="5" required placeholder="SELECT * FROM Users...">@(ViewBag.Query)</textarea>
+                            </div>
+                        }
+                        <div class="col-12 text-end">
+                            <button type="submit" class="btn btn-danger px-4">
+                                <i class="ri-flashlight-line me-1"></i> Thực thi (Execute)
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        @if (ViewBag.Data != null)
+        {
+            var dt = ViewBag.Data as System.Data.DataTable;
+            <div class="card shadow-sm border-0 mt-4">
+                <div class="card-header">
+                    <h6 class="card-title mb-0">Kết quả Truy vấn (@dt.Rows.Count dòng)</h6>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive" style="max-height: 500px;">
+                        <table class="table table-bordered table-striped table-hover mb-0 font-monospace" style="font-size: 0.85rem;">
+                            <thead class="table-light position-sticky top-0">
+                                <tr>
+                                    @foreach (System.Data.DataColumn col in dt.Columns)
+                                    {
+                                        <th>@col.ColumnName</th>
+                                    }
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (System.Data.DataRow row in dt.Rows)
+                                {
+                                    <tr>
+                                        @foreach (var item in row.ItemArray)
+                                        {
+                                            <td>@(item?.ToString() ?? "NULL")</td>
+                                        }
+                                    </tr>
+                                }
+                                @if(dt.Rows.Count == 0)
+                                {
+                                    <tr>
+                                        <td colspan="@dt.Columns.Count" class="text-center py-4 text-muted">Không có dữ liệu</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

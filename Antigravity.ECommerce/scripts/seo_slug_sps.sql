@@ -1,0 +1,20 @@
+USE Antigravity_ECommerce;
+GO
+
+CREATE OR ALTER PROCEDURE SP_Videos_GetBySlug
+    @Slug NVARCHAR(200)
+AS
+BEGIN
+    SET NOCOUNT ON;
+    SELECT * FROM Videos WHERE Slug = @Slug;
+END
+GO
+
+CREATE OR ALTER PROCEDURE SP_Galleries_GetBySlug
+    @Slug NVARCHAR(200)
+AS
+BEGIN
+    SET NOCOUNT ON;
+    SELECT * FROM Galleries WHERE Slug = @Slug;
+END
+GO

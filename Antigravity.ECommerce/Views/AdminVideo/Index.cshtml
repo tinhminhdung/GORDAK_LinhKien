@@ -1,0 +1,314 @@
+@model List<Antigravity.ECommerce.Models.Video>
+@{
+    Layout = "_AdminLayout";
+    ViewBag.Title = "Quản lý Video YouTube";
+    string kw = ViewBag.Keyword ?? "";
+    int? status = ViewBag.Status;
+    int? categoryId = ViewBag.CategoryId;
+    int pageIndex = ViewBag.PageIndex ?? 1;
+    int pageSize = ViewBag.PageSize ?? 20;
+    int totalCount = ViewBag.TotalCount ?? 0;
+    int totalPages = (int)Math.Ceiling((double)totalCount / pageSize);
+}
+
+<div class="row">
+    <div class="col-12">
+        <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+            <h4 class="mb-sm-0">Quản lý Video YouTube (@totalCount)</h4>
+            <div class="page-title-right d-flex gap-2">
+                <div class="dropdown" id="bulkOptions" style="display:none;">
+                    <button class="btn btn-soft-info dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="ri-settings-3-line align-bottom me-1"></i> Thao tác nhanh (<span id="selectedCount">0</span>)
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="javascript:void(0);" onclick="bulkUpdateStatus(1)">Hiện video</a></li>
+                        <li><a class="dropdown-item" href="javascript:void(0);" onclick="bulkUpdateStatus(0)">Ẩn video</a></li>
+                        <li class="dropdown-divider"></li>
+                        <li><a class="dropdown-item text-danger" href="javascript:void(0);" onclick="bulkDelete()"><i class="ri-delete-bin-line me-1"></i> Xóa vĩnh viễn</a></li>
+                    </ul>
+                </div>
+                <a href="/AdminVideo/Create" class="btn btn-primary">
+                    <i class="ri-add-line align-middle me-1"></i> Thêm Video mới
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card shadow-sm border-0 mb-4">
+            <div class="card-header border-0 bg-transparent py-3">
+                <form method="get" action="/AdminVideo/Index" id="filterForm">
+                    <input type="hidden" name="sort" value="@ViewBag.SortColumn" />
+                    <input type="hidden" name="order" value="@ViewBag.SortOrder" />
+                    <input type="hidden" name="page" id="pageIndex" value="@pageIndex" />
+                    <div class="row g-3">
+                        <div class="col-xxl-6 col-sm-8">
+                            <div class="search-box">
+                                <input type="text" name="kw" value="@kw" class="form-control border-light" placeholder="Tìm tiêu đề video...">
+                                <i class="ri-search-line search-icon"></i>
+                            </div>
+                        </div>
+                        <div class="col-xxl-3 col-sm-3">
+                            <select name="categoryId" class="form-select border-light">
+                                <option value="">-- Tất cả danh mục --</option>
+                                @if (ViewBag.Categories != null)
+                                {
+                                    foreach (var c in ViewBag.Categories as List<Antigravity.ECommerce.Models.Category>)
+                                    {
+                                        <option value="@c.CategoryId" selected="@(categoryId == c.CategoryId)">@c.Name</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                        <div class="col-xxl-2 col-sm-3">
+                            <select name="status" class="form-select border-light">
+                                <option value="">-- Trạng thái --</option>
+                                <option value="1" selected="@(status == 1)">Đang hiện</option>
+                                <option value="0" selected="@(status == 0)">Đang ẩn</option>
+                            </select>
+                        </div>
+                        <div class="col-xxl-3 col-sm-6 d-flex gap-2">
+                            <button type="submit" class="btn btn-primary flex-grow-1">
+                                <i class="ri-equalizer-fill me-1 align-bottom"></i> Lọc
+                            </button>
+                            <a href="/AdminVideo" class="btn btn-light px-3">
+                                <i class="ri-refresh-line align-bottom"></i>
+                            </a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="card shadow-sm border-0">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle table-nowrap mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th style="width: 40px;">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="checkAll">
+                                    </div>
+                                </th>
+                                <th style="width: 120px;">Thumbnail</th>
+                                <th onclick="changeSort('Title')" class="sort cursor-pointer">Tiêu đề <i class="ri-arrow-up-down-line sort-icon @(ViewBag.SortColumn == "Title" ? "active" : "")"></i></th>
+                                <th>Danh mục</th>
+                                <th>YouTube ID</th>
+                                <th>Thứ tự</th>
+                                <th>Trạng thái</th>
+                                <th style="width: 150px;" class="text-end">Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model != null && Model.Count > 0)
+                            {
+                                foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td>
+                                            <div class="form-check">
+                                                <input class="form-check-input select-item" type="checkbox" value="@item.VideoId" onchange="toggleBulkDeleteBtn()">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="position-relative">
+                                                <img src="@item.ThumbnailUrl" alt="" class="rounded" style="width: 100px; height: 60px; object-fit: cover;">
+                                                <span class="position-absolute top-50 start-50 translate-middle text-white opacity-75">
+                                                    <i class="ri-play-circle-fill fs-24"></i>
+                                                </span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <h6 class="fs-14 mb-1"><a href="/AdminVideo/Edit/@item.VideoId" class="text-body fw-bold">@item.Title</a></h6>
+                                            @if (!string.IsNullOrEmpty(item.Slug)) {
+                                                <a href="/video/detail/@(item.Slug).html" target="_blank" class="text-muted fs-12 text-decoration-none" title="Xem trên web"><i class="ri-link me-1"></i>/video/detail/@(item.Slug).html</a>
+                                            }
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-light text-dark">@(string.IsNullOrEmpty(item.CategoryName) ? "Chưa có danh mục" : item.CategoryName)</span>
+                                        </td>
+                                        <td>
+                                            <code class="bg-light text-primary px-2 py-1 rounded">@item.YoutubeId</code>
+                                        </td>
+                                        <td>@item.SortOrder</td>
+                                        <td>
+                                            @if (item.Status == 1)
+                                            {
+                                                <span class="badge bg-success-subtle text-success">Đang hiện</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge bg-danger-subtle text-danger">Đang ẩn</span>
+                                            }
+                                        </td>
+                                        <td class="text-end">
+                                            <div class="hstack gap-3 fs-15 justify-content-end">
+                                                <a href="/AdminVideo/Edit/@item.VideoId" class="link-primary"><i class="ri-settings-4-line fs-18"></i></a>
+                                                <a href="javascript:void(0);" onclick="deleteItem(@item.VideoId)" class="link-danger"><i class="ri-delete-bin-line fs-18"></i></a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="8" class="text-center py-5">
+                                        <div class="text-center">
+                                            <lord-icon src="https://cdn.lordicon.com/msoeawqm.json" trigger="loop" colors="primary:#405189,secondary:#0ab39c" style="width:75px;height:75px"></lord-icon>
+                                            <h5 class="mt-2">Chưa có video nào</h5>
+                                            <p class="text-muted">Bấm Thêm mới để bắt đầu quản trị video.</p>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+                @await Html.PartialAsync("_Pagination", new { PageIndex = pageIndex, TotalPages = totalPages, TotalCount = totalCount, DisplayCount = Model?.Count ?? 0 })
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function changeSort(col) {
+            const form = document.querySelector('form');
+            if(form.id === '') form.id = 'filterForm';
+            
+            // Check if sort input exists
+            if (!form.querySelector('input[name="sort"]')) {
+                const sortInp = document.createElement('input');
+                sortInp.type = 'hidden'; sortInp.name = 'sort';
+                form.appendChild(sortInp);
+            }
+            if (!form.querySelector('input[name="order"]')) {
+                const orderInp = document.createElement('input');
+                orderInp.type = 'hidden'; orderInp.name = 'order';
+                form.appendChild(orderInp);
+            }
+
+            if (form.sort.value === col) {
+                form.order.value = form.order.value === 'ASC' ? 'DESC' : 'ASC';
+            } else {
+                form.sort.value = col;
+                form.order.value = 'ASC';
+            }
+            form.submit();
+        }
+</script>
+    <script>
+        $(function () {
+            $('#checkAll').change(function () {
+                $('.select-item').prop('checked', $(this).prop('checked'));
+                toggleBulkDeleteBtn();
+            });
+        });
+
+        function changePage(page) {
+            $('#pageIndex').val(page);
+            $('#filterForm').submit();
+        }
+
+        function deleteItem(id) {
+            Swal.fire({
+                title: 'Xác nhận xóa?',
+                text: "Bạn không thể khôi phục sau khi xóa video này!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#405189',
+                cancelButtonColor: '#f06548',
+                confirmButtonText: 'Đồng ý xóa',
+                cancelButtonText: 'Hủy'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.post('/AdminVideo/Delete/' + id, function (res) {
+                        if (res.success) {
+                            Swal.fire('Thành công', 'Đã xóa video!', 'success').then(() => {
+                                location.reload();
+                            });
+                        } else {
+                            Swal.fire('Lỗi', res.message, 'error');
+                        }
+                    });
+                }
+            })
+        }
+
+        function toggleBulkDeleteBtn() {
+            const count = $('.select-item:checked').length;
+            if (count > 0) {
+                $('#selectedCount').text(count);
+                $('#bulkOptions').fadeIn();
+            } else {
+                $('#bulkOptions').fadeOut();
+            }
+        }
+
+        function bulkDelete() {
+            const ids = [];
+            $('.select-item:checked').each(function () {
+                ids.push(parseInt($(this).val()));
+            });
+
+            if (ids.length === 0) return;
+
+            Swal.fire({
+                title: 'Xóa nhiều video?',
+                text: `Bạn có chắc chắn muốn xóa ${ids.length} video đã chọn không?`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#f06548',
+                cancelButtonColor: '#405189',
+                confirmButtonText: 'Xác nhận xóa',
+                cancelButtonText: 'Hủy'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: '/AdminVideo/BulkDelete',
+                        type: 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify(ids),
+                        success: function (res) {
+                            if (res.success) {
+                                Swal.fire('Thành công', `Đã xóa video!`, 'success').then(() => {
+                                    location.reload();
+                                });
+                            } else {
+                                Swal.fire('Lỗi', 'Xóa thất bại', 'error');
+                            }
+                        }
+                    });
+                }
+            });
+        }
+
+        function bulkUpdateStatus(status) {
+            const ids = [];
+            $('.select-item:checked').each(function () {
+                ids.push(parseInt($(this).val()));
+            });
+
+            if (ids.length === 0) return;
+
+            $.ajax({
+                url: '/AdminVideo/BulkUpdateStatus',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({ ids: ids, status: status }),
+                success: function (res) {
+                    if (res.success) {
+                        location.reload();
+                    } else {
+                        Swal.fire('Lỗi', 'Cập nhật trạng thái thất bại', 'error');
+                    }
+                }
+            });
+        }
+    </script>
+}

@@ -1,0 +1,321 @@
+@model List<Antigravity.ECommerce.Models.Product>
+@{
+    Layout = "_MainLayout";
+    var category = ViewBag.Category as Antigravity.ECommerce.Models.Category;
+    ViewData["Title"] = category != null ? category.Name : (ViewBag.Keyword != null ? "Tìm kiếm: " + ViewBag.Keyword : "Tất cả sản phẩm");
+
+    // SEO Schema Setup
+    ViewData["SchemaBreadcrumbs"] = new List<Antigravity.ECommerce.Models.BreadcrumbItem> {
+        new Antigravity.ECommerce.Models.BreadcrumbItem { Name = "Trang chủ", Url = "/" },
+        new Antigravity.ECommerce.Models.BreadcrumbItem { Name = "Sản phẩm", Url = "/san-pham.html" }
+    };
+    if (category != null) {
+        ((List<Antigravity.ECommerce.Models.BreadcrumbItem>)ViewData["SchemaBreadcrumbs"]).Add(
+            new Antigravity.ECommerce.Models.BreadcrumbItem { Name = category.Name, Url = Context.Request.Path }
+        );
+    }
+}
+
+<!-- Category Banner -->
+@if (category != null && !string.IsNullOrEmpty(category.Banner))
+{
+    <section class="py-5 text-white position-relative overflow-hidden" style="background: url('@category.Banner') center/cover; min-height: 250px;">
+        <div class="position-absolute top-0 start-0 w-100 h-100 bg-dark opacity-50"></div>
+        <div class="container position-relative h-100 d-flex align-items-center">
+            <div class="py-4">
+                <h1 class="display-4 fw-bold">@category.Name</h1>
+                @if (!string.IsNullOrEmpty(category.Description))
+                {
+                    <p class="fs-5 text-white-50 max-width-600">@category.Description</p>
+                }
+            </div>
+        </div>
+    </section>
+}
+else
+{
+    <section class="bg-primary py-5 text-white">
+        <div class="container">
+            <h1 class="fw-bold mb-1">@(category?.Name ?? (ViewBag.Keyword != null ? "Kết quả tìm kiếm: " + ViewBag.Keyword : "Tất cả sản phẩm"))</h1>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-0">
+                    <li class="breadcrumb-item"><a href="/" class="text-white-50 text-decoration-none">Trang chủ</a></li>
+                    <li class="breadcrumb-item active text-white" aria-current="page">Sản phẩm</li>
+                </ol>
+            </nav>
+        </div>
+    </section>
+}
+
+<section class="py-5">
+    <div class="container">
+        <div class="row g-4">
+            <!-- Sidebar / Filters -->
+            <div class="col-lg-3">
+                <form action="" method="get" class="filter-card p-4 sticky-top" style="top: 100px;">
+                    <h5 class="filter-title">Lọc sản phẩm</h5>
+                    
+                    @if (ViewBag.Keyword != null) {
+                        <input type="hidden" name="q" value="@ViewBag.Keyword" />
+                    }
+
+                    <div class="mb-5">
+                        <label class="form-label fw-bold mb-3 text-dark"><i class="ri-money-dollar-circle-line align-bottom text-primary me-1 fs-5"></i> Khoảng giá</label>
+                        
+                        <!-- Slider container -->
+                        <div id="price-slider" class="mb-3 mt-2 mx-2"></div>
+                        
+                        <div class="d-flex justify-content-between align-items-center mt-3">
+                            <span id="price-min-display" class="price-value-display">0 ₫</span>
+                            <span class="text-muted">-</span>
+                            <span id="price-max-display" class="price-value-display">50,000,000 ₫</span>
+                        </div>
+                        
+                        <!-- Hidden inputs for form submission -->
+                        <input type="hidden" name="priceMin" id="priceMin" value="@Context.Request.Query["priceMin"]">
+                        <input type="hidden" name="priceMax" id="priceMax" value="@Context.Request.Query["priceMax"]">
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label fw-bold mb-3 text-dark"><i class="ri-sort-desc align-bottom text-primary me-1 fs-5"></i> Sắp xếp theo</label>
+                        <div class="sort-pills d-flex flex-column">
+                            @{
+                                var currentSort = Context.Request.Query["sort"].ToString();
+                                if (string.IsNullOrEmpty(currentSort)) currentSort = "newest";
+                            }
+                            <input type="radio" class="btn-check" name="sort" id="sort_newest" value="newest" @(currentSort == "newest" ? "checked" : "")>
+                            <label class="btn btn-outline-primary w-100" for="sort_newest"><i class="ri-time-line me-2"></i> Mới nhất</label>
+
+                            <input type="radio" class="btn-check" name="sort" id="sort_asc" value="price_asc" @(currentSort == "price_asc" ? "checked" : "")>
+                            <label class="btn btn-outline-primary w-100" for="sort_asc"><i class="ri-sort-asc me-2"></i> Giá: Thấp đến Cao</label>
+
+                            <input type="radio" class="btn-check" name="sort" id="sort_desc" value="price_desc" @(currentSort == "price_desc" ? "checked" : "")>
+                            <label class="btn btn-outline-primary w-100" for="sort_desc"><i class="ri-sort-desc me-2"></i> Giá: Cao đến Thấp</label>
+                        </div>
+                    </div>
+
+                    <div class="d-flex gap-2 pt-3 border-top mt-2">
+                        <a href="?" class="btn btn-light flex-grow-1 text-muted fw-medium border shadow-none"><i class="ri-refresh-line me-1"></i> Xóa</a>
+                        <button type="submit" class="btn btn-primary flex-grow-1 fw-medium shadow-sm"><i class="ri-filter-3-line me-1"></i> Áp dụng</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Product Grid -->
+            <div class="col-lg-9">
+                <div class="row g-4">
+                    @if (Model != null && Model.Any())
+                    {
+                        foreach (var p in Model)
+                        {
+                            <div class="col-xl-4 col-md-6 text-dark" >
+                                <div class="product-card">
+                                    <a href="/san-pham/detail/@(p.Slug).html" class="product-img-wrapper">
+                                        <img src="@(string.IsNullOrEmpty(p.MainImage) ? "/assets/images/placeholder.png" : p.MainImage)" alt="@p.Name">
+                                        @if(p.IsHot) {
+                                            <div class="position-absolute top-0 end-0 m-3">
+                                                <span class="badge-hot">HOT</span>
+                                            </div>
+                                        }
+                                    </a>
+                                    <div class="product-info">
+                                        <a href="/san-pham/detail/@(p.Slug).html" class="text-decoration-none text-dark">
+                                            <h5 class="product-title mb-1">@p.Name</h5>
+                                        </a>
+                                        @if (!string.IsNullOrEmpty(p.Tags))
+                                        {
+                                            <div class="mb-2 d-flex flex-wrap gap-1">
+                                                @foreach (var tag in p.Tags.Split(',', StringSplitOptions.RemoveEmptyEntries))
+                                                {
+                                                    <a href="/Product/Search?q=@tag.Trim()" class="badge bg-light text-primary border border-primary-subtle fw-normal text-decoration-none" style="font-size:10px; padding: 2px 6px;">#@tag.Trim()</a>
+                                                }
+                                            </div>
+                                        }
+                                        <div class="mt-auto">
+                                            <div class="d-flex align-items-center mb-3">
+                                                <span class="product-price">@p.Price.ToString("N0") ₫</span>
+                                            </div>
+                                            <div class="d-flex gap-2">
+                                                <button class="btn btn-outline-danger btn-sm px-3" onclick="toggleWishlist(@p.ProductId)" title="Yêu thích"><i class="ri-heart-3-line"></i></button>
+                                                <button class="btn btn-primary w-100 btn-sm" onclick="addToCart(@p.ProductId)">
+                                                    Mua ngay
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="col-12 text-center py-5">
+                            <i class="mdi mdi-package-variant mdi-48px text-muted"></i>
+                            <p class="fs-5 text-muted mt-3">Không tìm thấy sản phẩm nào phù hợp.</p>
+                            <a href="/" class="btn btn-primary">Về trang chủ</a>
+                        </div>
+                    }
+                </div>
+
+                <!-- Pagination -->
+                @if (ViewBag.PageCount > 1)
+                {
+                    <nav class="mt-5">
+                        <ul class="pagination pagination-rounded justify-content-center">
+                            @for (int i = 1; i <= ViewBag.PageCount; i++)
+                            {
+                                <li class="page-item @(i == ViewBag.PageIndex ? "active" : "")">
+                                    <a class="page-link" href="?q=@ViewBag.Keyword&page=@i">@i</a>
+                                </li>
+                            }
+                        </ul>
+                    </nav>
+                }
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Styles {
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/nouislider/15.7.1/nouislider.min.css" />
+    <style>
+        .max-width-600 { max-width: 600px; }
+        
+        /* Filter Card Modern UI */
+        .filter-card {
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.05);
+            border: 1px solid rgba(0,0,0,0.03);
+        }
+        .filter-title {
+            font-size: 1.15rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 1.5rem;
+            position: relative;
+            padding-bottom: 0.75rem;
+            color: #212529;
+        }
+        .filter-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background: var(--bs-primary);
+            border-radius: 3px;
+        }
+        
+        /* Pills Sorting */
+        .sort-pills .btn-check:checked + .btn-outline-primary {
+            background-color: var(--bs-primary);
+            color: #fff;
+            border-color: var(--bs-primary);
+            box-shadow: 0 4px 10px rgba(64, 81, 137, 0.2);
+        }
+        .sort-pills .btn {
+            text-align: left;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            border-color: #f0f0f0;
+            background: #fafafa;
+            color: #555;
+            font-weight: 500;
+            transition: all 0.25s ease;
+            padding: 10px 15px;
+        }
+        .sort-pills .btn:hover {
+            background-color: #f1f5f9;
+            border-color: #e2e8f0;
+            transform: translateX(2px);
+        }
+        
+        /* noUiSlider Customization */
+        .noUi-target {
+            background: #e9ecef;
+            border-radius: 10px;
+            border: none;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+            height: 6px;
+        }
+        .noUi-connect {
+            background: var(--bs-primary);
+        }
+        .noUi-handle {
+            border-radius: 50%;
+            background: #fff;
+            border: 2px solid var(--bs-primary);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+            cursor: pointer;
+            width: 20px !important;
+            height: 20px !important;
+            right: -10px !important;
+            top: -7px !important;
+            transition: transform 0.1s;
+        }
+        .noUi-handle:hover {
+            transform: scale(1.1);
+        }
+        .noUi-handle::before, .noUi-handle::after {
+            display: none; /* Hide default lines */
+        }
+        .price-value-display {
+            font-weight: 700;
+            color: var(--bs-primary);
+            font-size: 0.95rem;
+            background: #f8f9fa;
+            padding: 4px 10px;
+            border-radius: 6px;
+        }
+    </style>
+}
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/nouislider/15.7.1/nouislider.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var slider = document.getElementById('price-slider');
+            var minInput = document.getElementById('priceMin');
+            var maxInput = document.getElementById('priceMax');
+            var minDisplay = document.getElementById('price-min-display');
+            var maxDisplay = document.getElementById('price-max-display');
+
+            // Default max price for slider range
+            var maxSliderPrice = 50000000; // 50 million
+            
+            var startMin = minInput.value ? parseInt(minInput.value) : 0;
+            var startMax = maxInput.value ? parseInt(maxInput.value) : maxSliderPrice;
+
+            noUiSlider.create(slider, {
+                start: [startMin, startMax],
+                connect: true,
+                step: 100000, // Bước nhảy 100k
+                range: {
+                    'min': 0,
+                    'max': maxSliderPrice
+                },
+                format: {
+                    to: function (value) { return Math.round(value); },
+                    from: function (value) { return Number(value); }
+                }
+            });
+
+            slider.noUiSlider.on('update', function (values, handle) {
+                var value = values[handle];
+                var formattedValue = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(value);
+                
+                if (handle === 0) {
+                    minInput.value = value;
+                    minDisplay.innerHTML = formattedValue;
+                } else {
+                    maxInput.value = value;
+                    // If at absolute max, display a '+' sign to imply "and above"
+                    maxDisplay.innerHTML = value >= maxSliderPrice ? formattedValue.replace('₫', '') + '+ ₫' : formattedValue;
+                }
+            });
+        });
+    </script>
+}

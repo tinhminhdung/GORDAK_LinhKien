@@ -1,0 +1,312 @@
+﻿@model Antigravity.ECommerce.Models.Gallery
+@{
+	Layout = "_AdminLayout";
+	ViewBag.Title = "Thêm mới Album Thư viện ảnh";
+}
+
+<style>
+	.gallery-preview-item {
+		position: relative;
+		width: 120px;
+		height: 90px;
+		margin: 5px;
+		display: inline-block;
+		border-radius: 8px;
+		overflow: hidden;
+		border: 2px solid transparent;
+		transition: all 0.2s;
+	}
+
+		.gallery-preview-item img {
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+		}
+
+		.gallery-preview-item .remove-btn {
+			position: absolute;
+			top: 2px;
+			right: 2px;
+			background: rgba(255, 0, 0, 0.7);
+			color: white;
+			border-radius: 50%;
+			width: 20px;
+			height: 20px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			cursor: pointer;
+			font-size: 12px;
+		}
+
+		.gallery-preview-item:hover {
+			border-color: #405189;
+		}
+</style>
+
+<div class="row">
+	<div class="col-12">
+		<div class="page-title-box d-sm-flex align-items-center justify-content-between">
+			<h4 class="mb-sm-0">Thêm Album mới</h4>
+			<div class="page-title-right">
+				<a href="/AdminGallery" class="btn btn-soft-dark btn-sm"><i class="ri-arrow-left-line align-bottom me-1"></i> Quay lại</a>
+			</div>
+		</div>
+	</div>
+</div>
+
+<form method="post" action="/AdminGallery/Create">
+	<div class="row">
+		<div class="col-lg-8">
+			<div class="card">
+				<div class="card-body">
+					<div class="mb-3">
+						<label class="form-label">Tên Album <span class="text-danger">*</span></label>
+						<input type="text" class="form-control" name="AlbumName" id="txtAlbumName" value="@Model.AlbumName" required placeholder="Nhập tên album..." />
+					</div>
+					<div class="mb-3">
+						<label class="form-label">Đường dẫn thân thiện (Slug)</label>
+						<input type="text" class="form-control" name="Slug" id="txtSlug" value="@Model.Slug" placeholder="tieu-de-album" />
+					</div>
+					<div class="mb-3">
+						<label class="form-label">Danh mục Album <span class="text-danger">*</span></label>
+						<select class="form-control selectpicker" name="CategoryId" data-live-search="true" required>
+							<option value="">-- Chọn danh mục --</option>
+							@if (ViewBag.Categories != null)
+							{
+								foreach (var c in ViewBag.Categories as List<Antigravity.ECommerce.Models.Category>)
+								{
+									<option value="@c.CategoryId">@c.Name</option>
+								}
+							}
+						</select>
+					</div>
+					<div class="mb-3">
+						<label class="form-label">Mô tả ngắn</label>
+						<textarea class="form-control" name="Description" rows="3" placeholder="Mô tả về album này..."></textarea>
+					</div>
+
+
+					<div class="d-flex justify-content-between mt-4 border-top pt-3">
+						<a href="/AdminGallery" class="btn btn-light"><i class="ri-arrow-go-back-line me-1"></i>Quay lại</a>
+						<button type="submit" class="btn btn-success px-4"><i class="ri-save-line me-1"></i>Lưu thêm mới</button>
+					</div>
+
+				</div>
+
+
+			</div>
+			<div class="card border shadow-none mb-0 mt-4">
+				<div class="card-header bg-light-subtle">
+					<h5 class="card-title mb-0">Cấu hình SEO Meta</h5>
+				</div>
+				<div class="card-body">
+					<div class="mb-3">
+						<label class="form-label">SEO Title</label>
+						<input type="text" class="form-control" name="SeoTitle" id="SeoTitle" value="@Model.SeoTitle" placeholder="Nhập tiêu đề SEO...">
+					</div>
+					<div class="mb-3">
+						<label class="form-label">SEO Meta Description</label>
+						<textarea class="form-control" name="SeoDescription" id="SeoDescription" rows="3" placeholder="Nhập mô tả SEO...">@Model.SeoDescription</textarea>
+					</div>
+					<div class="mb-0">
+						<label class="form-label">SEO Meta Keywords</label>
+						<input type="text" class="form-control" name="SeoKeywords" id="SeoKeywords" value="@Model.SeoKeywords" placeholder="Từ khóa 1, từ khóa 2...">
+					</div>
+					<div class="bg-light p-3 rounded mt-3">
+						<h6 class="fs-13 text-muted mb-2 text-uppercase">Google Search Preview</h6>
+						<div style="font-family: Arial, sans-serif;">
+							<div class="text-primary fs-18 mb-1" id="seo_preview_title">Tiêu đề album...</div>
+							<div class="text-success fs-13 mb-1">https://example.com/album/<span id="seo_preview_slug">slug-album</span></div>
+							<div class="text-muted fs-13" id="seo_preview_desc" style="line-height:1.4;">Mô tả SEO sẽ hiển thị ở đây...</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Khu vực tải file đa năng -->
+			<div class="card mt-3">
+				<div class="card-header d-flex justify-content-between align-items-center">
+					<h5 class="card-title mb-0">Hình ảnh trong Album</h5>
+					<button type="button" class="btn btn-primary btn-sm" onclick="openMultiFileManager()">
+						<i class="ri-image-add-line me-1"></i> Chọn nhiều ảnh
+					</button>
+				</div>
+				<div class="card-body bg-light">
+					<!-- Preview Container -->
+					<div id="imagePreviewContainer" class="d-flex flex-wrap gap-2">
+						<!-- Images will be appended here dynamically -->
+						<div class="text-center w-100 py-4 text-muted" id="emptyImageMessage">
+							<i class="ri-image-2-line fs-24 d-block mb-1"></i>
+							Chưa có ảnh nào được chọn. Nhấp "Chọn nhiều ảnh" để thêm.
+						</div>
+					</div>
+					<!-- Hidden inputs will be generated here -->
+					<div id="hiddenInputsContainer"></div>
+				</div>
+			</div>
+
+		</div>
+		<div class="col-lg-4">
+			<div class="card">
+				<div class="card-header"><h5 class="card-title mb-0">Ảnh đại diện (Cover)</h5></div>
+				<div class="card-body text-center">
+					<img id="coverPreview" src="/assets/images/placeholder.png" alt="Ảnh bìa" class="img-fluid rounded mb-3" style="max-height: 200px; object-fit: cover;" />
+					<input type="hidden" name="CoverImage" id="CoverImage" />
+					<button type="button" class="btn btn-primary w-100" onclick="openFileManager('CoverImage')">Thay đổi ảnh bìa</button>
+				</div>
+			</div>
+
+			<div class="card mt-3">
+				<div class="card-header"><h5 class="card-title mb-0">Cấu hình</h5></div>
+				<div class="card-body">
+					<div class="mb-3">
+						<label class="form-label">Trạng thái</label>
+						<select class="form-select" name="Status">
+							<option value="1" selected="@(Model.Status==1)">Hiển thị</option>
+							<option value="0" selected="@(Model.Status==0)">Đang ẩn</option>
+						</select>
+					</div>
+					<div class="mb-3">
+						<label class="form-label">Thứ tự sắp xếp</label>
+						<input type="number" class="form-control" name="SortOrder" value="@(Model.SortOrder == 0 ? 1 : Model.SortOrder)" />
+					</div>
+
+
+				</div>
+			</div>
+		</div>
+	</div>
+
+</form>
+
+@section Scripts {
+	<script>
+		$(function() {
+			$('#txtAlbumName').on('input', function() {
+				var title = $(this).val();
+				var slug = title.toLowerCase()
+					.normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+					.replace(/[đĐ]/g, 'd')
+					.replace(/([^0-9a-z-\s])/g, '')
+					.replace(/(\s+)/g, '-')
+					.replace(/-+/g, '-')
+					.replace(/^-+|-+$/g, '');
+
+				$('#txtSlug').val(slug);
+				updateSeoPreview();
+			});
+
+			$('#SeoTitle, #SeoDescription, #txtSlug').on('input', function() {
+				updateSeoPreview();
+			});
+		});
+
+		function updateSeoPreview() {
+			const title = $('#SeoTitle').val() || $('#txtAlbumName').val() || 'Tiêu đề album';
+			const desc = $('#SeoDescription').val() || 'Mô tả SEO sẽ hiển thị ở đây để thu hút khách hàng click vào trang web của bạn.';
+			const slug = $('#txtSlug').val() || 'tieu-de-album';
+
+			$('#seo_preview_title').text(title);
+			$('#seo_preview_desc').text(desc);
+			$('#seo_preview_slug').text(slug);
+		}
+
+		// Single File Manager
+		function openFileManager(field) {
+			window.open('/FileManager?fieldId=' + field, 'FileManager', 'width=1100,height=750');
+		}
+		function setFileUrl(url, fieldId) {
+			const fileUrl = Array.isArray(url) ? url[0] : url;
+			const input = document.getElementById(fieldId);
+			if (input) {
+				input.value = fileUrl;
+				if (fieldId === 'CoverImage') {
+					document.getElementById('coverPreview').src = fileUrl;
+				}
+			}
+		}
+
+		// Multi File Manager integration
+		function openMultiFileManager() {
+			// By passing empty fieldId, our FileManager is adapted to return multiple selected files with a specific window function
+			window.open('/FileManager?multiple=true&fieldId=GalleryMultiple', 'FileManager', 'width=1100,height=750');
+		}
+
+		let selectedImages = [];
+
+		// Tricking FileManager to respond back with multiple items if it supports it,
+		// Assuming FileManager returns an array if fieldId == 'GalleryMultiple'
+		window.addEventListener('message', function(event) {
+			if (event.data && event.data.action === 'selectFiles') {
+				handleMultipleImagesAdd(event.data.urls);
+			}
+		});
+
+		// Backup global function in case FileManager uses setFileUrl
+		const originalSetFileUrl = window.setFileUrl;
+		window.setFileUrl = function(urls, fieldId) {
+			if (fieldId === 'GalleryMultiple') {
+				let arr = Array.isArray(urls) ? urls : [urls];
+				handleMultipleImagesAdd(arr);
+			} else {
+				originalSetFileUrl(urls, fieldId);
+			}
+		};
+
+		function handleMultipleImagesAdd(urls) {
+			if(!urls || urls.length === 0) return;
+
+			// Hide empty message
+			document.getElementById('emptyImageMessage').style.display = 'none';
+
+			// Automatic cover image logic: if no cover currently, use first uploaded image
+			if (!document.getElementById('CoverImage').value) {
+				document.getElementById('CoverImage').value = urls[0];
+				document.getElementById('coverPreview').src = urls[0];
+			}
+
+			urls.forEach(u => {
+				selectedImages.push(u);
+				renderPreviewItem(u, selectedImages.length - 1);
+			});
+			renderHiddenInputs();
+		}
+
+		function renderPreviewItem(url, index) {
+			const container = document.getElementById('imagePreviewContainer');
+			const div = document.createElement('div');
+			div.className = 'gallery-preview-item';
+			div.innerHTML = `
+				<img src="${url}" />
+				<div class="remove-btn" onclick="removePreviewImage(${index}, this)"><i class="ri-close-line"></i></div>
+			`;
+			container.appendChild(div);
+		}
+
+		function removePreviewImage(index, btnElement) {
+			selectedImages[index] = null; // tombstone
+			btnElement.parentElement.remove();
+
+			// Check if all removed
+			if (selectedImages.filter(x => x !== null).length === 0) {
+				document.getElementById('emptyImageMessage').style.display = 'block';
+			}
+			renderHiddenInputs();
+		}
+
+		function renderHiddenInputs() {
+			const container = document.getElementById('hiddenInputsContainer');
+			container.innerHTML = '';
+			selectedImages.forEach(u => {
+				if (u !== null) {
+					const input = document.createElement('input');
+					input.type = 'hidden';
+					input.name = 'GalleryImages';
+					input.value = u;
+					container.appendChild(input);
+				}
+			});
+		}
+	</script>
+}

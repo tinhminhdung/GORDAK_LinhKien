@@ -1,0 +1,360 @@
+﻿@model Antigravity.ECommerce.Models.Gallery
+@{
+    Layout = "_AdminLayout";
+    ViewBag.Title = "Chỉnh sửa Album Thư viện ảnh";
+}
+
+<style>
+    .gallery-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 15px;
+    }
+    .gallery-item {
+        position: relative;
+        border-radius: 8px;
+        overflow: hidden;
+        border: 2px solid transparent;
+        background: #fff;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        cursor: grab;
+    }
+    .gallery-item:active { cursor: grabbing; }
+    .gallery-item img {
+        width: 100%;
+        height: 120px;
+        object-fit: cover;
+    }
+    .gallery-item .actions {
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        display: flex;
+        gap: 5px;
+        display: none;
+    }
+    .gallery-item:hover .actions { display: flex; }
+    .btn-action {
+        background: rgba(0, 0, 0, 0.6);
+        color: white;
+        border: none;
+        border-radius: 4px;
+        padding: 4px 6px;
+        font-size: 14px;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+    .btn-action:hover { background: rgba(0, 0, 0, 0.9); }
+    .btn-action.delete:hover { background: rgb(240, 101, 72); }
+    .caption-input {
+        width: 100%;
+        border: none;
+        padding: 8px;
+        font-size: 12px;
+        background: #f8f9fa;
+        border-top: 1px solid #e9ecef;
+    }
+    .caption-input:focus { outline: none; background: #fff; }
+</style>
+
+<div class="row">
+    <div class="col-12">
+        <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+            <h4 class="mb-sm-0">Chỉnh sửa Album: @Model.AlbumName</h4>
+            <div class="page-title-right d-flex gap-2">
+                <a href="/AdminGallery" class="btn btn-soft-dark btn-sm"><i class="ri-arrow-left-line align-bottom me-1"></i> Quay lại</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<form method="post" action="/AdminGallery/Edit">
+    <input type="hidden" name="GalleryId" value="@Model.GalleryId" />
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label class="form-label">Tên Album <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" name="AlbumName" id="txtAlbumName" value="@Model.AlbumName" required placeholder="Nhập tên album..." />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Đường dẫn thân thiện (Slug)</label>
+                        <input type="text" class="form-control" name="Slug" id="txtSlug" value="@Model.Slug" placeholder="tieu-de-album" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Danh mục Album <span class="text-danger">*</span></label>
+                        <select class="form-control selectpicker" name="CategoryId" data-live-search="true" required>
+                            <option value="">-- Chọn danh mục --</option>
+                            @if (ViewBag.Categories != null)
+                            {
+                                foreach (var c in ViewBag.Categories as List<Antigravity.ECommerce.Models.Category>)
+                                {
+                                    <option value="@c.CategoryId" selected="@(Model.CategoryId == c.CategoryId)">@c.Name</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Mô tả ngắn</label>
+                        <textarea class="form-control" name="Description" rows="3">@Model.Description</textarea>
+                    </div>
+
+
+                    
+                <div class="d-flex justify-content-between mt-4 border-top pt-3">
+                    <a href="/AdminGallery" class="btn btn-light"><i class="ri-arrow-go-back-line me-1"></i>Quay lại</a>
+                    <button type="submit" class="btn btn-success px-4"><i class="ri-save-line me-1"></i>Lưu thay đổi</button>
+                </div>
+
+
+                
+
+                </div>
+
+            </div>
+            <div class="card border shadow-none mb-0 mt-4">
+                <div class="card-header bg-light-subtle">
+                    <h5 class="card-title mb-0">Cấu hình SEO Meta</h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label class="form-label">SEO Title</label>
+                        <input type="text" class="form-control" name="SeoTitle" id="SeoTitle" value="@Model.SeoTitle" placeholder="Nhập tiêu đề SEO...">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">SEO Meta Description</label>
+                        <textarea class="form-control" name="SeoDescription" id="SeoDescription" rows="3" placeholder="Nhập mô tả SEO...">@Model.SeoDescription</textarea>
+                    </div>
+                    <div class="mb-0">
+                        <label class="form-label">SEO Meta Keywords</label>
+                        <input type="text" class="form-control" name="SeoKeywords" id="SeoKeywords" value="@Model.SeoKeywords" placeholder="Từ khóa 1, từ khóa 2...">
+                    </div>
+                    <div class="bg-light p-3 rounded mt-3">
+                        <h6 class="fs-13 text-muted mb-2 text-uppercase">Google Search Preview</h6>
+                        <div style="font-family: Arial, sans-serif;">
+                            <div class="text-primary fs-18 mb-1" id="seo_preview_title">@(!string.IsNullOrEmpty(Model.SeoTitle) ? Model.SeoTitle : Model.AlbumName)</div>
+                            <div class="text-success fs-13 mb-1">https://example.com/album/<span id="seo_preview_slug">@Model.Slug</span></div>
+                            <div class="text-muted fs-13" id="seo_preview_desc" style="line-height:1.4;">@(!string.IsNullOrEmpty(Model.SeoDescription) ? Model.SeoDescription : "Mô tả SEO sẽ hiển thị ở đây...")</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Image Management -->
+            <div class="card mt-3">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="card-title mb-0">Hình ảnh trong Album (@Model.ImageList?.Count ảnh)</h5>
+                    <button type="button" class="btn btn-primary btn-sm" onclick="openMultiFileManager()">
+                        <i class="ri-image-add-line me-1"></i> Chọn nhiều ảnh
+                    </button>
+                </div>
+                <div class="card-body bg-light">
+                    <div id="galleryGrid" class="gallery-grid">
+                        @if(Model.ImageList != null && Model.ImageList.Any())
+                        {
+                            foreach(var img in Model.ImageList)
+                            {
+                                <div class="gallery-item" data-id="@img.ImageId">
+                                    <div class="actions">
+                                        <button type="button" class="btn-action" title="Dùng làm ảnh bìa" onclick="setCover('@img.ImagePath')">
+                                            <i class="ri-image-circle-line"></i>
+                                        </button>
+                                        <button type="button" class="btn-action delete" title="Xóa ảnh" onclick="removeImage(@img.ImageId, this)">
+                                            <i class="ri-delete-bin-line"></i>
+                                        </button>
+                                    </div>
+                                    <img src="@img.ImagePath" alt="Gallery Image" loading="lazy">
+                                    <input type="text" class="caption-input" placeholder="Thêm chú thích..." value="@img.Caption" onblur="updateCaption(@img.ImageId, this.value)">
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            <div class="col-12 text-center py-5 text-muted" id="emptyState">
+                                <i class="ri-image-2-line fs-1 d-block mb-2 opacity-50"></i>
+                                Album này chưa có bức ảnh nào.<br>Hãy nhấn "Thêm ảnh mới" để bắt đầu thiết kế bộ sưu tập của bạn.
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-header"><h5 class="card-title mb-0">Ảnh đại diện (Cover)</h5></div>
+                <div class="card-body text-center">
+                    <img id="coverPreview" src="@(!string.IsNullOrEmpty(Model.CoverImage) ? Model.CoverImage : "/assets/images/placeholder.png")" alt="Ảnh bìa" class="img-fluid rounded mb-3" style="max-height: 200px; object-fit: cover;" />
+                    <input type="hidden" name="CoverImage" id="CoverImage" value="@Model.CoverImage" />
+                    <button type="button" class="btn btn-primary w-100" onclick="openFileManager('CoverImage')">Thay đổi ảnh bìa</button>
+                </div>
+            </div>
+
+            <div class="card mt-3">
+                <div class="card-header"><h5 class="card-title mb-0">Cấu hình</h5></div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label class="form-label">Trạng thái</label>
+                        <select class="form-select" name="Status">
+                            <option value="1" selected="@(Model.Status==1)">Hiển thị</option>
+                            <option value="0" selected="@(Model.Status==0)">Đang ẩn</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Thứ tự sắp xếp</label>
+                        <input type="number" class="form-control" name="SortOrder" value="@Model.SortOrder" />
+                    </div>
+                    
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+
+            </form>
+
+@section Scripts {
+    <!-- SortableJS for Drag and Drop -->
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+    <script>
+        $(function() {
+            $('#txtAlbumName').on('input', function() {
+                var title = $(this).val();
+                var slug = title.toLowerCase()
+                    .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+                    .replace(/[đĐ]/g, 'd')
+                    .replace(/([^0-9a-z-\s])/g, '')
+                    .replace(/(\s+)/g, '-')
+                    .replace(/-+/g, '-')
+                    .replace(/^-+|-+$/g, '');
+                
+                if ($('#txtSlug').val() == "" || $('#txtSlug').val() == slug.substring(0, slug.length - 1)) {
+                    $('#txtSlug').val(slug);
+                }
+                updateSeoPreview();
+            });
+
+            $('#SeoTitle, #SeoDescription, #txtSlug').on('input', function() {
+                updateSeoPreview();
+            });
+        });
+
+        function updateSeoPreview() {
+            const title = $('#SeoTitle').val() || $('#txtAlbumName').val() || 'Tiêu đề album';
+            const desc = $('#SeoDescription').val() || 'Mô tả SEO sẽ hiển thị ở đây để thu hút khách hàng click vào trang web của bạn.';
+            const slug = $('#txtSlug').val() || 'tieu-de-album';
+            
+            $('#seo_preview_title').text(title);
+            $('#seo_preview_desc').text(desc);
+            $('#seo_preview_slug').text(slug);
+        }
+
+        const galleryId = @Model.GalleryId;
+
+        // Initialize Sortable
+        const el = document.getElementById('galleryGrid');
+        if(el) {
+            new Sortable(el, {
+                animation: 150,
+                ghostClass: 'bg-light',
+                onEnd: function (evt) {
+                    // Collect new order
+                    let itemIds = [];
+                    document.querySelectorAll('.gallery-item').forEach(item => {
+                        let id = item.getAttribute('data-id');
+                        if (id) itemIds.push(parseInt(id));
+                    });
+
+                    // Send to server
+                    if(itemIds.length > 0) {
+                        $.ajax({
+                            url: '/AdminGallery/ReorderImages',
+                            type: 'POST',
+                            contentType: 'application/json',
+                            data: JSON.stringify({ galleryId: galleryId, imageIds: itemIds }),
+                            success: function(res) {
+                                if(!res.success) Toastify({text:"Lỗi sắp xếp", backgroundColor:"#f06548"}).showToast();
+                            }
+                        });
+                    }
+                }
+            });
+        }
+
+        // Add New Images functionality
+        function openMultiFileManager() {
+            window.open('/FileManager?multiple=true&fieldId=GalleryMultipleEdit', 'FileManager', 'width=1100,height=750');
+        }
+
+        const originalSetFileUrl = window.setFileUrl;
+        window.setFileUrl = function(urls, fieldId) {
+            if (fieldId === 'GalleryMultipleEdit') {
+                let arr = Array.isArray(urls) ? urls : [urls];
+                addImagesToServer(arr);
+            } else if (fieldId === 'CoverImage') {
+                document.getElementById('CoverImage').value = urls;
+            } else if (originalSetFileUrl) {
+                originalSetFileUrl(urls, fieldId);
+            }
+        };
+
+        function addImagesToServer(urls) {
+            if(!urls || urls.length === 0) return;
+            
+            $.ajax({
+                url: '/AdminGallery/AddImages',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({ galleryId: galleryId, urls: urls }),
+                success: function(res) {
+                    if(res.success) {
+                        Toastify({text:`Đã thêm ${res.count} ảnh`, backgroundColor:"#0ab39c"}).showToast();
+                        location.reload(); // Reload for simplicity to get new generated IDs
+                    } else {
+                        alert('Lỗi thêm ảnh');
+                    }
+                }
+            });
+        }
+
+        // Define single file manager just in case Cover image button uses it
+        function openFileManager(field) {
+            window.open('/FileManager?fieldId=' + field, 'FileManager', 'width=1100,height=750');
+        }
+
+        // Set Cover directly from gallery
+        function setCover(url) {
+            document.getElementById('CoverImage').value = url;
+            Toastify({text:"Đã cập nhật ảnh bìa. Hãy nhấn Cập nhật Thông tin để lưu.", backgroundColor:"#f7b84b", duration: 3000}).showToast();
+        }
+
+        // Remove Image
+        function removeImage(imageId, btnElement) {
+            Swal.fire({
+                title: 'Xóa ảnh này?', text: 'Chỉ xóa ảnh khỏi hệ thống.', icon: 'warning',
+                showCancelButton: true, confirmButtonText: 'Xóa', cancelButtonText: 'Hủy'
+            }).then(r => {
+                if(r.isConfirmed) {
+                    $.post('/AdminGallery/RemoveImage', { imageId: imageId }, function(res) {
+                        if(res.success) {
+                            btnElement.closest('.gallery-item').remove();
+                            Toastify({text:"Đã xóa ảnh", backgroundColor:"#0ab39c"}).showToast();
+                        } else {
+                            alert('Xóa thất bại');
+                        }
+                    });
+                }
+            });
+        }
+
+        // Update Caption
+        function updateCaption(imageId, caption) {
+            $.post('/AdminGallery/UpdateImageCaption', { imageId: imageId, caption: caption }, function(res) {
+                if(res.success) {
+                    Toastify({text:"Đã lưu chú thích", backgroundColor:"#0ab39c", duration: 1500}).showToast();
+                }
+            });
+        }
+    </script>
+}

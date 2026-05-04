@@ -1,0 +1,85 @@
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cài đặt Cơ sở dữ liệu - Antigravity ECommerce</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background-color: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            text-align: center;
+            max-width: 500px;
+            width: 100%;
+        }
+        h1 { color: #333; margin-top: 0; }
+        p { color: #666; line-height: 1.5; margin-bottom: 30px; }
+        .btn {
+            background-color: #0d6efd;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .btn:hover { background-color: #0b5ed7; }
+        .footer { margin-top: 30px; font-size: 12px; color: #999; }
+        .alert {
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 1px solid transparent;
+            border-radius: 4px;
+            text-align: left;
+        }
+        .alert-success { color: #0f5132; background-color: #d1e7dd; border-color: #badbcc; }
+        .alert-danger { color: #842029; background-color: #f8d7da; border-color: #f5c2c7; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Cài đặt Hệ thống</h1>
+        <p>Chào mừng bạn đến với Antigravity ECommerce. Hệ thống nhận thấy bạn cần cài đặt cơ sở dữ liệu ban đầu. Hãy đảm bảo file <strong>SQLQuery.sql</strong> đã được đặt ở thư mục gốc của dự án.</p>
+        
+        @if (TempData["Message"] != null)
+        {
+            var isError = TempData["IsError"] as bool? ?? false;
+            <div class="alert @(isError ? "alert-danger" : "alert-success")">
+                @Html.Raw(TempData["Message"]?.ToString()?.Replace("\n", "<br/>"))
+            </div>
+        }
+
+        @if (ViewBag.IsLocked != true)
+        {
+            <form method="post" action="/Install/SetupDatabase">
+                <button type="submit" class="btn">Tiến hành Cài đặt Database</button>
+            </form>
+        }
+        else
+        {
+            <a href="/" class="btn" style="background-color: #28a745;">Quay về Trang Chủ</a>
+        }
+
+        <div class="footer">
+            &copy; @DateTime.Now.Year Antigravity ECommerce
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,222 @@
+﻿@model List<Antigravity.ECommerce.Models.ProductReview>
+@{
+    ViewData["Title"] = "Quản lý đánh giá sản phẩm";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                <h4 class="mb-sm-0">Quản lý đánh giá sản phẩm</h4>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filter -->
+    <div class="card mb-3">
+        <div class="card-body">
+            <form method="get" class="row g-2 align-items-end" id="filterForm">
+                <input type="hidden" name="sort" value="@ViewBag.SortColumn" />
+                <input type="hidden" name="order" value="@ViewBag.SortOrder" />
+                <div class="col-md-4">
+                    <label class="form-label small">Tìm kiếm</label>
+                    <input type="text" name="kw" class="form-control form-control-sm" placeholder="Tên khách, sản phẩm, nội dung..." value="@ViewBag.Keyword">
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label small">Số sao</label>
+                    <select name="rating" class="form-select form-select-sm">
+                        <option value="">Tất cả</option>
+                        @for(int s=5;s>=1;s--){
+                            <option value="@s" selected="@(ViewBag.Rating != null && (int)ViewBag.Rating == s)">@s ★</option>
+                        }
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label small">Trạng thái</label>
+                    <select name="status" class="form-select form-select-sm">
+                        <option value="">Tất cả</option>
+                        <option value="1" selected="@(ViewBag.Status != null && (int)ViewBag.Status == 1)">Hiển thị</option>
+                        <option value="0" selected="@(ViewBag.Status != null && (int)ViewBag.Status == 0)">Đã ẩn</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary btn-sm w-100"><i class="ri-search-line me-1"></i> Lọc</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Table -->
+    <div class="card">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th style="width:60px;">#</th>
+                            <th onclick="changeSort('ProductName')" class="sort cursor-pointer">Sản phẩm <i class="ri-arrow-up-down-line sort-icon @(ViewBag.SortColumn == "ProductName" ? "active" : "")"></i></th>
+                            <th onclick="changeSort('CustomerName')" class="sort cursor-pointer">Khách hàng <i class="ri-arrow-up-down-line sort-icon @(ViewBag.SortColumn == "CustomerName" ? "active" : "")"></i></th>
+                            <th onclick="changeSort('Rating')" class="sort cursor-pointer">Sao <i class="ri-arrow-up-down-line sort-icon @(ViewBag.SortColumn == "Rating" ? "active" : "")"></i></th>
+                            <th>Nội dung</th>
+                            <th>Trạng thái</th>
+                            <th onclick="changeSort('CreatedAt')" class="sort cursor-pointer">Ngày <i class="ri-arrow-up-down-line sort-icon @(ViewBag.SortColumn == "CreatedAt" ? "active" : "")"></i></th>
+                            <th class="text-center" style="width: 140px;">Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if(Model != null && Model.Any())
+                        {
+                            @foreach(var rv in Model)
+                            {
+                                <tr>
+                                    <td>@rv.ReviewId</td>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            @if(!string.IsNullOrEmpty(rv.ProductImage)){
+                                                <img src="@rv.ProductImage" class="rounded me-2" style="width:36px;height:36px;object-fit:cover;">
+                                            }
+                                            <span class="text-truncate" style="max-width:150px;font-size:0.85rem;">@rv.ProductName</span>
+                                        </div>
+                                    </td>
+                                    <td style="font-size:0.85rem;">@rv.CustomerName</td>
+                                    <td>
+                                        <span class="text-warning">
+                                            @for(int s=1;s<=5;s++){<i class="ri-star-fill @(s<=rv.Rating?"":"opacity-25")" style="font-size:0.85rem;"></i>}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <div class="text-truncate" style="max-width:200px;font-size:0.85rem;" title="@rv.Content">@rv.Content</div>
+                                        @if(!string.IsNullOrEmpty(rv.AdminReply)){
+                                            <small class="text-success"><i class="ri-check-line"></i> Đã phản hồi</small>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if(rv.Status == 1){
+                                            <span class="badge bg-success-subtle text-success">Hiển thị</span>
+                                        } else {
+                                            <span class="badge bg-warning-subtle text-warning">Đã ẩn</span>
+                                        }
+                                    </td>
+                                    <td style="font-size:0.8rem;">@rv.CreatedAt.ToString("dd/MM/yyyy HH:mm")</td>
+                                    <td class="text-center">
+                                        <div class="d-flex justify-content-center gap-1">
+                                            @if (Antigravity.ECommerce.Framework.PermissionHelper.HasPermission(Context, "Review", "CanEdit"))
+                                            {
+                                                <button class="btn btn-sm btn-soft-primary" onclick="openReplyModal(@rv.ReviewId, '@(rv.AdminReply?.Replace("'", "\\'"))')" title="Trả lời">
+                                                    <i class="ri-reply-line"></i>
+                                                </button>
+                                                <button class="btn btn-sm btn-soft-warning" onclick="toggleHide(@rv.ReviewId)" title="@(rv.Status==1?"Ẩn":"Hiện")">
+                                                    <i class="ri-eye-@(rv.Status==1?"off-":"")line"></i>
+                                                </button>
+                                            }
+                                            @if (Antigravity.ECommerce.Framework.PermissionHelper.HasPermission(Context, "Review", "CanDelete"))
+                                            {
+                                                <button class="btn btn-sm btn-soft-danger" onclick="deleteReview(@rv.ReviewId)" title="Xóa">
+                                                    <i class="ri-delete-bin-line"></i>
+                                                </button>
+                                            }
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr><td colspan="8" class="text-center text-muted py-4">Chưa có đánh giá nào</td></tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pagination -->
+    @if((int)ViewBag.TotalPages > 1) {
+        <nav class="mt-3">
+            <ul class="pagination justify-content-center">
+                @for(int p=1; p<=(int)ViewBag.TotalPages; p++){
+                    <li class="page-item @(p == (int)ViewBag.PageIndex ? "active" : "")">
+                        <a class="page-link" href="?kw=@ViewBag.Keyword&rating=@ViewBag.Rating&status=@ViewBag.Status&sort=@ViewBag.SortColumn&order=@ViewBag.SortOrder&page=@p">@p</a>
+                    </li>
+                }
+            </ul>
+        </nav>
+    }
+</div>
+
+<!-- Reply Modal -->
+<div class="modal fade" id="replyModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="ri-reply-line me-1"></i> Phản hồi đánh giá</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="replyReviewId">
+                <textarea id="replyContent" class="form-control" rows="4" placeholder="Nhập nội dung phản hồi..."></textarea>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Đóng</button>
+                <button class="btn btn-primary btn-sm" onclick="sendReply()"><i class="ri-send-plane-line me-1"></i> Gửi phản hồi</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function changeSort(col) {
+            const form = document.getElementById('filterForm');
+            if (form.sort.value === col) {
+                form.order.value = form.order.value === 'ASC' ? 'DESC' : 'ASC';
+            } else {
+                form.sort.value = col;
+                form.order.value = 'ASC';
+            }
+            form.submit();
+        }
+
+        function openReplyModal(id, existingReply) {
+            $('#replyReviewId').val(id);
+            $('#replyContent').val(existingReply || '');
+            new bootstrap.Modal(document.getElementById('replyModal')).show();
+        }
+
+        function sendReply() {
+            var id = $('#replyReviewId').val();
+            var reply = $('#replyContent').val();
+            $.post('/AdminReview/Reply', { reviewId: id, reply: reply }, function(res) {
+                if(res.success) {
+                    Swal.fire({ icon:'success', title:'Thành công', text:res.message, timer:1500, showConfirmButton:false }).then(()=>location.reload());
+                } else {
+                    Swal.fire('Lỗi', res.message, 'error');
+                }
+            });
+        }
+
+        function toggleHide(id) {
+            $.post('/AdminReview/ToggleHide', { reviewId: id }, function(res) {
+                if(res.success) location.reload();
+            });
+        }
+
+        function deleteReview(id) {
+            Swal.fire({
+                title: 'Xóa đánh giá?',
+                text: 'Đánh giá sẽ bị xóa mềm (không hiển thị nữa)',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#f06548',
+                confirmButtonText: 'Xóa',
+                cancelButtonText: 'Hủy'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.post('/AdminReview/Delete', { reviewId: id }, function(res) {
+                        if(res.success) location.reload();
+                    });
+                }
+            });
+        }
+    </script>
+}

@@ -1,0 +1,133 @@
+@using Antigravity.ECommerce.Models
+@{
+    var product = ViewData["SchemaProduct"] as Product;
+    var news = ViewData["SchemaNews"] as News;
+    var breadcrumbs = ViewData["SchemaBreadcrumbs"] as List<BreadcrumbItem>;
+    var reviewStats = ViewData["SchemaReviewStats"] as ReviewStatsModel;
+
+    string baseUrl = $"{Context.Request.Scheme}://{Context.Request.Host}";
+}
+
+@if (breadcrumbs != null)
+{
+    <script type="application/ld+json">
+    {
+      "@@context": "https://schema.org",
+      "@@type": "BreadcrumbList",
+      "itemListElement": [
+        @for (int i = 0; i < breadcrumbs.Count; i++)
+        {
+            var item = breadcrumbs[i];
+            <text>{
+              "@@type": "ListItem",
+              "position": @(i + 1),
+              "name": "@item.Name",
+              "item": "@(item.Url.StartsWith("http") ? item.Url : baseUrl + item.Url)"
+            }</text>
+            if (i < breadcrumbs.Count - 1) { <text>,</text> }
+        }
+      ]
+    }
+    </script>
+}
+
+@if (product != null)
+{
+    var ratingVal = reviewStats != null && reviewStats.TotalReviews > 0 ? reviewStats.AverageRating : 5m;
+    var reviewCount = reviewStats != null && reviewStats.TotalReviews > 0 ? reviewStats.TotalReviews : 1;
+    <script type="application/ld+json">
+    {
+        "@@context": "https://schema.org",
+        "@@type": "Product",
+        "name": "@product.Name",
+        "image": ["@(string.IsNullOrEmpty(product.MainImage) ? baseUrl + "/assets/images/placeholder.png" : (product.MainImage.StartsWith("http") ? product.MainImage : baseUrl + product.MainImage))"],
+        "description": "@(product.SeoDescription ?? product.ShortDescription ?? "")",
+        "sku": "@(product.SKU ?? product.ProductId.ToString())",
+        "brand": { "@@type": "Brand", "name": "Elite Store" },
+        "offers": {
+            "@@type": "Offer",
+            "url": "@(baseUrl + Context.Request.Path)",
+            "priceCurrency": "VND",
+            "price": "@product.Price",
+            "availability": "@(product.Stock > 0 ? "https://schema.org/InStock" : "https://schema.org/OutOfStock")"
+        },
+        "aggregateRating": {
+            "@@type": "AggregateRating",
+            "ratingValue": "@ratingVal.ToString("0.1")",
+            "reviewCount": "@reviewCount"
+        }
+    }
+    </script>
+}
+
+@if (news != null)
+{
+    <script type="application/ld+json">
+    {
+        "@@context": "https://schema.org",
+        "@@type": "NewsArticle",
+        "headline": "@news.Title",
+        "image": ["@(string.IsNullOrEmpty(news.Image) ? "" : (news.Image.StartsWith("http") ? news.Image : baseUrl + news.Image))"],
+        "datePublished": "@news.CreatedAt.ToString("yyyy-MM-ddTHH:mm:ssK")",
+        "author": [{ "@@type": "Person", "name": "Admin" }]
+    }
+    </script>
+}
+
+@if (ViewData["SchemaFAQs"] is List<FAQ> faqs && faqs.Any())
+{
+    <script type="application/ld+json">
+    {
+      "@@context": "https://schema.org",
+      "@@type": "FAQPage",
+      "mainEntity": [
+        @for (int i = 0; i < faqs.Count; i++)
+        {
+            var f = faqs[i];
+            <text>{
+              "@@type": "Question",
+              "name": "@f.Question",
+              "acceptedAnswer": {
+                "@@type": "Answer",
+                "text": "@Html.Raw(System.Web.HttpUtility.JavaScriptStringEncode(f.Answer?.Replace("<[^>]*>", "") ?? ""))"
+              }
+            }</text>
+            if (i < faqs.Count - 1) { <text>,</text> }
+        }
+      ]
+    }
+    </script>
+}
+
+@if (ViewData["SchemaVideo"] is Video vid)
+{
+    <script type="application/ld+json">
+    {
+      "@@context": "https://schema.org",
+      "@@type": "VideoObject",
+      "name": "@vid.Title",
+      "description": "@vid.Title",
+      "thumbnailUrl": ["@vid.ThumbnailUrl"],
+      "uploadDate": "@vid.CreatedAt.ToString("yyyy-MM-ddTHH:mm:ssK")",
+      "embedUrl": "https://www.youtube.com/embed/@vid.YoutubeId"
+    }
+    </script>
+}
+
+@if (Context.Request.Path == "/")
+{
+    <script type="application/ld+json">
+    {
+      "@@context": "https://schema.org",
+      "@@type": "WebSite",
+      "name": "Elite Store",
+      "url": "@baseUrl",
+      "potentialAction": {
+        "@@type": "SearchAction",
+        "target": "@(baseUrl)/Product/Search?q={search_term_string}",
+        "query-input": "required name=search_term_string"
+      }
+    }
+    </script>
+}
+

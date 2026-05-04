@@ -1,0 +1,60 @@
+@{
+    Layout = "~/Views/Shared/_MainLayout.cshtml";
+    ViewBag.Title = "Kiểm Tra Trạng Thái Đơn Hàng";
+    var order = ViewBag.OrderResult as Antigravity.ECommerce.Models.Order;
+    bool searched = ViewBag.Searched ?? false;
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <div class="text-center mb-5">
+                <h1 class="fw-bold" style="color:var(--primary-color);">TRA CỨU ĐƠN HÀNG</h1>
+                <p class="text-muted">Nhập thông tin mã đơn hàng và số điện thoại của bạn</p>
+            </div>
+
+            <div class="card border-0 shadow-sm rounded-4 p-4 mb-5">
+                <form action="/Order/Tracking" method="get">
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Mã Số Đơn Hàng</label>
+                        <input type="text" name="orderCode" class="form-control py-2" placeholder="Ví dụ: ORD-123456" required>
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label fw-bold">Số Điện Thoại Mua Hàng</label>
+                        <input type="text" name="phone" class="form-control py-2" placeholder="Ví dụ: 0912345678" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100 py-2 fw-bold rounded-pill">Tra Cứu Ngay</button>
+                </form>
+            </div>
+
+            @if (searched)
+            {
+                if (order != null)
+                {
+                    <div class="alert alert-success border-0 shadow-sm rounded-4 p-4">
+                        <h5 class="fw-bold fw-bold mb-3"><i class="ri-checkbox-circle-fill me-2"></i>Tìm thấy 1 Đơn Hàng</h5>
+                        <ul class="list-unstyled mb-0" style="line-height:2">
+                            <li><strong>Mã đơn:</strong> @order.OrderCode</li>
+                            <li><strong>Khách hàng:</strong> @order.CustomerName</li>
+                            <li><strong>Tổng tiền:</strong> @order.TotalAmount.ToString("N0") VNĐ</li>
+                            <li><strong>Ngày đặt:</strong> @order.CreatedAt.ToString("dd/MM/yyyy HH:mm")</li>
+                            <li>
+                                <strong>Trạng thái:</strong> 
+                                @if(order.OrderStatus == 0) { <span class="badge bg-warning text-dark">Chờ xác nhận</span> }
+                                else if(order.OrderStatus == 1) { <span class="badge bg-primary">Đang giao hàng</span> }
+                                else if(order.OrderStatus == 2) { <span class="badge bg-success">Đã hoàn thành</span> }
+                                else { <span class="badge bg-danger">Đã hủy</span> }
+                            </li>
+                        </ul>
+                    </div>
+                }
+                else
+                {
+                    <div class="alert alert-danger border-0 shadow-sm rounded-4">
+                        <i class="ri-error-warning-fill me-2"></i> Không tìm thấy đơn hàng nào khớp với thông tin cung cấp. Vui lòng kiểm tra lại.
+                    </div>
+                }
+            }
+        </div>
+    </div>
+</div>

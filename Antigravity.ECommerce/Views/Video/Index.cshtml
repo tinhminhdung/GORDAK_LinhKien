@@ -1,0 +1,142 @@
+@model List<Antigravity.ECommerce.Models.Video>
+@{
+    Layout = "~/Views/Shared/_MainLayout.cshtml";
+    ViewData["Title"] = ViewBag.CurrentCategory != null ? ViewBag.CurrentCategory.Name : "Video Chuyên Đề";
+    var categories = ViewBag.Categories as List<Antigravity.ECommerce.Models.Category>;
+    int currentPage = ViewBag.CurrentPage;
+    int totalPages = (int)Math.Ceiling((double)ViewBag.TotalCount / ViewBag.PageSize);
+}
+
+@section Styles {
+    <style>
+        .video-card {
+            border: none;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            background: #fff;
+            transition: all 0.3s ease;
+        }
+        .video-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        .video-thumb {
+            position: relative;
+            padding-top: 56.25%; /* 16:9 Aspect Ratio */
+            overflow: hidden;
+            background: #000;
+        }
+        .video-thumb img {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            object-fit: cover;
+            opacity: 0.8;
+            transition: all 0.4s ease;
+        }
+        .video-card:hover .video-thumb img { opacity: 1; transform: scale(1.05); }
+        .play-icon {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 60px; height: 60px;
+            background: rgba(255,0,0,0.8);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            color: #fff; font-size: 30px;
+            box-shadow: 0 0 0 0 rgba(255,0,0,0.4);
+            animation: pulse-red 2s infinite;
+            transition: all 0.3s;
+        }
+        .video-card:hover .play-icon { background: #ff0000; }
+        
+        @@keyframes pulse-red {
+            0% { transform: translate(-50%, -50%) scale(0.95); box-shadow: 0 0 0 0 rgba(255,0,0, 0.7); }
+            70% { transform: translate(-50%, -50%) scale(1); box-shadow: 0 0 0 10px rgba(255,0,0, 0); }
+            100% { transform: translate(-50%, -50%) scale(0.95); box-shadow: 0 0 0 0 rgba(255,0,0, 0); }
+        }
+
+        .cat-nav {
+            overflow-x: auto; white-space: nowrap; padding-bottom: 5px;
+        }
+        .cat-nav::-webkit-scrollbar { height: 4px; }
+        .cat-nav::-webkit-scrollbar-thumb { background: #ccc; border-radius: 4px; }
+    </style>
+}
+
+<div class="row mb-5">
+    <div class="col-12 text-center">
+        <h1 class="fw-bold mb-3">@(ViewBag.CurrentCategory != null ? ViewBag.CurrentCategory.Name : "Khám phá Video")</h1>
+        @if (ViewBag.CurrentCategory != null)
+        {
+            <p class="text-muted max-w-2xl mx-auto">@ViewBag.CurrentCategory.Description</p>
+        }
+        else
+        {
+            <p class="text-muted max-w-2xl mx-auto">Tập hợp các video hấp dẫn, hướng dẫn và chia sẻ kiến thức từ chuyên gia.</p>
+        }
+    </div>
+</div>
+
+@if (categories != null && categories.Count > 0)
+{
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="cat-nav d-flex gap-2 justify-content-center">
+                <a href="/video.html" class="btn rounded-pill px-4 @(ViewBag.CurrentCategory == null ? "btn-danger text-white" : "btn-light")">Tất cả</a>
+                @foreach (var cat in categories)
+                {
+                    <a href="/video/@cat.Slug" class="btn rounded-pill px-4 @(ViewBag.CurrentCategory != null && ViewBag.CurrentCategory.CategoryId == cat.CategoryId ? "btn-danger text-white" : "btn-light")">@cat.Name</a>
+                }
+            </div>
+        </div>
+    </div>
+}
+
+<div class="row g-4 pt-3">
+    @if (Model != null && Model.Count > 0)
+    {
+        foreach (var video in Model)
+        {
+            <div class="col-md-6 col-lg-4">
+                <a href="/video/detail/@(video.Slug).html" class="text-decoration-none text-dark">
+                    <div class="card video-card h-100 border-0">
+                        <div class="video-thumb">
+                            <img src="@video.ThumbnailUrl" class="lazy" alt="@video.Title">
+                            <div class="play-icon"><i class="mdi mdi-play"></i></div>
+                        </div>
+                        <div class="card-body p-4">
+                            <span class="badge bg-danger-subtle text-danger mb-2">@(string.IsNullOrEmpty(video.CategoryName) ? "Youtube" : video.CategoryName)</span>
+                            <h5 class="fw-bold mb-2 line-clamp-2">@video.Title</h5>
+                            <div class="text-muted small">
+                                <i class="mdi mdi-calendar"></i> @video.CreatedAt.ToString("dd/MM/yyyy")
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        }
+    }
+    else
+    {
+        <div class="col-12 text-center py-5">
+            <i class="mdi mdi-video-off fs-1 text-muted"></i>
+            <h4 class="text-muted mt-2">Chưa có video nào.</h4>
+        </div>
+    }
+</div>
+
+@if (totalPages > 1)
+{
+    <nav class="mt-5">
+        <ul class="pagination justify-content-center">
+            @for (int i = 1; i <= totalPages; i++)
+            {
+                <li class="page-item @(i == currentPage ? "active" : "")">
+                    <a class="page-link" href="?page=@i">@i</a>
+                </li>
+            }
+        </ul>
+    </nav>
+}

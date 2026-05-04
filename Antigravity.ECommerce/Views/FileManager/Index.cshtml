@@ -1,0 +1,991 @@
+@model List<Antigravity.ECommerce.Controllers.FileManagerItem>
+@using Antigravity.ECommerce.Controllers
+@{
+    Layout = null;
+    var currentPath = ViewBag.CurrentPath as string;
+    var fieldId = ViewBag.FieldId as string;
+    var funcNum = ViewBag.CKEditorFuncNum as string;
+    var folderTree = ViewBag.FolderTree as List<FolderTreeItem> ?? new List<FolderTreeItem>();
+    string BuildUrl(string path) => $"/FileManager?path={path}&fieldId={fieldId}&CKEditorFuncNum={funcNum}";
+}
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quản lý tệp tin</title>
+    <link href="/assets/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/assets/css/icons.min.css" rel="stylesheet" />
+    <style>
+        *, *::before, *::after { box-sizing: border-box; }
+        body { margin:0; padding:0; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; background:#f0f2f5; display:flex; flex-direction:column; height:100vh; overflow:hidden; font-size:14px; }
+
+        /* ──── TOP BAR ──── */
+        .fm-topbar { background:#fff; border-bottom:1px solid #e3e3e3; padding:8px 14px; display:flex; align-items:center; gap:10px; flex-shrink:0; box-shadow:0 1px 4px rgba(0,0,0,.06); }
+        .fm-topbar .brand { font-size:15px; font-weight:700; color:#2c3e50; white-space:nowrap; display:flex; align-items:center; gap:6px; }
+        .fm-breadcrumb { display:flex; align-items:center; gap:4px; font-size:12px; flex:1; min-width:0; }
+        .fm-breadcrumb a { color:#0ab39c; text-decoration:none; white-space:nowrap; }
+        .fm-breadcrumb a:hover { text-decoration:underline; }
+        .fm-breadcrumb span.sep { color:#ccc; }
+        .top-btn { display:flex; align-items:center; gap:5px; padding:6px 12px; border-radius:6px; border:1px solid #ddd; background:#fff; font-size:12px; color:#444; cursor:pointer; white-space:nowrap; transition:.12s; }
+        .top-btn:hover { background:#f5f5f5; border-color:#bbb; }
+        .top-btn.primary { background:#0ab39c; border-color:#0ab39c; color:#fff; }
+        .top-btn.primary:hover { background:#099d88; }
+
+        /* ──── BODY ──── */
+        .fm-body { display:flex; flex:1; overflow:hidden; }
+
+        /* ──── LEFT SIDEBAR ──── */
+        .fm-sidebar { width:220px; flex-shrink:0; background:#fff; border-right:1px solid #e3e3e3; display:flex; flex-direction:column; overflow:hidden; user-select:none; }
+        .sidebar-section-header { padding:10px 14px 6px; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.6px; color:#aaa; }
+        .sidebar-scroll { overflow-y:auto; flex:1; padding-bottom:6px; }
+        .s-item { display:flex; align-items:center; gap:7px; padding:6px 12px; cursor:pointer; font-size:12.5px; color:#444; border-left:3px solid transparent; transition:.12s; position:relative; }
+        .s-item:hover { background:#f4f4f4; color:#0ab39c; }
+        .s-item.active { background:rgba(10,179,156,.08); border-left-color:#0ab39c; color:#0ab39c; font-weight:600; }
+        .s-item i { font-size:15px; flex-shrink:0; }
+        .s-item .badge-n { margin-left:auto; background:#f0f0f0; color:#888; border-radius:10px; padding:1px 6px; font-size:10px; flex-shrink:0; }
+        .s-item.active .badge-n { background:rgba(10,179,156,.15); color:#0ab39c; }
+
+        /* Filter */
+        .filter-section { border-top:1px solid #f0f0f0; padding:8px 0; }
+        .filter-item { display:flex; align-items:center; gap:7px; padding:5px 14px; font-size:12px; color:#555; cursor:pointer; border-radius:0; transition:.12s; }
+        .filter-item:hover { background:#f5f5f5; }
+        .filter-item.active { color:#0ab39c; font-weight:600; background:rgba(10,179,156,.07); }
+        .filter-item i { font-size:14px; }
+
+        /* ──── CONTENT ──── */
+        .fm-content { flex:1; display:flex; flex-direction:column; overflow:hidden; }
+        .fm-toolbar { padding:8px 14px; background:#fff; border-bottom:1px solid #ebebeb; display:flex; gap:8px; align-items:center; flex-shrink:0; }
+        .fm-search { position:relative; flex:1; max-width:280px; }
+        .fm-search input { width:100%; padding:6px 12px 6px 32px; border:1px solid #ddd; border-radius:18px; font-size:12px; outline:none; transition:.15s; }
+        .fm-search input:focus { border-color:#0ab39c; }
+        .fm-search i { position:absolute; left:10px; top:50%; transform:translateY(-50%); color:#aaa; font-size:14px; pointer-events:none; }
+        .fm-count { font-size:11px; color:#aaa; white-space:nowrap; }
+
+        /* Sort Dropdown */
+        .sort-dropdown { position:relative; }
+        .sort-btn { display:flex; align-items:center; gap:5px; padding:5px 10px; border:1px solid #ddd; border-radius:6px; background:#fff; font-size:12px; color:#555; cursor:pointer; white-space:nowrap; }
+        .sort-btn:hover { background:#f5f5f5; }
+        .sort-menu { position:absolute; top:calc(100% + 4px); left:0; background:#fff; border:1px solid #e0e0e0; border-radius:8px; box-shadow:0 6px 20px rgba(0,0,0,.12); min-width:170px; z-index:500; padding:4px 0; display:none; }
+        .sort-menu.show { display:block; }
+        .sort-menu-item { padding:7px 14px; font-size:12px; color:#444; cursor:pointer; display:flex; align-items:center; gap:8px; }
+        .sort-menu-item:hover { background:#f5f5f5; color:#0ab39c; }
+        .sort-menu-item.active { color:#0ab39c; font-weight:600; }
+        .sort-menu-item i { font-size:14px; }
+
+        /* View Toggle */
+        .view-toggle { display:flex; border:1px solid #ddd; border-radius:6px; overflow:hidden; margin-left:auto; }
+        .view-btn { padding:5px 9px; border:none; background:#fff; cursor:pointer; font-size:14px; color:#777; transition:.12s; border-left:1px solid #ddd; }
+        .view-btn:first-child { border-left:none; }
+        .view-btn.active { background:#0ab39c; color:#fff; }
+        .view-btn:hover:not(.active) { background:#f5f5f5; }
+
+        /* ──── FILE AREA ──── */
+        .fm-grid-area { flex:1; overflow-y:auto; padding:14px; }
+        ::-webkit-scrollbar { width:5px; height:5px; }
+        ::-webkit-scrollbar-thumb { background:#d0d0d0; border-radius:3px; }
+
+        /* Grid (default) */
+        #file-container.view-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(120px, 1fr)); gap:10px; }
+        #file-container.view-large { display:grid; grid-template-columns:repeat(auto-fill, minmax(170px, 1fr)); gap:12px; }
+        #file-container.view-medium { display:grid; grid-template-columns:repeat(auto-fill, minmax(100px, 1fr)); gap:8px; }
+        #file-container.view-list { display:flex; flex-direction:column; gap:2px; }
+
+        /* File card (grid/large/medium) */
+        .file-card { background:#fff; border:2px solid transparent; border-radius:10px; padding:9px 8px 7px; text-align:center; cursor:pointer; position:relative; transition:.15s; box-shadow:0 1px 3px rgba(0,0,0,.07); }
+        .file-card:hover { border-color:#c0ece5; box-shadow:0 3px 12px rgba(10,179,156,.15); transform:translateY(-1px); }
+        .file-card.selected { border-color:#0ab39c; background:rgba(10,179,156,.06); }
+        .thumb-wrap { width:100%; aspect-ratio:1; display:flex; align-items:center; justify-content:center; border-radius:7px; overflow:hidden; background:#f5f7fa; margin-bottom:7px; position:relative; }
+        .thumb-wrap img { width:100%; object-fit:cover; display:block; }
+        .thumb-icon { font-size:40px; }
+        .view-large .thumb-wrap { border-radius:9px; }
+        .view-medium .thumb-icon { font-size:30px; }
+        .fname { font-size:11px; color:#555; word-break:break-all; line-height:1.3; max-height:28px; overflow:hidden; }
+        .view-large .fname { font-size:12px; max-height:34px; }
+        .view-medium .fname { font-size:10px; max-height:26px; }
+        .cb-wrap { position:absolute; top:5px; right:5px; opacity:0; transition:.12s; z-index:2; }
+        .file-card:hover .cb-wrap, .file-card.selected .cb-wrap { opacity:1; }
+        .cb-wrap input { width:15px; height:15px; accent-color:#0ab39c; cursor:pointer; }
+        .img-badge { position:absolute; bottom:4px; right:4px; background:rgba(0,0,0,.45); color:#fff; font-size:9px; padding:1px 5px; border-radius:3px; }
+        
+        /* ── Image Optimization Badges ── */
+        .img-type-badge { position:absolute; bottom:0; left:0; right:0; display:flex; flex-direction:column; z-index:2; }
+        .type-tag { font-size:9px; color:#fff; padding:3px 2px; text-align:center; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; letter-spacing:0.2px; text-shadow: 0 1px 2px rgba(0,0,0,0.5); }
+        .thumb-tag { font-size:9px; padding:2px; text-align:center; color:#fff; font-weight:bold; }
+        .thumb-tag.optimized { background:rgba(10,179,156,.95); }
+        .thumb-tag.not-optimized { background:rgba(244,106,106,.95); }
+        /* Folder card */
+        .folder-card { background:#fff; border:2px solid transparent; border-radius:10px; padding:9px 8px 7px; text-align:center; cursor:pointer; transition:.15s; box-shadow:0 1px 3px rgba(0,0,0,.07); }
+        .folder-card:hover { border-color:#f1c06f; box-shadow:0 3px 12px rgba(241,180,76,.2); transform:translateY(-1px); }
+        .folder-card i { font-size:44px; color:#f1b44c; display:block; margin-bottom:6px; }
+        .view-large .folder-card i { font-size:56px; }
+        .view-medium .folder-card i { font-size:32px; }
+        .folder-card .fname { font-size:11px; color:#555; }
+
+        /* List View */
+        .list-row { display:flex; align-items:center; gap:10px; padding:6px 10px; background:#fff; border-radius:6px; cursor:pointer; border:1px solid transparent; transition:.12s; }
+        .list-row:hover { background:#f8f8f8; border-color:#e5e5e5; }
+        .list-row.selected { background:rgba(10,179,156,.06); border-color:rgba(10,179,156,.3); }
+        .list-thumb { width:36px; height:36px; object-fit:cover; border-radius:4px; flex-shrink:0; }
+        .list-icon-wrap { width:36px; height:36px; display:flex; align-items:center; justify-content:center; background:#f5f5f5; border-radius:4px; flex-shrink:0; }
+        .list-icon-wrap i { font-size:20px; }
+        .list-name { flex:1; font-size:12.5px; color:#444; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+        .list-meta { font-size:11px; color:#aaa; white-space:nowrap; }
+        .list-cb { flex-shrink:0; }
+        .list-cb input { width:15px; height:15px; accent-color:#0ab39c; }
+
+        /* ── MODAL FIX: explicit white BG, always show on top ── */
+        .modal-content { background-color: #ffffff !important; border-radius: 12px !important; box-shadow: 0 20px 60px rgba(0,0,0,.3) !important; }
+        .modal-backdrop { background-color: rgba(0,0,0,0.6) !important; }
+        .modal { z-index: 9000 !important; }
+        .modal-backdrop { z-index: 8999 !important; }
+        .modal-header { border-bottom: 1px solid #f0f0f0 !important; }
+        .modal-footer { border-top: 1px solid #f0f0f0 !important; }
+        .modal-body .form-control { border: 1px solid #ced4da !important; background-color: #fff !important; color: #495057 !important; padding: 0.6rem 1rem !important; border-radius: 6px !important; box-shadow: inset 0 1px 2px rgba(0,0,0,.075) !important; }
+        .modal-body .form-control:focus { background-color: #fff !important; border-color: #86b7fe !important; box-shadow: inset 0 1px 2px rgba(0,0,0,.075), 0 0 0 0.25rem rgba(13,110,253,.25) !important; outline: 0 !important; }
+
+        /* ──── CONTEXT MENU ──── */
+        #ctx-menu { position:fixed; background:#fff; border:1px solid #e0e0e0; border-radius:9px; box-shadow:0 8px 28px rgba(0,0,0,.15); min-width:185px; z-index:9999; padding:5px 0; display:none; animation:fadeIn .12s; }
+        @@keyframes fadeIn { from { opacity:0; transform:scale(.96); } to { opacity:1; transform:scale(1); } }
+        .ctx-item { display:flex; align-items:center; gap:9px; padding:8px 16px; font-size:12.5px; color:#333; cursor:pointer; transition:.1s; }
+        .ctx-item:hover { background:#f5f5f5; color:#0ab39c; }
+        .ctx-item i { font-size:15px; width:16px; text-align:center; }
+        .ctx-item.danger { color:#f46a6a; }
+        .ctx-item.danger:hover { background:#fff5f5; color:#e53e3e; }
+        .ctx-divider { height:1px; background:#f0f0f0; margin:4px 0; }
+
+        /* Sidebar Context Menu */
+        #sidebar-ctx { position:fixed; background:#fff; border:1px solid #e0e0e0; border-radius:9px; box-shadow:0 8px 28px rgba(0,0,0,.15); min-width:170px; z-index:9999; padding:5px 0; display:none; }
+
+        /* ──── SELECT BAR ──── */
+        #multi-select-bar { position:sticky; bottom:0; background:linear-gradient(135deg,#2c3e50,#3d5a74); color:#fff; padding:10px 18px; display:none; border-top:2px solid #1a2940; z-index:100; flex-shrink:0; }
+        .use-btn { background:#0ab39c; border:none; color:#fff; padding:7px 20px; border-radius:6px; font-size:13px; font-weight:600; cursor:pointer; }
+        .use-btn:hover { background:#099d88; }
+        .clear-btn { background:transparent; border:1px solid rgba(255,255,255,.35); color:#fff; padding:6px 14px; border-radius:6px; font-size:12px; cursor:pointer; }
+
+        /* Empty State */
+        .empty-state { text-align:center; padding:60px 20px; color:#ccc; }
+        .empty-state i { font-size:60px; display:block; margin-bottom:12px; }
+
+        /* ──── FULLSCREEN ──── */
+        body.fullscreen-mode { position:fixed; inset:0; z-index:99999; }
+
+        /* ──── IMAGE TYPE BADGES ──── */
+        .img-type-badge { position:absolute; bottom:4px; left:4px; display:flex; flex-direction:column; gap:2px; z-index:2; }
+        .img-type-badge .type-tag { font-size:8px; padding:1px 5px; border-radius:3px; color:#fff; font-weight:600; line-height:1.4; white-space:nowrap; }
+        .img-type-badge .thumb-tag { font-size:8px; padding:1px 5px; border-radius:3px; font-weight:600; line-height:1.4; }
+        .thumb-tag.optimized { background:rgba(10,179,156,.85); color:#fff; }
+        .thumb-tag.not-optimized { background:rgba(244,106,106,.85); color:#fff; }
+
+        /* ──── DRAG & DROP OVERLAY ──── */
+        .drag-overlay { position:fixed; inset:0; background:rgba(10,179,156,.12); border:3px dashed #0ab39c; z-index:9998; display:none; align-items:center; justify-content:center; }
+        .drag-overlay.active { display:flex; }
+        .drag-overlay-inner { text-align:center; color:#0ab39c; }
+        .drag-overlay-inner i { font-size:64px; display:block; margin-bottom:10px; }
+        .drag-overlay-inner span { font-size:18px; font-weight:600; }
+
+        /* ──── INFO TOOLTIP ──── */
+        .info-icon { display:inline-flex; align-items:center; justify-content:center; width:18px; height:18px; border-radius:50%; background:#e8f5e9; color:#0ab39c; font-size:11px; cursor:help; font-weight:700; font-style:italic; font-family:serif; margin-left:5px; border:1px solid #c8e6c9; }
+        .info-icon:hover { background:#0ab39c; color:#fff; }
+    </style>
+</head>
+<body>
+
+<!-- ════════ TOP BAR ════════ -->
+<div class="fm-topbar">
+    <div class="brand"><i class="ri-hard-drive-2-line" style="color:#0ab39c;font-size:18px;"></i> File Manager
+        <span class="info-icon" title="📁 Quản lý tệp tin thông minh&#10;&#10;✨ Tính năng nổi bật:&#10;• Upload ảnh → Tự động tạo bản thu nhỏ WebP siêu nhẹ&#10;• Ảnh gốc luôn được giữ nguyên, không bao giờ bị sửa đổi&#10;• Chuột phải để chỉnh sửa, crop, xoay ảnh&#10;• Bấm F2 để mở trình chỉnh sửa nhanh&#10;• Bấm F11 để xem toàn màn hình&#10;• Kéo thả ảnh từ máy tính vào để upload&#10;&#10;🚀 Ảnh được tối ưu tự động giúp website tải nhanh hơn 5-10 lần!">i</span>
+    </div>
+    <div class="fm-breadcrumb">
+        <span class="sep">|</span>
+        <a href="@BuildUrl("")"><i class="ri-home-3-line"></i> Uploads</a>
+        @{
+            var parts = (currentPath ?? "/").Trim('/').Split('/');
+            var acc = "";
+            foreach (var part in parts)
+            {
+                if (string.IsNullOrEmpty(part)) continue;
+                acc += "/" + part;
+                var snap = acc;
+                <span class="sep">/</span>
+                <a href="@BuildUrl(snap)">@part</a>
+            }
+        }
+    </div>
+    <div class="d-flex gap-2 ms-auto">
+        <button class="top-btn" onclick="bulkOptimizeAll()" title="Tạo thumbnail cho tất cả ảnh chưa tối ưu">
+            <i class="ri-speed-line"></i> Tối ưu ảnh
+        </button>
+        <form action="/FileManager/Upload" method="post" enctype="multipart/form-data" class="d-inline">
+            <input type="hidden" name="currentPath" value="@currentPath" />
+            <input type="hidden" name="fieldId" value="@fieldId" />
+            <input type="hidden" name="CKEditorFuncNum" value="@funcNum" />
+            <input type="file" name="files" id="fileUpload" style="display:none;" onchange="this.form.submit()" multiple />
+            <button type="button" class="top-btn primary" onclick="document.getElementById('fileUpload').click();">
+                <i class="ri-upload-2-fill"></i> Tải lên
+            </button>
+        </form>
+        <button class="top-btn" data-bs-toggle="modal" data-bs-target="#createFolderModal">
+            <i class="ri-folder-add-fill"></i> Thư mục mới
+        </button>
+    </div>
+</div>
+
+<!-- ════════ BODY ════════ -->
+<div class="fm-body">
+
+    <!-- ── LEFT SIDEBAR ── -->
+    <div class="fm-sidebar">
+        <div class="sidebar-scroll">
+            <div class="sidebar-section-header">Thư mục</div>
+
+            <!-- Root -->
+            <div class="s-item @(currentPath == "/" || string.IsNullOrEmpty(currentPath) ? "active" : "")"
+                 onclick="navigate('@BuildUrl("")')"
+                 oncontextmenu="showSidebarCtx(event,'','root')">
+                <i class="ri-hard-drive-2-line" style="color:#0ab39c;"></i>
+                <span>Tất cả tệp tin</span>
+            </div>
+
+            <!-- Folder Tree -->
+            @{
+                void RenderTree(List<FolderTreeItem> nodes, int depth)
+                {
+                    foreach (var folder in nodes)
+                    {
+                        var isActive = currentPath == folder.RelativePath || currentPath?.StartsWith(folder.RelativePath + "/") == true;
+                        var relPath = folder.RelativePath;
+                        <div class="s-item @(isActive ? "active" : "")"
+                             style="padding-left: @(12 + depth * 13)px"
+                             onclick="navigate('@BuildUrl(relPath)')"
+                             oncontextmenu="showSidebarCtx(event,'@relPath','folder')">
+                            <i class="ri-folder-@(isActive ? "open-" : "")fill" style="color:#f1b44c;"></i>
+                            <span style="overflow:hidden;text-overflow:ellipsis;min-width:0">@folder.Name</span>
+                            @if (folder.FileCount > 0)
+                            {
+                                <span class="badge-n">@folder.FileCount</span>
+                            }
+                        </div>
+                        if (folder.Children?.Count > 0) { RenderTree(folder.Children, depth + 1); }
+                    }
+                }
+                RenderTree(folderTree, 0);
+            }
+
+            <!-- Filters -->
+            <div class="filter-section">
+                <div class="sidebar-section-header" style="padding-top:6px;">Lọc loại tệp</div>
+                <div class="filter-item active" id="flt-all" onclick="setFilter('all',this)"><i class="ri-apps-2-line" style="color:#0ab39c;"></i> Tất cả</div>
+                <div class="filter-item" id="flt-image" onclick="setFilter('image',this)"><i class="ri-image-line" style="color:#50a5f1;"></i> Hình ảnh</div>
+                <div class="filter-item" id="flt-video" onclick="setFilter('video',this)"><i class="ri-video-line" style="color:#f46a6a;"></i> Video</div>
+                <div class="filter-item" id="flt-doc" onclick="setFilter('doc',this)"><i class="ri-file-text-line" style="color:#f1b44c;"></i> Tài liệu</div>
+                <div class="filter-item" id="flt-other" onclick="setFilter('other',this)"><i class="ri-file-line" style="color:#aaa;"></i> Khác</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── CONTENT ── -->
+    <div class="fm-content">
+        <!-- Toolbar -->
+        <div class="fm-toolbar">
+            <div class="fm-search">
+                <i class="ri-search-line"></i>
+                <input type="text" id="searchInput" placeholder="Tìm kiếm tệp tin..." oninput="applyFilters()" />
+            </div>
+
+            <!-- Sort -->
+            <div class="sort-dropdown">
+                <div class="sort-btn" onclick="toggleSortMenu()" id="sort-label">
+                    <i class="ri-sort-asc"></i> <span id="sort-text">Tên A-Z</span> <i class="ri-arrow-down-s-line"></i>
+                </div>
+                <div class="sort-menu" id="sort-menu">
+                    <div class="sort-menu-item active" onclick="setSort('name-asc',this)"><i class="ri-sort-asc"></i> <span>Tên A → Z</span></div>
+                    <div class="sort-menu-item" onclick="setSort('name-desc',this)"><i class="ri-sort-desc"></i> <span>Tên Z → A</span></div>
+                    <div class="ctx-divider"></div>
+                    <div class="sort-menu-item" onclick="setSort('date-desc',this)"><i class="ri-calendar-line"></i> <span>Mới nhất</span></div>
+                    <div class="sort-menu-item" onclick="setSort('date-asc',this)"><i class="ri-calendar-check-line"></i> <span>Cũ nhất</span></div>
+                    <div class="ctx-divider"></div>
+                    <div class="sort-menu-item" onclick="setSort('size-desc',this)"><i class="ri-archive-fill"></i> <span>Lớn nhất</span></div>
+                    <div class="sort-menu-item" onclick="setSort('size-asc',this)"><i class="ri-archive-line"></i> <span>Nhỏ nhất</span></div>
+                    <div class="ctx-divider"></div>
+                    <div class="sort-menu-item" onclick="setSort('type',this)"><i class="ri-layout-grid-line"></i> <span>Theo loại</span></div>
+                </div>
+            </div>
+
+            <span class="fm-count" id="fm-count-label">@Model.Count(m => !m.IsDirectory) tệp · @Model.Count(m => m.IsDirectory) thư mục</span>
+
+            <!-- View Toggle -->
+            <div class="view-toggle ms-auto">
+                <button class="view-btn" id="vbtn-large" onclick="setView('large')" title="Ảnh lớn"><i class="ri-landscape-line"></i></button>
+                <button class="view-btn active" id="vbtn-grid" onclick="setView('grid')" title="Lưới vừa"><i class="ri-grid-line"></i></button>
+                <button class="view-btn" id="vbtn-medium" onclick="setView('medium')" title="Thu nhỏ"><i class="ri-grid-fill"></i></button>
+                <button class="view-btn" id="vbtn-list" onclick="setView('list')" title="Danh sách"><i class="ri-list-check"></i></button>
+            </div>
+        </div>
+
+        <!-- Files Grid/List -->
+        <div class="fm-grid-area" id="fm-grid-area" onclick="hideCtxMenus()">
+            <div class="view-grid" id="file-container">
+
+                <!-- Back button -->
+                @if (!string.IsNullOrEmpty(currentPath) && currentPath != "/")
+                {
+                    var parentPath = currentPath.Contains("/") ? currentPath.Substring(0, currentPath.LastIndexOf('/')) : "";
+                    <div class="folder-card" onclick="navigate('@BuildUrl(parentPath)')">
+                        <i class="ri-arrow-go-back-line" style="color:#aaa;font-size:36px;"></i>
+                        <div class="fname">Lên một cấp</div>
+                    </div>
+                }
+
+                @foreach (var item in Model)
+                {
+                    if (item.IsDirectory)
+                    {
+                        var relPath = item.Path;
+                        <div class="folder-card fm-item" data-name="@item.Name.ToLower()" data-type="folder"
+                             data-path="@relPath"
+                             onclick="navigate('@BuildUrl(relPath)')"
+                             ondblclick="navigate('@BuildUrl(relPath)')"
+                             oncontextmenu="showFileCtx(event,this,'folder','@relPath','@item.Name')">
+                            <i class="ri-folder-2-fill"></i>
+                            <div class="fname" title="@item.Name">@item.Name</div>
+                        </div>
+                    }
+                    else
+                    {
+                        var ext = System.IO.Path.GetExtension(item.Name).ToLower();
+                        var isImg = ext is ".jpg" or ".jpeg" or ".png" or ".webp" or ".gif" or ".svg";
+                        var isVideo = ext is ".mp4" or ".avi" or ".mov" or ".webm" or ".mkv";
+                        var isDoc = ext is ".pdf" or ".doc" or ".docx" or ".xls" or ".xlsx" or ".txt" or ".csv";
+                        var fType = isImg ? "image" : isVideo ? "video" : isDoc ? "doc" : "other";
+                        var iColor = isImg ? "#50a5f1" : isVideo ? "#f46a6a" : isDoc ? "#f1b44c" : "#aaa";
+                        var iName = isImg ? "ri-image-fill" : isVideo ? "ri-video-fill" : isDoc ? "ri-file-text-fill" : "ri-file-fill";
+                        var sizeKb = item.Size > 1024 * 1024 ? (item.Size / 1024.0 / 1024.0).ToString("0.00") + " MB"
+                                     : item.Size > 0 ? (item.Size / 1024.0).ToString("0") + " KB" : "—";
+
+                        <div class="file-card fm-item"
+                             data-name="@item.Name.ToLower()"
+                             data-type="@fType"
+                             data-url="@item.Path"
+                             data-size="@item.Size"
+                             data-datemod="@item.DateModified.ToString("s")"
+                             data-imgtype="@item.ImageType"
+                             data-imgw="@item.ImageWidth"
+                             data-imgh="@item.ImageHeight"
+                             data-hasthumb="@item.HasThumbnail.ToString().ToLower()"
+                             onclick="toggleSelect(this)"
+                             ondblclick="quickUse('@item.Path')"
+                             oncontextmenu="showFileCtx(event,this,'file','@item.Path','@item.Name')">
+                            <div class="cb-wrap"><input class="item-checkbox" type="checkbox" value="@item.Path" onclick="event.stopPropagation();syncSelection(this)" /></div>
+                            <div class="thumb-wrap">
+                                @if (isImg)
+                                {
+                                    <img src="@item.Path" alt="" loading="lazy"
+                                         onerror="this.parentElement.innerHTML='<i class=\'@iName thumb-icon\' style=\'color:@iColor\'></i>'" />
+                                }
+                                else
+                                {
+                                    <i class="@iName thumb-icon" style="color:@iColor;"></i>
+                                }
+                                @if (isImg && !string.IsNullOrEmpty(item.ImageTypeLabel))
+                                {
+                                    var thumbSizeStr = item.HasThumbnail
+                                        ? (item.ThumbnailSize > 1024 * 1024 ? (item.ThumbnailSize / 1024.0 / 1024.0).ToString("0.00") + " MB" : (item.ThumbnailSize / 1024.0).ToString("0") + " KB")
+                                        : sizeKb;
+                                    <div class="img-type-badge">
+                                        <span class="type-tag" style="background:@item.ImageTypeColor;">@item.ImageTypeLabel · @(item.ImageWidth)×@(item.ImageHeight)</span>
+                                        <span class="thumb-tag @(item.HasThumbnail ? "optimized" : "not-optimized")">@(item.HasThumbnail ? "✅ " + thumbSizeStr : "⚠️ " + sizeKb)</span>
+                                    </div>
+                                }
+                                else if (isImg)
+                                {
+                                    <span class="img-badge">@sizeKb</span>
+                                }
+                            </div>
+                            <div class="fname" title="@item.Name">@item.Name</div>
+                        </div>
+                    }
+                }
+            </div>
+            @if (!Model.Any())
+            {
+                <div class="empty-state"><i class="ri-folder-open-line"></i>Thư mục đang trống</div>
+            }
+        </div>
+
+        <!-- Select Bar -->
+        <div id="multi-select-bar">
+            <div class="d-flex align-items-center justify-content-between">
+                <span><i class="ri-check-double-line me-1"></i>Đã chọn <strong id="selected-count">0</strong> tệp</span>
+                <div class="d-flex gap-2">
+                    <button class="use-btn" style="background:#e74c3c" onclick="bulkDelete()"><i class="ri-delete-bin-line me-1"></i>Xóa</button>
+                    <button class="clear-btn" onclick="clearSelection()">Bỏ chọn</button>
+                    <button class="use-btn" onclick="useSelected()"><i class="ri-check-line me-1"></i>Sử dụng</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ════════ CONTEXT MENU – File/Folder ════════ -->
+<div id="ctx-menu">
+    <div class="ctx-item" id="ctx-use" onclick="ctxUse()"><i class="ri-check-circle-line"></i> Sử dụng ảnh này</div>
+    <div class="ctx-item" id="ctx-copy" onclick="ctxCopy()"><i class="ri-link"></i> Sao chép đường dẫn</div>
+    <div class="ctx-item" id="ctx-preview" onclick="ctxPreview()"><i class="ri-eye-line"></i> Xem trước</div>
+    <div class="ctx-item" id="ctx-open-tab" onclick="ctxOpenTab()"><i class="ri-external-link-line"></i> Mở trong tab mới</div>
+    <div class="ctx-divider"></div>
+    <div class="ctx-item" id="ctx-edit-img" onclick="ctxEditImage()"><i class="ri-crop-line" style="color:#7c5cbf;"></i> Chỉnh sửa ảnh</div>
+    <div class="ctx-item" id="ctx-regen" onclick="ctxRegenerateThumb()"><i class="ri-refresh-line" style="color:#0ab39c;"></i> Tạo lại Thumbnail</div>
+    <div class="ctx-item" id="ctx-info" onclick="ctxImageInfo()"><i class="ri-information-line" style="color:#50a5f1;"></i> Thông tin ảnh</div>
+    <div class="ctx-divider"></div>
+    <div class="ctx-item danger" id="ctx-delete" onclick="ctxDelete()"><i class="ri-delete-bin-line"></i> Xóa</div>
+</div>
+
+<!-- ════════ DRAG & DROP OVERLAY ════════ -->
+<div class="drag-overlay" id="drag-overlay">
+    <div class="drag-overlay-inner">
+        <i class="ri-download-cloud-2-line"></i>
+        <span>Thả ảnh vào đây để tải lên</span>
+    </div>
+</div>
+
+<!-- ════════ CONTEXT MENU – Sidebar Folder ════════ -->
+<div id="sidebar-ctx">
+    <div class="ctx-item" onclick="sidebarNavigate()"><i class="ri-folder-open-line" style="color:#f1b44c;"></i> Mở thư mục</div>
+    <div class="ctx-item" onclick="sidebarCreateSub()"><i class="ri-folder-add-line" style="color:#0ab39c;"></i> Tạo thư mục con</div>
+    <div class="ctx-divider"></div>
+    <div class="ctx-item danger" id="sidebar-ctx-delete" onclick="sidebarDelete()"><i class="ri-delete-bin-line"></i> Xóa thư mục</div>
+</div>
+
+<!-- ════════ MODAL – Tạo thư mục ════════ -->
+<div class="modal fade" id="createFolderModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
+            <form action="/FileManager/CreateFolder" method="post">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="ri-folder-add-fill me-2 text-primary"></i>Tạo thư mục</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="currentPath" id="cf-path" value="@currentPath" />
+                    <input type="hidden" name="fieldId" value="@fieldId" />
+                    <input type="hidden" name="CKEditorFuncNum" value="@funcNum" />
+                    <label class="form-label small" id="cf-label">Tên thư mục mới trong <b>/ Uploads</b></label>
+                    <input type="text" class="form-control" name="folderName" id="cf-name" placeholder="Nhập tên thư mục..." required autofocus />
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Hủy</button>
+                    <button type="submit" class="btn btn-primary">Tạo mới</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Preview -->
+<div class="modal fade" id="previewModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content border-0 shadow-lg">
+            <div class="modal-header py-2 border-0">
+                <span id="preview-name" class="fw-semibold"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body p-2 text-center" style="background:#1a1a2e;">
+                <img id="preview-img" src="" style="max-width:100%;max-height:70vh;object-fit:contain;border-radius:4px;" />
+            </div>
+            <div class="modal-footer py-2 border-0 gap-2">
+                <button class="btn btn-sm btn-outline-secondary" onclick="ctxCopy()"><i class="ri-link me-1"></i>Sao chép URL</button>
+                <button class="btn btn-sm btn-success" onclick="ctxUseFromPreview()"><i class="ri-check-line me-1"></i>Sử dụng ảnh</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Confirm Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-content border-0 shadow">
+            <form action="/FileManager/Delete" method="post" id="deleteForm">
+                <div id="deleteInputs"></div>
+                <input type="hidden" name="currentPath" value="@currentPath" />
+                <input type="hidden" name="fieldId" value="@fieldId" />
+                <input type="hidden" name="CKEditorFuncNum" value="@funcNum" />
+                <div class="modal-header border-0 pb-0">
+                    <h6 class="modal-title text-danger"><i class="ri-alert-line me-1"></i>Xác nhận xóa</h6>
+                </div>
+                <div class="modal-body py-2">
+                    <p class="mb-0 small text-muted">Bạn có chắc chắn muốn xóa <strong id="del-name"></strong>? Hành động này không thể hoàn tác.</p>
+                </div>
+                <div class="modal-footer border-0 pt-0">
+                    <button type="button" class="btn btn-sm btn-light" data-bs-dismiss="modal">Hủy</button>
+                    <button type="submit" class="btn btn-sm btn-danger">Xóa</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- ════════ MODAL – Thông tin ảnh ════════ -->
+<div class="modal fade" id="imageInfoModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg">
+            <div class="modal-header">
+                <h6 class="modal-title"><i class="ri-information-line me-2 text-primary"></i>Thông tin ảnh</h6>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <table class="table table-sm mb-0">
+                    <tr><td class="text-muted" style="width:140px;">Tên file</td><td><strong id="info-name"></strong></td></tr>
+                    <tr><td class="text-muted">Kích thước gốc</td><td id="info-dimensions"></td></tr>
+                    <tr><td class="text-muted">Dung lượng gốc</td><td id="info-size"></td></tr>
+                    <tr><td class="text-muted">Loại ảnh</td><td id="info-type"></td></tr>
+                    <tr><td class="text-muted">Thumbnail</td><td id="info-thumb"></td></tr>
+                    <tr><td class="text-muted">Tiết kiệm</td><td id="info-saved"></td></tr>
+                </table>
+            </div>
+            <div class="modal-footer py-2">
+                <button class="btn btn-sm btn-outline-primary" onclick="ctxRegenerateThumb()"><i class="ri-refresh-line me-1"></i>Tạo lại Thumbnail</button>
+                <button type="button" class="btn btn-sm btn-light" data-bs-dismiss="modal">Đóng</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Cropper.js CDN -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js"></script>
+
+<!-- ════════ MODAL – Chỉnh sửa ảnh ════════ -->
+<div class="modal fade" id="editImageModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content border-0 shadow-lg">
+            <div class="modal-header">
+                <h6 class="modal-title"><i class="ri-crop-line me-2" style="color:#7c5cbf;"></i>Chỉnh sửa ảnh: <span id="edit-img-name"></span></h6>
+                <span class="info-icon ms-2" title="✂️ Chỉnh sửa ảnh&#10;&#10;• Kéo thả để chọn vùng cắt&#10;• Chọn tỷ lệ sẵn hoặc cắt tự do&#10;• Xoay ảnh 90° sang trái hoặc phải&#10;&#10;⚠️ Ảnh gốc KHÔNG bị thay đổi!&#10;Chỉ ảnh thumbnail được tạo lại.">i</span>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body p-0" style="background:#1a1a2e;">
+                <div style="max-height:60vh;overflow:hidden;">
+                    <img id="cropperImage" src="" style="max-width:100%;display:block;" />
+                </div>
+            </div>
+            <div class="modal-footer flex-wrap gap-2">
+                <div class="d-flex gap-1">
+                    <button class="btn btn-sm btn-outline-secondary" onclick="setCropRatio(NaN)" title="Tự do">Tự do</button>
+                    <button class="btn btn-sm btn-outline-secondary" onclick="setCropRatio(1)" title="1:1">1:1</button>
+                    <button class="btn btn-sm btn-outline-secondary" onclick="setCropRatio(16/9)" title="16:9">16:9</button>
+                    <button class="btn btn-sm btn-outline-secondary" onclick="setCropRatio(4/3)" title="4:3">4:3</button>
+                    <button class="btn btn-sm btn-outline-secondary" onclick="setCropRatio(3/2)" title="3:2">3:2</button>
+                </div>
+                <div class="d-flex gap-1">
+                    <button class="btn btn-sm btn-outline-secondary" onclick="cropperRotate(-90)" title="Xoay trái"><i class="ri-anticlockwise-2-line"></i></button>
+                    <button class="btn btn-sm btn-outline-secondary" onclick="cropperRotate(90)" title="Xoay phải"><i class="ri-clockwise-2-line"></i></button>
+                </div>
+                <div class="ms-auto d-flex gap-2">
+                    <button class="btn btn-sm btn-light" data-bs-dismiss="modal">Hủy</button>
+                    <button class="btn btn-sm btn-success" onclick="saveCroppedImage()"><i class="ri-save-line me-1"></i>Lưu & Tối ưu</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="/assets/libs/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script>
+    // ════ STATE ════
+    let selectedUrls = [];
+    let currentView = 'grid';
+    let currentFilter = 'all';
+    let currentSort = 'name-asc';
+    let ctxTarget = null;
+    let ctxSidebarPath = '';
+    let ctxSidebarType = '';
+
+    const FIELD_ID = '@fieldId';
+    const FUNC_NUM = '@funcNum';
+    const BASE_URL = '/FileManager?fieldId=' + FIELD_ID + '&CKEditorFuncNum=' + FUNC_NUM;
+
+    // ════ NAVIGATE ════
+    function navigate(url) { location.href = url; }
+
+    // ════ VIEW ════
+    function setView(v) {
+        currentView = v;
+        const c = document.getElementById('file-container');
+        c.className = 'view-' + v;
+        document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById('vbtn-' + v)?.classList.add('active');
+    }
+
+    // ════ SORT ════
+    function toggleSortMenu() {
+        document.getElementById('sort-menu').classList.toggle('show');
+    }
+    function setSort(key, el) {
+        currentSort = key;
+        document.querySelectorAll('.sort-menu-item').forEach(i => i.classList.remove('active'));
+        el.classList.add('active');
+        // Use data-label to avoid icon characters appearing in the label
+        document.getElementById('sort-text').textContent = el.dataset.label || el.querySelector('span')?.textContent || key;
+        document.getElementById('sort-menu').classList.remove('show');
+        sortItems();
+    }
+    function sortItems() {
+        const c = document.getElementById('file-container');
+        const items = [...c.querySelectorAll('.fm-item')];
+        items.sort((a, b) => {
+            const aFolder = a.classList.contains('folder-card');
+            const bFolder = b.classList.contains('folder-card');
+            if (aFolder && !bFolder) return -1;
+            if (!aFolder && bFolder) return 1;
+            const aName = (a.dataset.name || '');
+            const bName = (b.dataset.name || '');
+            const aSize = parseInt(a.dataset.size || '0');
+            const bSize = parseInt(b.dataset.size || '0');
+            const aDate = new Date(a.dataset.datemod || 0);
+            const bDate = new Date(b.dataset.datemod || 0);
+            switch (currentSort) {
+                case 'name-asc': return aName.localeCompare(bName);
+                case 'name-desc': return bName.localeCompare(aName);
+                case 'date-desc': return bDate - aDate;
+                case 'date-asc': return aDate - bDate;
+                case 'size-desc': return bSize - aSize;
+                case 'size-asc': return aSize - bSize;
+                case 'type': return (a.dataset.type || '').localeCompare(b.dataset.type || '');
+                default: return 0;
+            }
+        });
+        items.forEach(el => c.appendChild(el));
+    }
+
+    // ════ FILTER ════
+    function setFilter(type, el) {
+        currentFilter = type;
+        document.querySelectorAll('.filter-item').forEach(i => i.classList.remove('active'));
+        el.classList.add('active');
+        applyFilters();
+    }
+    function applyFilters() {
+        const q = document.getElementById('searchInput').value.toLowerCase().trim();
+        let vis = 0;
+        document.querySelectorAll('.fm-item').forEach(el => {
+            const name = el.dataset.name || '';
+            const type = el.dataset.type || '';
+            const matchQ = !q || name.includes(q);
+            const matchType = currentFilter === 'all' || type === currentFilter || type === 'folder';
+            el.style.display = matchQ && matchType ? '' : 'none';
+            if (matchQ && matchType && type !== 'folder') vis++;
+        });
+        document.getElementById('fm-count-label').textContent = vis + ' tệp hiển thị';
+    }
+
+    // ════ SELECTION ════
+    function toggleSelect(el) {
+        if (el.classList.contains('folder-card')) return;
+        const cb = el.querySelector('.item-checkbox');
+        if (!cb) return;
+        cb.checked = !cb.checked;
+        syncSelection(cb);
+    }
+    function syncSelection(cb) {
+        const url = cb.value;
+        const item = cb.closest('.file-card');
+        if (cb.checked) { if (!selectedUrls.includes(url)) selectedUrls.push(url); item?.classList.add('selected'); }
+        else { selectedUrls = selectedUrls.filter(u => u !== url); item?.classList.remove('selected'); }
+        updateBar();
+    }
+    function updateBar() {
+        const bar = document.getElementById('multi-select-bar');
+        document.getElementById('selected-count').innerText = selectedUrls.length;
+        bar.style.display = selectedUrls.length > 0 ? 'block' : 'none';
+    }
+    function clearSelection() {
+        document.querySelectorAll('.item-checkbox').forEach(cb => { cb.checked = false; cb.closest('.file-card')?.classList.remove('selected'); });
+        selectedUrls = []; updateBar();
+    }
+    function useSelected() {
+        if (!selectedUrls.length) return;
+        if (window.opener) {
+            if (FUNC_NUM && window.opener.CKEDITOR) window.opener.CKEDITOR.tools.callFunction(FUNC_NUM, selectedUrls[0]);
+            else if (window.opener.setFileUrl) window.opener.setFileUrl(selectedUrls, FIELD_ID);
+            window.close();
+        } else {
+            // Support iframe / postMessage
+            window.parent.postMessage({ type: 'fileSelected', url: selectedUrls[0], fieldId: FIELD_ID }, '*');
+        }
+    }
+    function quickUse(url) {
+        if (window.opener) {
+            if (FUNC_NUM && window.opener.CKEDITOR) window.opener.CKEDITOR.tools.callFunction(FUNC_NUM, url);
+            else if (window.opener.setFileUrl) window.opener.setFileUrl([url], FIELD_ID);
+            window.close();
+        } else {
+            // Support iframe / postMessage
+            window.parent.postMessage({ type: 'fileSelected', url: url, fieldId: FIELD_ID }, '*');
+        }
+    }
+
+    // ════ CONTEXT MENU – File ════
+    function showFileCtx(e, el, type, path, name) {
+        e.preventDefault(); e.stopPropagation();
+        ctxTarget = { el, type, path, name };
+        const m = document.getElementById('ctx-menu');
+        const isImage = type === 'file' && path.match(/\.(jpg|jpeg|png|webp|gif|bmp)$/i);
+        document.getElementById('ctx-use').style.display = type === 'file' ? 'flex' : 'none';
+        document.getElementById('ctx-preview').style.display = isImage ? 'flex' : 'none';
+        document.getElementById('ctx-open-tab').style.display = type === 'file' ? 'flex' : 'none';
+        document.getElementById('ctx-copy').style.display = type === 'file' ? 'flex' : 'none';
+        // Image-specific items
+        document.getElementById('ctx-edit-img').style.display = isImage ? 'flex' : 'none';
+        document.getElementById('ctx-regen').style.display = isImage ? 'flex' : 'none';
+        document.getElementById('ctx-info').style.display = isImage ? 'flex' : 'none';
+        m.style.display = 'block';
+        positionMenu(m, e);
+    }
+    function positionMenu(m, e) {
+        m.style.left = e.clientX + 'px'; m.style.top = e.clientY + 'px';
+        setTimeout(() => {
+            const r = m.getBoundingClientRect();
+            if (r.right > window.innerWidth) m.style.left = (e.clientX - r.width) + 'px';
+            if (r.bottom > window.innerHeight) m.style.top = (e.clientY - r.height) + 'px';
+        }, 0);
+    }
+    function ctxUse() {
+        if (ctxTarget) quickUse(ctxTarget.path);
+    }
+    function ctxCopy() {
+        if (ctxTarget) { navigator.clipboard.writeText(window.location.origin + ctxTarget.path).then(() => alert('Đã sao chép đường dẫn!')); }
+    }
+    function ctxPreview() {
+        if (!ctxTarget) return;
+        document.getElementById('preview-img').src = ctxTarget.path;
+        document.getElementById('preview-name').textContent = ctxTarget.name;
+        new bootstrap.Modal(document.getElementById('previewModal')).show();
+    }
+    function ctxOpenTab() { if (ctxTarget) window.open(ctxTarget.path, '_blank'); }
+    function ctxDelete() {
+        if (!ctxTarget) return;
+        document.getElementById('deleteInputs').innerHTML = '<input type="hidden" name="itemPaths" value="' + ctxTarget.path + '" />';
+        document.getElementById('del-name').textContent = ctxTarget.name;
+        hideCtxMenus();
+        new bootstrap.Modal(document.getElementById('deleteModal')).show();
+    }
+    function ctxUseFromPreview() {
+        const src = document.getElementById('preview-img').src;
+        const rel = src.replace(window.location.origin, '');
+        quickUse(rel);
+    }
+
+    // ════ CONTEXT MENU – Sidebar ════
+    function showSidebarCtx(e, path, type) {
+        e.preventDefault(); e.stopPropagation();
+        ctxSidebarPath = path; ctxSidebarType = type;
+        const m = document.getElementById('sidebar-ctx');
+        const delBtn = document.getElementById('sidebar-ctx-delete');
+        delBtn.style.display = type === 'root' ? 'none' : 'flex';
+        m.style.display = 'block';
+        positionMenu(m, e);
+    }
+    function sidebarNavigate() { navigate(BASE_URL + '&path=' + ctxSidebarPath); hideCtxMenus(); }
+    function sidebarCreateSub() {
+        document.getElementById('cf-path').value = ctxSidebarPath;
+        document.getElementById('cf-label').innerHTML = 'Thư mục con trong: <b>' + (ctxSidebarPath || '/Uploads') + '</b>';
+        document.getElementById('cf-name').value = '';
+        hideCtxMenus();
+        new bootstrap.Modal(document.getElementById('createFolderModal')).show();
+    }
+    function sidebarDelete() {
+        if (!ctxSidebarPath) return;
+        const name = ctxSidebarPath.split('/').pop();
+        document.getElementById('deleteInputs').innerHTML = '<input type="hidden" name="itemPaths" value="' + ctxSidebarPath + '" />';
+        document.getElementById('del-name').textContent = name;
+        hideCtxMenus();
+        new bootstrap.Modal(document.getElementById('deleteModal')).show();
+    }
+
+    function bulkDelete() {
+        if (!selectedUrls.length) return;
+        let html = '';
+        selectedUrls.forEach(url => html += '<input type="hidden" name="itemPaths" value="' + url + '" />');
+        document.getElementById('deleteInputs').innerHTML = html;
+        document.getElementById('del-name').textContent = selectedUrls.length + ' mục đã chọn';
+        new bootstrap.Modal(document.getElementById('deleteModal')).show();
+    }
+
+    // ════ HELPERS ════
+    function hideCtxMenus() {
+        document.getElementById('ctx-menu').style.display = 'none';
+        document.getElementById('sidebar-ctx').style.display = 'none';
+        document.getElementById('sort-menu').classList.remove('show');
+    }
+    document.addEventListener('click', hideCtxMenus);
+
+    // ════ FULLSCREEN ════
+    function toggleFullscreen() {
+        document.body.classList.toggle('fullscreen-mode');
+        const icon = document.getElementById('fullscreen-icon');
+        icon.className = document.body.classList.contains('fullscreen-mode') ? 'ri-fullscreen-exit-line' : 'ri-fullscreen-line';
+    }
+
+    // ════ IMAGE INFO ════
+    function ctxImageInfo() {
+        if (!ctxTarget) return;
+        hideCtxMenus();
+        const el = ctxTarget.el;
+        document.getElementById('info-name').textContent = ctxTarget.name;
+        const w = el?.dataset.imgw || '?', h = el?.dataset.imgh || '?';
+        document.getElementById('info-dimensions').textContent = w + ' × ' + h + ' px';
+        const size = parseInt(el?.dataset.size || 0);
+        document.getElementById('info-size').textContent = size > 1024*1024 ? (size/1024/1024).toFixed(2)+' MB' : Math.round(size/1024)+' KB';
+        const typeLabels = { banner:'🟦 Banner', landscape:'🟧 Ngang', square:'🟩 Vuông', portrait:'🟪 Dọc' };
+        document.getElementById('info-type').textContent = typeLabels[el?.dataset.imgtype] || 'Không xác định';
+        const hasThumb = el?.dataset.hasthumb === 'true';
+        document.getElementById('info-thumb').innerHTML = hasThumb ? '✅ Có thumbnail WebP' : '⚠️ Chưa tối ưu';
+        const saved = hasThumb ? '—' : '0%';
+        document.getElementById('info-saved').textContent = hasThumb ? 'Đã tối ưu' : 'Chưa tối ưu - Bấm "Tạo lại Thumbnail"';
+        new bootstrap.Modal(document.getElementById('imageInfoModal')).show();
+    }
+
+    // ════ REGENERATE THUMBNAIL ════
+    function ctxRegenerateThumb() {
+        if (!ctxTarget) return;
+        hideCtxMenus();
+        fetch('/FileManager/RegenerateThumbnail', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: 'filePath=' + encodeURIComponent(ctxTarget.path)
+        })
+        .then(r => r.json())
+        .then(data => {
+            if (data.success) {
+                alert('✅ Đã tạo thumbnail thành công! (' + Math.round(data.thumbSize/1024) + ' KB)');
+                location.reload();
+            } else {
+                alert('❌ ' + (data.message || 'Lỗi'));
+            }
+        });
+    }
+
+    // ════ IMAGE EDITOR (Cropper.js) ════
+    let cropper = null;
+    function ctxEditImage() {
+        if (!ctxTarget) return;
+        hideCtxMenus();
+        document.getElementById('edit-img-name').textContent = ctxTarget.name;
+        const img = document.getElementById('cropperImage');
+        img.src = ctxTarget.path + '?t=' + Date.now(); // cache bust
+
+        // Destroy previous cropper
+        if (cropper) { cropper.destroy(); cropper = null; }
+
+        const modal = new bootstrap.Modal(document.getElementById('editImageModal'));
+        modal.show();
+
+        // Init cropper after modal is fully shown
+        document.getElementById('editImageModal').addEventListener('shown.bs.modal', function handler() {
+            if (cropper) cropper.destroy();
+            cropper = new Cropper(img, {
+                viewMode: 1,
+                autoCropArea: 0.8,
+                responsive: true,
+                background: true
+            });
+            this.removeEventListener('shown.bs.modal', handler);
+        });
+    }
+
+    function setCropRatio(ratio) {
+        if (cropper) cropper.setAspectRatio(ratio);
+    }
+
+    function cropperRotate(deg) {
+        if (cropper) cropper.rotate(deg);
+    }
+
+    function saveCroppedImage() {
+        if (!cropper || !ctxTarget) return;
+        const data = cropper.getData(true);
+        fetch('/FileManager/CropImage', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: `filePath=${encodeURIComponent(ctxTarget.path)}&x=${data.x}&y=${data.y}&width=${data.width}&height=${data.height}`
+        })
+        .then(r => r.json())
+        .then(res => {
+            if (res.success) {
+                alert('✅ Đã lưu & tối ưu! Thumbnail mới: ' + Math.round(res.thumbSize/1024) + ' KB\n\n⚠️ Ảnh gốc KHÔNG bị thay đổi.');
+                bootstrap.Modal.getInstance(document.getElementById('editImageModal'))?.hide();
+                location.reload();
+            } else {
+                alert('❌ ' + (res.message || 'Lỗi'));
+            }
+        });
+    }
+
+    // Cleanup cropper on modal close
+    document.getElementById('editImageModal')?.addEventListener('hidden.bs.modal', function() {
+        if (cropper) { cropper.destroy(); cropper = null; }
+    });
+
+    // ════ BULK OPTIMIZE ════
+    function bulkOptimizeAll() {
+        if (!confirm('🚀 Tạo thumbnail cho TẤT CẢ ảnh chưa tối ưu?\n\nQuá trình này có thể mất vài phút.\nẢnh gốc KHÔNG bị thay đổi.')) return;
+        fetch('/FileManager/BulkOptimize', { method: 'POST' })
+        .then(r => r.json())
+        .then(data => {
+            if (data.success) {
+                const savedMB = (data.savedBytes / 1024 / 1024).toFixed(1);
+                alert(`✅ Hoàn tất!\n\n📊 Tổng: ${data.total} ảnh\n✅ Đã tối ưu: ${data.optimized} ảnh\n💾 Tiết kiệm: ${savedMB} MB\n\n⚠️ Ảnh gốc KHÔNG bị thay đổi.`);
+                location.reload();
+            }
+        });
+    }
+
+    // ════ DRAG & DROP ════
+    const dragOverlay = document.getElementById('drag-overlay');
+    let dragCounter = 0;
+    document.addEventListener('dragenter', e => { e.preventDefault(); dragCounter++; dragOverlay.classList.add('active'); });
+    document.addEventListener('dragleave', e => { e.preventDefault(); dragCounter--; if (dragCounter <= 0) { dragCounter = 0; dragOverlay.classList.remove('active'); } });
+    document.addEventListener('dragover', e => e.preventDefault());
+    document.addEventListener('drop', e => {
+        e.preventDefault();
+        dragCounter = 0;
+        dragOverlay.classList.remove('active');
+        if (e.dataTransfer.files.length > 0) {
+            const form = new FormData();
+            form.append('currentPath', '@currentPath');
+            form.append('fieldId', '@fieldId');
+            form.append('CKEditorFuncNum', '@funcNum');
+            for (const file of e.dataTransfer.files) { form.append('files', file); }
+            fetch('/FileManager/Upload', { method: 'POST', body: form })
+            .then(() => location.reload());
+        }
+    });
+
+    // ════ KEYBOARD SHORTCUTS ════
+    document.addEventListener('keydown', e => {
+        if (e.key === 'Escape') { hideCtxMenus(); return; }
+        // F2 → Edit image
+        if (e.key === 'F2' && selectedUrls.length === 1) {
+            e.preventDefault();
+            const sel = document.querySelector('.file-card.selected');
+            if (sel && sel.dataset.url?.match(/\.(jpg|jpeg|png|webp|gif|bmp)$/i)) {
+                ctxTarget = { el: sel, type: 'file', path: sel.dataset.url, name: sel.querySelector('.fname')?.textContent || '' };
+                ctxEditImage();
+            }
+        }
+        // F11 → Fullscreen
+        if (e.key === 'F11') { e.preventDefault(); toggleFullscreen(); }
+        // Delete → Delete selected
+        if (e.key === 'Delete' && selectedUrls.length > 0) { e.preventDefault(); bulkDelete(); }
+        // Ctrl+A → Select all
+        if (e.key === 'a' && (e.ctrlKey || e.metaKey)) {
+            e.preventDefault();
+            document.querySelectorAll('.file-card .item-checkbox').forEach(cb => {
+                cb.checked = true; syncSelection(cb);
+            });
+        }
+    });
+
+</script>
+</body>
+</html>

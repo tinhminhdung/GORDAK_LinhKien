@@ -1,0 +1,249 @@
+﻿@using Antigravity.ECommerce.Models
+@model List<AdminPermission>
+@{
+    Layout = "_AdminLayout";
+    var role = (AdminRole)ViewBag.Role;
+    var modules = (List<string>)ViewBag.Modules;
+    ViewData["Title"] = "Phân quyền: " + role.RoleName;
+}
+
+<div class="page-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                    <h4 class="mb-sm-0">Thiết lập quyền: <span class="text-primary">@role.RoleName</span></h4>
+                    <div class="page-title-right d-flex gap-2">
+                        <button class="btn btn-info" data-bs-toggle="modal" data-bs-target="#helpModal">
+                            <i class="ri-question-line align-bottom me-1"></i> Cách dùng
+                        </button>
+                        <a href="/AdminRole" class="btn btn-outline-secondary"><i class="ri-arrow-left-line align-bottom me-1"></i> Quay lại</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card bg-soft-primary border-0">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <div class="flex-shrink-0">
+                                <i class="ri-lightbulb-flash-line fs-24 text-primary"></i>
+                            </div>
+                            <div class="flex-grow-1 ms-3">
+                                <h5 class="fs-15 mb-1">Hướng dẫn nhanh về hệ thống phân quyền</h5>
+                                <p class="text-muted mb-0">Hệ thống áp dụng <b>cơ chế chặn ngay từ tầng xử lý (Backend)</b>. Khi bạn tắt một quyền (ví dụ: Xem), người dùng thuộc vai trò đó sẽ không thể nhìn thấy module hoặc bị đẩy ra trang báo lỗi khi cố tình truy cập.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-header border-bottom-dashed d-flex align-items-center">
+                        <h5 class="card-title mb-0 flex-grow-1">Ma trận quyền hạn</h5>
+                        <div class="d-flex gap-3 fs-13">
+                            <span class="text-muted"><i class="ri-checkbox-circle-fill text-success"></i> Đã cấp</span>
+                            <span class="text-muted"><i class="ri-close-circle-fill text-danger"></i> Đang chặn</span>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <!-- Legend sinh động -->
+                        <div class="row mb-4">
+                            <div class="col-md-2 col-sm-4 text-center border-end">
+                                <div class="p-2">
+                                    <h6 class="mb-1 text-primary"><i class="ri-eye-line me-1"></i> Xem (View)</h6>
+                                    <small class="text-muted">Quyền truy cập & Xem danh sách</small>
+                                </div>
+                            </div>
+                            <div class="col-md-2 col-sm-4 text-center border-end">
+                                <div class="p-2">
+                                    <h6 class="mb-1 text-success"><i class="ri-add-circle-line me-1"></i> Thêm (Create)</h6>
+                                    <small class="text-muted">Quyền tạo mới dữ liệu</small>
+                                </div>
+                            </div>
+                            <div class="col-md-2 col-sm-4 text-center border-end">
+                                <div class="p-2">
+                                    <h6 class="mb-1 text-warning"><i class="ri-edit-2-line me-1"></i> Sửa (Edit)</h6>
+                                    <small class="text-muted">Quyền cập nhật thông tin</small>
+                                </div>
+                            </div>
+                            <div class="col-md-2 col-sm-4 text-center border-end">
+                                <div class="p-2">
+                                    <h6 class="mb-1 text-danger"><i class="ri-delete-bin-line me-1"></i> Xóa (Delete)</h6>
+                                    <small class="text-muted">Quyền gỡ bỏ dữ liệu</small>
+                                </div>
+                            </div>
+                            <div class="col-md-2 col-sm-4 text-center">
+                                <div class="p-2">
+                                    <h6 class="mb-1 text-info"><i class="ri-download-2-line me-1"></i> Xuất (Export)</h6>
+                                    <small class="text-muted">Quyền tải file Excel/PDF</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle table-nowrap mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th scope="col">Tên Module</th>
+                                        <th scope="col" class="text-center">Xem (View)</th>
+                                        <th scope="col" class="text-center">Thêm (Create)</th>
+                                        <th scope="col" class="text-center">Sửa (Edit)</th>
+                                        <th scope="col" class="text-center">Xóa (Delete)</th>
+                                        <th scope="col" class="text-center">Xuất (Export)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var mod in modules)
+                                    {
+                                        var p = Model.FirstOrDefault(x => x.ModuleName == mod) ?? new AdminPermission { ModuleName = mod };
+                                        <tr>
+                                            <td>
+                                                <div class="d-flex align-items-center">
+                                                    <i class="ri-folder-settings-line fs-17 text-primary me-2"></i>
+                                                    <span class="fw-medium">@mod</span>
+                                                </div>
+                                            </td>
+                                            <td class="text-center">@Html.Raw(RenderSwitch(role.RoleId, mod, "CanView", p.CanView))</td>
+                                            <td class="text-center">@Html.Raw(RenderSwitch(role.RoleId, mod, "CanCreate", p.CanCreate))</td>
+                                            <td class="text-center">@Html.Raw(RenderSwitch(role.RoleId, mod, "CanEdit", p.CanEdit))</td>
+                                            <td class="text-center">@Html.Raw(RenderSwitch(role.RoleId, mod, "CanDelete", p.CanDelete))</td>
+                                            <td class="text-center">@Html.Raw(RenderSwitch(role.RoleId, mod, "CanExport", p.CanExport))</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@functions {
+    public string RenderSwitch(int roleId, string module, string action, bool value)
+    {
+        // Danh sách các module và các hành động KHÔNG hỗ trợ
+        var unsupported = new Dictionary<string, List<string>> {
+            { "Dashboard", new List<string> { "CanCreate", "CanEdit", "CanDelete", "CanExport" } },
+            { "Settings", new List<string> { "CanCreate", "CanDelete", "CanExport" } },
+            { "SeoAudit", new List<string> { "CanCreate", "CanEdit", "CanDelete", "CanExport" } },
+            { "Contact", new List<string> { "CanCreate", "CanExport" } }, 
+            { "AdminRoles", new List<string> { "CanExport" } },
+            { "AdminUsers", new List<string> { "CanExport" } },
+            { "AdminLogs", new List<string> { "CanCreate", "CanEdit", "CanExport" } },
+            { "News", new List<string> { "CanExport" } },
+            { "Categories", new List<string> { "CanExport" } },
+            { "Video", new List<string> { "CanExport" } },
+            { "Gallery", new List<string> { "CanExport" } },
+            { "FAQ", new List<string> { "CanExport" } },
+            { "Documents", new List<string> { "CanExport" } },
+            { "Advertising", new List<string> { "CanExport" } },
+            { "Location", new List<string> { "CanExport" } },
+            { "Products", new List<string> { "CanExport" } }, // Sản phẩm hiện chưa có code xuất CSV/Excel
+            { "Menu", new List<string> { "CanExport" } },
+            { "FileManager", new List<string> { "CanCreate", "CanEdit", "CanDelete", "CanExport" } }
+        };
+
+        if (unsupported.ContainsKey(module) && unsupported[module].Contains(action))
+        {
+            return "<span class='text-muted'>-</span>";
+        }
+
+        string id = $"{module}_{action}";
+        string isChecked = value ? "checked" : "";
+        return $@"
+            <div class='form-check form-switch form-switch-md justify-content-center'>
+                <input class='form-check-input' type='checkbox' id='{id}' {isChecked} 
+                       onchange='updatePermission({roleId}, ""{module}"", ""{action}"", this.checked)'>
+            </div>";
+    }
+}
+
+<script>
+    function updatePermission(roleId, module, action, val) {
+        $.post('/AdminRole/UpdatePermission', {
+            roleId: roleId,
+            module: module,
+            action: action,
+            value: val
+        }, function(res) {
+            if (res.success) {
+                // Toast notification (giả sử có sẵn trong layout)
+                if(window.Swal) {
+                    const Toast = Swal.mixin({
+                        toast: true,
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 1500,
+                        timerProgressBar: true
+                    });
+                    Toast.fire({ icon: 'success', title: 'Đã cập nhật quyền ' + module });
+                }
+            } else {
+                alert('Có lỗi xảy ra!');
+            }
+        });
+    }
+</script>
+
+<!-- Help Modal -->
+<div class="modal fade" id="helpModal" tabindex="-1" aria-labelledby="helpModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content border-0">
+            <div class="modal-header bg-soft-info p-3">
+                <h5 class="modal-title" id="helpModalLabel"><i class="ri-lightbulb-line me-1"></i> Hướng dẫn Phân quyền Thông minh</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4">
+                <div class="row g-4">
+                    <div class="col-md-6">
+                        <div class="d-flex border rounded p-3 h-100 shadow-sm">
+                            <div class="flex-shrink-0">
+                                <span class="avatar-title bg-soft-success text-success rounded fs-3 p-2">
+                                    <i class="ri-shield-user-line"></i>
+                                </span>
+                            </div>
+                            <div class="flex-grow-1 ms-3">
+                                <h6 class="fs-15 mb-1">Cơ chế Role-Based (RBAC)</h6>
+                                <p class="text-muted mb-0">Bạn thiết lập quyền cho **Vai trò** (Role), sau đó gán vai trò này cho **Tài khoản** (User). Mọi người cùng vai trò sẽ có quyền giống hệt nhau.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="d-flex border rounded p-3 h-100 shadow-sm">
+                            <div class="flex-shrink-0">
+                                <span class="avatar-title bg-soft-warning text-warning rounded fs-3 p-2">
+                                    <i class="ri-lock-2-line"></i>
+                                </span>
+                            </div>
+                            <div class="flex-grow-1 ms-3">
+                                <h6 class="fs-15 mb-1">Bảo mật đa tầng</h6>
+                                <p class="text-muted mb-0">Khi tắt quyền **Xem**, hệ thống sẽ ẩn Menu và chặn luôn đường dẫn (URL). Nếu user cố tình truy cập sẽ nhận trang báo lỗi 403.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="bg-light p-3 rounded border-start border-4 border-info">
+                            <h6 class="mb-2 text-info"><i class="ri-double-quotes-l"></i> Ví dụ thực tế:</h6>
+                            <ul class="mb-0 fs-13">
+                                <li><b>Cộng tác viên:</b> Chỉ bật <span class="badge bg-success">Thêm</span> và <span class="badge bg-primary">Xem</span> ở module Sản phẩm. Họ có thể đăng bài nhưng không thể Xóa bài của mình hoặc của người khác.</li>
+                                <li><b>Kế toán:</b> Chỉ bật <span class="badge bg-info">Xuất (Export)</span> ở module Đơn hàng để lấy báo cáo, không được quyền <span class="badge bg-warning">Sửa</span> trạng thái đơn.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary w-100" data-bs-dismiss="modal">Tôi đã hiểu!</button>
+            </div>
+        </div>
+    </div>
+</div>
+

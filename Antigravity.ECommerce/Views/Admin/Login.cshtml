@@ -1,0 +1,78 @@
+﻿@{
+    Layout = null;
+    var error = ViewBag.Error as string;
+    var returnUrl = ViewBag.ReturnUrl as string;
+}
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Đăng nhập — Quản trị</title>
+    <link href="/assets/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/assets/css/icons.min.css" rel="stylesheet" />
+    <style>
+        body { margin:0; min-height:100vh; display:flex; align-items:center; justify-content:center; background:linear-gradient(135deg,#1a1a2e 0%,#16213e 50%,#0f3460 100%); font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; }
+        .login-card { background:#fff; border-radius:18px; padding:44px 40px 36px; width:100%; max-width:400px; box-shadow:0 20px 60px rgba(0,0,0,.4); }
+        .brand { text-align:center; margin-bottom:32px; }
+        .brand-logo { width:60px; height:60px; background:linear-gradient(135deg,#0ab39c,#06b6d4); border-radius:16px; display:inline-flex; align-items:center; justify-content:center; margin-bottom:14px; }
+        .brand-logo i { font-size:28px; color:#fff; }
+        .brand h4 { font-size:20px; font-weight:700; color:#1a1a2e; margin:0 0 4px; }
+        .brand p { font-size:13px; color:#888; margin:0; }
+        .form-label { font-size:12px; font-weight:600; color:#555; text-transform:uppercase; letter-spacing:.4px; margin-bottom:6px; }
+        .form-control { border-radius:10px; border:1.5px solid #e0e0e0; padding:10px 14px; font-size:14px; transition:.15s; }
+        .form-control:focus { border-color:#0ab39c; box-shadow:0 0 0 3px rgba(10,179,156,.12); }
+        .input-icon { position:relative; }
+        .input-icon i { position:absolute; left:12px; top:50%; transform:translateY(-50%); color:#aaa; font-size:16px; pointer-events:none; }
+        .input-icon .form-control { padding-left:38px; }
+        .btn-login { width:100%; padding:12px; border-radius:10px; background:linear-gradient(135deg,#0ab39c,#06b6d4); border:none; color:#fff; font-size:15px; font-weight:600; cursor:pointer; transition:.2s; margin-top:20px; }
+        .btn-login:hover { transform:translateY(-1px); box-shadow:0 6px 20px rgba(10,179,156,.4); }
+        .alert-error { background:#fff5f5; border:1px solid #fca5a5; color:#dc2626; border-radius:10px; padding:10px 14px; font-size:13px; margin-bottom:16px; display:flex; align-items:center; gap:8px; }
+        .footer-note { text-align:center; margin-top:20px; font-size:12px; color:#aaa; }
+    </style>
+</head>
+<body>
+    <div class="login-card">
+        <div class="brand">
+            <div class="brand-logo"><i class="ri-shield-check-line"></i></div>
+            <h4>Elite Admin</h4>
+            <p>Đăng nhập vào hệ thống quản trị</p>
+        </div>
+
+        @if (!string.IsNullOrEmpty(error))
+        {
+            <div class="alert-error">
+                <i class="ri-error-warning-line"></i> @error
+            </div>
+        }
+
+        <form method="post" action="/Admin/Login">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="returnUrl" value="@returnUrl" />
+
+            <div class="mb-3">
+                <label class="form-label">Tên đăng nhập</label>
+                <div class="input-icon">
+                    <i class="ri-user-3-line"></i>
+                    <input type="text" class="form-control" name="username" placeholder="Nhập username..." autofocus required />
+                </div>
+            </div>
+
+            <div class="mb-1">
+                <label class="form-label">Mật khẩu</label>
+                <div class="input-icon">
+                    <i class="ri-lock-line"></i>
+                    <input type="password" class="form-control" name="password" placeholder="Nhập mật khẩu..." required />
+                </div>
+            </div>
+
+            <button type="submit" class="btn-login">
+                <i class="ri-login-box-line me-2"></i>Đăng nhập
+            </button>
+        </form>
+
+        <div class="footer-note">© 2026 Elite E-Commerce</div>
+    </div>
+    <link href="/assets/css/icons.min.css" rel="stylesheet" />
+</body>
+</html>

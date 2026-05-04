@@ -1,0 +1,118 @@
+﻿@model Antigravity.ECommerce.Models.AdminUser
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "Thêm tài khoản quản trị";
+}
+
+<div class="row">
+    <div class="col-lg-8 offset-lg-2">
+        <div class="card shadow-lg border-0">
+            <div class="card-header bg-success-subtle py-3">
+                <h5 class="card-title mb-0 text-success"><i class="ri-user-add-line me-2"></i> Tạo tài khoản mới</h5>
+            </div>
+            <div class="card-body p-4">
+                <form action="/AdminUser/Create" method="post" enctype="multipart/form-data"><div asp-validation-summary="All" class="text-danger mb-3 fw-bold"></div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold">Tên đăng nhập <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" asp-for="Username" placeholder="Nhập tên đăng nhập (ví dụ: nhanvien_seo)" required>
+                            <span asp-validation-for="Username" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold">Mật khẩu <span class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <input type="password" class="form-control" asp-for="Password" id="password_input" placeholder="Tối thiểu 6 ký tự" required>
+                                <button class="btn btn-outline-secondary" type="button" onclick="togglePassword()"><i class="ri-eye-line"></i></button>
+                            </div>
+                            <span asp-validation-for="Password" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Họ và tên</label>
+                        <input type="text" class="form-control" asp-for="FullName" placeholder="Nguyễn Văn A">
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold">Email</label>
+                            <input type="email" class="form-control" asp-for="Email" placeholder="email@example.com">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold">Số điện thoại</label>
+                            <input type="text" class="form-control" asp-for="Phone" placeholder="09xx xxx xxx">
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold text-primary">Vai trò hệ thống <span class="text-danger">*</span></label>
+                            <select class="form-select border-primary" asp-for="RoleId" required>
+                                <option value="">--- Chọn vai trò ---</option>
+                                @if (ViewBag.Roles != null)
+                                {
+                                    foreach (var role in (List<Antigravity.ECommerce.Models.AdminRole>)ViewBag.Roles)
+                                    {
+                                        <option value="@role.RoleId">@role.RoleName</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold">Trạng thái</label>
+                            <select class="form-select" asp-for="Status">
+                                <option value="1">Kích hoạt (Hoạt động)</option>
+                                <option value="0">Tạm khóa (Ngừng truy cập)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label fw-bold">Ảnh đại diện</label>
+                        <div class="input-group mb-2">
+                            <input type="text" class="form-control" asp-for="Avatar" id="Avatar" placeholder="Chọn ảnh từ hệ thống..." readonly>
+                            <button class="btn btn-primary" type="button" onclick="openFileManager('Avatar')">Chọn ảnh</button>
+                        </div>
+                        <img id="imgPreview" src="/assets/images/users/multi-user.jpg" style="max-width: 120px; border-radius: 50%; border: 3px solid #eee; padding: 5px;" class="mt-2 d-none shadow-sm" />
+                    </div>
+
+                
+                <div class="d-flex justify-content-between mt-4 border-top pt-3">
+                    <a href="/AdminUser" class="btn btn-light"><i class="ri-arrow-go-back-line me-1"></i>Quay lại</a>
+                    <button type="submit" class="btn btn-success px-4"><i class="ri-save-line me-1"></i>Lưu thêm mới</button>
+                </div>
+            </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function togglePassword() {
+            var x = document.getElementById("password_input");
+            if (x.type === "password") {
+                x.type = "text";
+            } else {
+                x.type = "password";
+            }
+        }
+
+        function openFileManager(fieldId) {
+            window.open('/FileManager?fieldId=' + fieldId, 'FileManager', 'width=1100,height=750');
+        }
+
+        function setFileUrl(url, fieldId) {
+            const input = document.getElementById(fieldId);
+            const fileUrl = Array.isArray(url) ? url[0] : url;
+            if (input) {
+                input.value = fileUrl;
+                const preview = document.getElementById('imgPreview');
+                if (preview) {
+                    preview.src = fileUrl;
+                    preview.classList.remove('d-none');
+                }
+            }
+        }
+    </script>
+}

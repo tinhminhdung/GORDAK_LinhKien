@@ -1,0 +1,301 @@
+@using Antigravity.ECommerce.Framework
+@{
+	var _contactStats = FContact.GetStats() ?? new ContactStats();
+	int unreadContactCount = _contactStats.UnreadCount;
+
+	// Đếm đơn hàng mới
+	int newOrders = Antigravity.ECommerce.Framework.FOrder.GetStatusCounts().New;
+}
+<!-- ========== App Menu ========== -->
+<div class="app-menu navbar-menu">
+	<!-- LOGO -->
+	<div class="navbar-brand-box">
+		<a href="/Admin" class="logo logo-dark text-decoration-none">
+			<span class="logo-sm">
+				<h3 class="text-dark mt-4 fw-bold">EA</h3>
+			</span>
+			<span class="logo-lg">
+				<h3 class="text-dark mt-4 fw-bold" style="letter-spacing: 1px;">Elite Admin</h3>
+			</span>
+		</a>
+		<!-- Light Logo-->
+		<a href="/Admin" class="logo logo-light text-decoration-none">
+			<span class="logo-sm">
+				<h3 class="text-white mt-4 fw-bold">EA</h3>
+			</span>
+			<span class="logo-lg">
+				<h3 class="text-white mt-4 fw-bold" style="letter-spacing: 1px;">Elite Admin</h3>
+			</span>
+		</a>
+		<button type="button" class="btn btn-sm p-0 fs-20 header-item float-end btn-vertical-sm-hover" id="vertical-hover">
+			<i class="ri-record-circle-line"></i>
+		</button>
+	</div>
+
+	<div id="scrollbar">
+		<div class="container-fluid">
+
+			<div id="two-column-menu">
+			</div>
+			<ul class="navbar-nav" id="navbar-nav">
+				<li class="menu-title"><span data-key="t-menu">Menu</span></li>
+				@if (PermissionHelper.CanView(Context, "Dashboard"))
+				{
+					<li class="nav-item">
+						<a class="nav-link menu-link @(Context.Request.Path.Value == "/Admin" ? "active" : "")" href="/Admin">
+							<i class="ri-dashboard-2-line"></i> <span data-key="t-dashboards">Bảng điều khiển</span>
+						</a>
+					</li>
+				}
+
+
+				@if (PermissionHelper.CanView(Context, "Orders"))
+				{
+					<li class="nav-item">
+						<a class="nav-link menu-link @(Context.Request.Path.Value.StartsWith("/AdminOrder") ? "active" : "")" href="/AdminOrder">
+							<i class="ri-shopping-cart-2-line"></i> <span>QL. Đơn hàng</span>
+							@if (newOrders > 0)
+							{
+								<span class="badge badge-pill bg-danger ms-auto">@newOrders Mới</span>
+							}
+						</a>
+					</li>
+				}
+
+
+				@if (PermissionHelper.CanView(Context, "Menu"))
+				{
+					<li class="nav-item">
+						<a class="nav-link menu-link @(Context.Request.Path.Value.StartsWith("/AdminMenu") ? "active" : "")" href="/AdminMenu">
+							<i class="ri-menu-2-line"></i> <span>Quản trị Menu</span>
+						</a>
+					</li>
+				}
+
+
+				@if (PermissionHelper.CanView(Context, "Products") || PermissionHelper.CanView(Context, "Categories"))
+				{
+					<li class="nav-item">
+						<a class="nav-link menu-link @(Context.Request.Path.Value.Contains("Product") || (Context.Request.Path.Value.Contains("Category") && Context.Request.Query["type"] == "1") ? "active" : "")" href="#sidebarProduct" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarProduct">
+							<i class="ri-apps-2-line"></i> <span>Quản lý Sản phẩm</span>
+						</a>
+						<div class="collapse menu-dropdown @(Context.Request.Path.Value.Contains("Product") || (Context.Request.Path.Value.Contains("Category") && Context.Request.Query["type"] == "1") ? "show" : "")" id="sidebarProduct">
+							<ul class="nav nav-sm flex-column">
+								@if (PermissionHelper.CanView(Context, "Categories"))
+								{
+									<li class="nav-item">
+										<a href="/AdminCategory?type=1" class="nav-link @(Context.Request.Query["type"] == "1" ? "active" : "")">Danh mục Sản phẩm</a>
+									</li>
+								}
+								@if (PermissionHelper.CanView(Context, "Products"))
+								{
+									<li class="nav-item">
+										<a href="/AdminProduct" class="nav-link @(Context.Request.Path.Value.StartsWith("/AdminProduct") ? "active" : "")">Danh sách Sản phẩm</a>
+									</li>
+								}
+							</ul>
+						</div>
+					</li>
+				}
+
+
+				@if (PermissionHelper.CanView(Context, "News") || PermissionHelper.CanView(Context, "Categories"))
+				{
+					<li class="nav-item">
+						<a class="nav-link menu-link @(Context.Request.Path.Value.Contains("News") ? "active" : "")" href="#sidebarNews" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarNews">
+							<i class="ri-file-list-3-line"></i> <span>Module Tin tức</span>
+						</a>
+						<div class="collapse menu-dropdown @(Context.Request.Path.Value.Contains("News") ? "show" : "")" id="sidebarNews">
+							<ul class="nav nav-sm flex-column">
+								@if (PermissionHelper.CanView(Context, "Categories"))
+								{
+									<li class="nav-item">
+										<a href="/AdminNewsCategory" class="nav-link @(Context.Request.Path.Value == "/AdminNewsCategory" ? "active" : "")">Danh mục Tin tức</a>
+									</li>
+								}
+								@if (PermissionHelper.CanView(Context, "News"))
+								{
+									<li class="nav-item">
+										<a href="/AdminNews" class="nav-link @(Context.Request.Path.Value.StartsWith("/AdminNews") ? "active" : "")">Danh sách Bài viết</a>
+									</li>
+								}
+							</ul>
+						</div>
+					</li>
+				}
+
+
+				@if (PermissionHelper.CanView(Context, "Video") || PermissionHelper.CanView(Context, "Gallery") || PermissionHelper.CanView(Context, "FAQ") || PermissionHelper.CanView(Context, "Documents"))
+				{
+					<li class="nav-item">
+						<a class="nav-link menu-link @(Context.Request.Path.Value.Contains("Video") || Context.Request.Path.Value.Contains("Gallery") || Context.Request.Path.Value.Contains("FAQ") || Context.Request.Path.Value.Contains("Document") ? "active" : "")" href="#sidebarMultimedia" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarMultimedia">
+							<i class="ri-gallery-line"></i> <span>Multimedia & CMS</span>
+						</a>
+						<div class="collapse menu-dropdown @(Context.Request.Path.Value.Contains("Video") || Context.Request.Path.Value.Contains("Gallery") || Context.Request.Path.Value.Contains("FAQ") || Context.Request.Path.Value.Contains("Document") ? "show" : "")" id="sidebarMultimedia">
+							<ul class="nav nav-sm flex-column">
+								@if (PermissionHelper.CanView(Context, "Video"))
+								{
+									<li class="nav-item">
+										<a href="#subVideo" class="nav-link @(Context.Request.Path.Value.Contains("Video") ? "active" : "")" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="subVideo">Video</a>
+										<div class="collapse menu-dropdown @(Context.Request.Path.Value.Contains("Video") ? "show" : "")" id="subVideo">
+											<ul class="nav nav-sm flex-column">
+												<li class="nav-item"><a href="/AdminVideoCategory" class="nav-link @(Context.Request.Path.Value == "/AdminVideoCategory" ? "active" : "")">Danh mục Video</a></li>
+												<li class="nav-item"><a href="/AdminVideo" class="nav-link @(Context.Request.Path.Value == "/AdminVideo" ? "active" : "")">Danh sách Video</a></li>
+											</ul>
+										</div>
+									</li>
+								}
+								@if (PermissionHelper.CanView(Context, "Gallery"))
+								{
+									<li class="nav-item">
+										<a href="#subGallery" class="nav-link @(Context.Request.Path.Value.Contains("Gallery") ? "active" : "")" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="subGallery">Thư viện Ảnh</a>
+										<div class="collapse menu-dropdown @(Context.Request.Path.Value.Contains("Gallery") ? "show" : "")" id="subGallery">
+											<ul class="nav nav-sm flex-column">
+												<li class="nav-item"><a href="/AdminGalleryCategory" class="nav-link @(Context.Request.Path.Value == "/AdminGalleryCategory" ? "active" : "")">Danh mục Ảnh</a></li>
+												<li class="nav-item"><a href="/AdminGallery" class="nav-link @(Context.Request.Path.Value == "/AdminGallery" ? "active" : "")">Danh sách Album</a></li>
+											</ul>
+										</div>
+									</li>
+								}
+								@if (PermissionHelper.CanView(Context, "FAQ"))
+								{
+									<li class="nav-item">
+										<a href="#subFAQ" class="nav-link @(Context.Request.Path.Value.Contains("FAQ") ? "active" : "")" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="subFAQ">Hỏi đáp (FAQ)</a>
+										<div class="collapse menu-dropdown @(Context.Request.Path.Value.Contains("FAQ") ? "show" : "")" id="subFAQ">
+											<ul class="nav nav-sm flex-column">
+												<li class="nav-item"><a href="/AdminFAQCategory" class="nav-link @(Context.Request.Path.Value == "/AdminFAQCategory" ? "active" : "")">Danh mục FAQ</a></li>
+												<li class="nav-item"><a href="/AdminFAQ" class="nav-link @(Context.Request.Path.Value == "/AdminFAQ" ? "active" : "")">Danh sách Hỏi đáp</a></li>
+											</ul>
+										</div>
+									</li>
+								}
+								@if (PermissionHelper.CanView(Context, "Documents"))
+								{
+									<li class="nav-item">
+										<a href="#subDocument" class="nav-link @(Context.Request.Path.Value.Contains("Document") ? "active" : "")" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="subDocument">Tài liệu / PDF</a>
+										<div class="collapse menu-dropdown @(Context.Request.Path.Value.Contains("Document") ? "show" : "")" id="subDocument">
+											<ul class="nav nav-sm flex-column">
+												<li class="nav-item"><a href="/AdminDocumentCategory" class="nav-link @(Context.Request.Path.Value == "/AdminDocumentCategory" ? "active" : "")">Danh mục Tài liệu</a></li>
+												<li class="nav-item"><a href="/AdminDocument" class="nav-link @(Context.Request.Path.Value == "/AdminDocument" ? "active" : "")">Danh sách Tài liệu</a></li>
+											</ul>
+										</div>
+									</li>
+								}
+							</ul>
+						</div>
+					</li>
+				}
+
+				
+				@if (PermissionHelper.CanView(Context, "Review"))
+				{
+					<li class="nav-item">
+						<a class="nav-link menu-link @(Context.Request.Path.Value.StartsWith("/AdminReview") ? "active" : "")" href="/AdminReview">
+							<i class="ri-star-smile-line"></i> <span>Đánh giá sản phẩm</span>
+						</a>
+					</li>
+				}
+
+				@if (PermissionHelper.CanView(Context, "Customers"))
+				{
+					<li class="nav-item">
+						<a class="nav-link menu-link @(Context.Request.Path.Value.StartsWith("/AdminCustomer") ? "active" : "")" href="/AdminCustomer">
+							<i class="ri-user-heart-line"></i> <span>Quản lý Khách hàng</span>
+						</a>
+					</li>
+				}
+
+
+				@if (PermissionHelper.CanView(Context, "Contact"))
+				{
+					<li class="nav-item">
+						<a class="nav-link menu-link @(Context.Request.Path.Value.StartsWith("/AdminContact") ? "active" : "")" href="/AdminContact">
+							<i class="ri-mail-send-line"></i> <span>Quản lý Liên hệ</span>
+							@if (unreadContactCount > 0)
+							{
+								<span class="badge badge-pill bg-danger ms-auto">@unreadContactCount Mới</span>
+							}
+						</a>
+					</li>
+				}
+	
+				
+				@if (PermissionHelper.CanView(Context, "Advertising"))
+				{
+					<li class="nav-item">
+						<a class="nav-link menu-link @(Context.Request.Path.Value.StartsWith("/AdminAdvertising") ? "active" : "")" href="/AdminAdvertising">
+							<i class="ri-advertisement-line"></i> <span>Quản lý Banner/QC</span>
+						</a>
+					</li>
+				}
+
+
+				@if (PermissionHelper.CanView(Context, "Location"))
+				{
+					<li class="nav-item">
+						<a class="nav-link menu-link @(Context.Request.Path.Value.StartsWith("/AdminLocation") ? "active" : "")" href="/AdminLocation">
+							<i class="ri-map-pin-2-line"></i> <span>Tỉnh thành 2026</span>
+						</a>
+					</li>
+				}
+	
+				
+				@if (PermissionHelper.CanView(Context, "SeoAudit"))
+				{
+					<li class="nav-item">
+						<a class="nav-link menu-link @(Context.Request.Path.Value.StartsWith("/AdminSeo") ? "active" : "")" href="/AdminSeo">
+							<i class="ri-search-eye-line"></i> <span>SEO Audit</span>
+						</a>
+					</li>
+				}
+	
+				
+				@if (PermissionHelper.CanView(Context, "Settings"))
+				{
+					<li class="nav-item">
+						<a class="nav-link menu-link @(Context.Request.Path.Value.StartsWith("/AdminSetting") ? "active" : "")" href="/AdminSetting">
+							<i class="ri-settings-4-line"></i> <span>Cấu hình hệ thống</span>
+						</a>
+					</li>
+				}
+	
+				
+				@if (PermissionHelper.CanView(Context, "AdminRoles") || PermissionHelper.CanView(Context, "AdminUsers") || PermissionHelper.CanView(Context, "AdminLogs"))
+				{
+					<li class="nav-item">
+						<a class="nav-link menu-link @(Context.Request.Path.Value.Contains("/AdminUser") || Context.Request.Path.Value.Contains("/AdminRole") || Context.Request.Path.Value.Contains("/AdminLog") ? "active" : "")" href="#sidebarAuth" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarAuth">
+							<i class="ri-shield-keyhole-line"></i> <span>Hệ thống & Bảo mật</span>
+						</a>
+						<div class="collapse menu-dropdown @(Context.Request.Path.Value.Contains("/AdminUser") || Context.Request.Path.Value.Contains("/AdminRole") || Context.Request.Path.Value.Contains("/AdminLog") ? "show" : "")" id="sidebarAuth">
+							<ul class="nav nav-sm flex-column">
+								@if (PermissionHelper.CanView(Context, "AdminUsers"))
+								{
+									<li class="nav-item">
+										<a href="/AdminUser" class="nav-link @(Context.Request.Path.Value.StartsWith("/AdminUser") ? "active" : "")">Quản lý Tài khoản</a>
+									</li>
+								}
+								@if (PermissionHelper.CanView(Context, "AdminRoles"))
+								{
+									<li class="nav-item">
+										<a href="/AdminRole" class="nav-link @(Context.Request.Path.Value.StartsWith("/AdminRole") ? "active" : "")">Phân quyền & Vai trò</a>
+									</li>
+								}
+								@if (PermissionHelper.CanView(Context, "AdminLogs"))
+								{
+									<li class="nav-item">
+										<a href="/AdminLog" class="nav-link @(Context.Request.Path.Value.StartsWith("/AdminLog") ? "active" : "")">Nhật ký Hoạt động (Log)</a>
+									</li>
+								}
+							</ul>
+						</div>
+					</li>
+				}
+
+			</ul>
+		</div>
+		<!-- Sidebar -->
+	</div>
+
+	<div class="sidebar-background"></div>
+</div>
+<!-- Left Sidebar End -->

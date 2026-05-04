@@ -1,0 +1,75 @@
+@model List<Antigravity.ECommerce.Models.Order>
+@{
+    Layout = "_MemberLayout";
+    ViewData["Title"] = "Lịch sử đơn hàng";
+}
+
+<h4 class="mb-4 pb-2 border-bottom fw-bold text-dark">Đơn hàng của tôi</h4>
+
+@if (Model != null && Model.Any())
+{
+    <div class="table-responsive">
+        <table class="table table-hover align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th>Mã đơn</th>
+                    <th>Ngày đặt</th>
+                    <th>Tổng tiền</th>
+                    <th>Trạng thái</th>
+                    <th>Thanh toán</th>
+                    <th>Thao tác</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var order in Model)
+                {
+                    <tr>
+                        <td><strong>@order.OrderCode</strong></td>
+                        <td>@order.CreatedAt.ToString("dd/MM/yyyy HH:mm")</td>
+                        <td><strong class="text-danger">@order.TotalAmount.ToString("N0")đ</strong></td>
+                        <td>
+                            @switch (order.OrderStatus)
+                            {
+                                case 0: <span class="badge bg-warning">Chờ xác nhận</span>; break;
+                                case 1: <span class="badge bg-info">Đang xử lý</span>; break;
+                                case 2: <span class="badge bg-primary">Đang giao</span>; break;
+                                case 3: <span class="badge bg-success">Hoàn thành</span>; break;
+                                case 4: <span class="badge bg-danger">Đã hủy</span>; break;
+                                default: <span class="badge bg-secondary">Không xác định</span>; break;
+                            }
+                        </td>
+                        <td>
+                            @if (order.PaymentStatus == 1)
+                            {
+                                <span class="badge bg-success"><i class="ri-check-line"></i> Đã thanh toán</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-secondary">Chưa thanh toán</span>
+                            }
+                        </td>
+                        <td>
+                            <a href="@Url.Action("OrderDetail", "Member", new { id = order.OrderId })" class="btn btn-sm btn-outline-primary">Chi tiết</a>
+                            @if(order.OrderStatus == 3)
+                            {
+                                <form asp-controller="Member" asp-action="Reorder" method="post" class="d-inline">
+                                    <input type="hidden" name="orderId" value="@order.OrderId" />
+                                    <button type="submit" class="btn btn-sm btn-outline-success">Mua lại</button>
+                                </form>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+else
+{
+    <div class="text-center py-5">
+        <img src="/assets/img/empty-cart.png" alt="Không có đơn hàng" style="width: 150px; opacity: 0.5" class="mb-3">
+        <h5 class="text-muted">Bạn chưa có đơn hàng nào</h5>
+        <p class="text-muted mb-4">Hãy khám phá các sản phẩm hấp dẫn của chúng tôi</p>
+        <a href="/" class="btn btn-primary px-4 py-2">Mua sắm ngay</a>
+    </div>
+}

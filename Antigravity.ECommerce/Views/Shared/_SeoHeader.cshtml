@@ -1,0 +1,58 @@
+@using Antigravity.ECommerce.Services
+@{
+    var settings = SSetting.GetViewModel();
+    var title = ViewData["Title"] ?? settings.SiteTitle;
+    var description = ViewData["Description"] ?? settings.MetaDescription ?? settings.SiteDescription;
+    var keywords = ViewData["Keywords"] ?? settings.SeoKeywords;
+    var image = ViewData["Image"] ?? (Context.Request.Scheme + "://" + Context.Request.Host + settings.Logo);
+    var canonical = $"{Context.Request.Scheme}://{Context.Request.Host}{Context.Request.Path}";
+}
+
+<!-- Favicon -->
+@if (!string.IsNullOrEmpty(settings.Favicon))
+{
+    <link rel="icon" href="@settings.Favicon">
+    <link rel="shortcut icon" href="@settings.Favicon">
+    <link rel="apple-touch-icon" href="@settings.Favicon">
+}
+
+<!-- Primary Meta Tags -->
+<title>@title</title>
+<meta name="title" content="@title">
+<meta name="description" content="@description">
+<meta name="keywords" content="@keywords">
+
+<!-- Canonical Tag -->
+<link rel="canonical" href="@canonical" />
+
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="@canonical">
+<meta property="og:title" content="@title">
+<meta property="og:description" content="@description">
+<meta property="og:image" content="@image">
+
+<!-- Twitter -->
+<meta property="twitter:card" content="summary_large_image">
+<meta property="twitter:url" content="@canonical">
+<meta property="twitter:title" content="@title">
+<meta property="twitter:description" content="@description">
+<meta property="twitter:image" content="@image">
+
+<!-- Google Analytics (GA4) -->
+@if (!string.IsNullOrEmpty(settings.GoogleAnalyticsId))
+{
+    <script async src="https://www.googletagmanager.com/gtag/js?id=@settings.GoogleAnalyticsId"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', '@settings.GoogleAnalyticsId');
+    </script>
+}
+
+<!-- Custom Header Scripts from Admin Panel -->
+@if (!string.IsNullOrEmpty(settings.HeaderScripts))
+{
+    @Html.Raw(settings.HeaderScripts)
+}

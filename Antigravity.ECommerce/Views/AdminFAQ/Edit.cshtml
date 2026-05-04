@@ -1,0 +1,156 @@
+﻿@model Antigravity.ECommerce.Models.FAQ
+@{
+    Layout = "_AdminLayout";
+    ViewBag.Title = "Chỉnh sửa Câu hỏi FAQ";
+}
+
+<div class="row">
+    <div class="col-12">
+        <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+            <h4 class="mb-sm-0">Chỉnh sửa Câu hỏi: #@Model.FAQId</h4>
+            <div class="page-title-right">
+                <a href="/AdminFAQ" class="btn btn-soft-dark btn-sm"><i class="ri-arrow-left-line align-bottom me-1"></i> Quay lại</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<form method="post" action="/AdminFAQ/Edit">
+    <input type="hidden" name="FAQId" value="@Model.FAQId" />
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label class="form-label">Câu hỏi <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" name="Question" id="txtQuestion" value="@Model.Question" required placeholder="Nhập câu hỏi..." />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Đường dẫn thân thiện (Slug)</label>
+                        <input type="text" class="form-control" name="Slug" id="txtSlug" value="@Model.Slug" placeholder="tieu-de-cau-hoi" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Danh mục Hỏi đáp <span class="text-danger">*</span></label>
+                        <select class="form-control selectpicker" name="CategoryId" data-live-search="true" required>
+                            <option value="">-- Chọn danh mục --</option>
+                            @if (ViewBag.Categories != null)
+                            {
+                                foreach (var c in ViewBag.Categories as List<Antigravity.ECommerce.Models.Category>)
+                                {
+                                    <option value="@c.CategoryId" selected="@(Model.CategoryId == c.CategoryId)">@c.Name</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Câu trả lời chi tiết <span class="text-danger">*</span></label>
+                        <textarea class="form-control" id="ckeditor-classic" name="Answer" required>@Model.Answer</textarea>
+                    </div>
+                    <div class="d-flex justify-content-between mt-4 border-top pt-3">
+                        <a href="/AdminFAQ" class="btn btn-light"><i class="ri-arrow-go-back-line me-1"></i>Quay lại</a>
+                        <button type="submit" class="btn btn-success px-4"><i class="ri-save-line me-1"></i>Lưu thay đổi</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border shadow-none mb-0 mt-4">
+                <div class="card-header bg-light-subtle">
+                    <h5 class="card-title mb-0">Cấu hình SEO Meta</h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label class="form-label">SEO Title</label>
+                        <input type="text" class="form-control" name="SeoTitle" id="SeoTitle" value="@Model.SeoTitle" placeholder="Nhập tiêu đề SEO...">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">SEO Meta Description</label>
+                        <textarea class="form-control" name="SeoDescription" id="SeoDescription" rows="3" placeholder="Nhập mô tả SEO...">@Model.SeoDescription</textarea>
+                    </div>
+                    <div class="mb-0">
+                        <label class="form-label">SEO Meta Keywords</label>
+                        <input type="text" class="form-control" name="SeoKeywords" id="SeoKeywords" value="@Model.SeoKeywords" placeholder="Từ khóa 1, từ khóa 2...">
+                    </div>
+                    <div class="bg-light p-3 rounded mt-3">
+                        <h6 class="fs-13 text-muted mb-2 text-uppercase">Google Search Preview</h6>
+                        <div style="font-family: Arial, sans-serif;">
+                            <div class="text-primary fs-18 mb-1" id="seo_preview_title">@(!string.IsNullOrEmpty(Model.SeoTitle) ? Model.SeoTitle : Model.Question)</div>
+                            <div class="text-success fs-13 mb-1">https://example.com/faq/<span id="seo_preview_slug">@Model.Slug</span></div>
+                            <div class="text-muted fs-13" id="seo_preview_desc" style="line-height:1.4;">@(!string.IsNullOrEmpty(Model.SeoDescription) ? Model.SeoDescription : "Mô tả SEO sẽ hiển thị ở đây...")</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <br />
+            <br />
+        </div>
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-header"><h5 class="card-title mb-0">Cấu hình</h5></div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label class="form-label">Trạng thái</label>
+                        <select class="form-select" name="Status">
+                            <option value="1" selected="@(Model.Status==1)">Hiển thị</option>
+                            <option value="0" selected="@(Model.Status==0)">Đang ẩn</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Thứ tự sắp xếp</label>
+                        <input type="number" class="form-control" name="SortOrder" value="@Model.SortOrder" />
+                    </div>
+                    
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+
+              
+            </form>
+
+@section Scripts {
+    <script>
+        $(function() {
+            // Slug Auto-gen
+            $('#txtQuestion').on('input', function() {
+                var title = $(this).val();
+                var slug = title.toLowerCase()
+                    .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+                    .replace(/[đĐ]/g, 'd')
+                    .replace(/([^0-9a-z-\s])/g, '')
+                    .replace(/(\s+)/g, '-')
+                    .replace(/-+/g, '-')
+                    .replace(/^-+|-+$/g, '');
+                
+                if ($('#txtSlug').val() == "" || $('#txtSlug').val() == slug.substring(0, slug.length - 1)) {
+                    $('#txtSlug').val(slug);
+                }
+                updateSeoPreview();
+            });
+
+            $('#SeoTitle, #SeoDescription, #txtSlug').on('input', function() {
+                updateSeoPreview();
+            });
+
+            // CKEditor
+            if (document.getElementById('ckeditor-classic')) {
+                 CKEDITOR.replace('ckeditor-classic', {
+                    height: 300,
+                    filebrowserBrowseUrl: '/FileManager',
+                    filebrowserImageBrowseUrl: '/FileManager'
+                });
+            }
+        });
+
+        function updateSeoPreview() {
+            const title = $('#SeoTitle').val() || $('#txtQuestion').val() || 'Tiêu đề câu hỏi';
+            const desc = $('#SeoDescription').val() || 'Mô tả SEO sẽ hiển thị ở đây để thu hút khách hàng click vào trang web của bạn.';
+            const slug = $('#txtSlug').val() || 'tieu-de-cau-hoi';
+            
+            $('#seo_preview_title').text(title);
+            $('#seo_preview_desc').text(desc);
+            $('#seo_preview_slug').text(slug);
+        }
+    </script>
+}

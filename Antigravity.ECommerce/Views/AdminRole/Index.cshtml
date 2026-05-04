@@ -1,0 +1,128 @@
+﻿@model List<Antigravity.ECommerce.Models.AdminRole>
+@{
+	Layout = "_AdminLayout";
+	ViewData["Title"] = "Quản lý Vai trò & Phân quyền";
+}
+
+<div class="row">
+	<div class="col-12">
+		<div class="page-title-box d-sm-flex align-items-center justify-content-between">
+			<h4 class="mb-sm-0">Vai trò & Phân quyền</h4>
+			<div class="page-title-right">
+				<button class="btn btn-success add-btn"><i class="ri-add-line align-bottom me-1"></i> Thêm vai trò mới</button>
+			</div>
+</div>
+
+		<div class="row">
+			@foreach (var item in Model)
+			{
+				<div class="col-xl-4 col-md-6">
+					<div class="card card-animate">
+						<div class="card-body">
+							<div class="d-flex align-items-center">
+								<div class="flex-grow-1">
+									<h5 class="card-title mb-1">
+										<span class="badge badge-soft-@item.Color fs-12">@item.RoleName</span>
+									</h5>
+									<p class="text-muted mb-0">@item.Description</p>
+								</div>
+								<div class="flex-shrink-0">
+									<div class="avatar-sm">
+										<span class="avatar-title bg-soft-@item.Color text-@item.Color rounded fs-2">
+											<i class="ri-user-settings-line"></i>
+										</span>
+									</div>
+								</div>
+							</div>
+							<div class="mt-4 d-flex gap-2">
+								<a href="/AdminRole/Permissions/@item.RoleId" class="btn btn-sm btn-outline-primary w-100">
+									<i class="ri-shield-keyhole-line me-1"></i> Phân quyền
+								</a>
+								@if (!item.IsSystem)
+								{
+									<button class="btn btn-sm btn-soft-danger" onclick="deleteRole(@item.RoleId)"><i class="ri-delete-bin-line"></i></button>
+								}
+							</div>
+						</div>
+					</div>
+				</div>
+			}
+		</div>
+	</div>
+</div>
+
+@section Scripts {
+	<script>
+		$('.add-btn').click(function() {
+			$('#addRoleModal').modal('show');
+		});
+
+		function saveRole() {
+			var name = $('#roleName').val();
+			var desc = $('#roleDesc').val();
+			var color = $('#roleColor').val();
+
+			if (!name) {
+				alert('Vui lòng nhập tên vai trò');
+				return;
+			}
+
+			$.post('/AdminRole/Create', { name: name, desc: desc, color: color }, function(res) {
+				if (res.success) {
+					location.reload();
+				} else {
+					alert(res.message || 'Có lỗi xảy ra');
+				}
+			});
+		}
+
+		function deleteRole(id) {
+			if (confirm('Bạn có chắc chắn muốn xóa vai trò này?')) {
+				$.post('/AdminRole/Delete', { id: id }, function (res) {
+					if (res.success) {
+						location.reload();
+					} else {
+						alert(res.message || 'Xóa thất bại!');
+					}
+				});
+			}
+		}
+	</script>
+}
+
+<!-- Add Role Modal -->
+<div class="modal fade" id="addRoleModal" tabindex="-1" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Thêm vai trò mới</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<div class="mb-3">
+					<label class="form-label">Tên vai trò</label>
+					<input type="text" id="roleName" class="form-control" placeholder="Ví dụ: Biên tập viên, Kế toán...">
+				</div>
+				<div class="mb-3">
+					<label class="form-label">Mô tả</label>
+					<textarea id="roleDesc" class="form-control" rows="3"></textarea>
+				</div>
+				<div class="mb-3">
+					<label class="form-label">Màu sắc hiển thị</label>
+					<select id="roleColor" class="form-select">
+						<option value="primary" class="text-primary">Xanh dương (Primary)</option>
+						<option value="success" class="text-success">Xanh lá (Success)</option>
+						<option value="info" class="text-info">Xanh nhạt (Info)</option>
+						<option value="warning" class="text-warning">Vàng (Warning)</option>
+						<option value="danger" class="text-danger">Đỏ (Danger)</option>
+						<option value="secondary" class="text-secondary">Xám (Secondary)</option>
+					</select>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-light" data-bs-dismiss="modal">Hủy</button>
+				<button type="button" class="btn btn-primary" onclick="saveRole()">Lưu vai trò</button>
+			</div>
+		</div>
+	</div>
+</div>

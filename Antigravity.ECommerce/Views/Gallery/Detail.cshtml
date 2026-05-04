@@ -1,0 +1,139 @@
+@model Antigravity.ECommerce.Models.Gallery
+@{
+    Layout = "~/Views/Shared/_MainLayout.cshtml";
+    ViewData["Title"] = Model.AlbumName;
+    var related = ViewBag.Related as List<Antigravity.ECommerce.Models.Gallery>;
+    if (!string.IsNullOrEmpty(Model.CoverImage)) { ViewData["Image"] = Model.CoverImage; }
+    ViewData["SchemaBreadcrumbs"] = new List<Antigravity.ECommerce.Models.BreadcrumbItem> {
+        new Antigravity.ECommerce.Models.BreadcrumbItem { Name = "Trang chủ", Url = "/" },
+        new Antigravity.ECommerce.Models.BreadcrumbItem { Name = "Thư viện Ảnh", Url = "/thu-vien-anh.html" },
+        new Antigravity.ECommerce.Models.BreadcrumbItem { Name = Model.AlbumName, Url = Context.Request.Path }
+    };
+}
+
+@section Styles {
+    <!-- GLightbox CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css" />
+    <style>
+        .album-header {
+            background:#f8f9fa;
+            border-radius:15px;
+            padding:40px;
+            margin-bottom:30px;
+        }
+        .masonry-grid {
+            display: column;
+            column-count: 3;
+            column-gap: 20px;
+        }
+        @@media (max-width: 991px) { .masonry-grid { column-count: 2; } }
+        @@media (max-width: 575px) { .masonry-grid { column-count: 1; } }
+
+        .masonry-item {
+            margin-bottom: 20px;
+            break-inside: avoid;
+            position: relative;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease;
+        }
+        .masonry-item img {
+            width: 100%;
+            height: auto;
+            display: block;
+            transition: transform 0.5s ease;
+        }
+        .masonry-item:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.15); }
+        .masonry-item:hover img { transform: scale(1.05); }
+        
+        .masonry-caption {
+            position: absolute;
+            bottom: -50px; left: 0; right: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+            color: #fff; padding: 20px 15px 15px;
+            transition: bottom 0.3s ease;
+            font-size: 14px;
+        }
+        .masonry-item:hover .masonry-caption { bottom: 0; }
+    </style>
+}
+
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb mt-3">
+    <li class="breadcrumb-item"><a href="/">Trang chủ</a></li>
+    <li class="breadcrumb-item"><a href="/thu-vien-anh.html">Thư viện Ảnh</a></li>
+    <li class="breadcrumb-item active" aria-current="page">@Model.AlbumName</li>
+  </ol>
+</nav>
+
+<div class="row">
+    <div class="col-12">
+        <div class="album-header text-center">
+            <h1 class="fw-bold">@Model.AlbumName</h1>
+            <p class="text-muted mt-2 mb-0"><i class="mdi mdi-calendar-blank"></i> @Model.CreatedAt.ToString("dd MMMM, yyyy") | <i class="mdi mdi-folder-image"></i> @Model.CategoryName</p>
+            @if (!string.IsNullOrEmpty(Model.Description))
+            {
+                <p class="mt-3 mx-auto" style="max-width:800px; font-size:16px;">@Model.Description</p>
+            }
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="masonry-grid">
+            @if (Model.ImageList != null && Model.ImageList.Count > 0)
+            {
+                foreach (var img in Model.ImageList)
+                {
+                    <a href="@img.ImagePath" class="glightbox masonry-item" data-gallery="album_@Model.GalleryId" data-title="@img.Caption" data-description="@img.Caption">
+                        <img src="@img.ImagePath" alt="@img.Caption" loading="lazy">
+                        @if (!string.IsNullOrEmpty(img.Caption))
+                        {
+                            <div class="masonry-caption">@img.Caption</div>
+                        }
+                    </a>
+                }
+            }
+            else
+            {
+                <p class="text-center text-muted w-100 py-5">Album này chưa có ảnh nào.</p>
+            }
+        </div>
+    </div>
+</div>
+
+@if (related != null && related.Count > 0)
+{
+    <div class="row mt-5 pt-4 border-top">
+        <div class="col-12 mb-4">
+            <h3 class="fw-bold">Album liên quan</h3>
+        </div>
+        @foreach (var r in related)
+        {
+            <div class="col-md-4 col-sm-6 mb-4">
+                <a href="/album/@(r.Slug).html" class="text-decoration-none">
+                    <div class="card border-0 shadow-sm rounded-4 overflow-hidden h-100">
+                        <img src="@r.CoverImage" class="card-img-top" alt="@r.AlbumName" style="height:180px; object-fit:cover;">
+                        <div class="card-body">
+                            <h6 class="card-title text-dark fw-bold mb-1">@r.AlbumName</h6>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        }
+    </div>
+}
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/glightbox/dist/js/glightbox.min.js"></script>
+    <script>
+        const lightbox = GLightbox({
+            touchNavigation: true,
+            loop: true,
+            autoplayVideos: true,
+            zoomable: true
+        });
+    </script>
+}

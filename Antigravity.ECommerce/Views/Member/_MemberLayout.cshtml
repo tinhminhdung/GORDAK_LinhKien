@@ -1,0 +1,165 @@
+@{
+    Layout = "_MainLayout";
+    var customer = ViewBag.Customer as Antigravity.ECommerce.Models.Customer;
+}
+
+@section Styles {
+    <style>
+        .member-layout {
+            padding: 3rem 0;
+            background: #f8f9fa;
+            min-height: calc(100vh - 200px);
+        }
+        .member-sidebar {
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+            padding: 2rem 1.5rem;
+            position: sticky;
+            top: 2rem;
+        }
+        .member-avatar-box {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid #edf2f7;
+        }
+        .member-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid #fff;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            margin-bottom: 1rem;
+        }
+        .member-name {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #1a202c;
+            margin-bottom: 0.25rem;
+        }
+        .member-rank {
+            display: inline-block;
+            padding: 0.25rem 1rem;
+            background: linear-gradient(135deg, #f6e05e 0%, #ecc94b 100%);
+            color: #744210;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+        .member-nav {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .member-nav li {
+            margin-bottom: 0.5rem;
+        }
+        .member-nav a {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            color: #4a5568;
+            text-decoration: none;
+            border-radius: 10px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        .member-nav a:hover, .member-nav a.active {
+            background: #eef2ff;
+            color: #4f46e5;
+        }
+        .member-nav a i {
+            margin-right: 10px;
+            font-size: 1.25rem;
+        }
+        .member-content {
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+            padding: 2rem;
+        }
+    </style>
+    @RenderSection("MemberStyles", required: false)
+}
+
+<div class="member-layout">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-3 mb-4 mb-lg-0">
+                <div class="member-sidebar">
+                    <div class="member-avatar-box">
+                        @{
+                            var avatarUrl = !string.IsNullOrEmpty(customer?.Avatar) ? customer.Avatar : $"https://ui-avatars.com/api/?name={System.Net.WebUtility.UrlEncode(customer?.FullName ?? "User")}&background=random&size=100";
+                        }
+                        <img src="@avatarUrl" alt="Avatar" class="member-avatar">
+                        <div class="member-name">@(customer?.FullName ?? "Thành viên")</div>
+                        <div class="member-rank">@(customer?.MemberRankName ?? "Hạng thường")</div>
+                    </div>
+                    <ul class="member-nav">
+                        <li>
+                            <a href="@Url.Action("Dashboard", "Member")" class="@(ViewContext.RouteData.Values["action"]?.ToString() == "Dashboard" ? "active" : "")">
+                                <i class="ri-dashboard-line"></i> Tổng quan
+                            </a>
+                        </li>
+                        <li>
+                            <a href="@Url.Action("Orders", "Member")" class="@(ViewContext.RouteData.Values["action"]?.ToString() == "Orders" ? "active" : "")">
+                                <i class="ri-file-list-3-line"></i> Đơn hàng của tôi
+                            </a>
+                        </li>
+                        <li>
+                            <a href="@Url.Action("Profile", "Member")" class="@(ViewContext.RouteData.Values["action"]?.ToString() == "Profile" ? "active" : "")">
+                                <i class="ri-user-settings-line"></i> Thông tin cá nhân
+                            </a>
+                        </li>
+                        <li>
+                            <a href="@Url.Action("Wishlist", "Member")" class="@(ViewContext.RouteData.Values["action"]?.ToString() == "Wishlist" ? "active" : "")">
+                                <i class="ri-heart-3-line"></i> Sản phẩm yêu thích
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/thanh-vien/danh-gia.html" class="@(ViewContext.RouteData.Values["action"]?.ToString() == "MyReviews" ? "active" : "")">
+                                <i class="ri-star-line"></i> Đánh giá của tôi
+                            </a>
+                        </li>
+                        <li>
+                            <a href="@Url.Action("ChangePassword", "Member")" class="@(ViewContext.RouteData.Values["action"]?.ToString() == "ChangePassword" ? "active" : "")">
+                                <i class="ri-lock-password-line"></i> Đổi mật khẩu
+                            </a>
+                        </li>
+                        <li>
+                            <a href="@Url.Action("Logout", "Account")" class="text-danger">
+                                <i class="ri-logout-box-r-line"></i> Đăng xuất
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-lg-9">
+                <div class="member-content">
+                    @if (TempData["Success"] != null)
+                    {
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            @TempData["Success"]
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    }
+                    @if (TempData["Error"] != null)
+                    {
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            @TempData["Error"]
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    }
+
+                    @RenderBody()
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @RenderSection("MemberScripts", required: false)
+}
