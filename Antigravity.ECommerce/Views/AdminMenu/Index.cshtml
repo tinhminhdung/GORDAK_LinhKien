@@ -1,0 +1,487 @@
+@model List<Antigravity.ECommerce.Models.Category>
+@{
+    ViewData["Title"] = "Quản lý Menu";
+    Layout = "_AdminLayout";
+    int totalCount = ViewBag.TotalCount ?? 0;
+}
+
+<style>
+    .tree-row td:first-child { border-left: none; }
+    .tree-indent { display: inline-flex; align-items: center; }
+    .tree-line { color: #adb5bd; font-size: 13px; margin-right: 4px; }
+    .tree-icon-root { color: #405189; }
+    .tree-icon-child { color: #0ab39c; }
+    .tree-icon-leaf { color: #f06548; }
+    .name-col { min-width: 220px; }
+    .btn-add-child { padding: 2px 7px; font-size: 12px; }
+    .level-badge { font-size: 10px; padding: 2px 6px; }
+    .tree-row:hover { background-color: rgba(64, 81, 137, 0.05); }
+</style>
+
+@Html.AntiForgeryToken()
+
+<div class="row">
+    <div class="col-12">
+        <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+            <h4 class="mb-sm-0">Quản lý Menu & Điều hướng</h4>
+            <div class="page-title-right">
+                <ol class="breadcrumb m-0">
+                    <li class="breadcrumb-item"><a href="/Admin">Admin</a></li>
+                    <li class="breadcrumb-item active">Menu</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header border-0">
+                <div class="d-flex align-items-center">
+                    <h5 class="card-title mb-0 flex-grow-1">Danh sách Menu (@totalCount)</h5>
+                    <div class="flex-shrink-0 d-flex gap-2">
+                        <div class="dropdown" id="bulkOptions" style="display:none;">
+                            <button class="btn btn-soft-info btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="ri-settings-3-line align-bottom me-1"></i> Thao tác nhanh (<span id="selectedCount">0</span>)
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="javascript:void(0);" onclick="bulkUpdateStatus(1)">Hiện Menu</a></li>
+                                <li><a class="dropdown-item" href="javascript:void(0);" onclick="bulkUpdateStatus(0)">Ẩn Menu</a></li>
+                                <li class="dropdown-divider"></li>
+                                <li><a class="dropdown-item text-danger" href="javascript:void(0);" onclick="bulkDelete()"><i class="ri-delete-bin-line me-1"></i> Xóa đã chọn</a></li>
+                            </ul>
+                        </div>
+                        <button type="button" class="btn btn-warning btn-sm" onclick="openImportModal()">
+                            <i class="ri-flashlight-fill align-bottom me-1"></i> Import nhanh
+                        </button>
+                        <a href="/AdminMenu/Create" class="btn btn-success btn-sm">
+                            <i class="ri-add-line align-bottom me-1"></i> Thêm mới
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-body border border-dashed border-end-0 border-start-0 py-3">
+                <form id="filterForm" method="get" class="row g-2">
+                    <input type="hidden" name="page" value="@ViewBag.PageIndex" />
+                    <div class="col-sm-5">
+                        <div class="search-box">
+                            <input type="text" name="kw" class="form-control form-control-sm" value="@ViewBag.Keyword" placeholder="Tìm tên menu, slug...">
+                            <i class="ri-search-line search-icon"></i>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <select class="form-select form-select-sm" name="status">
+                            <option value="">--- Trạng thái ---</option>
+                            <option value="1" selected="@(ViewBag.Status != null && ViewBag.Status.ToString() == "1" ? "selected" : null)">Hiển thị</option>
+                            <option value="0" selected="@(ViewBag.Status != null && ViewBag.Status.ToString() == "0" ? "selected" : null)">Đang ẩn</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-4 d-flex gap-2">
+                        <button type="submit" class="btn btn-primary btn-sm w-100"><i class="ri-filter-line me-1"></i>Lọc</button>
+                        <a href="/AdminMenu" class="btn btn-light btn-sm w-100">Reset</a>
+                    </div>
+                </form>
+            </div>
+
+            <div class="card-body pt-0">
+                <div class="table-responsive mt-3">
+                    <table class="table table-bordered align-middle" id="menuTable">
+                        <thead class="table-light">
+                            <tr>
+                                <th style="width:40px;">
+                                    <input class="form-check-input" type="checkbox" id="checkAll">
+                                </th>
+                                <th class="name-col">Tên Menu</th>
+                                <th>Slug / Link</th>
+                                <th>Vị trí</th>
+                                <th style="width:90px;" class="text-center">Thứ tự</th>
+                                <th style="width:130px;">Trạng thái</th>
+                                <th style="width:140px;" class="text-center">Chức năng</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                async Task RenderRows(List<Antigravity.ECommerce.Models.Category> nodes, int level)
+                                {
+                                    foreach (var item in nodes)
+                                    {
+                                        bool hasChildren = item.Children != null && item.Children.Any();
+                                        string iconClass = level == 0 ? "ri-folder-2-fill tree-icon-root" : (hasChildren ? "ri-folder-fill tree-icon-child" : "ri-file-list-2-line tree-icon-leaf");
+                                        string levelBadgeClass = level == 0 ? "bg-primary-subtle text-primary" : (level == 1 ? "bg-success-subtle text-success" : "bg-warning-subtle text-warning");
+
+                                        <tr data-id="@item.CategoryId" data-level="@level" class="tree-row">
+                                            <td>
+                                                <input class="form-check-input checkItem" type="checkbox" value="@item.CategoryId">
+                                            </td>
+                                            <td>
+                                                <div class="d-flex align-items-center">
+                                                    @for (int i = 0; i < level; i++)
+                                                    {
+                                                        <span class="tree-line ms-2">@(i < level - 1 ? "│" : "├─")</span>
+                                                    }
+                                                    <i class="@iconClass me-2 fs-16"></i>
+                                                    <a href="/AdminMenu/Edit/@item.CategoryId" class="fw-semibold text-body text-decoration-none">@item.Name</a>
+                                                    <span class="badge @levelBadgeClass level-badge ms-2">Cấp @(level + 1)</span>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                @{
+                                                    string menuLink = "";
+                                                    if (!string.IsNullOrEmpty(item.Url)) {
+                                                        menuLink = item.Url.StartsWith("/") ? item.Url : "/" + item.Url;
+                                                    } else if (!string.IsNullOrEmpty(item.Slug)) {
+                                                        switch (item.CategoryType) {
+                                                            case 1: menuLink = "/san-pham/" + item.Slug + ".html"; break;
+                                                            case 2: menuLink = "/tin-tuc/" + item.Slug + ".html"; break;
+                                                            case 3: menuLink = "/video/" + item.Slug + ".html"; break;
+                                                            case 4: menuLink = "/bai-viet/" + item.Slug + ".html"; break;
+                                                            case 6: menuLink = "/thu-vien-anh/" + item.Slug + ".html"; break;
+                                                            case 7: menuLink = "/hoi-dap/" + item.Slug + ".html"; break;
+                                                            case 8: case 11: menuLink = "/tai-lieu/" + item.Slug + ".html"; break;
+                                                            default: menuLink = "/" + item.Slug; break;
+                                                        }
+                                                    }
+                                                }
+                                                @if (!string.IsNullOrEmpty(menuLink)) {
+                                                    <a href="@menuLink" target="_blank" class="text-muted small text-decoration-none" title="Xem trên web"><i class="ri-link me-1"></i>@menuLink</a>
+                                                } else {
+                                                    <span class="text-muted small fst-italic">—</span>
+                                                }
+                                            </td>
+                                            <td>
+                                                <span class="badge badge-outline-info">@item.MenuPosition</span>
+                                            </td>
+                                            <td class="text-center">
+                                                <input type="number" class="form-control form-control-sm text-center mx-auto" style="width:70px;"
+                                                       value="@item.SortOrder" onchange="updateSortOrder(@item.CategoryId, this.value)">
+                                            </td>
+                                            <td>
+                                                <div class="form-check form-switch form-switch-success mb-0">
+                                                    <input class="form-check-input status-switch" type="checkbox" data-id="@item.CategoryId"
+                                                           @(item.Status == 1 ? "checked" : "") 
+                                                           onchange="updateQuickStatus(@item.CategoryId, this)">
+                                                    <label class="form-check-label status-label @(item.Status == 1 ? "text-success" : "text-muted")">
+                                                        @(item.Status == 1 ? "Hiện" : "Ẩn")
+                                                    </label>
+                                                </div>
+                                            </td>
+                                            <td class="text-center">
+                                                <div class="d-flex justify-content-center gap-1">
+                                                    <a href="/AdminMenu/Create?parentId=@item.CategoryId" class="btn btn-sm btn-soft-success" title="Thêm mục con">
+                                                        <i class="ri-add-line"></i>
+                                                    </a>
+                                                    <a href="/AdminMenu/Edit/@item.CategoryId" class="btn btn-sm btn-soft-info" title="Sửa">
+                                                        <i class="ri-pencil-line"></i>
+                                                    </a>
+                                                    <button onclick="deleteItem(@item.CategoryId)" class="btn btn-sm btn-soft-danger" title="Xóa">
+                                                        <i class="ri-delete-bin-line"></i>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+
+                                        if (hasChildren)
+                                        {
+                                            await RenderRows(item.Children, level + 1);
+                                        }
+                                    }
+                                }
+                            }
+
+                            @if (Model != null && Model.Any())
+                            {
+                                await RenderRows(Model, 0);
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="7" class="text-center text-muted py-4">
+                                        <i class="ri-menu-2-line fs-2 d-block mb-2 opacity-50"></i>
+                                        Chưa có menu nào. <a href="/AdminMenu/Create">Thêm ngay</a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                @await Html.PartialAsync("_Pagination", new { PageIndex = ViewBag.PageIndex, TotalPages = ViewBag.TotalPages, JsFunction = "changePage" })
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Import -->
+<div class="modal fade" id="importModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">⚡ Import nhanh danh mục vào Menu</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label">1. Chọn module nguồn</label>
+                        <select class="form-select" id="importModule" onchange="loadModuleCategories()">
+                            <option value="">-- Chọn module --</option>
+                            <option value="1">Sản phẩm</option>
+                            <option value="2">Tin tức</option>
+                            <option value="3">Video</option>
+                            <option value="4">Hỏi đáp (FAQ)</option>
+                            <option value="5">Tài liệu</option>
+                            <option value="6">Thư viện ảnh</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">2. Vị trí Menu</label>
+                        <select class="form-select" id="importPosition">
+                            <option value="Header">Menu trên (Header)</option>
+                            <option value="Footer">Menu dưới (Footer)</option>
+                            <option value="Sidebar">Cột trái (Sidebar)</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-12">
+                        <label class="form-label">3. Gắn vào Menu cha</label>
+                        <select class="form-select" id="importParentId">
+                            <option value="0">-- Là Menu cấp gốc --</option>
+                            @if (ViewBag.Categories != null)
+                            {
+                                foreach (var cat in ViewBag.Categories as List<Antigravity.ECommerce.Models.Category>)
+                                {
+                                    <option value="@cat.CategoryId">@cat.Name</option>
+                                }
+                            }
+                        </select>
+                        <small class="text-muted">Lưu ý: Cấu trúc cha-con của danh mục nguồn sẽ được tự động giữ nguyên.</small>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-12">
+                        <div class="d-flex justify-content-between align-items-end mb-2">
+                            <label class="form-label mb-0">4. Chọn danh mục cần Import</label>
+                            <div class="form-check d-none" id="selectAllWrapper">
+                                <input class="form-check-input" type="checkbox" id="importSelectAll" onchange="toggleSelectAllImport(this)">
+                                <label class="form-check-label" for="importSelectAll">Chọn tất cả</label>
+                            </div>
+                        </div>
+                        <div id="importCategoryList" class="border rounded p-3" style="max-height: 300px; overflow-y: auto; background-color: #f8f9fa;">
+                            <div class="text-center text-muted py-3">Vui lòng chọn module nguồn ở trên.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Đóng</button>
+                <button type="button" class="btn btn-primary" onclick="executeImport()" id="btnExecuteImport" disabled>Thực hiện Import</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        const token = $('input[name="__RequestVerificationToken"]').val();
+        $.ajaxSetup({ headers: { 'RequestVerificationToken': token } });
+
+        $('#checkAll').change(function () {
+            $('.checkItem').prop('checked', $(this).prop('checked'));
+            toggleBulk();
+        });
+
+        $(document).on('change', '.checkItem', function () {
+            toggleBulk();
+        });
+
+        function toggleBulk() {
+            const count = $('.checkItem:checked').length;
+            $('#selectedCount').text(count);
+            if (count > 0) $('#bulkOptions').show(); else $('#bulkOptions').hide();
+        }
+
+        function updateSortOrder(id, val) {
+            $.post('/AdminMenu/UpdateQuick', { id: id, sortOrder: val }, res => {
+                if (res.success) {
+                    Toastify({ text: "Đã lưu thứ tự!", duration: 2000, gravity: "top", position: "right", backgroundColor: "#0ab39c" }).showToast();
+                } else alert(res.message || 'Lỗi!');
+            });
+        }
+
+        function updateQuickStatus(id, input) {
+            const isChecked = $(input).is(':checked');
+            const status = isChecked ? 1 : 0;
+            const label = $(input).next('.status-label');
+
+            $.post('/AdminMenu/UpdateQuick', { id: id, status: status }, res => {
+                if (res.success) {
+                    label.text(status == 1 ? "Hiện" : "Ẩn");
+                    label.toggleClass('text-success', status == 1).toggleClass('text-muted', status == 0);
+                    Toastify({ text: "Đã cập nhật trạng thái!", duration: 2000, gravity: "top", position: "right", backgroundColor: "#0ab39c" }).showToast();
+                } else {
+                    $(input).prop('checked', !isChecked);
+                    alert(res.message || 'Lỗi!');
+                }
+            });
+        }
+
+        function deleteItem(id) {
+            Swal.fire({
+                title: 'Xác nhận xóa?',
+                text: 'Sẽ xóa menu này và tất cả menu con thuộc về nó!',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#f06548',
+                confirmButtonText: 'Xóa',
+                cancelButtonText: 'Hủy'
+            }).then(result => {
+                if (result.isConfirmed) {
+                    $.post('/AdminMenu/Delete/' + id, res => {
+                        if (res.success) location.reload();
+                        else alert(res.message);
+                    });
+                }
+            });
+        }
+
+        async function bulkDelete() {
+            const ids = $('.checkItem:checked').map((_, el) => parseInt(el.value)).get();
+            if (!ids.length) return;
+            const r = await Swal.fire({ title: `Xóa ${ids.length} mục?`, text: 'Sẽ xóa menu này và tất cả menu con của chúng!', icon: 'warning', showCancelButton: true, confirmButtonColor: '#f06548', confirmButtonText: 'Xóa' });
+            if (r.isConfirmed) {
+                const res = await fetch('/AdminMenu/BulkDelete', { 
+                    method: 'POST', 
+                    headers: { 'Content-Type': 'application/json', 'RequestVerificationToken': token }, 
+                    body: JSON.stringify(ids) 
+                });
+                const data = await res.json();
+                if (data.success) location.reload(); else alert(data.message || 'Lỗi khi xóa hàng loạt');
+            }
+        }
+
+        async function bulkUpdateStatus(status) {
+            const ids = $('.checkItem:checked').map((_, el) => parseInt(el.value)).get();
+            if (!ids.length) return;
+            const res = await fetch('/AdminMenu/BulkUpdateStatus', { 
+                method: 'POST', 
+                headers: { 'Content-Type': 'application/json', 'RequestVerificationToken': token }, 
+                body: JSON.stringify({ ids: ids, status: status }) 
+            });
+            const data = await res.json();
+            if (data.success) location.reload(); else alert(data.message || 'Lỗi khi cập nhật trạng thái');
+        }
+
+        function changePage(p) {
+            const form = document.getElementById('filterForm');
+            form.page.value = p;
+            form.submit();
+        }
+
+        // --- IMPORT NHANH SCRIPT ---
+        function openImportModal() {
+            var myModal = new bootstrap.Modal(document.getElementById('importModal'));
+            myModal.show();
+        }
+
+        async function loadModuleCategories() {
+            const moduleType = $('#importModule').val();
+            const listContainer = $('#importCategoryList');
+            const selectAllWrapper = $('#selectAllWrapper');
+            const btnExecute = $('#btnExecuteImport');
+
+            if (!moduleType) {
+                listContainer.html('<div class="text-center text-muted py-3">Vui lòng chọn module nguồn ở trên.</div>');
+                selectAllWrapper.addClass('d-none');
+                btnExecute.prop('disabled', true);
+                return;
+            }
+
+            listContainer.html('<div class="text-center py-3"><div class="spinner-border text-primary" role="status"></div></div>');
+            
+            try {
+                const response = await fetch(`/AdminMenu/GetModuleCategories?module=${moduleType}`);
+                const data = await response.json();
+
+                if (!data || data.length === 0) {
+                    listContainer.html('<div class="text-center text-muted py-3">Không có danh mục nào trong module này.</div>');
+                    selectAllWrapper.addClass('d-none');
+                    btnExecute.prop('disabled', true);
+                    return;
+                }
+
+                let html = '';
+                data.forEach(item => {
+                    const indent = '&nbsp;&nbsp;&nbsp;&nbsp;'.repeat(item.level);
+                    const disabledStr = item.exists ? 'disabled' : '';
+                    const badgeStr = item.exists ? '<span class="badge bg-success ms-2">Đã có</span>' : '';
+                    
+                    html += `
+                        <div class="form-check mb-2">
+                            ${indent}
+                            <input class="form-check-input import-check-item" type="checkbox" value="${item.id}" id="importCat_${item.id}" ${disabledStr} onchange="updateImportBtnState()">
+                            <label class="form-check-label ${item.exists ? 'text-muted' : ''}" for="importCat_${item.id}">
+                                ${item.name} ${badgeStr}
+                            </label>
+                        </div>
+                    `;
+                });
+
+                listContainer.html(html);
+                selectAllWrapper.removeClass('d-none');
+                $('#importSelectAll').prop('checked', false);
+                updateImportBtnState();
+            } catch (error) {
+                listContainer.html('<div class="text-center text-danger py-3">Lỗi khi tải dữ liệu!</div>');
+            }
+        }
+
+        function toggleSelectAllImport(cb) {
+            $('.import-check-item:not(:disabled)').prop('checked', cb.checked);
+            updateImportBtnState();
+        }
+
+        function updateImportBtnState() {
+            const checkedCount = $('.import-check-item:checked').length;
+            $('#btnExecuteImport').prop('disabled', checkedCount === 0);
+            $('#btnExecuteImport').text(checkedCount > 0 ? `Thực hiện Import (${checkedCount})` : 'Thực hiện Import');
+        }
+
+        async function executeImport() {
+            const moduleType = parseInt($('#importModule').val());
+            const parentId = parseInt($('#importParentId').val());
+            const position = $('#importPosition').val();
+            const categoryIds = $('.import-check-item:checked').map((_, el) => parseInt(el.value)).get();
+
+            if (!moduleType || categoryIds.length === 0) return;
+
+            $('#btnExecuteImport').prop('disabled', true).html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Đang xử lý...');
+
+            try {
+                const res = await fetch('/AdminMenu/BulkImport', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'RequestVerificationToken': token },
+                    body: JSON.stringify({
+                        ModuleType: moduleType,
+                        ParentId: parentId,
+                        Position: position,
+                        CategoryIds: categoryIds
+                    })
+                });
+                
+                const data = await res.json();
+                if (data.success) {
+                    Toastify({ text: `Đã import thành công ${data.importedCount} mục!`, backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)" }).showToast();
+                    setTimeout(() => location.reload(), 1000);
+                } else {
+                    alert(data.message || "Lỗi khi import");
+                    $('#btnExecuteImport').prop('disabled', false).text(`Thực hiện Import (${categoryIds.length})`);
+                }
+            } catch (error) {
+                alert("Lỗi kết nối!");
+                $('#btnExecuteImport').prop('disabled', false).text(`Thực hiện Import (${categoryIds.length})`);
+            }
+        }
+    </script>
+}

@@ -1,0 +1,203 @@
+﻿@model List<Antigravity.ECommerce.Models.AdminLog>
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "Nhật ký Hoạt động (Activity Log)";
+}
+
+<div class="row">
+    <div class="col-12">
+        <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+            <h4 class="mb-sm-0">Nhật ký Hoạt động</h4>
+            
+            <div class="page-title-right">
+                <div class="btn-group">
+                    <button type="button" class="btn btn-warning btn-sm" onclick="clearOldLogs()"><i class="ri-time-line align-middle me-1"></i> Xóa log > 30 ngày</button>
+                    <button type="button" class="btn btn-danger btn-sm" onclick="clearAllLogs()"><i class="ri-delete-bin-2-line align-middle me-1"></i> Xóa tất cả</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header border-bottom-dashed">
+                <form method="get" action="/AdminLog" class="row g-3">
+                    <div class="col-xxl-2 col-sm-6">
+                        <label class="form-label fs-12 text-muted mb-0">Hành động</label>
+                        <select name="actionType" class="form-select form-select-sm">
+                            <option value="">-- Tất cả hành động --</option>
+                            <option value="Login" selected="@(ViewBag.CurrentAction == "Login")">Đăng nhập</option>
+                            <option value="Create" selected="@(ViewBag.CurrentAction == "Create")">Thêm mới</option>
+                            <option value="Edit" selected="@(ViewBag.CurrentAction == "Edit")">Cập nhật</option>
+                            <option value="Delete" selected="@(ViewBag.CurrentAction == "Delete")">Xóa</option>
+                        </select>
+                    </div>
+                    <div class="col-xxl-2 col-sm-6">
+                        <label class="form-label fs-12 text-muted mb-0">Tài khoản</label>
+                        <select name="username" class="form-select form-select-sm">
+                            <option value="">-- Tất cả quản trị viên --</option>
+                            @if(ViewBag.Usernames != null) {
+                                foreach(var u in ViewBag.Usernames) {
+                                    <option value="@u" selected="@(ViewBag.CurrentUsername == u)">@u</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                    <div class="col-xxl-3 col-sm-6">
+                        <label class="form-label fs-12 text-muted mb-0">Chức năng (Module)</label>
+                        <select name="module" class="form-select form-select-sm">
+                            <option value="">-- Tất cả module --</option>
+                            @if(ViewBag.Modules != null) {
+                                foreach(var m in ViewBag.Modules) {
+                                    <option value="@m" selected="@(ViewBag.CurrentModule == m)">@m</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                    <div class="col-xxl-2 col-sm-6">
+                        <label class="form-label fs-12 text-muted mb-0">Từ ngày</label>
+                        <input type="date" name="fromDate" class="form-control form-control-sm" value="@ViewBag.FromDate">
+                    </div>
+                    <div class="col-xxl-2 col-sm-6">
+                        <label class="form-label fs-12 text-muted mb-0">Đến ngày</label>
+                        <input type="date" name="toDate" class="form-control form-control-sm" value="@ViewBag.ToDate">
+                    </div>
+                    <div class="col-xxl-1 col-sm-12 d-flex align-items-end">
+                        <button type="submit" class="btn btn-primary btn-sm w-100"><i class="ri-search-2-line"></i> Lọc</button>
+                    </div>
+                </form>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Thời gian</th>
+                                <th>Tài khoản</th>
+                                <th>IP Address</th>
+                                <th>Module</th>
+                                <th>Loại hành động</th>
+                                <th>Chi tiết (Mô tả)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model != null && Model.Count > 0)
+                            {
+                                foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td>
+                                            <div class="fw-medium">@item.CreatedAt.ToString("dd/MM/yyyy")</div>
+                                            <small class="text-muted">@item.CreatedAt.ToString("HH:mm:ss")</small>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-soft-primary text-primary fs-12">@item.Username</span>
+                                        </td>
+                                        <td><code class="fs-12">@item.IpAddress</code></td>
+                                        <td><span class="fw-medium text-dark">@item.Module</span></td>
+                                        <td>
+                                            @if (item.Action == "Create") {
+                                                <span class="badge bg-success"><i class="ri-add-line"></i> Create</span>
+                                            } else if (item.Action == "Edit") {
+                                                <span class="badge bg-warning"><i class="ri-pencil-line"></i> Edit</span>
+                                            } else if (item.Action == "Delete") {
+                                                <span class="badge bg-danger"><i class="ri-delete-bin-line"></i> Delete</span>
+                                            } else if (item.Action == "Login") {
+                                                <span class="badge bg-info"><i class="ri-login-circle-line"></i> Login</span>
+                                            } else {
+                                                <span class="badge bg-secondary">@item.Action</span>
+                                            }
+                                        </td>
+                                        <td>
+                                            <span class="text-muted" style="max-width:300px; display:inline-block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="@item.Description">
+                                                @item.Description
+                                            </span>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="6" class="text-center py-4">
+                                        <div class="avatar-md mx-auto mb-3">
+                                            <div class="avatar-title bg-light text-muted fs-24 rounded-circle">
+                                                <i class="ri-search-line"></i>
+                                            </div>
+                                        </div>
+                                        <h5 class="text-muted">Không tìm thấy bản ghi nhật ký nào.</h5>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+                @if(ViewBag.TotalPages > 1) {
+                    <div class="d-flex justify-content-end mt-3">
+                        <ul class="pagination pagination-sm mb-0">
+                            @for (int i = 1; i <= ViewBag.TotalPages; i++)
+                            {
+                                <li class="page-item @(i == ViewBag.Page ? "active" : "")">
+                                    <a class="page-link" href="/AdminLog?module=@ViewBag.CurrentModule&username=@ViewBag.CurrentUsername&actionType=@ViewBag.CurrentAction&fromDate=@ViewBag.FromDate&toDate=@ViewBag.ToDate&page=@i">@i</a>
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+    function clearOldLogs() {
+        Swal.fire({
+            title: 'Xóa dữ liệu cũ?',
+            text: "Tất cả nhật ký cũ hơn 30 ngày sẽ bị xóa vĩnh viễn khỏi hệ thống!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#f7b84b',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Đồng ý xóa',
+            cancelButtonText: 'Hủy bỏ'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.post('/AdminLog/ClearOldLogs', { days: 30 }, function (res) {
+                    if (res.success) {
+                        Swal.fire('Hoàn thành!', res.message, 'success').then(() => location.reload());
+                    } else {
+                        Swal.fire('Lỗi', res.message, 'error');
+                    }
+                });
+            }
+        });
+    }
+
+    function clearAllLogs() {
+        Swal.fire({
+            title: 'Dọn dẹp toàn bộ?',
+            text: "Hành động này sẽ XÓA TẤT CẢ nhật ký từ trước đến nay. Bạn có chắc chắn không?",
+            icon: 'error',
+            showCancelButton: true,
+            confirmButtonColor: '#f06548',
+            cancelButtonColor: '#878a99',
+            confirmButtonText: 'Có, xóa sạch!',
+            cancelButtonText: 'Không'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.post('/AdminLog/ClearAllLogs', function (res) {
+                    if (res.success) {
+                        Swal.fire('Đã dọn dẹp!', res.message, 'success').then(() => location.reload());
+                    } else {
+                        Swal.fire('Lỗi', res.message, 'error');
+                    }
+                });
+            }
+        });
+    }
+</script>
+}

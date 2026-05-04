@@ -1,0 +1,243 @@
+﻿@model Antigravity.ECommerce.Models.News
+@{
+    ViewBag.Title = "Viết bài Tin tức mới";
+    Layout = "_AdminLayout";
+}
+
+<form asp-action="Create" method="post">
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label class="form-label">Tiêu đề bài viết <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control form-control-lg" asp-for="Title" id="txtTitle" placeholder="Nhập tiêu đề tin tức..." required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Đường dẫn thân thiện (Slug)</label>
+                        <input type="text" class="form-control" asp-for="Slug" id="txtSlug" placeholder="tieu-de-tin-tuc">
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Mô tả ngắn (Sapô)</label>
+                        <textarea class="form-control" asp-for="ShortDescription" rows="3" placeholder="Nhập mô tả tóm tắt cho bài viết..."></textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Nội dung chi tiết bài viết</label>
+                        <textarea id="editor" asp-for="DetailDescription"></textarea>
+                    </div>
+
+                    <div class="d-flex justify-content-between mt-4 border-top pt-3">
+                        <a href="/AdminNews" class="btn btn-light"><i class="ri-arrow-go-back-line me-1"></i>Quay lại</a>
+                        <button type="submit" class="btn btn-success px-4"><i class="ri-save-line me-1"></i>Lưu thêm mới</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Cấu hình SEO Meta</h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label class="form-label">SEO Title</label>
+                        <input type="text" class="form-control" asp-for="SeoTitle">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">SEO Meta Description</label>
+                        <textarea class="form-control" asp-for="SeoDescription" rows="3"></textarea>
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label">SEO Meta Keywords</label>
+                        <input type="text" class="form-control" asp-for="SeoKeywords">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Thiết lập bài viết</h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label class="form-label">Danh mục tin tức <span class="text-danger">*</span></label>
+                        <select class="selectpicker" asp-for="CategoryId" data-live-search="true" required>
+                            <option value="">-- Chọn danh mục --</option>
+                            @foreach (var cat in ViewBag.Categories)
+                            {
+                                <option value="@cat.CategoryId">@cat.Name</option>
+                            }
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Ảnh đại diện bài viết</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" asp-for="Image" id="txtImage" readonly>
+                            <button class="btn btn-primary" type="button" onclick="browseImage('txtImage')">Chọn ảnh</button>
+                        </div>
+                        <div id="image_preview" class="mt-2 text-center border rounded p-2 d-none">
+                            <img src="" style="max-height: 150px; max-width: 100%;">
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Thứ tự ưu tiên</label>
+                        <input type="number" class="form-control" asp-for="SortOrder">
+                    </div>
+
+                    <div class="mb-3">
+                        <div class="form-check form-switch form-switch-lg mb-2">
+                            <input class="form-check-input" type="checkbox" id="IsHot" asp-for="IsHot">
+                            <label class="form-check-label" for="IsHot">Bài viết nổi bật (Hot)</label>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Trạng thái</label>
+                        <select class="form-select" asp-for="Status">
+                            <option value="1">Đăng bài ngay</option>
+                            <option value="0">Lưu bản nháp</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header bg-soft-info text-info">
+                    <h5 class="card-title mb-0"><i class="ri-price-tag-3-line me-1"></i> Từ khóa (Tags) - Nhấn Enter hoặc Dấu phẩy để ngăn cách</h5>
+                </div>
+                <div class="card-body">
+                    <div class="tag-input-container form-control d-flex flex-wrap gap-2 align-items-center" id="tags-container" onclick="document.getElementById('tags-input').focus()" style="min-height: 45px;">
+                        <input type="text" id="tags-input" style="border:none; outline:none; flex-grow:1; min-width:100px;" placeholder="Thêm từ khóa...">
+                    </div>
+                    <input type="hidden" asp-for="Tags" id="Tags">
+                    <small class="text-muted mt-2 d-block">Mỗi từ khóa giúp bài viết của bạn dễ tìm kiếm hơn trên Google.</small>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+
+               
+            </form>
+
+<!-- Modal File Manager -->
+<div class="modal fade" id="fileManagerModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Quản lý File</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-0">
+                <iframe id="fileManagerIframe" src="/FileManager/Index?mode=select" style="width: 100%; height: 600px; border: none;"></iframe>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/lib/ckeditor/ckeditor.js"></script>
+    <script>
+        $(function() {
+            // Init CKEditor 4 (matching Product style)
+            if (document.getElementById('editor')) {
+                CKEDITOR.replace('editor', {
+                    height: 500,
+                    filebrowserBrowseUrl: '/FileManager',
+                    filebrowserImageBrowseUrl: '/FileManager'
+                });
+            }
+
+            // Slug & SEO Preview
+            $('#txtTitle').on('input', function() {
+                var title = $(this).val();
+                var slug = title.toLowerCase()
+                    .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+                    .replace(/[đĐ]/g, 'd')
+                    .replace(/([^0-9a-z-\s])/g, '')
+                    .replace(/(\s+)/g, '-')
+                    .replace(/-+/g, '-')
+                    .replace(/^-+|-+$/g, '');
+                $('#txtSlug').val(slug);
+                updateSeoPreview();
+            });
+
+            function updateSeoPreview() {
+                const title = $('#SeoTitle').val() || $('#txtTitle').val() || 'Tiêu đề bài viết';
+                let desc = $('#SeoDescription').val() || $('#ShortDescription').val() || 'Mô tả bài viết sẽ hiển thị tại đây...';
+                const slug = $('#txtSlug').val() || 'slug-bai-viet';
+                
+                $('#seo_preview_title').text(title);
+                $('#seo_preview_desc').text(desc.replace(/<[^>]*>?/gm, '').substring(0, 160));
+                $('#seo_preview_slug').text(slug);
+            }
+
+            $('#SeoTitle, #SeoDescription, #txtSlug, #ShortDescription').on('input', updateSeoPreview);
+            updateSeoPreview();
+
+            // Tags System
+            initTagsSystem();
+        });
+
+        let tagsList = [];
+        function initTagsSystem() {
+            const input = document.getElementById('tags-input'), hidden = document.getElementById('Tags');
+            if(!input) return;
+            
+            input.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' || e.key === ',') {
+                    e.preventDefault();
+                    let val = this.value.replace(/,/g, '').trim();
+                    if (val && !tagsList.includes(val)) { tagsList.push(val); renderTags(); }
+                    this.value = '';
+                } else if (e.key === 'Backspace' && this.value === '' && tagsList.length > 0) {
+                    tagsList.pop(); renderTags();
+                }
+            });
+        }
+
+        function addTag(val) { if (val && !tagsList.includes(val)) { tagsList.push(val); renderTags(); } }
+        function removeTag(index) { tagsList.splice(index, 1); renderTags(); }
+
+        function renderTags() {
+            const container = document.getElementById('tags-container'), input = document.getElementById('tags-input');
+            if(!container || !input) return;
+            container.querySelectorAll('.visual-tag').forEach(el => el.remove());
+            tagsList.forEach((tag, i) => {
+                let el = document.createElement('span');
+                el.className = 'visual-tag badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25 px-2 py-1 fs-12 d-flex align-items-center gap-1';
+                el.innerHTML = `${tag} <i class="ri-close-line cursor-pointer" onclick="removeTag(${i})"></i>`;
+                container.insertBefore(el, input);
+            });
+            document.getElementById('Tags').value = tagsList.join(',');
+        }
+        
+        function setFileUrl(url, fieldId) {
+             const finalUrl = Array.isArray(url) ? url[0] : url;
+             if (CKEDITOR.instances[fieldId]) {
+                 CKEDITOR.instances[fieldId].insertHtml(`<img src="${finalUrl}" />`);
+             } else {
+                 $('#' + fieldId).val(finalUrl);
+                 if(fieldId === 'txtImage') {
+                     $('#image_preview').removeClass('d-none').find('img').attr('src', finalUrl);
+                 }
+             }
+        }
+        
+        function browseImage(fieldId) {
+            window.open('/FileManager?fieldId=' + fieldId, 'FileManager', 'width=1100,height=750');
+        }
+    </script>
+}

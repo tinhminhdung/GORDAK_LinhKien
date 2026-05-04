@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Trạm khò Gordak 952 - GORDAK Việt Nam</title>
+  <!-- Bootstrap 5 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <!-- Font Awesome 6 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <!-- CSS Chung (Gộp cả Trang chủ & Chi tiết SP) -->
+  <link rel="stylesheet" href="style.css?v=6" />
+</head>
+
+<body>
+
+  <!-- ======== HEADER DESKTOP ======== -->
+  <header class="top-header d-none d-lg-block">
+    <div class="container">
+      <div class="row align-items-center py-3">
+        <!-- Logo -->
+        <div class="col-auto">
+          <a href="home.html" class="d-flex align-items-center text-decoration-none logo-wrap">
+            <div class="logo-mark">G</div>
+            <div class="logo-text">GORDAK<small>TOOLS FOR LIFE</small></div>
+          </a>
+        </div>
+        <!-- Search -->
+        <div class="col">
+          <div class="search-box d-flex mx-auto" style="max-width:455px">
+            <input class="form-control search-input" placeholder="Bạn cần tìm sản phẩm nào?" />
+            <button class="btn-search"><i class="fa-solid fa-magnifying-glass"></i></button>
+          </div>
+        </div>
+        <!-- Quick actions -->
+        <div class="col-auto d-flex align-items-center gap-4">
+          <div class="quick-item d-flex align-items-center gap-2">
+            <i class="fa-solid fa-phone-volume qi-icon"></i>
+            <div><b>Hotline tư vấn</b><span class="d-block text-muted small">0963 344 888</span></div>
+          </div>
+          <div class="quick-item d-flex align-items-center gap-2">
+            <div class="zalo-circle">Zalo</div>
+            <div><b>Chat Zalo</b><span class="d-block text-muted small">Tư vấn 24/7</span></div>
+          </div>
+          <div class="cart-wrap position-relative d-flex align-items-center gap-2">
+            <i class="fa-solid fa-cart-shopping qi-icon"></i>
+            <span class="cart-badge">2</span>
+            <b>Giỏ hàng</b>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Desktop Nav -->
+    <nav class="desktop-nav">
+      <div class="container d-flex justify-content-center gap-5">
+        <a href="home.html"><i class="fa-solid fa-house"></i> Trang chủ</a>
+        <a href="#" class="active"><i class="fa-solid fa-box"></i> Sản phẩm <i class="fa-solid fa-chevron-down nav-arr"></i></a>
+        <a href="#"><i class="fa-solid fa-award"></i> Về thương hiệu Gordak</a>
+        <a href="#"><i class="fa-regular fa-newspaper"></i> Tin tức - Video <i class="fa-solid fa-chevron-down nav-arr"></i></a>
+        <a href="#"><i class="fa-solid fa-address-book"></i> Liên hệ</a>
+      </div>
+    </nav>
+  </header>
+
+  <!-- ======== HEADER MOBILE ======== -->
+  <header class="mobile-header d-lg-none">
+    <div class="container d-flex align-items-center justify-content-between py-2">
+      <button class="btn p-0 border-0 fs-5 text-dark"><i class="fa-solid fa-bars"></i></button>
+      <a href="home.html" class="d-flex align-items-center text-decoration-none logo-wrap">
+        <div class="logo-mark logo-mark-sm">G</div>
+        <div class="logo-text logo-text-sm">GORDAK<small>TOOLS FOR LIFE</small></div>
+      </a>
+      <div></div>
+    </div>
+    <div class="container pb-2">
+      <div class="search-box d-flex">
+        <input class="form-control search-input" placeholder="Bạn cần tìm sản phẩm nào?" />
+        <button class="btn-search"><i class="fa-solid fa-magnifying-glass"></i></button>
+      </div>
+    </div>
+  </header>
+
+  <main class="container pd2-wrap">
+    
+    <!-- Breadcrumb -->
+    <div class="pd2-breadcrumb">
+      <a href="home.html">Trang chủ</a> 
+      <i class="fa-solid fa-chevron-right separator"></i> 
+      <a href="#">Sản phẩm</a>
+      <i class="fa-solid fa-chevron-right separator"></i> 
+      <a href="#">Trạm hàn</a>
+      <i class="fa-solid fa-chevron-right separator"></i> 
+      <span class="active">Trạm khò Gordak 952</span>
+    </div>
+
+    <!-- Main 3-Column Layout: Left (9) - Right (3) -->
+    <div class="row pd2-main-row">
+      
+      <!-- CỘT TRÁI (CHỨA GALLERY, INFO, TABS) -->
+      <div class="col-lg-9">
+        
+        <div class="row">
+          <!-- Phân chia nhỏ hơn: Gallery & Info -->
+          
+          <!-- Nửa trái: Gallery -->
+          <div class="col-md-6">
+            <div class="pd2-gallery">
+              <div class="pd2-main-img-wrap">
+                <img id="mainImg" src="638757469040297678SMall.jpg" alt="Trạm khò Gordak 952" data-bs-toggle="modal" data-bs-target="#imageZoomModal" style="cursor: zoom-in;">
+                <div class="pd2-expand-btn" data-bs-toggle="modal" data-bs-target="#imageZoomModal"><i class="fa-solid fa-expand"></i></div>
+              </div>
+              <div class="pd2-thumbs">
+                <i class="fa-solid fa-chevron-left pd2-thumb-nav"></i>
+                <div class="pd2-thumb-item active" onclick="changeImg(this, '638757469040297678SMall.jpg')">
+                  <img src="638757469040297678SMall.jpg" alt="Thumb">
+                </div>
+                <div class="pd2-thumb-item" onclick="changeImg(this, '638757507324519146SMall.jpg')">
+                  <img src="638757507324519146SMall.jpg" alt="Thumb">
+                </div>
+                <div class="pd2-thumb-item" onclick="changeImg(this, '638757510112782078SMall.jpg')">
+                  <img src="638757510112782078SMall.jpg" alt="Thumb">
+                </div>
+                <div class="pd2-thumb-item" onclick="changeImg(this, '638757514270467140SMall.jpg')">
+                  <img src="638757514270467140SMall.jpg" alt="Thumb">
+                </div>
+                <i class="fa-solid fa-chevron-right pd2-thumb-nav"></i>
+              </div>
+            </div>
+          </div>
+
+          <!-- Nửa phải: Info -->
+          <div class="col-md-6">
+            <div class="pd2-info">
+              
+              <h1 class="pd2-title">Trạm khò Gordak 952 – 700W</h1>
+              
+              <table class="pd2-meta-table">
+                <tr>
+                  <td class="pd2-meta-label">Mã sản phẩm:</td>
+                  <td>GORDAK 952</td>
+                </tr>
+                <tr>
+                  <td class="pd2-meta-label">Thương hiệu:</td>
+                  <td>GORDAK</td>
+                </tr>
+                <tr>
+                  <td class="pd2-meta-label">Tình trạng:</td>
+                  <td class="pd2-status-green">Còn hàng</td>
+                </tr>
+                <tr>
+                  <td class="pd2-meta-label">Bảo hành:</td>
+                  <td>12 tháng</td>
+                </tr>
+              </table>
+
+              <div class="pd2-price-wrap">
+                <div class="pd2-price-row">
+                  <span style="color:#666;">Giá (Chưa VAT):</span>
+                  <span class="pd2-price-red">1.295.000đ</span>
+                </div>
+                <div class="pd2-price-row">
+                  <span style="color:#666;">Giá bán (VAT 8%):</span>
+                  <span class="pd2-price-main">1.398.600đ</span>
+                </div>
+              </div>
+
+              <!-- Action Buttons -->
+              <button class="pd2-btn-buy">
+                <span class="main-text">MUA NGAY</span>
+                <span class="sub-text">Giao hàng tận nơi hoặc nhận tại cửa hàng</span>
+              </button>
+
+              <button class="pd2-btn-outline">
+                <i class="fa-solid fa-cart-shopping"></i> THÊM VÀO GIỎ HÀNG
+              </button>
+
+              <button class="pd2-btn-zalo">
+                <i class="fa-solid fa-phone-volume"></i> 
+                <div class="text-wrap">
+                  <span class="main-text">CHAT ZALO NGAY</span>
+                  <span class="sub-text">Tư vấn nhanh 24/7</span>
+                </div>
+                <div class="zalo-icon-right">Zalo</div>
+              </button>
+
+              <!-- Ecommerce links -->
+              <div class="pd2-ecommerce">
+                <span>Mua SP trên sàn:</span>
+                <a href="#" class="pd2-ecommerce-btn">
+                  <i class="fa-solid fa-bag-shopping" style="color: #ee4d2d;"></i> <span class="shopee-text">Shopee</span>
+                </a>
+                <a href="#" class="pd2-ecommerce-btn">
+                  <i class="fa-solid fa-heart" style="color: #0f136d;"></i> <span class="lazada-text">Lazada</span>
+                </a>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <!-- TABS MÔ TẢ & THÔNG SỐ -->
+        <div class="pd2-tabs-wrap">
+          <ul class="pd2-nav-tabs">
+            <li><button class="active" onclick="switchTab(this, 'desc')">MÔ TẢ SẢN PHẨM</button></li>
+            <li><button onclick="switchTab(this, 'spec')">THÔNG SỐ KỸ THUẬT</button></li>
+            <li><button onclick="switchTab(this, 'video')">VIDEO HƯỚNG DẪN</button></li>
+          </ul>
+
+          <div class="pd2-tab-content" id="tab-desc">
+            <h3 class="pd2-tab-title">TRẠM KHÒ GORDAK 952 – 2 TRONG 1 TIỆN LỢI</h3>
+            <p class="pd2-tab-desc">Gordak 952 là trạm hàn khò 2 trong 1 gồm mỏ hàn và súng khò nhiệt, đáp ứng tốt nhu cầu hàn linh kiện, IC, SMD, tháo gỡ linh kiện, phù hợp cho kỹ thuật viên điện tử, sửa chữa điện thoại, máy tính, và các thiết bị công nghiệp.</p>
+            
+            <h3 class="pd2-tab-title" style="color:#212d45;">ƯU ĐIỂM NỔI BẬT</h3>
+            <ul class="pd2-tab-features">
+              <li>Công suất mạnh mẽ 700W, làm nóng nhanh, nhiệt độ ổn định</li>
+              <li>Điều chỉnh nhiệt độ độc lập cho cả mỏ hàn và súng khò</li>
+              <li>Màn hình hiển thị LED, dễ dàng theo dõi và điều chỉnh</li>
+              <li>Thiết kế nhỏ gọn, bền bỉ, linh kiện chất lượng cao</li>
+              <li>Phù hợp cho sửa chữa điện tử chuyên nghiệp và công nghiệp</li>
+            </ul>
+
+            <hr style="border-color: #e5e5e5; margin: 40px 0; opacity: 1;">
+            <h3 class="pd2-tab-title" style="color:#212d45;">THÔNG SỐ KỸ THUẬT</h3>
+            <div class="pd2-spec-wrap">
+              <table class="pd2-spec-table">
+                <tr><td class="label">Model</td><td>Gordak 952</td></tr>
+                <tr><td class="label">Công suất</td><td>700W</td></tr>
+                <tr><td class="label">Điện áp</td><td>220V / 50Hz</td></tr>
+                <tr><td class="label">Nhiệt độ mỏ hàn</td><td>200°C - 480°C</td></tr>
+                <tr><td class="label">Nhiệt độ súng khò</td><td>100°C - 500°C</td></tr>
+                <tr><td class="label">Loại mỏ hàn</td><td>907</td></tr>
+              </table>
+              <table class="pd2-spec-table">
+                <tr><td class="label">Bơm khí</td><td>Tuabin</td></tr>
+                <tr><td class="label">Lưu lượng khí</td><td>120L/phút (Max)</td></tr>
+                <tr><td class="label">Hiển thị</td><td>LED kỹ thuật số</td></tr>
+                <tr><td class="label">Kích thước</td><td>220 x 150 x 120 mm</td></tr>
+                <tr><td class="label">Trọng lượng</td><td>~3.8 kg</td></tr>
+                <tr><td class="label">Bảo hành</td><td>12 tháng</td></tr>
+              </table>
+            </div>
+          </div>
+          
+          <div class="pd2-tab-content" id="tab-spec" style="display: none;">
+            <p class="pd2-tab-desc">Vui lòng xem thông số kỹ thuật chi tiết ở phần Mô tả sản phẩm.</p>
+          </div>
+
+          <div class="pd2-tab-content" id="tab-video" style="display: none;">
+            <p class="pd2-tab-desc">Video hướng dẫn sử dụng đang được cập nhật...</p>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- CỘT PHẢI (SIDEBAR) -->
+      <div class="col-lg-3">
+        
+        <!-- Box Cam Kết -->
+        <div class="pd2-sidebar-box">
+          <h3 class="pd2-sidebar-title text-start">CAM KẾT TỪ GORDAK</h3>
+          <div class="pd2-commit-list">
+            <div class="pd2-commit-item">
+              <div class="pd2-commit-icon"><i class="fa-solid fa-shield-halved"></i></div>
+              <div class="pd2-commit-text">
+                <h4>Sản phẩm chính hãng 100%</h4>
+                <p>Nhà phân phối chính thức tại Việt Nam</p>
+              </div>
+            </div>
+            <div class="pd2-commit-item">
+              <div class="pd2-commit-icon"><i class="fa-solid fa-certificate"></i></div>
+              <div class="pd2-commit-text">
+                <h4>Bảo hành chính hãng 12 - 24 tháng</h4>
+                <p>1 đổi 1 trong 7 ngày nếu có lỗi NSX</p>
+              </div>
+            </div>
+            <div class="pd2-commit-item">
+              <div class="pd2-commit-icon"><i class="fa-solid fa-headset"></i></div>
+              <div class="pd2-commit-text">
+                <h4>Hỗ trợ kỹ thuật trọn đời</h4>
+                <p>Đội ngũ kỹ thuật giàu kinh nghiệm</p>
+              </div>
+            </div>
+            <div class="pd2-commit-item">
+              <div class="pd2-commit-icon"><i class="fa-solid fa-truck-fast"></i></div>
+              <div class="pd2-commit-text">
+                <h4>Giao hàng toàn quốc</h4>
+                <p>Miễn phí giao hàng cho đơn từ 1 triệu</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Box Chứng nhận -->
+        <div class="pd2-sidebar-box">
+          <h3 class="pd2-sidebar-title">CHỨNG NHẬN ĐẠI LÝ CHÍNH THỨC</h3>
+          <div class="pd2-cert-content">
+            <img src="638758122526522822SMall.jpg" alt="Chứng nhận" class="pd2-cert-img" style="max-width: 80px;">
+            <div style="font-weight: bold; color: #1a3c8a; font-size: 14px; margin-bottom: 10px;">GORDAK</div>
+            <button class="pd2-cert-btn">Xem chứng nhận</button>
+          </div>
+        </div>
+
+        <!-- Box Phụ kiện liên quan -->
+        <div class="pd2-sidebar-box bg-white">
+          <h3 class="pd2-sidebar-title">PHỤ KIỆN LIÊN QUAN</h3>
+          <div class="pd2-acc-list">
+            <!-- Mũi hàn -->
+            <div class="pd2-acc-item">
+              <img src="638757514270467140SMall.jpg" class="pd2-acc-img" alt="Mũi hàn">
+              <div class="pd2-acc-info">
+                <div class="pd2-acc-name">Mũi hàn Gordak 907</div>
+                <div class="pd2-acc-price">120.000đ</div>
+                <a href="#" class="pd2-acc-btn">Xem chi tiết</a>
+              </div>
+            </div>
+            <!-- Tay khò -->
+            <div class="pd2-acc-item">
+              <img src="638757510112782078SMall.jpg" class="pd2-acc-img" alt="Tay khò">
+              <div class="pd2-acc-info">
+                <div class="pd2-acc-name">Tay khò Gordak</div>
+                <div class="pd2-acc-price">350.000đ</div>
+                <a href="#" class="pd2-acc-btn">Xem chi tiết</a>
+              </div>
+            </div>
+            <!-- Thiếc hàn -->
+            <div class="pd2-acc-item">
+              <img src="638757507324519146SMall.jpg" class="pd2-acc-img" alt="Thiếc hàn">
+              <div class="pd2-acc-info">
+                <div class="pd2-acc-name">Thiếc hàn Gordak</div>
+                <div class="pd2-acc-price">180.000đ</div>
+                <a href="#" class="pd2-acc-btn">Xem chi tiết</a>
+              </div>
+            </div>
+            <!-- Bộ tip -->
+            <div class="pd2-acc-item">
+              <img src="638757469040297678SMall.jpg" class="pd2-acc-img" alt="Bộ tip">
+              <div class="pd2-acc-info">
+                <div class="pd2-acc-name">Bộ tip hàn 5 loại</div>
+                <div class="pd2-acc-price">250.000đ</div>
+                <a href="#" class="pd2-acc-btn">Xem chi tiết</a>
+              </div>
+            </div>
+            <!-- Đế hàn -->
+            <div class="pd2-acc-item">
+              <img src="638758122526522822SMall.jpg" class="pd2-acc-img" alt="Đế hàn">
+              <div class="pd2-acc-info">
+                <div class="pd2-acc-name">Đế hàn Gordak 952</div>
+                <div class="pd2-acc-price">150.000đ</div>
+                <a href="#" class="pd2-acc-btn">Xem chi tiết</a>
+              </div>
+            </div>
+            <!-- Phụ kiện Ẩn (Sổ ra) -->
+            <div class="collapse" id="collapseAccessories">
+              <div class="pd2-acc-item mt-3">
+                <img src="638757510112782078SMall.jpg" class="pd2-acc-img" alt="Tay khò Gordak 952">
+                <div class="pd2-acc-info">
+                  <div class="pd2-acc-name">Tay khò Gordak 952</div>
+                  <div class="pd2-acc-price">380.000đ</div>
+                  <a href="#" class="pd2-acc-btn">Xem chi tiết</a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <a class="pd2-view-all mb-3" data-bs-toggle="collapse" href="#collapseAccessories" role="button" aria-expanded="false" aria-controls="collapseAccessories" onclick="toggleText(this, 'Xem tất cả phụ kiện', 'Thu gọn')">Xem tất cả phụ kiện <i class="fa-solid fa-chevron-down"></i></a>
+        </div>
+
+        <!-- Box Sản phẩm đã xem -->
+        <div class="pd2-sidebar-box bg-white mt-3">
+          <h3 class="pd2-sidebar-title">SẢN PHẨM ĐÃ XEM</h3>
+          <div class="pd2-acc-list">
+            <!-- Sản phẩm 1 -->
+            <div class="pd2-acc-item">
+              <img src="638757510112782078SMall.jpg" class="pd2-acc-img" alt="Trạm hàn Gordak 952D">
+              <div class="pd2-acc-info">
+                <div class="pd2-acc-name">Trạm hàn Gordak 952D</div>
+                <div class="pd2-acc-price">2.850.000đ</div>
+                <a href="#" class="pd2-acc-btn">Xem chi tiết</a>
+              </div>
+            </div>
+            <!-- Sản phẩm 2 -->
+            <div class="pd2-acc-item">
+              <img src="638757514270467140SMall.jpg" class="pd2-acc-img" alt="Trạm hàn Gordak 863">
+              <div class="pd2-acc-info">
+                <div class="pd2-acc-name">Trạm hàn Gordak 863</div>
+                <div class="pd2-acc-price">1.450.000đ</div>
+                <a href="#" class="pd2-acc-btn">Xem chi tiết</a>
+              </div>
+            </div>
+            <!-- Sản phẩm 3 -->
+            <div class="pd2-acc-item">
+              <img src="638757469040297678SMall.jpg" class="pd2-acc-img" alt="Tay khò Gordak">
+              <div class="pd2-acc-info">
+                <div class="pd2-acc-name">Tay khò Gordak</div>
+                <div class="pd2-acc-price">350.000đ</div>
+                <a href="#" class="pd2-acc-btn">Xem chi tiết</a>
+              </div>
+            </div>
+            <!-- Sản phẩm Ẩn (Sổ ra) -->
+            <div class="collapse" id="collapseViewed">
+              <div class="pd2-acc-item mt-3">
+                <img src="638757510112782078SMall.jpg" class="pd2-acc-img" alt="Trạm hàn Gordak 936A">
+                <div class="pd2-acc-info">
+                  <div class="pd2-acc-name">Trạm hàn Gordak 936A</div>
+                  <div class="pd2-acc-price">850.000đ</div>
+                  <a href="#" class="pd2-acc-btn">Xem chi tiết</a>
+                </div>
+              </div>
+              <div class="pd2-acc-item mt-3">
+                <img src="638758122526522822SMall.jpg" class="pd2-acc-img" alt="Tay hàn Gordak 907">
+                <div class="pd2-acc-info">
+                  <div class="pd2-acc-name">Tay hàn Gordak 907</div>
+                  <div class="pd2-acc-price">150.000đ</div>
+                  <a href="#" class="pd2-acc-btn">Xem chi tiết</a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <a class="pd2-view-all mb-3" data-bs-toggle="collapse" href="#collapseViewed" role="button" aria-expanded="false" aria-controls="collapseViewed" onclick="toggleText(this, 'Xem tất cả sản phẩm đã xem', 'Thu gọn')">Xem tất cả sản phẩm đã xem <i class="fa-solid fa-chevron-down"></i></a>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- SẢN PHẨM LIÊN QUAN (Full width) -->
+    <div class="pd2-related-sec">
+      <h3 class="pd2-related-title">SẢN PHẨM LIÊN QUAN</h3>
+      <div class="pd2-product-list">
+        <!-- Item 1 -->
+        <div class="pd2-product-card">
+          <img src="638758122526522822SMall.jpg" alt="Trạm hàn Gordak 952D">
+          <div class="name">Trạm hàn Gordak 952D</div>
+          <div class="price">2.850.000đ</div>
+          <a href="#" class="btn-detail">Xem chi tiết</a>
+        </div>
+        <!-- Item 2 -->
+        <div class="pd2-product-card">
+          <img src="638757514270467140SMall.jpg" alt="Trạm hàn Gordak 863">
+          <div class="name">Trạm hàn Gordak 863</div>
+          <div class="price">1.450.000đ</div>
+          <a href="#" class="btn-detail">Xem chi tiết</a>
+        </div>
+        <!-- Item 3 -->
+        <div class="pd2-product-card">
+          <img src="638758122526522822SMall.jpg" alt="Trạm khò Gordak 952D+">
+          <div class="name">Trạm khò Gordak 952D+</div>
+          <div class="price">3.250.000đ</div>
+          <a href="#" class="btn-detail">Xem chi tiết</a>
+        </div>
+        <!-- Item 4 -->
+        <div class="pd2-product-card">
+          <img src="638757510112782078SMall.jpg" alt="Mũi hàn Gordak 907">
+          <div class="name">Mũi hàn Gordak 907</div>
+          <div class="price">120.000đ</div>
+          <a href="#" class="btn-detail">Xem chi tiết</a>
+        </div>
+        <!-- Item 5 -->
+        <div class="pd2-product-card">
+          <img src="638757469040297678SMall.jpg" alt="Tay khò Gordak">
+          <div class="name">Tay khò Gordak</div>
+          <div class="price">350.000đ</div>
+          <a href="#" class="btn-detail">Xem chi tiết</a>
+        </div>
+        <!-- Item 6 -->
+        <div class="pd2-product-card">
+          <img src="638757507324519146SMall.jpg" alt="Thiếc hàn Gordak">
+          <div class="name">Thiếc hàn Gordak</div>
+          <div class="price">180.000đ</div>
+          <a href="#" class="btn-detail">Xem chi tiết</a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Modal Phóng To Ảnh -->
+  <div class="modal fade" id="imageZoomModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg d-flex justify-content-center">
+      <div class="modal-content border-0 bg-transparent align-items-center">
+        <div class="position-relative d-inline-block">
+          <button type="button" class="btn-close position-absolute" data-bs-dismiss="modal" aria-label="Close" style="top: 10px; right: 10px; z-index: 1050; background-color: rgba(0,0,0,0.5); filter: invert(1); border-radius: 50%; opacity: 1; padding: 10px; cursor: pointer;"></button>
+          <img id="modalZoomImg" src="638757469040297678SMall.jpg" class="img-fluid rounded bg-white p-2" style="max-height: 85vh;" alt="Phóng to ảnh">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======== FOOTER ======== -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="row g-4 py-4">
+        <div class="col-lg-3 col-12">
+          <div class="d-flex align-items-center gap-2 mb-2 logo-wrap">
+            <div class="logo-mark" style="background:#fff;color:#073e96">G</div>
+            <div class="logo-text" style="color:#fff">GORDAK<small style="color:#fff">TOOLS FOR LIFE</small></div>
+          </div>
+          <p class="footer-text">Nhà phân phối chính thức các sản phẩm<br>Gordak tại Việt Nam.</p>
+          <div class="d-flex gap-2 mt-2">
+            <span class="social-circle"><i class="fa-brands fa-facebook-f"></i></span>
+            <span class="social-circle"><i class="fa-brands fa-instagram"></i></span>
+            <span class="social-circle"><i class="fa-brands fa-youtube"></i></span>
+            <span class="social-circle"><i class="fa-solid fa-earth-americas"></i></span>
+          </div>
+        </div>
+        <div class="col-lg-3 col-6">
+          <h3 class="footer-heading"><span class="fh-underline">DANH MỤC</span> SẢN PHẨM</h3>
+          <ul class="footer-links list-unstyled">
+            <li><a href="#">Trạm hàn</a></li>
+            <li><a href="#">Trạm khò</a></li>
+            <li><a href="#">Hàn khò kết hợp</a></li>
+            <li><a href="#">Máy hấp chip</a></li>
+            <li><a href="#">Phụ kiện</a></li>
+          </ul>
+        </div>
+        <div class="col-lg-3 col-6">
+          <h3 class="footer-heading">HỖ TRỢ KHÁCH HÀNG</h3>
+          <ul class="footer-links list-unstyled">
+            <li><a href="#">Chính sách bảo hành</a></li>
+            <li><a href="#">Chính sách giao hàng</a></li>
+            <li><a href="#">Hướng dẫn thanh toán</a></li>
+            <li><a href="#">Đổi trả - Hoàn tiền</a></li>
+          </ul>
+        </div>
+        <div class="col-lg-3 col-12">
+          <h3 class="footer-heading">CÔNG TY TNHH NHẬT MINH ESC</h3>
+          <p class="footer-text"><i class="fa-solid fa-location-dot me-2"></i>Số 50, ngõ 127/2, Đường Mỹ Đình,<br><span style="padding-left:22px">P. Mỹ Đình 2, Q. Nam Từ Liêm, Hà Nội</span></p>
+          <p class="footer-text"><i class="fa-solid fa-phone me-2"></i>0963 344 888</p>
+          <p class="footer-text"><i class="fa-solid fa-envelope me-2"></i>info@nhatminhesc.com</p>
+          <p class="footer-text"><i class="fa-solid fa-globe me-2"></i>www.gordak.vn</p>
+        </div>
+      </div>
+      <div class="footer-bottom text-center">
+        © 2024 Nhật Minh ESC. All rights reserved.
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Lấy các element thumbnail
+    const thumbs = document.querySelectorAll('.pd2-thumb-item');
+    let currentThumbIndex = 0;
+    let sliderInterval;
+
+    // JS Đổi ảnh
+    function changeImg(el, src) {
+      document.getElementById('mainImg').src = src;
+      document.getElementById('modalZoomImg').src = src; // Cập nhật luôn ảnh trong modal
+      thumbs.forEach((i, idx) => {
+        i.classList.remove('active');
+        if (i === el) currentThumbIndex = idx;
+      });
+      el.classList.add('active');
+    }
+
+    // Auto Slide
+    function startAutoSlide() {
+      sliderInterval = setInterval(() => {
+        currentThumbIndex++;
+        if (currentThumbIndex >= thumbs.length) currentThumbIndex = 0;
+        let nextThumb = thumbs[currentThumbIndex];
+        let src = nextThumb.querySelector('img').getAttribute('src');
+        changeImg(nextThumb, src);
+      }, 3000); // Tự động chuyển sau mỗi 3 giây
+    }
+
+    function stopAutoSlide() {
+      clearInterval(sliderInterval);
+    }
+
+    // Khởi động auto slide và dừng khi hover
+    if (thumbs.length > 0) {
+      startAutoSlide();
+      const gallery = document.querySelector('.pd2-gallery');
+      gallery.addEventListener('mouseenter', stopAutoSlide);
+      gallery.addEventListener('mouseleave', startAutoSlide);
+    }
+
+    // Gắn sự kiện cho 2 nút qua lại (mũi tên trái/phải)
+    const navLeft = document.querySelector('.pd2-thumb-nav.fa-chevron-left');
+    const navRight = document.querySelector('.pd2-thumb-nav.fa-chevron-right');
+    
+    if (navLeft && navRight) {
+      navLeft.addEventListener('click', () => {
+        currentThumbIndex--;
+        if (currentThumbIndex < 0) currentThumbIndex = thumbs.length - 1;
+        let nextThumb = thumbs[currentThumbIndex];
+        changeImg(nextThumb, nextThumb.querySelector('img').getAttribute('src'));
+      });
+      navRight.addEventListener('click', () => {
+        currentThumbIndex++;
+        if (currentThumbIndex >= thumbs.length) currentThumbIndex = 0;
+        let nextThumb = thumbs[currentThumbIndex];
+        changeImg(nextThumb, nextThumb.querySelector('img').getAttribute('src'));
+      });
+    }
+
+    // JS Chuyển Tab
+    function switchTab(btn, tabId) {
+      // Ẩn tất cả nội dung
+      document.getElementById('tab-desc').style.display = 'none';
+      document.getElementById('tab-spec').style.display = 'none';
+      document.getElementById('tab-video').style.display = 'none';
+      
+      // Bỏ active tất cả các nút
+      document.querySelectorAll('.pd2-nav-tabs button').forEach(b => b.classList.remove('active'));
+      
+      // Hiện nội dung tab được chọn và active nút
+      document.getElementById('tab-' + tabId).style.display = 'block';
+      btn.classList.add('active');
+    }
+
+    // Toggle Text Collapse
+    function toggleText(el, expandText, collapseText) {
+      let isExpanded = el.getAttribute('aria-expanded') === 'true';
+      if (isExpanded) {
+        // Sau khi click thì nó sẽ đóng lại
+        setTimeout(() => el.innerHTML = expandText + ' <i class="fa-solid fa-chevron-down"></i>', 300);
+      } else {
+        // Mở ra
+        setTimeout(() => el.innerHTML = collapseText + ' <i class="fa-solid fa-chevron-up"></i>', 300);
+      }
+    }
+  </script>
+  <!-- Bootstrap Bundle with Popper -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

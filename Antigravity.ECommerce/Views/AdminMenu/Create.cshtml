@@ -1,0 +1,460 @@
+@model Antigravity.ECommerce.Models.Category
+@{
+	ViewBag.Title = "Thêm mục Menu mới";
+	Layout = "_AdminLayout";
+}
+
+<style>
+	.google-preview {
+		font-family: arial, sans-serif;
+		max-width: 600px;
+	}
+
+	.google-title {
+		color: #1a0dab;
+		font-size: 18px;
+		line-height: 1.3;
+		margin-bottom: 4px;
+		cursor: pointer;
+	}
+
+		.google-title:hover {
+			text-decoration: underline;
+		}
+
+	.google-url {
+		color: #006621;
+		font-size: 14px;
+		line-height: 1.5;
+		margin-bottom: 2px;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+
+	.google-desc {
+		color: #70757a;
+		font-size: 14px;
+		line-height: 1.57;
+		word-wrap: break-word;
+	}
+</style>
+
+<div class="row">
+	<div class="col-12">
+		<div class="page-title-box d-sm-flex align-items-center justify-content-between">
+			<h4 class="mb-sm-0">Thiết lập Menu</h4>
+			<div class="page-title-right">
+				<ol class="breadcrumb m-0">
+					<li class="breadcrumb-item"><a href="/Admin">Admin</a></li>
+					<li class="breadcrumb-item"><a href="/AdminMenu">Menu</a></li>
+					<li class="breadcrumb-item active">Thêm mới</li>
+				</ol>
+			</div>
+		</div>
+	</div>
+</div>
+
+<form asp-action="Create" method="post" id="menuForm">
+	<input type="hidden" asp-for="Url" id="DirectUrl" />
+
+	<div class="row justify-content-center">
+		<div class="col-xl-11">
+			<div class="row">
+				<div class="col-lg-8">
+					<div class="card">
+						<div class="card-body">
+							<div class="mb-3">
+								<label class="form-label">Tên hiển thị trên Menu <span class="text-danger">*</span></label>
+								<input type="text" class="form-control" asp-for="Name" id="MenuName" placeholder="VD: Trang chủ, Sản phẩm, Giới thiệu..." required>
+							</div>
+
+							<div class="row mb-3">
+								<div class="col-md-6 parent-select">
+									<label class="form-label">Danh mục cha</label>
+									<select class="form-select" data-choices="true" data-choices-search-true="true" asp-for="ParentId">
+										<option value="0">-- Là Menu cấp gốc --</option>
+										@if (ViewBag.Categories != null)
+										{
+											foreach (var cat in ViewBag.Categories as List<Antigravity.ECommerce.Models.Category>)
+											{
+												<option value="@cat.CategoryId" selected="@(Model.ParentId == cat.CategoryId ? "selected" : null)">@cat.Name</option>
+											}
+										}
+									</select>
+								</div>
+								<div class="col-md-6">
+									<label class="form-label">Kiểu trang</label>
+									<select class="form-select" asp-for="LinkType" id="LinkType" onchange="toggleFormAreas()">
+										<option value="1">Trang liên kết</option>
+										<option value="2">Trang nội dung</option>
+										<option value="3">Url / Đường dẫn</option>
+									</select>
+								</div>
+							</div>
+
+							<!-- AREA 1: SYSTEM LINK -->
+							<div id="area-system-link">
+								<div class="row mb-3">
+									<div class="col-md-6">
+										<label class="form-label">Nhóm liên kết</label>
+										<select class="form-select" id="system-group" onchange="toggleSystemSubGroup()">
+											<option value="Home">Trang chủ</option>
+											<option value="Product">Danh mục Sản phẩm</option>
+											<option value="News">Danh mục Tin tức</option>
+											<option value="Video">Danh mục Video</option>
+											<option value="Gallery">Thư viện ảnh</option>
+											<option value="FAQ">Hỏi đáp (FAQ)</option>
+											<option value="Document">Tài liệu</option>
+											<option value="Contact">Trang Liên hệ</option>
+										</select>
+									</div>
+
+									<div class="col-md-6 d-none" id="sub-group-product">
+										<label class="form-label">Chuyên mục liên kết (Sản phẩm)</label>
+										<div class="d-flex gap-2">
+											<select class="form-select" data-choices="true" data-choices-search-true="true" id="select-product-cat">
+												<option value="san-pham.html" data-name="Sản phẩm">>> TẤT CẢ SẢN PHẨM <<</option>
+												@foreach (var cat in ViewBag.ProductCategories as List<Antigravity.ECommerce.Models.Category>)
+												{
+													<option value="@cat.Slug" data-name="@cat.Name" data-title="@cat.SeoTitle" data-desc="@cat.SeoDescription" data-key="@cat.SeoKeywords">@cat.Name</option>
+												}
+											</select>
+											<button type="button" class="btn btn-soft-info" onclick="copyFullCategory('product')">Copy</button>
+										</div>
+									</div>
+
+									<div class="col-md-6 d-none" id="sub-group-news">
+										<label class="form-label">Chuyên mục liên kết (Tin tức)</label>
+										<div class="d-flex gap-2">
+											<select class="form-select" data-choices="true" data-choices-search-true="true" id="select-news-cat">
+												<option value="tin-tuc.html" data-name="Tin tức">>> TẤT CẢ TIN TỨC <<</option>
+												@foreach (var cat in ViewBag.NewsCategories as List<Antigravity.ECommerce.Models.Category>)
+												{
+													<option value="@cat.Slug" data-name="@cat.Name" data-title="@cat.SeoTitle" data-desc="@cat.SeoDescription" data-key="@cat.SeoKeywords">@cat.Name</option>
+												}
+											</select>
+											<button type="button" class="btn btn-soft-info" onclick="copyFullCategory('news')">Copy</button>
+										</div>
+									</div>
+
+									<div class="col-md-6 d-none" id="sub-group-video">
+										<label class="form-label">Chuyên mục liên kết (Video)</label>
+										<div class="d-flex gap-2">
+											<select class="form-select" data-choices="true" data-choices-search-true="true" id="select-video-cat">
+												<option value="video.html" data-name="Video">>> TẤT CẢ VIDEO <<</option>
+												@foreach (var cat in ViewBag.VideoCategories as List<Antigravity.ECommerce.Models.Category>)
+												{
+													<option value="@cat.Slug" data-name="@cat.Name" data-title="@cat.SeoTitle" data-desc="@cat.SeoDescription" data-key="@cat.SeoKeywords">@cat.Name</option>
+												}
+											</select>
+											<button type="button" class="btn btn-soft-info" onclick="copyFullCategory('video')">Copy</button>
+										</div>
+									</div>
+
+									<div class="col-md-6 d-none" id="sub-group-gallery">
+										<label class="form-label">Chuyên mục liên kết (Thư viện ảnh)</label>
+										<div class="d-flex gap-2">
+											<select class="form-select" data-choices="true" data-choices-search-true="true" id="select-gallery-cat">
+												<option value="thu-vien-anh.html" data-name="Thư viện ảnh">>> TẤT CẢ HÌNH ẢNH <<</option>
+												@foreach (var cat in ViewBag.GalleryCategories as List<Antigravity.ECommerce.Models.Category>)
+												{
+													<option value="@cat.Slug" data-name="@cat.Name" data-title="@cat.SeoTitle" data-desc="@cat.SeoDescription" data-key="@cat.SeoKeywords">@cat.Name</option>
+												}
+											</select>
+											<button type="button" class="btn btn-soft-info" onclick="copyFullCategory('gallery')">Copy</button>
+										</div>
+									</div>
+
+									<div class="col-md-6 d-none" id="sub-group-faq">
+										<label class="form-label">Chuyên mục liên kết (Hỏi đáp)</label>
+										<div class="d-flex gap-2">
+											<select class="form-select" data-choices="true" data-choices-search-true="true" id="select-faq-cat">
+												<option value="hoi-dap.html" data-name="Hỏi đáp">>> TẤT CẢ HỎI ĐÁP <<</option>
+												@foreach (var cat in ViewBag.FAQCategories as List<Antigravity.ECommerce.Models.Category>)
+												{
+													<option value="@cat.Slug" data-name="@cat.Name" data-title="@cat.SeoTitle" data-desc="@cat.SeoDescription" data-key="@cat.SeoKeywords">@cat.Name</option>
+												}
+											</select>
+											<button type="button" class="btn btn-soft-info" onclick="copyFullCategory('faq')">Copy</button>
+										</div>
+									</div>
+
+									<div class="col-md-6 d-none" id="sub-group-document">
+										<label class="form-label">Chuyên mục liên kết (Tài liệu)</label>
+										<div class="d-flex gap-2">
+											<select class="form-select" data-choices="true" data-choices-search-true="true" id="select-document-cat">
+												<option value="tai-lieu.html" data-name="Tài liệu">>> TẤT CẢ TÀI LIỆU <<</option>
+												@foreach (var cat in ViewBag.DocumentCategories as List<Antigravity.ECommerce.Models.Category>)
+												{
+													<option value="@cat.Slug" data-name="@cat.Name" data-title="@cat.SeoTitle" data-desc="@cat.SeoDescription" data-key="@cat.SeoKeywords">@cat.Name</option>
+												}
+											</select>
+											<button type="button" class="btn btn-soft-info" onclick="copyFullCategory('document')">Copy</button>
+										</div>
+									</div>
+								</div>
+
+							</div>
+
+							<!-- AREA 2: SLUG & UNIFIED FIELD -->
+							<div id="area-slug-url" class="d-none">
+								<div class="mb-3">
+									<label class="form-label" id="label-slug-url">Đường dẫn thân thiện (Slug)</label>
+									<div class="input-group">
+										<input type="text" class="form-control" asp-for="Slug" id="Slug" placeholder="nhap-duong-dan">
+										<span class="input-group-text d-none" id="slug-suffix">.html</span>
+									</div>
+									<small class="text-muted italic" id="help-slug-url">Slug dùng để tạo đường dẫn thân thiện SEO.</small>
+								</div>
+							</div>
+
+							<!-- AREA 3: CONTENT (Removed Image Share as requested) -->
+							<div id="area-rich-content" class="d-none">
+								<div class="mb-3">
+									<label class="form-label">Nội dung trang</label>
+									<textarea id="editor" asp-for="Content"></textarea>
+								</div>
+							</div>
+
+							<div class="d-flex justify-content-center gap-3 mt-4 pt-2 border-top">
+							</div>
+
+							<div class="d-flex justify-content-between align-items-center">
+								<a href="/AdminMenu" class="btn btn-light px-4"><i class="ri-arrow-go-back-line me-1"></i>Quay lại</a>
+								<button type="submit" class="btn btn-success px-5"><i class="ri-save-line me-1"></i>Lưu thiết lập</button>
+							</div>
+
+						</div>
+					</div>
+
+					<!-- GOOGLE SEARCH PREVIEW & SEO DATA -->
+					<div class="card mt-4 shadow-sm border">
+						<div class="card-header py-3">
+							<h5 class="card-title mb-0 fs-16">Tối ưu SEO</h5>
+						</div>
+						<div class="card-body">
+							<div class="mb-3">
+								<label class="form-label">Tiêu đề SEO</label>
+								<input type="text" class="form-control" id="SeoTitle" asp-for="SeoTitle" placeholder="Tiêu đề hiển thị trên Google">
+							</div>
+							<div class="mb-3">
+								<label class="form-label">Mô tả SEO</label>
+								<textarea class="form-control" id="SeoDescription" asp-for="SeoDescription" rows="3" placeholder="Đoạn mô tả ngắn"></textarea>
+							</div>
+							<div class="mb-3">
+								<label class="form-label">Từ khóa SEO</label>
+								<input type="text" class="form-control" id="SeoKeywords" asp-for="SeoKeywords" placeholder="Cách nhau bằng dấu phẩy">
+							</div>
+
+							<div class="bg-light p-4 rounded-3 mt-4 border-0">
+								<h6 class="fs-12 text-muted mb-2 text-uppercase fw-semibold" style="letter-spacing: 0.5px;">GOOGLE SEARCH PREVIEW</h6>
+								<div class="google-preview">
+									<div class="google-title" id="preview-title">Tiêu đề SEO sẽ hiển thị ở đây...</div>
+									<div class="google-url" id="preview-url">https://example.com/slug-cua-trang.html</div>
+									<div class="google-desc" id="preview-desc">Mô tả SEO sẽ hiển thị ở đây. Độ dài tối ưu khoảng 150-160 ký tự.</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="col-lg-4">
+					<div class="card">
+						<div class="card-header"><h5 class="card-title mb-0">Thiết lập hiển thị</h5></div>
+						<div class="card-body">
+							<div class="mb-3">
+								<label class="form-label">Kiểu xuất hiện trang</label>
+								<select class="form-select" asp-for="Target">
+									<option value="_self">Cùng trang (Mặc định)</option>
+									<option value="_blank">Trang mới (Mở tab mới)</option>
+								</select>
+							</div>
+							<div class="mb-3">
+								<label class="form-label">Vị trí Menu</label>
+								<select class="selectpicker w-100" multiple asp-for="MenuPosition">
+									<option value="Header" selected>Menu trên (Top)</option>
+									<option value="Footer">Menu dưới (Bottom)</option>
+									<option value="Sidebar">Cột trái (Sidebar)</option>
+								</select>
+							</div>
+							<div class="mb-3">
+								<label class="form-label">Thứ tự sắp xếp</label>
+								<input type="number" class="form-control" asp-for="SortOrder" value="1">
+							</div>
+							<div class="form-check form-switch mb-2 pt-2">
+								<input class="form-check-input" type="checkbox" role="switch" id="Status" name="Status" value="1" checked>
+								<label class="form-check-label" for="Status">Kích hoạt hiển thị</label>
+							</div>
+
+								
+
+						</div>
+					</div>
+				</div>
+			</div>
+
+
+		</div>
+
+</form>
+
+@section Scripts {
+	<script>
+		$(function() {
+			if (document.querySelector('#editor')) {
+				CKEDITOR.replace('editor', {
+					language: 'vi',
+					filebrowserBrowseUrl: '/FileManager',
+					filebrowserImageBrowseUrl: '/FileManager',
+					filebrowserUploadUrl: '/FileManager/UploadCK',
+					filebrowserImageUploadUrl: '/FileManager/UploadCK'
+				});
+			}
+
+			toggleFormAreas();
+			updateGooglePreview();
+		});
+
+		function generateSlug(text) {
+			return text.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[đĐ]/g, 'd').replace(/([^a-z0-9\s])/g, '').replace(/\s+/g, '-').replace(/-+/g, '-').replace(/^-+|-+$/g, '');
+		}
+
+		function toggleFormAreas() {
+			var type = $('#LinkType').val();
+			$('#area-system-link, #area-slug-url, #area-rich-content').addClass('d-none');
+			$('#slug-suffix').addClass('d-none');
+
+			if (type == "1") {
+				$('#area-system-link').removeClass('d-none');
+				toggleSystemSubGroup();
+			} else if (type == "2") {
+				$('#area-slug-url, #area-rich-content').removeClass('d-none');
+				$('#label-slug-url').text("Đường dẫn thân thiện (Slug)");
+				$('#slug-suffix').removeClass('d-none');
+
+				// Tự động điền slug nếu đã có tiêu đề
+				if ($('#Slug').val() == "" && $('#MenuName').val() != "") {
+					$('#Slug').val(generateSlug($('#MenuName').val()));
+				}
+			} else if (type == "3") {
+				$('#area-slug-url').removeClass('d-none');
+				$('#label-slug-url').text("Đường dẫn liên kết (URL)");
+			}
+			updateGooglePreview();
+		}
+
+		function toggleSystemSubGroup() {
+			var group = $('#system-group').val();
+			$('#sub-group-product, #sub-group-news, #sub-group-video, #sub-group-gallery, #sub-group-faq, #sub-group-document').addClass('d-none');
+			if (group == "Product") $('#sub-group-product').removeClass('d-none');
+			else if (group == "News") $('#sub-group-news').removeClass('d-none');
+			else if (group == "Video") $('#sub-group-video').removeClass('d-none');
+			else if (group == "Gallery") $('#sub-group-gallery').removeClass('d-none');
+			else if (group == "FAQ") $('#sub-group-faq').removeClass('d-none');
+			else if (group == "Document") $('#sub-group-document').removeClass('d-none');
+			syncFinalUrl();
+		}
+
+		function syncFinalUrl() {
+			var type = $('#LinkType').val();
+			if (type != "1") return;
+
+			var group = $('#system-group').val();
+			var finalUrl = "";
+			var slug = "";
+
+			if (group == "Home") finalUrl = "/";
+			else if (group == "Contact") finalUrl = "/lien-he.html";
+			else if (group == "Product") {
+				slug = $('#select-product-cat').val();
+				finalUrl = (slug == "san-pham.html") ? "/san-pham.html" : "/san-pham/" + slug + ".html";
+			}
+			else if (group == "News") {
+				slug = $('#select-news-cat').val();
+				finalUrl = (slug == "tin-tuc.html") ? "/tin-tuc.html" : "/tin-tuc/" + slug + ".html";
+			}
+			else if (group == "Video") {
+				slug = $('#select-video-cat').val();
+				finalUrl = (slug == "video.html") ? "/video.html" : "/videos/" + slug + ".html";
+			}
+			else if (group == "Gallery") {
+				slug = $('#select-gallery-cat').val();
+				finalUrl = (slug == "thu-vien-anh.html") ? "/thu-vien-anh.html" : "/thu-vien-anh/" + slug + ".html";
+			}
+			else if (group == "FAQ") {
+				slug = $('#select-faq-cat').val();
+				finalUrl = (slug == "hoi-dap.html") ? "/hoi-dap.html" : "/hoi-dap/" + slug + ".html";
+			}
+			else if (group == "Document") {
+				slug = $('#select-document-cat').val();
+				finalUrl = (slug == "tai-lieu.html") ? "/tai-lieu.html" : "/tai-lieu/" + slug + ".html";
+			}
+			$('#DirectUrl').val(finalUrl);
+			updateGooglePreview();
+		}
+
+		function updateGooglePreview() {
+			var title = $('#SeoTitle').val() || $('#MenuName').val() || "Tiêu đề SEO sẽ hiển thị ở đây...";
+			var desc = $('#SeoDescription').val() || "Mô tả SEO sẽ hiển thị ở đây. Độ dài tối ưu khoảng 150-160 ký tự.";
+			var type = $('#LinkType').val();
+			var baseUrl = window.location.origin;
+			var finalUrl = baseUrl;
+
+			if (type == "1") {
+				finalUrl += $('#DirectUrl').val() || "/";
+			} else if (type == "2") {
+				finalUrl += "/bai-viet/" + ($('#Slug').val() || "slug-cua-trang") + ".html";
+			} else {
+				finalUrl = $('#Slug').val() || baseUrl;
+			}
+
+			$('#preview-title').text(title);
+			$('#preview-url').text(finalUrl);
+			$('#preview-desc').text(desc);
+		}
+
+		$('#MenuName').on('input', function() {
+			if ($('#LinkType').val() == "2") {
+				$('#Slug').val(generateSlug($(this).val()));
+			}
+			updateGooglePreview();
+		});
+
+		$('#SeoTitle, #SeoDescription, #Slug').on('input', updateGooglePreview);
+
+		$('#select-product-cat, #select-news-cat, #select-video-cat, #select-gallery-cat, #select-faq-cat, #select-document-cat').on('change', syncFinalUrl);
+
+		function copyFullCategory(type) {
+			var sel = $('#select-' + type + '-cat');
+			var opt = sel.find('option:selected');
+			if (opt.val()) {
+				$('#MenuName').val(opt.data('name')).trigger('input');
+				$('#SeoTitle').val(opt.data('title') || opt.data('name'));
+				$('#SeoDescription').val(opt.data('desc'));
+				$('#SeoKeywords').val(opt.data('key'));
+				updateGooglePreview();
+				Toastify({ text: "Đã copy thông tin!", backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)" }).showToast();
+			}
+		}
+
+		$('#menuForm').on('submit', function() {
+			var type = $('#LinkType').val();
+			var finalUrl = "";
+			if (type == "2") {
+				var s = $('#Slug').val();
+				if (s != "") finalUrl = "/bai-viet/" + s + ".html";
+			} else if (type == "3") {
+				finalUrl = $('#Slug').val();
+			} else if (type == "1") {
+				syncFinalUrl();
+				finalUrl = $('#DirectUrl').val();
+			}
+
+			if (finalUrl != "") {
+				$('#DirectUrl').val(finalUrl);
+				$('<input>').attr({ type: 'hidden', name: 'Target', value: finalUrl }).appendTo('#menuForm');
+			}
+		});
+	</script>
+}

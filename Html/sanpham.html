@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sản phẩm - GORDAK Việt Nam</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link rel="stylesheet" href="style.css?v=7" />
+</head>
+<body>
+
+  <!-- ======== HEADER DESKTOP ======== -->
+  <header class="top-header d-none d-lg-block">
+    <div class="container">
+      <div class="row align-items-center py-3">
+        <div class="col-auto">
+          <a href="home.html" class="d-flex align-items-center text-decoration-none logo-wrap">
+            <div class="logo-mark">G</div>
+            <div class="logo-text">GORDAK<small>TOOLS FOR LIFE</small></div>
+          </a>
+        </div>
+        <div class="col">
+          <div class="search-box d-flex mx-auto" style="max-width:455px">
+            <input class="form-control search-input" placeholder="Bạn cần tìm sản phẩm nào?" />
+            <button class="btn-search"><i class="fa-solid fa-magnifying-glass"></i></button>
+          </div>
+        </div>
+        <div class="col-auto d-flex align-items-center gap-4">
+          <div class="quick-item d-flex align-items-center gap-2">
+            <i class="fa-solid fa-phone-volume qi-icon"></i>
+            <div><b>Hotline tư vấn</b><span class="d-block text-muted small">0963 344 888</span></div>
+          </div>
+          <div class="quick-item d-flex align-items-center gap-2">
+            <div class="zalo-circle">Zalo</div>
+            <div><b>Chat Zalo</b><span class="d-block text-muted small">Tư vấn 24/7</span></div>
+          </div>
+          <div class="cart-wrap position-relative d-flex align-items-center gap-2">
+            <i class="fa-solid fa-cart-shopping qi-icon"></i>
+            <span class="cart-badge">2</span>
+            <b>Giỏ hàng</b>
+          </div>
+        </div>
+      </div>
+    </div>
+    <nav class="desktop-nav">
+      <div class="container d-flex justify-content-center gap-5">
+        <a href="home.html"><i class="fa-solid fa-house"></i> Trang chủ</a>
+        <a href="sanpham.html" class="active"><i class="fa-solid fa-box"></i> Sản phẩm <i class="fa-solid fa-chevron-down nav-arr"></i></a>
+        <a href="gioithieu.html"><i class="fa-solid fa-award"></i> Về thương hiệu Gordak</a>
+        <a href="tintuc.html"><i class="fa-regular fa-newspaper"></i> Tin tức - Video <i class="fa-solid fa-chevron-down nav-arr"></i></a>
+        <a href="lienhe.html"><i class="fa-solid fa-address-book"></i> Liên hệ</a>
+      </div>
+    </nav>
+  </header>
+
+  <!-- ======== HEADER MOBILE ======== -->
+  <header class="mobile-header d-lg-none">
+    <div class="container d-flex align-items-center justify-content-between py-2">
+      <button class="btn p-0 border-0 fs-5 text-dark"><i class="fa-solid fa-bars"></i></button>
+      <a href="home.html" class="d-flex align-items-center text-decoration-none logo-wrap">
+        <div class="logo-mark logo-mark-sm">G</div>
+        <div class="logo-text logo-text-sm">GORDAK<small>TOOLS FOR LIFE</small></div>
+      </a>
+      <div class="d-flex align-items-center gap-3">
+        <i class="fa-solid fa-phone-volume qi-icon"></i>
+        <div class="zalo-circle" style="width:28px;height:28px;font-size:9px">Zalo</div>
+        <div class="cart-wrap position-relative"><i class="fa-solid fa-cart-shopping qi-icon"></i><span class="cart-badge">2</span></div>
+      </div>
+    </div>
+    <div class="container pb-2">
+      <div class="search-box d-flex">
+        <input class="form-control search-input" placeholder="Bạn cần tìm sản phẩm nào?" />
+        <button class="btn-search"><i class="fa-solid fa-magnifying-glass"></i></button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ======== BREADCRUMB ======== -->
+  <div class="container mt-3 mb-2">
+    <nav class="sp-breadcrumb"><a href="home.html">Trang chủ</a> <i class="fa-solid fa-chevron-right"></i> <span>Sản phẩm</span></nav>
+  </div>
+
+  <!-- ======== CATEGORY FILTER ======== -->
+  <div class="container mb-3">
+    <div class="sp-cat-list">
+      <a href="#" class="sp-cat-item active">
+        <i class="fa-solid fa-border-all"></i>
+        <div><strong>Tất cả sản phẩm</strong><small>89 sản phẩm</small></div>
+      </a>
+      <a href="#" class="sp-cat-item">
+        <i class="fa-solid fa-fire"></i>
+        <div><strong>Trạm hàn</strong><small>21 sản phẩm</small></div>
+      </a>
+      <a href="#" class="sp-cat-item">
+        <i class="fa-solid fa-wind"></i>
+        <div><strong>Trạm khò</strong><small>18 sản phẩm</small></div>
+      </a>
+      <a href="#" class="sp-cat-item">
+        <i class="fa-solid fa-layer-group"></i>
+        <div><strong>Hàn khò kết hợp</strong><small>14 sản phẩm</small></div>
+      </a>
+      <a href="#" class="sp-cat-item">
+        <i class="fa-solid fa-microchip"></i>
+        <div><strong>Máy hấp chip</strong><small>8 sản phẩm</small></div>
+      </a>
+      <a href="#" class="sp-cat-item">
+        <i class="fa-solid fa-screwdriver-wrench"></i>
+        <div><strong>Phụ kiện</strong><small>28 sản phẩm</small></div>
+      </a>
+      <!-- DEMO 10 CATEGORIES -->
+      <a href="#" class="sp-cat-item"><i class="fa-solid fa-fire"></i><div><strong>Trạm hàn (2)</strong><small>21 sản phẩm</small></div></a>
+      <a href="#" class="sp-cat-item"><i class="fa-solid fa-wind"></i><div><strong>Trạm khò (2)</strong><small>18 sản phẩm</small></div></a>
+      <a href="#" class="sp-cat-item"><i class="fa-solid fa-layer-group"></i><div><strong>Hàn khò kết hợp (2)</strong><small>14 sản phẩm</small></div></a>
+      <a href="#" class="sp-cat-item"><i class="fa-solid fa-microchip"></i><div><strong>Máy hấp chip (2)</strong><small>8 sản phẩm</small></div></a>
+      <a href="#" class="sp-cat-item"><i class="fa-solid fa-screwdriver-wrench"></i><div><strong>Phụ kiện (2)</strong><small>28 sản phẩm</small></div></a>
+      <a href="#" class="sp-cat-item"><i class="fa-solid fa-fire"></i><div><strong>Trạm hàn (3)</strong><small>21 sản phẩm</small></div></a>
+      <a href="#" class="sp-cat-item"><i class="fa-solid fa-wind"></i><div><strong>Trạm khò (3)</strong><small>18 sản phẩm</small></div></a>
+      <a href="#" class="sp-cat-item"><i class="fa-solid fa-layer-group"></i><div><strong>Hàn khò kết hợp (3)</strong><small>14 sản phẩm</small></div></a>
+      <a href="#" class="sp-cat-item"><i class="fa-solid fa-microchip"></i><div><strong>Máy hấp chip (3)</strong><small>8 sản phẩm</small></div></a>
+      <a href="#" class="sp-cat-item"><i class="fa-solid fa-screwdriver-wrench"></i><div><strong>Phụ kiện (3)</strong><small>28 sản phẩm</small></div></a>
+    </div>
+    <!-- Mobile filter -->
+    <div class="sp-mobile-filter d-lg-none">
+      <a href="#" class="sp-mf-btn active"><i class="fa-solid fa-border-all"></i> Tất cả sản phẩm<br><small>89 sản phẩm</small></a>
+      <a href="#" class="sp-mf-btn" data-bs-toggle="offcanvas" data-bs-target="#filterOffcanvas"><i class="fa-solid fa-sliders"></i> Bộ lọc</a>
+    </div>
+  </div>
+
+  <!-- ======== PRODUCT GRID ======== -->
+  <div class="container">
+    <div class="row g-3" id="sp-product-grid">
+      <!-- Row 1 -->
+      <div class="col-6 col-lg sp-col-5"><div class="sp-card"><img src="638757514270467140SMall.jpg" alt="Trạm hàn Gordak 952D"><div class="sp-card-name">Trạm hàn Gordak 952D</div><div class="sp-card-price">2.850.000đ</div><div class="sp-card-actions"><a href="product-detail.html" class="sp-btn-detail">Xem chi tiết</a><a href="#" class="sp-btn-cart"><i class="fa-solid fa-cart-shopping"></i></a></div></div></div>
+      <div class="col-6 col-lg sp-col-5"><div class="sp-card"><img src="638757510112782078SMall.jpg" alt="Trạm hàn Gordak 863"><div class="sp-card-name">Trạm hàn Gordak 863</div><div class="sp-card-price">1.450.000đ</div><div class="sp-card-actions"><a href="#" class="sp-btn-detail">Xem chi tiết</a><a href="#" class="sp-btn-cart"><i class="fa-solid fa-cart-shopping"></i></a></div></div></div>
+      <div class="col-6 col-lg sp-col-5"><div class="sp-card"><img src="638757469040297678SMall.jpg" alt="Trạm khò Gordak 952D+"><div class="sp-card-name">Trạm khò Gordak 952D+</div><div class="sp-card-price">3.250.000đ</div><div class="sp-card-actions"><a href="#" class="sp-btn-detail">Xem chi tiết</a><a href="#" class="sp-btn-cart"><i class="fa-solid fa-cart-shopping"></i></a></div></div></div>
+      <div class="col-6 col-lg sp-col-5"><div class="sp-card"><img src="638758122526522822SMall.jpg" alt="Trạm hàn Gordak 868D"><div class="sp-card-name">Trạm hàn Gordak 868D</div><div class="sp-card-price">2.450.000đ</div><div class="sp-card-actions"><a href="#" class="sp-btn-detail">Xem chi tiết</a><a href="#" class="sp-btn-cart"><i class="fa-solid fa-cart-shopping"></i></a></div></div></div>
+      <div class="col-6 col-lg sp-col-5"><div class="sp-card"><img src="638757507324519146SMall.jpg" alt="Trạm khò Gordak 952"><div class="sp-card-name">Trạm khò Gordak 952</div><div class="sp-card-price">2.650.000đ</div><div class="sp-card-actions"><a href="product-detail.html" class="sp-btn-detail">Xem chi tiết</a><a href="#" class="sp-btn-cart"><i class="fa-solid fa-cart-shopping"></i></a></div></div></div>
+      <!-- Row 2 -->
+      <div class="col-6 col-lg sp-col-5"><div class="sp-card"><img src="638757507324519146SMall.jpg" alt="Tay khò Gordak"><div class="sp-card-name">Tay khò Gordak</div><div class="sp-card-price">350.000đ</div><div class="sp-card-actions"><a href="#" class="sp-btn-detail">Xem chi tiết</a><a href="#" class="sp-btn-cart"><i class="fa-solid fa-cart-shopping"></i></a></div></div></div>
+      <div class="col-6 col-lg sp-col-5"><div class="sp-card"><img src="638757469040297678SMall.jpg" alt="Mũi hàn Gordak 907"><div class="sp-card-name">Mũi hàn Gordak 907</div><div class="sp-card-price">120.000đ</div><div class="sp-card-actions"><a href="#" class="sp-btn-detail">Xem chi tiết</a><a href="#" class="sp-btn-cart"><i class="fa-solid fa-cart-shopping"></i></a></div></div></div>
+      <div class="col-6 col-lg sp-col-5"><div class="sp-card"><img src="638757510112782078SMall.jpg" alt="Thiếc hàn Gordak"><div class="sp-card-name">Thiếc hàn Gordak</div><div class="sp-card-price">180.000đ</div><div class="sp-card-actions"><a href="#" class="sp-btn-detail">Xem chi tiết</a><a href="#" class="sp-btn-cart"><i class="fa-solid fa-cart-shopping"></i></a></div></div></div>
+      <div class="col-6 col-lg sp-col-5"><div class="sp-card"><img src="638758122526522822SMall.jpg" alt="Bộ tip hàn 5 loại"><div class="sp-card-name">Bộ tip hàn 5 loại</div><div class="sp-card-price">250.000đ</div><div class="sp-card-actions"><a href="#" class="sp-btn-detail">Xem chi tiết</a><a href="#" class="sp-btn-cart"><i class="fa-solid fa-cart-shopping"></i></a></div></div></div>
+      <div class="col-6 col-lg sp-col-5"><div class="sp-card"><img src="638757514270467140SMall.jpg" alt="Đế hàn Gordak 952"><div class="sp-card-name">Đế hàn Gordak 952</div><div class="sp-card-price">150.000đ</div><div class="sp-card-actions"><a href="#" class="sp-btn-detail">Xem chi tiết</a><a href="#" class="sp-btn-cart"><i class="fa-solid fa-cart-shopping"></i></a></div></div></div>
+      <!-- Row 3 -->
+      <div class="col-6 col-lg sp-col-5"><div class="sp-card"><img src="638757507324519146SMall.jpg" alt="Dây nguồn Gordak"><div class="sp-card-name">Dây nguồn Gordak</div><div class="sp-card-price">80.000đ</div><div class="sp-card-actions"><a href="#" class="sp-btn-detail">Xem chi tiết</a><a href="#" class="sp-btn-cart"><i class="fa-solid fa-cart-shopping"></i></a></div></div></div>
+      <div class="col-6 col-lg sp-col-5"><div class="sp-card"><img src="638757469040297678SMall.jpg" alt="Tay gắp linh kiện"><div class="sp-card-name">Tay gắp linh kiện</div><div class="sp-card-price">60.000đ</div><div class="sp-card-actions"><a href="#" class="sp-btn-detail">Xem chi tiết</a><a href="#" class="sp-btn-cart"><i class="fa-solid fa-cart-shopping"></i></a></div></div></div>
+      <div class="col-6 col-lg sp-col-5"><div class="sp-card"><img src="638757514270467140SMall.jpg" alt="Máy hấp chip Gordak 853"><div class="sp-card-name">Máy hấp chip Gordak 853</div><div class="sp-card-price">4.950.000đ</div><div class="sp-card-actions"><a href="#" class="sp-btn-detail">Xem chi tiết</a><a href="#" class="sp-btn-cart"><i class="fa-solid fa-cart-shopping"></i></a></div></div></div>
+      <div class="col-6 col-lg sp-col-5"><div class="sp-card"><img src="638758122526522822SMall.jpg" alt="Máy hấp chip Gordak 853D+"><div class="sp-card-name">Máy hấp chip Gordak 853D+</div><div class="sp-card-price">6.350.000đ</div><div class="sp-card-actions"><a href="#" class="sp-btn-detail">Xem chi tiết</a><a href="#" class="sp-btn-cart"><i class="fa-solid fa-cart-shopping"></i></a></div></div></div>
+      <div class="col-6 col-lg sp-col-5"><div class="sp-card"><img src="638757510112782078SMall.jpg" alt="Giá đỡ tay khò"><div class="sp-card-name">Giá đỡ tay khò</div><div class="sp-card-price">120.000đ</div><div class="sp-card-actions"><a href="#" class="sp-btn-detail">Xem chi tiết</a><a href="#" class="sp-btn-cart"><i class="fa-solid fa-cart-shopping"></i></a></div></div></div>
+    </div>
+    <!-- Xem thêm -->
+    <div class="text-center my-4">
+      <a href="#" class="sp-btn-loadmore">Xem thêm sản phẩm <i class="fa-solid fa-chevron-right"></i></a>
+    </div>
+  </div>
+
+  <!-- ======== SẢN PHẨM BÁN CHẠY ======== -->
+  <div class="container sp-bestseller-sec">
+    <h2 class="sp-section-title"><i class="fa-solid fa-fire" style="color:#e30000"></i> SẢN PHẨM BÁN CHẠY</h2>
+    <div class="position-relative">
+      <button class="sp-slider-btn sp-slider-prev" onclick="spSlide(-1)"><i class="fa-solid fa-chevron-left"></i></button>
+      <div class="sp-slider-wrap" id="spSlider">
+        <div class="sp-slider-item"><img src="638757514270467140SMall.jpg" alt=""><div class="sp-slider-name">Trạm hàn Gordak 952D</div><div class="sp-slider-price">2.850.000đ</div></div>
+        <div class="sp-slider-item"><img src="638757507324519146SMall.jpg" alt=""><div class="sp-slider-name">Trạm khò Gordak 952</div><div class="sp-slider-price">2.650.000đ</div></div>
+        <div class="sp-slider-item"><img src="638757510112782078SMall.jpg" alt=""><div class="sp-slider-name">Trạm hàn Gordak 863</div><div class="sp-slider-price">1.450.000đ</div></div>
+        <div class="sp-slider-item"><img src="638757469040297678SMall.jpg" alt=""><div class="sp-slider-name">Trạm khò Gordak 952D+</div><div class="sp-slider-price">3.250.000đ</div></div>
+        <div class="sp-slider-item"><img src="638758122526522822SMall.jpg" alt=""><div class="sp-slider-name">Mũi hàn Gordak 907</div><div class="sp-slider-price">120.000đ</div></div>
+        <div class="sp-slider-item"><img src="638757507324519146SMall.jpg" alt=""><div class="sp-slider-name">Tay khò Gordak</div><div class="sp-slider-price">350.000đ</div></div>
+      </div>
+      <button class="sp-slider-btn sp-slider-next" onclick="spSlide(1)"><i class="fa-solid fa-chevron-right"></i></button>
+    </div>
+  </div>
+
+  <!-- ======== CAM KẾT BAR ======== -->
+  <div class="container my-4">
+    <div class="sp-commit-bar">
+      <div class="sp-commit-item"><i class="fa-solid fa-shield-halved"></i><div><strong>Sản phẩm chính hãng 100%</strong><small>Nhập khẩu và phân phối chính thức tại Việt Nam</small></div></div>
+      <div class="sp-commit-item"><i class="fa-solid fa-certificate"></i><div><strong>Bảo hành chính hãng 12 tháng</strong><small>1 đổi 1 trong 7 ngày nếu có lỗi NSX</small></div></div>
+      <div class="sp-commit-item"><i class="fa-solid fa-headset"></i><div><strong>Hỗ trợ kỹ thuật trọn đời</strong><small>Đội ngũ kỹ thuật giàu kinh nghiệm</small></div></div>
+      <div class="sp-commit-item"><i class="fa-solid fa-truck-fast"></i><div><strong>Giao hàng toàn quốc</strong><small>Miễn phí giao hàng cho đơn từ 1 triệu</small></div></div>
+    </div>
+  </div>
+
+  <!-- ======== CTA BAR ======== -->
+  <section class="sp-cta-bar">
+    <div class="container d-flex flex-wrap align-items-center justify-content-between gap-3">
+      <div class="d-flex align-items-center gap-3">
+        <i class="fa-solid fa-shield-halved" style="font-size:32px;color:#fff"></i>
+        <div>
+          <strong style="font-size:16px">Nhà phân phối chính thức GORDAK tại Việt Nam</strong><br>
+          <small>Cam kết mang đến sản phẩm chính hãng, chất lượng và dịch vụ tốt nhất cho khách hàng.</small>
+        </div>
+      </div>
+      <div class="d-flex gap-2">
+        <a href="#" class="sp-cta-btn sp-cta-red"><i class="fa-solid fa-file-lines"></i> NHẬN BÁO GIÁ NGAY</a>
+        <a href="#" class="sp-cta-btn sp-cta-outline"><i class="fa-solid fa-phone"></i> GỌI TƯ VẤN: 0963 344 888</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======== FOOTER ======== -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="row g-4 py-4">
+        <div class="col-lg-3 col-12">
+          <div class="d-flex align-items-center gap-2 mb-2 logo-wrap">
+            <div class="logo-mark" style="background:#fff;color:#073e96">G</div>
+            <div class="logo-text" style="color:#fff">GORDAK<small style="color:#fff">TOOLS FOR LIFE</small></div>
+          </div>
+          <p class="footer-text">Nhà phân phối chính thức các sản phẩm<br>Gordak tại Việt Nam.</p>
+          <div class="d-flex gap-2 mt-2">
+            <span class="social-circle"><i class="fa-brands fa-facebook-f"></i></span>
+            <span class="social-circle"><i class="fa-brands fa-instagram"></i></span>
+            <span class="social-circle"><i class="fa-brands fa-youtube"></i></span>
+            <span class="social-circle"><i class="fa-solid fa-earth-americas"></i></span>
+          </div>
+        </div>
+        <div class="col-lg-3 col-6">
+          <h3 class="footer-heading"><span class="fh-underline">DANH MỤC</span> SẢN PHẨM</h3>
+          <ul class="footer-links list-unstyled">
+            <li><a href="#">Trạm hàn</a></li><li><a href="#">Trạm khò</a></li><li><a href="#">Hàn khò kết hợp</a></li><li><a href="#">Máy hấp chip</a></li><li><a href="#">Phụ kiện</a></li>
+          </ul>
+        </div>
+        <div class="col-lg-3 col-6">
+          <h3 class="footer-heading">HỖ TRỢ KHÁCH HÀNG</h3>
+          <ul class="footer-links list-unstyled">
+            <li><a href="#">Chính sách bảo hành</a></li><li><a href="#">Chính sách giao hàng</a></li><li><a href="#">Hướng dẫn thanh toán</a></li><li><a href="#">Đổi trả - Hoàn tiền</a></li>
+          </ul>
+        </div>
+        <div class="col-lg-3 col-12">
+          <h3 class="footer-heading">CÔNG TY TNHH NHẬT MINH ESC</h3>
+          <p class="footer-text"><i class="fa-solid fa-location-dot me-2"></i>Số 50, ngõ 127/2, Đường Mỹ Đình,<br><span style="padding-left:22px">P. Mỹ Đình 2, Q. Nam Từ Liêm, Hà Nội</span></p>
+          <p class="footer-text"><i class="fa-solid fa-phone me-2"></i>0963 344 888</p>
+          <p class="footer-text"><i class="fa-solid fa-envelope me-2"></i>info@nhatminhesc.com</p>
+          <p class="footer-text"><i class="fa-solid fa-globe me-2"></i>www.gordak.vn</p>
+        </div>
+      </div>
+      <div class="footer-bottom text-center">© 2024 Nhật Minh ESC. All rights reserved.</div>
+    </div>
+  </footer>
+
+  <!-- ======== MOBILE BOTTOM NAV ======== -->
+  <nav class="mobile-bottom-nav d-lg-none">
+    <a href="home.html" class="mnav-item"><i class="fa-solid fa-house"></i><span>Trang chủ</span></a>
+    <a href="sanpham.html" class="mnav-item active"><i class="fa-solid fa-box"></i><span>Sản phẩm</span></a>
+    <a href="giohang.html" class="mnav-item position-relative"><i class="fa-solid fa-cart-shopping"></i><span class="mnav-badge">2</span><span>Giỏ hàng</span></a>
+    <a href="lienhe.html" class="mnav-item"><i class="fa-solid fa-address-book"></i><span>Liên hệ</span></a>
+  </nav>
+
+  <!-- ======== FILTER OFFCANVAS (MOBILE) ======== -->
+  <div class="offcanvas offcanvas-bottom" tabindex="-1" id="filterOffcanvas" style="height: 60vh;">
+    <div class="offcanvas-header border-bottom">
+      <h5 class="offcanvas-title fw-bold text-uppercase"><i class="fa-solid fa-sliders"></i> Danh mục sản phẩm</h5>
+      <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+      <div class="list-group list-group-flush">
+        <a href="#" class="list-group-item list-group-item-action fw-bold text-primary"><i class="fa-solid fa-border-all me-2"></i> Tất cả sản phẩm <span class="float-end text-muted small">89</span></a>
+        <a href="#" class="list-group-item list-group-item-action"><i class="fa-solid fa-fire me-2"></i> Trạm hàn <span class="float-end text-muted small">21</span></a>
+        <a href="#" class="list-group-item list-group-item-action"><i class="fa-solid fa-wind me-2"></i> Trạm khò <span class="float-end text-muted small">18</span></a>
+        <a href="#" class="list-group-item list-group-item-action"><i class="fa-solid fa-layer-group me-2"></i> Hàn khò kết hợp <span class="float-end text-muted small">14</span></a>
+        <a href="#" class="list-group-item list-group-item-action"><i class="fa-solid fa-microchip me-2"></i> Máy hấp chip <span class="float-end text-muted small">8</span></a>
+        <a href="#" class="list-group-item list-group-item-action"><i class="fa-solid fa-screwdriver-wrench me-2"></i> Phụ kiện <span class="float-end text-muted small">28</span></a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Slider sản phẩm bán chạy
+    function spSlide(dir) {
+      const wrap = document.getElementById('spSlider');
+      const itemW = wrap.querySelector('.sp-slider-item').offsetWidth + 15;
+      wrap.scrollBy({ left: dir * itemW * 2, behavior: 'smooth' });
+    }
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
