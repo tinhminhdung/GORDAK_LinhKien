@@ -71,8 +71,8 @@
                                 <li><a class="dropdown-item" href="javascript:void(0);" onclick="bulkUpdateStatus(1, null)">Hiện sản phẩm</a></li>
                                 <li><a class="dropdown-item" href="javascript:void(0);" onclick="bulkUpdateStatus(0, null)">Ẩn sản phẩm</a></li>
                                 <li class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" href="javascript:void(0);" onclick="bulkUpdateStatus(null, true)">Bật HOT</a></li>
-                                <li><a class="dropdown-item" href="javascript:void(0);" onclick="bulkUpdateStatus(null, false)">Tắt HOT</a></li>
+                                <li><a class="dropdown-item" href="javascript:void(0);" onclick="bulkUpdateStatus(null, true)">Bật Bán chạy</a></li>
+                                <li><a class="dropdown-item" href="javascript:void(0);" onclick="bulkUpdateStatus(null, false)">Tắt Bán chạy</a></li>
                                 <li class="dropdown-divider"></li>
                                 <li><a class="dropdown-item text-danger" href="javascript:void(0);" onclick="bulkDelete()"><i class="ri-delete-bin-line me-1"></i> Xóa vĩnh viễn</a></li>
                             </ul>
@@ -154,7 +154,7 @@
                                 <th onclick="changeSort('Stock')" class="sort cursor-pointer text-center">Kho <i class="ri-arrow-up-down-line sort-icon @(sortColumn == "Stock" ? "active" : "")"></i></th>
                                 <th onclick="changeSort('Views')" class="sort cursor-pointer text-center">Xem <i class="ri-arrow-up-down-line sort-icon @(sortColumn == "Views" ? "active" : "")"></i></th>
                                 <th onclick="changeSort('CreatedAt')" class="sort cursor-pointer text-center">Ngày tạo <i class="ri-arrow-up-down-line sort-icon @(sortColumn == "CreatedAt" ? "active" : "")"></i></th>
-                                <th class="text-center">HOT</th>
+                                <th class="text-center">Bán chạy (HOT)</th>
                                 <th class="text-center">Trạng thái</th>
                                 <th class="text-center">Hành động</th>
                             </tr>

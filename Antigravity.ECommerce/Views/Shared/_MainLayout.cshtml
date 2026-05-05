@@ -49,6 +49,11 @@
         .dropdown-menu.show { opacity: 1; visibility: visible; transform: translateY(0); }
         .dropdown-submenu { position: relative; }
         .dropdown-submenu:hover > .dropdown-menu { display: block; opacity: 1; visibility: visible; }
+        
+        /* 5-column grid for large screens */
+        @@media (min-width: 1200px) {
+            .col-xl-2-4 { flex: 0 0 auto; width: 20%; }
+        }
     </style>
     
     @await RenderSectionAsync("Styles", required: false)

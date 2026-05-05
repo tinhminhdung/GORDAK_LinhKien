@@ -4,6 +4,11 @@
     var category = ViewBag.Category as Antigravity.ECommerce.Models.Category;
     ViewData["Title"] = category != null ? category.Name : (ViewBag.Keyword != null ? "Tìm kiếm: " + ViewBag.Keyword : "Tất cả sản phẩm");
 
+    // Lấy danh sách danh mục gốc để hiển thị
+    var parentCategories = Antigravity.ECommerce.Services.SCache.GetOrSet("Home_Categories", () => Antigravity.ECommerce.Services.SCategory.GetAll().Where(x => x.ParentId == 0 && (x.CategoryType == 1 || x.CategoryType == null)).OrderBy(x => x.SortOrder).ToList(), 60);
+    var bestSellers = Antigravity.ECommerce.Services.SCache.GetOrSet("Product_BestSellers", () => Antigravity.ECommerce.Services.SProduct.Search(null, null, 1, true, null, null, "SortOrder", "ASC", 1, 12), 60);
+    var commitments = Antigravity.ECommerce.Services.SCache.GetOrSet("Product_Commitments", () => Antigravity.ECommerce.Services.SAdvertising.GetByPosition("Product_Commitment"), 60);
+
     // SEO Schema Setup
     ViewData["SchemaBreadcrumbs"] = new List<Antigravity.ECommerce.Models.BreadcrumbItem> {
         new Antigravity.ECommerce.Models.BreadcrumbItem { Name = "Trang chủ", Url = "/" },
@@ -16,260 +21,215 @@
     }
 }
 
-<!-- Category Banner -->
-@if (category != null && !string.IsNullOrEmpty(category.Banner))
-{
-    <section class="py-5 text-white position-relative overflow-hidden" style="background: url('@category.Banner') center/cover; min-height: 250px;">
-        <div class="position-absolute top-0 start-0 w-100 h-100 bg-dark opacity-50"></div>
-        <div class="container position-relative h-100 d-flex align-items-center">
-            <div class="py-4">
-                <h1 class="display-4 fw-bold">@category.Name</h1>
-                @if (!string.IsNullOrEmpty(category.Description))
-                {
-                    <p class="fs-5 text-white-50 max-width-600">@category.Description</p>
-                }
-            </div>
-        </div>
-    </section>
-}
-else
-{
-    <section class="bg-primary py-5 text-white">
-        <div class="container">
-            <h1 class="fw-bold mb-1">@(category?.Name ?? (ViewBag.Keyword != null ? "Kết quả tìm kiếm: " + ViewBag.Keyword : "Tất cả sản phẩm"))</h1>
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb mb-0">
-                    <li class="breadcrumb-item"><a href="/" class="text-white-50 text-decoration-none">Trang chủ</a></li>
-                    <li class="breadcrumb-item active text-white" aria-current="page">Sản phẩm</li>
-                </ol>
-            </nav>
-        </div>
-    </section>
-}
+<!-- ======== BREADCRUMB ======== -->
+<div class="container mt-3 mb-2">
+  <nav class="sp-breadcrumb"><a href="/">Trang chủ</a> <i class="fa-solid fa-chevron-right"></i> <span>@(category != null ? category.Name : (ViewBag.Keyword != null ? "Tìm kiếm: " + ViewBag.Keyword : "Sản phẩm"))</span></nav>
+</div>
 
-<section class="py-5">
-    <div class="container">
-        <div class="row g-4">
-            <!-- Sidebar / Filters -->
-            <div class="col-lg-3">
-                <form action="" method="get" class="filter-card p-4 sticky-top" style="top: 100px;">
-                    <h5 class="filter-title">Lọc sản phẩm</h5>
-                    
-                    @if (ViewBag.Keyword != null) {
-                        <input type="hidden" name="q" value="@ViewBag.Keyword" />
-                    }
+<!-- ======== CATEGORY FILTER ======== -->
+<div class="container mb-3">
+  <div class="sp-cat-list d-flex flex-wrap pb-2 gap-2">
+    <a href="/san-pham.html" class="sp-cat-item @(category == null ? "active" : "") d-flex align-items-center gap-3 px-3 py-2 border rounded text-decoration-none text-dark bg-white" style="min-width: 180px;">
+      <i class="fa-solid fa-border-all fs-3 text-primary"></i>
+      <div><strong class="d-block lh-1 mb-1">Tất cả sản phẩm</strong><small class="text-muted" style="font-size:12px;">@(ViewBag.TotalCount ?? (Model != null ? Model.Count : 0)) sản phẩm</small></div>
+    </a>
+    @if(parentCategories != null)
+    {
+      foreach(var cat in parentCategories)
+      {
+        <a href="/san-pham/@(cat.Slug).html" class="sp-cat-item @((category != null && category.CategoryId == cat.CategoryId) ? "active" : "") d-flex align-items-center gap-3 px-3 py-2 border rounded text-decoration-none text-dark bg-white" style="min-width: 180px;">
+          <i class="@(cat.Icon ?? "fa-solid fa-box") fs-3 @((category != null && category.CategoryId == cat.CategoryId) ? "text-danger" : "text-dark")"></i>
+          <div><strong class="d-block lh-1 mb-1">@cat.Name</strong><small class="text-muted" style="font-size:12px;">@cat.ItemCount sản phẩm</small></div>
+        </a>
+      }
+    }
+  </div>
+  
+  <!-- Mobile & Desktop Filter Trigger -->
+  <div class="d-flex justify-content-between align-items-center mt-3 border-top pt-3">
+    <div class="fw-bold text-dark"><i class="fa-solid fa-list me-1"></i> Hiển thị @(Model != null ? Model.Count : 0) sản phẩm</div>
+    <button class="btn btn-outline-dark btn-sm rounded-1 px-3 d-flex align-items-center gap-2" data-bs-toggle="offcanvas" data-bs-target="#filterOffcanvas">
+      <i class="fa-solid fa-sliders"></i> Lọc & Sắp xếp
+    </button>
+  </div>
+</div>
 
-                    <div class="mb-5">
-                        <label class="form-label fw-bold mb-3 text-dark"><i class="ri-money-dollar-circle-line align-bottom text-primary me-1 fs-5"></i> Khoảng giá</label>
-                        
-                        <!-- Slider container -->
-                        <div id="price-slider" class="mb-3 mt-2 mx-2"></div>
-                        
-                        <div class="d-flex justify-content-between align-items-center mt-3">
-                            <span id="price-min-display" class="price-value-display">0 ₫</span>
-                            <span class="text-muted">-</span>
-                            <span id="price-max-display" class="price-value-display">50,000,000 ₫</span>
-                        </div>
-                        
-                        <!-- Hidden inputs for form submission -->
-                        <input type="hidden" name="priceMin" id="priceMin" value="@Context.Request.Query["priceMin"]">
-                        <input type="hidden" name="priceMax" id="priceMax" value="@Context.Request.Query["priceMax"]">
-                    </div>
-
-                    <div class="mb-4">
-                        <label class="form-label fw-bold mb-3 text-dark"><i class="ri-sort-desc align-bottom text-primary me-1 fs-5"></i> Sắp xếp theo</label>
-                        <div class="sort-pills d-flex flex-column">
-                            @{
-                                var currentSort = Context.Request.Query["sort"].ToString();
-                                if (string.IsNullOrEmpty(currentSort)) currentSort = "newest";
-                            }
-                            <input type="radio" class="btn-check" name="sort" id="sort_newest" value="newest" @(currentSort == "newest" ? "checked" : "")>
-                            <label class="btn btn-outline-primary w-100" for="sort_newest"><i class="ri-time-line me-2"></i> Mới nhất</label>
-
-                            <input type="radio" class="btn-check" name="sort" id="sort_asc" value="price_asc" @(currentSort == "price_asc" ? "checked" : "")>
-                            <label class="btn btn-outline-primary w-100" for="sort_asc"><i class="ri-sort-asc me-2"></i> Giá: Thấp đến Cao</label>
-
-                            <input type="radio" class="btn-check" name="sort" id="sort_desc" value="price_desc" @(currentSort == "price_desc" ? "checked" : "")>
-                            <label class="btn btn-outline-primary w-100" for="sort_desc"><i class="ri-sort-desc me-2"></i> Giá: Cao đến Thấp</label>
-                        </div>
-                    </div>
-
-                    <div class="d-flex gap-2 pt-3 border-top mt-2">
-                        <a href="?" class="btn btn-light flex-grow-1 text-muted fw-medium border shadow-none"><i class="ri-refresh-line me-1"></i> Xóa</a>
-                        <button type="submit" class="btn btn-primary flex-grow-1 fw-medium shadow-sm"><i class="ri-filter-3-line me-1"></i> Áp dụng</button>
-                    </div>
-                </form>
-            </div>
-
-            <!-- Product Grid -->
-            <div class="col-lg-9">
-                <div class="row g-4">
-                    @if (Model != null && Model.Any())
-                    {
-                        foreach (var p in Model)
-                        {
-                            <div class="col-xl-4 col-md-6 text-dark" >
-                                <div class="product-card">
-                                    <a href="/san-pham/detail/@(p.Slug).html" class="product-img-wrapper">
-                                        <img src="@(string.IsNullOrEmpty(p.MainImage) ? "/assets/images/placeholder.png" : p.MainImage)" alt="@p.Name">
-                                        @if(p.IsHot) {
-                                            <div class="position-absolute top-0 end-0 m-3">
-                                                <span class="badge-hot">HOT</span>
-                                            </div>
-                                        }
-                                    </a>
-                                    <div class="product-info">
-                                        <a href="/san-pham/detail/@(p.Slug).html" class="text-decoration-none text-dark">
-                                            <h5 class="product-title mb-1">@p.Name</h5>
-                                        </a>
-                                        @if (!string.IsNullOrEmpty(p.Tags))
-                                        {
-                                            <div class="mb-2 d-flex flex-wrap gap-1">
-                                                @foreach (var tag in p.Tags.Split(',', StringSplitOptions.RemoveEmptyEntries))
-                                                {
-                                                    <a href="/Product/Search?q=@tag.Trim()" class="badge bg-light text-primary border border-primary-subtle fw-normal text-decoration-none" style="font-size:10px; padding: 2px 6px;">#@tag.Trim()</a>
-                                                }
-                                            </div>
-                                        }
-                                        <div class="mt-auto">
-                                            <div class="d-flex align-items-center mb-3">
-                                                <span class="product-price">@p.Price.ToString("N0") ₫</span>
-                                            </div>
-                                            <div class="d-flex gap-2">
-                                                <button class="btn btn-outline-danger btn-sm px-3" onclick="toggleWishlist(@p.ProductId)" title="Yêu thích"><i class="ri-heart-3-line"></i></button>
-                                                <button class="btn btn-primary w-100 btn-sm" onclick="addToCart(@p.ProductId)">
-                                                    Mua ngay
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        }
-                    }
-                    else
-                    {
-                        <div class="col-12 text-center py-5">
-                            <i class="mdi mdi-package-variant mdi-48px text-muted"></i>
-                            <p class="fs-5 text-muted mt-3">Không tìm thấy sản phẩm nào phù hợp.</p>
-                            <a href="/" class="btn btn-primary">Về trang chủ</a>
-                        </div>
-                    }
+<!-- ======== PRODUCT GRID ======== -->
+<div class="container">
+  <div class="row g-3">
+    @if (Model != null && Model.Any())
+    {
+        foreach (var p in Model)
+        {
+            <div class="col-6 col-md-4 col-lg-3 col-xl-2-4">
+                <div class="product-card position-relative h-100 d-flex flex-column">
+                  @if(p.IsHot){<span class="badge-hot">HOT</span>}
+                  <span class="badge-heart" onclick="toggleWishlist(@p.ProductId)" style="cursor:pointer"><i class="fa-regular fa-heart"></i></span>
+                  <a href="/san-pham/detail/@(p.Slug).html" class="d-block text-center mb-2" style="height: 180px;">
+                      <img src="@(string.IsNullOrEmpty(p.MainImage) ? "/assets/images/placeholder.png" : p.MainImage)" class="product-img h-100 w-100 object-fit-contain" alt="@p.Name">
+                  </a>
+                  <h3 class="product-name"><a href="/san-pham/detail/@(p.Slug).html" class="text-decoration-none text-dark">@p.Name</a></h3>
+                  <p class="product-desc line-clamp-2" style="font-size:12px; color:#666;">@(string.IsNullOrEmpty(p.ShortDescription) ? p.Name : p.ShortDescription)</p>
+                  <div class="mt-auto">
+                      <div class="product-price">@p.Price.ToString("N0")đ</div>
+                      <div class="product-actions d-flex gap-2 mt-2">
+                        <a href="/san-pham/detail/@(p.Slug).html" class="btn-outline-gd flex-fill text-center px-0 py-1" style="font-size:13px;">Chi tiết</a>
+                        <a href="javascript:void(0)" onclick="addToCart(@p.ProductId,1)" class="btn-gd flex-fill d-flex align-items-center justify-content-center gap-1 py-1" style="font-size:13px;">
+                          <i class="fa-solid fa-cart-shopping"></i> Mua
+                        </a>
+                      </div>
+                  </div>
                 </div>
+            </div>
+        }
+    }
+    else
+    {
+        <div class="col-12 text-center py-5">
+            <i class="fa-solid fa-box-open fa-3x text-muted mb-3"></i>
+            <p class="fs-5 text-muted">Không tìm thấy sản phẩm nào phù hợp.</p>
+            <a href="/san-pham.html" class="btn btn-primary mt-2">Xem tất cả sản phẩm</a>
+        </div>
+    }
+  </div>
 
-                <!-- Pagination -->
-                @if (ViewBag.PageCount > 1)
-                {
-                    <nav class="mt-5">
-                        <ul class="pagination pagination-rounded justify-content-center">
-                            @for (int i = 1; i <= ViewBag.PageCount; i++)
-                            {
-                                <li class="page-item @(i == ViewBag.PageIndex ? "active" : "")">
-                                    <a class="page-link" href="?q=@ViewBag.Keyword&page=@i">@i</a>
-                                </li>
-                            }
-                        </ul>
-                    </nav>
-                }
+  <!-- Pagination -->
+  @if (ViewBag.PageCount > 1)
+  {
+      <nav class="mt-4 mb-5">
+          <ul class="pagination pagination-rounded justify-content-center">
+              @for (int i = 1; i <= ViewBag.PageCount; i++)
+              {
+                  <li class="page-item @(i == ViewBag.PageIndex ? "active" : "")">
+                      <a class="page-link" href="?q=@ViewBag.Keyword&page=@i&priceMin=@Context.Request.Query["priceMin"]&priceMax=@Context.Request.Query["priceMax"]&sort=@Context.Request.Query["sort"]">@i</a>
+                  </li>
+              }
+          </ul>
+      </nav>
+  }
+</div>
+
+<!-- ======== SẢN PHẨM BÁN CHẠY ======== -->
+@if(bestSellers != null && bestSellers.Count > 0)
+{
+<div class="container sp-bestseller-sec mt-5">
+  <h2 class="gt-section-title text-uppercase mb-3"><i class="fa-solid fa-fire text-danger"></i> SẢN PHẨM BÁN CHẠY</h2>
+  <div class="position-relative group-slider">
+    <button class="btn btn-light position-absolute top-50 start-0 translate-middle-y shadow-sm z-3 d-none d-md-block sp-slider-prev" onclick="spSlide(-1)" style="border-radius:50%; width:40px; height:40px; margin-left:-20px;"><i class="fa-solid fa-chevron-left"></i></button>
+    
+    <div class="row g-3 flex-nowrap overflow-auto hide-scrollbar pb-3 sp-slider-wrap" id="spSlider" style="scrollbar-width: none;">
+      @foreach(var p in bestSellers)
+      {
+      <div class="col-6 col-md-4 col-lg-3 col-xl-2-4 sp-slider-item">
+        <div class="product-card position-relative h-100 d-flex flex-column bg-white">
+            @if(p.IsHot){<span class="badge-hot">HOT</span>}
+            <span class="badge-heart" onclick="toggleWishlist(@p.ProductId)" style="cursor:pointer"><i class="fa-regular fa-heart"></i></span>
+            <a href="/san-pham/detail/@(p.Slug).html" class="d-block text-center mb-2" style="height: 180px;">
+                <img src="@(string.IsNullOrEmpty(p.MainImage) ? "/assets/images/placeholder.png" : p.MainImage)" class="product-img h-100 w-100 object-fit-contain" alt="@p.Name">
+            </a>
+            <h3 class="product-name"><a href="/san-pham/detail/@(p.Slug).html" class="text-decoration-none text-dark">@p.Name</a></h3>
+            <p class="product-desc line-clamp-2" style="font-size:12px; color:#666;">@(string.IsNullOrEmpty(p.ShortDescription) ? p.Name : p.ShortDescription)</p>
+            <div class="mt-auto">
+                <div class="product-price">@p.Price.ToString("N0")đ</div>
+                <div class="product-actions d-flex gap-2 mt-2">
+                  <a href="/san-pham/detail/@(p.Slug).html" class="btn-outline-gd flex-fill text-center px-0 py-1" style="font-size:13px;">Chi tiết</a>
+                  <a href="javascript:void(0)" onclick="addToCart(@p.ProductId,1)" class="btn-gd flex-fill d-flex align-items-center justify-content-center gap-1 py-1" style="font-size:13px;">
+                    <i class="fa-solid fa-cart-shopping"></i> Mua
+                  </a>
+                </div>
             </div>
         </div>
+      </div>
+      }
     </div>
-</section>
+    
+    <button class="btn btn-light position-absolute top-50 end-0 translate-middle-y shadow-sm z-3 d-none d-md-block sp-slider-next" onclick="spSlide(1)" style="border-radius:50%; width:40px; height:40px; margin-right:-20px;"><i class="fa-solid fa-chevron-right"></i></button>
+  </div>
+</div>
+}
+
+<!-- ======== CAM KẾT BAR ======== -->
+<div class="container my-4">
+  <div class="sp-commit-bar">
+    @if(commitments != null)
+    {
+        foreach(var c in commitments)
+        {
+            <div class="sp-commit-item"><i class="@c.VideoUrl"></i><div><strong>@c.Title</strong><small>@c.Description</small></div></div>
+        }
+    }
+  </div>
+</div>
+
+
+<!-- ======== FILTER OFFCANVAS ======== -->
+<div class="offcanvas offcanvas-end" tabindex="-1" id="filterOffcanvas" style="width: 350px;">
+  <div class="offcanvas-header border-bottom bg-light">
+    <h5 class="offcanvas-title fw-bold text-uppercase"><i class="fa-solid fa-sliders text-primary"></i> Lọc & Sắp xếp</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body">
+    <form action="" method="get">
+        @if (ViewBag.Keyword != null) {
+            <input type="hidden" name="q" value="@ViewBag.Keyword" />
+        }
+
+        <div class="mb-4">
+            <label class="form-label fw-bold mb-3 text-dark"><i class="fa-solid fa-sort me-1 text-primary"></i> Sắp xếp theo</label>
+            <div class="sort-pills d-flex flex-column">
+                @{
+                    var currentSort = Context.Request.Query["sort"].ToString();
+                    if (string.IsNullOrEmpty(currentSort)) currentSort = "newest";
+                }
+                <div class="form-check mb-2">
+                    <input class="form-check-input" type="radio" name="sort" id="sort_newest" value="newest" @(currentSort == "newest" ? "checked" : "")>
+                    <label class="form-check-label" for="sort_newest">Mới nhất</label>
+                </div>
+                <div class="form-check mb-2">
+                    <input class="form-check-input" type="radio" name="sort" id="sort_asc" value="price_asc" @(currentSort == "price_asc" ? "checked" : "")>
+                    <label class="form-check-label" for="sort_asc">Giá: Thấp đến Cao</label>
+                </div>
+                <div class="form-check mb-2">
+                    <input class="form-check-input" type="radio" name="sort" id="sort_desc" value="price_desc" @(currentSort == "price_desc" ? "checked" : "")>
+                    <label class="form-check-label" for="sort_desc">Giá: Cao đến Thấp</label>
+                </div>
+            </div>
+        </div>
+        
+        <hr>
+
+        <div class="mb-4 mt-3">
+            <label class="form-label fw-bold mb-3 text-dark"><i class="fa-solid fa-money-bill-wave me-1 text-primary"></i> Khoảng giá</label>
+            <div id="price-slider" class="mb-3 mt-2 mx-2"></div>
+            <div class="d-flex justify-content-between align-items-center mt-3">
+                <span id="price-min-display" class="price-value-display fw-bold text-danger">0 ₫</span>
+                <span class="text-muted">-</span>
+                <span id="price-max-display" class="price-value-display fw-bold text-danger">50,000,000 ₫</span>
+            </div>
+            <input type="hidden" name="priceMin" id="priceMin" value="@Context.Request.Query["priceMin"]">
+            <input type="hidden" name="priceMax" id="priceMax" value="@Context.Request.Query["priceMax"]">
+        </div>
+
+        <div class="d-flex gap-2 pt-3 border-top mt-auto fixed-bottom p-3 bg-white border-top">
+            <a href="?" class="btn btn-light flex-grow-1 border">Thiết lập lại</a>
+            <button type="submit" class="btn btn-primary flex-grow-1">Áp dụng</button>
+        </div>
+    </form>
+  </div>
+</div>
 
 @section Styles {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/nouislider/15.7.1/nouislider.min.css" />
     <style>
-        .max-width-600 { max-width: 600px; }
-        
-        /* Filter Card Modern UI */
-        .filter-card {
-            background: #fff;
-            border-radius: 16px;
-            box-shadow: 0 5px 25px rgba(0,0,0,0.05);
-            border: 1px solid rgba(0,0,0,0.03);
-        }
-        .filter-title {
-            font-size: 1.15rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 1.5rem;
-            position: relative;
-            padding-bottom: 0.75rem;
-            color: #212529;
-        }
-        .filter-title::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 50px;
-            height: 3px;
-            background: var(--bs-primary);
-            border-radius: 3px;
-        }
-        
-        /* Pills Sorting */
-        .sort-pills .btn-check:checked + .btn-outline-primary {
-            background-color: var(--bs-primary);
-            color: #fff;
-            border-color: var(--bs-primary);
-            box-shadow: 0 4px 10px rgba(64, 81, 137, 0.2);
-        }
-        .sort-pills .btn {
-            text-align: left;
-            border-radius: 10px;
-            margin-bottom: 10px;
-            border-color: #f0f0f0;
-            background: #fafafa;
-            color: #555;
-            font-weight: 500;
-            transition: all 0.25s ease;
-            padding: 10px 15px;
-        }
-        .sort-pills .btn:hover {
-            background-color: #f1f5f9;
-            border-color: #e2e8f0;
-            transform: translateX(2px);
-        }
+        .sp-cat-list::-webkit-scrollbar { display: none; }
+        .sp-cat-item.active { border-color: var(--bs-primary) !important; background: rgba(var(--bs-primary-rgb), 0.05) !important; box-shadow: inset 0 0 0 1px var(--bs-primary); }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
         
         /* noUiSlider Customization */
-        .noUi-target {
-            background: #e9ecef;
-            border-radius: 10px;
-            border: none;
-            box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
-            height: 6px;
-        }
-        .noUi-connect {
-            background: var(--bs-primary);
-        }
-        .noUi-handle {
-            border-radius: 50%;
-            background: #fff;
-            border: 2px solid var(--bs-primary);
-            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-            cursor: pointer;
-            width: 20px !important;
-            height: 20px !important;
-            right: -10px !important;
-            top: -7px !important;
-            transition: transform 0.1s;
-        }
-        .noUi-handle:hover {
-            transform: scale(1.1);
-        }
-        .noUi-handle::before, .noUi-handle::after {
-            display: none; /* Hide default lines */
-        }
-        .price-value-display {
-            font-weight: 700;
-            color: var(--bs-primary);
-            font-size: 0.95rem;
-            background: #f8f9fa;
-            padding: 4px 10px;
-            border-radius: 6px;
-        }
+        .noUi-target { background: #e9ecef; border: none; height: 6px; }
+        .noUi-connect { background: var(--bs-primary); }
+        .noUi-handle { border-radius: 50%; background: #fff; border: 2px solid var(--bs-primary); width: 20px !important; height: 20px !important; right: -10px !important; top: -7px !important; }
+        .noUi-handle::before, .noUi-handle::after { display: none; }
     </style>
 }
 
@@ -283,20 +243,15 @@ else
             var minDisplay = document.getElementById('price-min-display');
             var maxDisplay = document.getElementById('price-max-display');
 
-            // Default max price for slider range
-            var maxSliderPrice = 50000000; // 50 million
-            
+            var maxSliderPrice = 50000000;
             var startMin = minInput.value ? parseInt(minInput.value) : 0;
             var startMax = maxInput.value ? parseInt(maxInput.value) : maxSliderPrice;
 
             noUiSlider.create(slider, {
                 start: [startMin, startMax],
                 connect: true,
-                step: 100000, // Bước nhảy 100k
-                range: {
-                    'min': 0,
-                    'max': maxSliderPrice
-                },
+                step: 100000,
+                range: { 'min': 0, 'max': maxSliderPrice },
                 format: {
                     to: function (value) { return Math.round(value); },
                     from: function (value) { return Number(value); }
@@ -312,10 +267,43 @@ else
                     minDisplay.innerHTML = formattedValue;
                 } else {
                     maxInput.value = value;
-                    // If at absolute max, display a '+' sign to imply "and above"
-                    maxDisplay.innerHTML = value >= maxSliderPrice ? formattedValue.replace('₫', '') + '+ ₫' : formattedValue;
+                    maxDisplay.innerHTML = value >= maxSliderPrice ? formattedValue.replace('₫', '') + '+' : formattedValue;
                 }
             });
         });
+
+        // Slider sản phẩm bán chạy
+        function spSlide(dir) {
+          const wrap = document.getElementById('spSlider');
+          if(!wrap) return;
+          const itemW = wrap.querySelector('.sp-slider-item').offsetWidth;
+          
+          // === CẤU HÌNH SỐ LƯỢNG SẢN PHẨM TRƯỢT ===
+          // Bạn có thể sửa các số bên dưới để thay đổi số lượng item trượt đi mỗi khi bấm nút.
+          // Nếu để = 0, JS sẽ tự động tính toán trượt theo kích thước màn hình hiện tại.
+          const configItemsToScroll = {
+              desktop: 5,   // Số item trượt trên PC (chiều rộng >= 1200px)
+              laptop: 4,    // Số item trượt trên Laptop (chiều rộng >= 992px)
+              tablet: 3,    // Số item trượt trên Tablet ngang (chiều rộng >= 768px)
+              mobile: 2     // Số item trượt trên Mobile (chiều rộng < 768px)
+          };
+          // ========================================
+
+          let visibleItems = 1;
+          const w = window.innerWidth;
+
+          if (w >= 1200) {
+              visibleItems = configItemsToScroll.desktop || Math.max(1, Math.floor(wrap.clientWidth / itemW));
+          } else if (w >= 992) {
+              visibleItems = configItemsToScroll.laptop || Math.max(1, Math.floor(wrap.clientWidth / itemW));
+          } else if (w >= 768) {
+              visibleItems = configItemsToScroll.tablet || Math.max(1, Math.floor(wrap.clientWidth / itemW));
+          } else {
+              visibleItems = configItemsToScroll.mobile || Math.max(1, Math.floor(wrap.clientWidth / itemW));
+          }
+          
+          // Cuộn đúng bằng số lượng item đang hiển thị
+          wrap.scrollBy({ left: dir * itemW * visibleItems, behavior: 'smooth' });
+        }
     </script>
 }

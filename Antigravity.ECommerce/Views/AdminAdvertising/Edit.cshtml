@@ -88,6 +88,12 @@
                             <option value="Sidebar_Right">Cột phải - Sidebar</option>
                             <option value="Product_Detail">Trang chi tiết sản phẩm</option>
                             <option value="Popup">Popup Quảng cáo</option>
+                            <option disabled>── Trang Giới thiệu ──</option>
+                            <option value="About_Hero">Giới thiệu - Banner đầu trang</option>
+                            <option value="About_Intro">Giới thiệu - Về Gordak</option>
+                            <option value="About_CoreValues">Giới thiệu - Giá trị cốt lõi</option>
+                            <option value="About_Timeline">Giới thiệu - Hành trình phát triển</option>
+                            <option value="About_Cert">Giới thiệu - Chứng nhận</option>
                         </select>
                     </div>
 
@@ -194,6 +200,54 @@
                 videoUrl: { show: true, label: 'Đoạn mô tả thứ 2 <small class="text-muted">(hiển thị bên dưới đoạn 1)</small>', col: 'col-md-12', textarea: true, rows: 3 },
                 description: { show: true, label: 'Đoạn mô tả chính <span class="text-danger">*</span>', rows: 4 },
                 link: { show: true, label: 'Đường dẫn "Tìm hiểu thêm"', placeholder: '/gioi-thieu.html' },
+                target: false, schedule: false
+            },
+            'About_Hero': {
+                title: 'Tiêu đề Banner <span class="text-danger">*</span>',
+                image: { show: true, label: 'Ảnh bên phải <span class="text-danger">*</span>', col: 'col-md-12' },
+                videoUrl: { show: true, label: 'Tiêu đề phụ (Subtitle)', col: 'col-md-6' },
+                description: { show: true, label: 'Đoạn mô tả ngắn', rows: 4 },
+                link: { show: true, label: 'Nhãn nhỏ trên cùng (VD: VỀ THƯƠNG HIỆU)' },
+                target: false, schedule: false
+            },
+            'About_Intro': {
+                title: 'Tiêu đề (hoặc nội dung checklist) <span class="text-danger">*</span>',
+                image: { show: true, label: 'Ảnh giới thiệu (nếu là mục chính)', col: 'col-md-12' },
+                videoUrl: { show: true, label: 'Icon FontAwesome (nếu là checklist)', col: 'col-md-12' },
+                description: { show: true, label: 'Mô tả (nếu là mục chính)', rows: 4 },
+                link: { show: false },
+                target: false, schedule: false
+            },
+            'About_CoreValues': {
+                title: 'Tên giá trị cốt lõi <span class="text-danger">*</span>',
+                image: { show: false, label: '', col: 'col-md-6' },
+                videoUrl: { show: true, label: 'Icon FontAwesome <small class="text-muted">VD: fa-solid fa-gem</small>', col: 'col-md-12' },
+                description: { show: true, label: 'Mô tả ngắn', rows: 3 },
+                link: { show: false },
+                target: false, schedule: false
+            },
+            'About_Timeline': {
+                title: 'Tiêu đề mốc sự kiện <span class="text-danger">*</span>',
+                image: { show: false, label: '', col: 'col-md-6' },
+                videoUrl: { show: true, label: 'Icon FontAwesome <small class="text-muted">VD: fa-solid fa-rocket</small>', col: 'col-md-12' },
+                description: { show: false },
+                link: { show: true, label: 'Mô tả sự kiện <span class="text-danger">*</span>' },
+                target: false, schedule: false
+            },
+            'About_Cert': {
+                title: 'Tiêu đề chứng nhận <span class="text-danger">*</span>',
+                image: { show: true, label: 'Ảnh chứng nhận <span class="text-danger">*</span>', col: 'col-md-12' },
+                videoUrl: { show: false, label: '', col: 'col-md-6' },
+                description: { show: false },
+                link: { show: false },
+                target: false, schedule: false
+            },
+            'Product_Commitment': {
+                title: 'Tiêu đề cam kết <span class="text-danger">*</span>',
+                image: { show: false, label: '', col: 'col-md-6' },
+                videoUrl: { show: true, label: 'Icon FontAwesome <small class="text-muted">VD: fa-solid fa-shield-halved</small>', col: 'col-md-12' },
+                description: { show: true, label: 'Mô tả ngắn <span class="text-danger">*</span>', rows: 3 },
+                link: { show: false },
                 target: false, schedule: false
             },
             '_default': {

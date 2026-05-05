@@ -101,24 +101,38 @@ public class HomeController : Controller
     /// </summary>
     public IActionResult About()
     {
-        // Lấy dữ liệu BrandIntro, BrandStat, WhyChoose từ Advertising
-        var brandIntro = Antigravity.ECommerce.Services.SCache.GetOrSet("Home_BrandIntro", () =>
-            Antigravity.ECommerce.Services.SAdvertising.GetByPosition("Home_BrandIntro")?.FirstOrDefault(), 60);
+        // Dữ liệu riêng cho trang Giới thiệu
+        var aboutHero = Antigravity.ECommerce.Services.SCache.GetOrSet("About_Hero", () =>
+            Antigravity.ECommerce.Services.SAdvertising.GetByPosition("About_Hero")?.FirstOrDefault(), 60);
+
+        var aboutIntro = Antigravity.ECommerce.Services.SCache.GetOrSet("About_Intro", () =>
+            Antigravity.ECommerce.Services.SAdvertising.GetByPosition("About_Intro"), 60);
+
+        var aboutCoreValues = Antigravity.ECommerce.Services.SCache.GetOrSet("About_CoreValues", () =>
+            Antigravity.ECommerce.Services.SAdvertising.GetByPosition("About_CoreValues"), 60);
 
         var brandStats = Antigravity.ECommerce.Services.SCache.GetOrSet("Home_BrandStat", () =>
             Antigravity.ECommerce.Services.SAdvertising.GetByPosition("Home_BrandStat"), 60);
 
-        var whyChoose = Antigravity.ECommerce.Services.SCache.GetOrSet("Home_WhyChoose", () =>
-            Antigravity.ECommerce.Services.SAdvertising.GetByPosition("Home_WhyChoose"), 60);
-
-        // Sản phẩm tiêu biểu (4 sản phẩm hot nhất)
+        // Sản phẩm tiêu biểu (5 sản phẩm hot nhất)
         var featuredProducts = Antigravity.ECommerce.Services.SCache.GetOrSet("About_FeaturedProducts", () =>
-            Antigravity.ECommerce.Framework.FProduct.Search(null, null, 1, true, null, null, "CreatedAt", "DESC", 1, 4), 60);
+            Antigravity.ECommerce.Framework.FProduct.Search(null, null, 1, true, null, null, "CreatedAt", "DESC", 1, 5), 60);
 
-        ViewBag.BrandIntro = brandIntro;
+        // Timeline giới thiệu
+        var aboutTimeline = Antigravity.ECommerce.Services.SCache.GetOrSet("About_Timeline", () =>
+            Antigravity.ECommerce.Services.SAdvertising.GetByPosition("About_Timeline"), 60);
+
+        // Chứng nhận
+        var aboutCert = Antigravity.ECommerce.Services.SCache.GetOrSet("About_Cert", () =>
+            Antigravity.ECommerce.Services.SAdvertising.GetByPosition("About_Cert"), 60);
+
+        ViewBag.AboutHero = aboutHero;
+        ViewBag.AboutIntro = aboutIntro;
+        ViewBag.AboutCoreValues = aboutCoreValues;
         ViewBag.BrandStats = brandStats;
-        ViewBag.WhyChoose = whyChoose;
         ViewBag.FeaturedProducts = featuredProducts;
+        ViewBag.AboutTimeline = aboutTimeline;
+        ViewBag.AboutCert = aboutCert;
 
         return View();
     }

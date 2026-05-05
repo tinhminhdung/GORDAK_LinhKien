@@ -131,20 +131,76 @@ namespace Antigravity.ECommerce.Controllers
                     foreach (var d in statDefaults) { d.CreatedBy = createdBy; SAdvertising.Insert(d); }
                     break;
 
-                case "Home_BrandIntro":
-                    var introItem = new Advertising
+                case "About_Hero":
+                    SAdvertising.Insert(new Advertising
                     {
-                        Title = "VỀ THƯƠNG HIỆU GORDAK",
+                        Title = "GORDAK",
+                        Link = "VỀ THƯƠNG HIỆU",
+                        VideoUrl = "Nhà sản xuất thiết bị hàn & rework hàng đầu thế giới",
+                        Description = "Gordak là thương hiệu nổi tiếng trong lĩnh vực thiết bị hàn và sửa chữa điện tử. Với công nghệ hiện đại, độ bền vượt trội và hiệu suất ổn định, sản phẩm của Gordak được tin dùng bởi kỹ thuật viên và doanh nghiệp tại nhiều quốc gia trên thế giới.",
                         Image = "/assets/images/z7775799762257_f058bd78c3b1f94e77da2c4eda69efb3.jpg",
-                        Description = "Gordak là thương hiệu nổi tiếng trong lĩnh vực thiết bị hàn và sửa chữa điện tử, được thành lập từ năm 1999. Với hơn 20 năm phát triển, Gordak không ngừng nghiên cứu và cải tiến công nghệ để mang đến những sản phẩm chất lượng cao, độ bền vượt trội và hiệu suất ổn định.",
-                        VideoUrl = "Các sản phẩm của Gordak được tin dùng rộng rãi trong lĩnh vực sửa chữa điện tử, sản xuất công nghiệp, phòng thí nghiệm và đào tạo nghề tại hơn 50 quốc gia trên thế giới.",
-                        Link = "/gioi-thieu.html",
-                        Position = "Home_BrandIntro",
+                        Position = "About_Hero",
                         SortOrder = 1,
                         Status = 1,
                         CreatedBy = createdBy
+                    });
+                    break;
+
+                case "About_Intro":
+                    var introDefaults = new List<Advertising>
+                    {
+                        new Advertising { Title = "GIỚI THIỆU VỀ GORDAK", Description = "Với định hướng tập trung vào chất lượng và sự đổi mới, Gordak không ngừng nghiên cứu và cải tiến công nghệ để mang đến những giải pháp hàn và sửa chữa hiệu quả, an toàn và thân thiện với người dùng.", Image = "/assets/images/z7775799762257_f058bd78c3b1f94e77da2c4eda69efb3.jpg", Position = "About_Intro", SortOrder = 1, Status = 1 },
+                        new Advertising { Title = "Công nghệ kiểm soát nhiệt thông minh", VideoUrl = "fa-solid fa-check", Position = "About_Intro", SortOrder = 2, Status = 1 },
+                        new Advertising { Title = "Độ bền cao, hoạt động ổn định", VideoUrl = "fa-solid fa-check", Position = "About_Intro", SortOrder = 3, Status = 1 },
+                        new Advertising { Title = "Thiết kế tối ưu, dễ sử dụng", VideoUrl = "fa-solid fa-check", Position = "About_Intro", SortOrder = 4, Status = 1 },
+                        new Advertising { Title = "Đáp ứng tiêu chuẩn kỹ thuật quốc tế", VideoUrl = "fa-solid fa-check", Position = "About_Intro", SortOrder = 5, Status = 1 }
                     };
-                    SAdvertising.Insert(introItem);
+                    foreach (var d in introDefaults) { d.CreatedBy = createdBy; SAdvertising.Insert(d); }
+                    break;
+
+                case "About_CoreValues":
+                    var coreDefaults = new List<Advertising>
+                    {
+                        new Advertising { Title = "CHẤT LƯỢNG HÀNG ĐẦU", Description = "Kiểm soát chặt chẽ từng công đoạn để đảm bảo chất lượng sản phẩm.", VideoUrl = "fa-solid fa-gem", Position = "About_CoreValues", SortOrder = 1, Status = 1 },
+                        new Advertising { Title = "ĐỔI MỚI CÔNG NGHỆ", Description = "Không ngừng nghiên cứu và cải tiến để mang lại giải pháp tiên tiến.", VideoUrl = "fa-solid fa-lightbulb", Position = "About_CoreValues", SortOrder = 2, Status = 1 },
+                        new Advertising { Title = "KHÁCH HÀNG LÀ TRUNG TÂM", Description = "Luôn lắng nghe và đáp ứng mọi nhu cầu của khách hàng.", VideoUrl = "fa-solid fa-users", Position = "About_CoreValues", SortOrder = 3, Status = 1 },
+                        new Advertising { Title = "HỢP TÁC BỀN VỮNG", Description = "Xây dựng mối quan hệ lâu dài, cùng phát triển và thành công.", VideoUrl = "fa-solid fa-handshake", Position = "About_CoreValues", SortOrder = 4, Status = 1 }
+                    };
+                    foreach (var d in coreDefaults) { d.CreatedBy = createdBy; SAdvertising.Insert(d); }
+                    break;
+
+                case "About_Timeline":
+                    var tlDefaults = new List<Advertising>
+                    {
+                        new Advertising { Title = "Khởi đầu & phát triển", Link = "Tập trung nghiên cứu và phát triển thiết bị hàn chất lượng cao.", VideoUrl = "fa-solid fa-rocket", Position = "About_Timeline", SortOrder = 1, Status = 1 },
+                        new Advertising { Title = "Mở rộng thị trường", Link = "Sản phẩm Gordak có mặt tại nhiều quốc gia và khu vực.", VideoUrl = "fa-solid fa-globe", Position = "About_Timeline", SortOrder = 2, Status = 1 },
+                        new Advertising { Title = "Nâng cao chất lượng", Link = "Liên tục cải tiến công nghệ, tối ưu hiệu suất và độ bền sản phẩm.", VideoUrl = "fa-solid fa-chart-line", Position = "About_Timeline", SortOrder = 3, Status = 1 },
+                        new Advertising { Title = "Đổi mới không ngừng", Link = "Phát triển các giải pháp hàn hiện đại, phù hợp với xu hướng mới.", VideoUrl = "fa-solid fa-microchip", Position = "About_Timeline", SortOrder = 4, Status = 1 },
+                        new Advertising { Title = "Đồng hành cùng khách hàng", Link = "Luôn lắng nghe và hỗ trợ để mang lại giá trị tốt nhất cho khách hàng.", VideoUrl = "fa-solid fa-heart", Position = "About_Timeline", SortOrder = 5, Status = 1 }
+                    };
+                    foreach (var d in tlDefaults) { d.CreatedBy = createdBy; SAdvertising.Insert(d); }
+                    break;
+
+                case "Product_Commitment":
+                    var commitDefaults = new List<Advertising>
+                    {
+                        new Advertising { Title = "Sản phẩm chính hãng 100%", Description = "Nhập khẩu và phân phối chính thức tại Việt Nam", VideoUrl = "fa-solid fa-shield-halved", Position = "Product_Commitment", SortOrder = 1, Status = 1 },
+                        new Advertising { Title = "Bảo hành chính hãng 12 tháng", Description = "1 đổi 1 trong 7 ngày nếu có lỗi NSX", VideoUrl = "fa-solid fa-certificate", Position = "Product_Commitment", SortOrder = 2, Status = 1 },
+                        new Advertising { Title = "Hỗ trợ kỹ thuật trọn đời", Description = "Đội ngũ kỹ thuật giàu kinh nghiệm", VideoUrl = "fa-solid fa-headset", Position = "Product_Commitment", SortOrder = 3, Status = 1 },
+                        new Advertising { Title = "Giao hàng toàn quốc", Description = "Miễn phí giao hàng cho đơn từ 1 triệu", VideoUrl = "fa-solid fa-truck-fast", Position = "Product_Commitment", SortOrder = 4, Status = 1 }
+                    };
+                    foreach (var d in commitDefaults) { d.CreatedBy = createdBy; SAdvertising.Insert(d); }
+                    break;
+
+                case "About_Cert":
+                    var certDefaults = new List<Advertising>
+                    {
+                        new Advertising { Title = "Chứng nhận đại lý chính thức", Image = "/assets/images/z7775799762257_f058bd78c3b1f94e77da2c4eda69efb3.jpg", Position = "About_Cert", SortOrder = 1, Status = 1 },
+                        new Advertising { Title = "Chứng nhận ISO 9001:2015", Image = "/assets/images/z7775799762257_f058bd78c3b1f94e77da2c4eda69efb3.jpg", Position = "About_Cert", SortOrder = 2, Status = 1 },
+                        new Advertising { Title = "Chứng nhận CO, CQ đầy đủ", Image = "/assets/images/z7775799762257_f058bd78c3b1f94e77da2c4eda69efb3.jpg", Position = "About_Cert", SortOrder = 3, Status = 1 },
+                        new Advertising { Title = "Nhà phân phối chính hãng tại Việt Nam", Image = "/assets/images/z7775799762257_f058bd78c3b1f94e77da2c4eda69efb3.jpg", Position = "About_Cert", SortOrder = 4, Status = 1 }
+                    };
+                    foreach (var d in certDefaults) { d.CreatedBy = createdBy; SAdvertising.Insert(d); }
                     break;
 
                 default:
