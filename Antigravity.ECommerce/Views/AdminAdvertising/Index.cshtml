@@ -64,6 +64,7 @@
                                 <option value="Popup" selected="@(position == "Popup")">Popup Quảng cáo</option>
                                 <option disabled>── Trang Sản phẩm ──</option>
                                 <option value="Product_Commitment" selected="@(position == "Product_Commitment")">Cam kết chất lượng</option>
+                                <option value="Product_DealerCert" selected="@(position == "Product_DealerCert")">Chứng nhận đại lý</option>
                                 <option disabled>── Trang chủ - Module ──</option>
                                 <option value="Home_WhyChoose" selected="@(position == "Home_WhyChoose")">Vì sao chọn chúng tôi</option>
                                 <option value="Home_BrandIntro" selected="@(position == "Home_BrandIntro")">Giới thiệu Thương hiệu</option>
@@ -74,6 +75,8 @@
                                 <option value="About_CoreValues" selected="@(position == "About_CoreValues")">Giới thiệu - Giá trị cốt lõi</option>
                                 <option value="About_Timeline" selected="@(position == "About_Timeline")">Giới thiệu - Hành trình</option>
                                 <option value="About_Cert" selected="@(position == "About_Cert")">Giới thiệu - Chứng nhận</option>
+                                <option disabled>── Trang Liên hệ ──</option>
+                                <option value="Contact_Connect" selected="@(position == "Contact_Connect")">Kết nối với Gordak</option>
                             </select>
                         </div>
                         <div class="col-xxl-2 col-sm-4">
@@ -451,6 +454,15 @@
                             <small class="text-muted">4 cam kết (Bar ngang)</small>
                         </div>
                     </button>
+                    <button type="button" class="btn btn-outline-info text-start p-3 rounded-3 d-flex align-items-center mt-3" onclick="restoreSection('Product_DealerCert', 'Chứng nhận Đại lý')">
+                        <div class="bg-info bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center flex-shrink-0" style="width:40px;height:40px;">
+                            <i class="fas fa-certificate text-info"></i>
+                        </div>
+                        <div class="ms-3">
+                            <div class="fw-bold">Chứng nhận Đại lý</div>
+                            <small class="text-muted">Logo và Link chứng nhận GORDAK</small>
+                        </div>
+                    </button>
                     <hr class="my-2">
                     <p class="text-muted fw-bold small mb-1"><i class="ri-award-line me-1"></i> TRANG GIỚI THIỆU</p>
                     <button type="button" class="btn btn-outline-dark text-start p-3 rounded-3 d-flex align-items-center" onclick="restoreSection('About_Hero', 'Banner Đầu Trang Giới Thiệu')">
@@ -496,6 +508,17 @@
                         <div class="ms-3">
                             <div class="fw-bold">Chứng nhận & Uy tín</div>
                             <small class="text-muted">4 chứng nhận: Đại lý, ISO, CO/CQ...</small>
+                        </div>
+                    </button>
+                    <hr class="my-2">
+                    <p class="text-muted fw-bold small mb-1"><i class="ri-contacts-book-2-line me-1"></i> TRANG LIÊN HỆ</p>
+                    <button type="button" class="btn btn-outline-info text-start p-3 rounded-3 d-flex align-items-center" onclick="restoreSection('Contact_Connect', 'Kết nối với Gordak')">
+                        <div class="bg-info bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center flex-shrink-0" style="width:40px;height:40px;">
+                            <i class="fas fa-handshake text-info"></i>
+                        </div>
+                        <div class="ms-3">
+                            <div class="fw-bold">Kết nối với Gordak</div>
+                            <small class="text-muted">4 mục: Tư vấn, Hỗ trợ, Đồng hành, Chính hãng...</small>
                         </div>
                     </button>
                 </div>

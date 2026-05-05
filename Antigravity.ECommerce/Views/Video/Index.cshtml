@@ -1,142 +1,207 @@
 @model List<Antigravity.ECommerce.Models.Video>
 @{
     Layout = "~/Views/Shared/_MainLayout.cshtml";
-    ViewData["Title"] = ViewBag.CurrentCategory != null ? ViewBag.CurrentCategory.Name : "Video Chuyên Đề";
-    var categories = ViewBag.Categories as List<Antigravity.ECommerce.Models.Category>;
+    var categories = ViewBag.Categories as List<Antigravity.ECommerce.Models.Category> ?? new List<Antigravity.ECommerce.Models.Category>();
+    var hotVideos = ViewBag.HotVideos as List<Antigravity.ECommerce.Models.Video> ?? new List<Antigravity.ECommerce.Models.Video>();
+    var currentCat = ViewBag.CurrentCategory as Antigravity.ECommerce.Models.Category;
     int currentPage = ViewBag.CurrentPage;
     int totalPages = (int)Math.Ceiling((double)ViewBag.TotalCount / ViewBag.PageSize);
+    
+    // Breadcrumb
+    ViewData["SchemaBreadcrumbs"] = new List<Antigravity.ECommerce.Models.BreadcrumbItem> {
+        new Antigravity.ECommerce.Models.BreadcrumbItem { Name = "Trang chủ", Url = "/" },
+        new Antigravity.ECommerce.Models.BreadcrumbItem { Name = "Video", Url = "/video.html" }
+    };
+    if(currentCat != null) {
+        ((List<Antigravity.ECommerce.Models.BreadcrumbItem>)ViewData["SchemaBreadcrumbs"]).Add(new Antigravity.ECommerce.Models.BreadcrumbItem { Name = currentCat.Name, Url = "/video/" + currentCat.Slug + ".html" });
+    }
 }
 
-@section Styles {
-    <style>
-        .video-card {
-            border: none;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-            background: #fff;
-            transition: all 0.3s ease;
+<div class="container mt-3 mb-2">
+    <nav class="sp-breadcrumb">
+        <a href="/">Trang chủ</a> 
+        <i class="fa-solid fa-chevron-right"></i> 
+        @if(currentCat == null) {
+            <span>Video</span>
+        } else {
+            <a href="/video.html">Video</a> <i class="fa-solid fa-chevron-right"></i> <span>@currentCat.Name</span>
         }
-        .video-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-        }
-        .video-thumb {
-            position: relative;
-            padding-top: 56.25%; /* 16:9 Aspect Ratio */
-            overflow: hidden;
-            background: #000;
-        }
-        .video-thumb img {
-            position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            object-fit: cover;
-            opacity: 0.8;
-            transition: all 0.4s ease;
-        }
-        .video-card:hover .video-thumb img { opacity: 1; transform: scale(1.05); }
-        .play-icon {
-            position: absolute;
-            top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
-            width: 60px; height: 60px;
-            background: rgba(255,0,0,0.8);
-            border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            color: #fff; font-size: 30px;
-            box-shadow: 0 0 0 0 rgba(255,0,0,0.4);
-            animation: pulse-red 2s infinite;
-            transition: all 0.3s;
-        }
-        .video-card:hover .play-icon { background: #ff0000; }
-        
-        @@keyframes pulse-red {
-            0% { transform: translate(-50%, -50%) scale(0.95); box-shadow: 0 0 0 0 rgba(255,0,0, 0.7); }
-            70% { transform: translate(-50%, -50%) scale(1); box-shadow: 0 0 0 10px rgba(255,0,0, 0); }
-            100% { transform: translate(-50%, -50%) scale(0.95); box-shadow: 0 0 0 0 rgba(255,0,0, 0); }
-        }
-
-        .cat-nav {
-            overflow-x: auto; white-space: nowrap; padding-bottom: 5px;
-        }
-        .cat-nav::-webkit-scrollbar { height: 4px; }
-        .cat-nav::-webkit-scrollbar-thumb { background: #ccc; border-radius: 4px; }
-    </style>
-}
-
-<div class="row mb-5">
-    <div class="col-12 text-center">
-        <h1 class="fw-bold mb-3">@(ViewBag.CurrentCategory != null ? ViewBag.CurrentCategory.Name : "Khám phá Video")</h1>
-        @if (ViewBag.CurrentCategory != null)
-        {
-            <p class="text-muted max-w-2xl mx-auto">@ViewBag.CurrentCategory.Description</p>
-        }
-        else
-        {
-            <p class="text-muted max-w-2xl mx-auto">Tập hợp các video hấp dẫn, hướng dẫn và chia sẻ kiến thức từ chuyên gia.</p>
-        }
-    </div>
+    </nav>
 </div>
 
-@if (categories != null && categories.Count > 0)
-{
-    <div class="row mb-4">
-        <div class="col-12">
-            <div class="cat-nav d-flex gap-2 justify-content-center">
-                <a href="/video.html" class="btn rounded-pill px-4 @(ViewBag.CurrentCategory == null ? "btn-danger text-white" : "btn-light")">Tất cả</a>
-                @foreach (var cat in categories)
+<main class="container mb-5">
+    <h1 class="lh-page-title mb-3 text-uppercase">@(currentCat?.Name ?? "VIDEO")</h1>
+
+    <!-- Filter tabs -->
+    @if(categories.Any()) {
+    <div class="tt-filter-tabs mb-4">
+        <a href="/video.html" class="tt-filter-btn @(currentCat == null ? "active" : "")">Tất cả</a>
+        @foreach(var cat in categories) {
+            <a href="/video/@(cat.Slug).html" class="tt-filter-btn @(currentCat?.CategoryId == cat.CategoryId ? "active" : "")">@cat.Name</a>
+        }
+    </div>
+    }
+
+    <div class="row g-4">
+        <!-- NỘI DUNG CHÍNH -->
+        <div class="col-lg-9">
+            @{
+                var featuredVideo = ViewBag.FeaturedVideo as Antigravity.ECommerce.Models.Video;
+            }
+            
+            @if(featuredVideo != null) {
+                var featuredUrl = $"/video/detail/{featuredVideo.Slug}.html";
+                <!-- Video Player chinh (luon hien) -->
+                <div class="vd-player-wrap mb-4">
+                    <a href="@featuredUrl" class="d-block text-decoration-none text-dark">
+                        <div class="vd-player-main">
+                            <img src="@(string.IsNullOrEmpty(featuredVideo.ThumbnailUrl) ? "/assets/images/placeholder.png" : featuredVideo.ThumbnailUrl)" alt="@featuredVideo.Title" class="vd-player-thumb">
+                            <div class="vd-player-overlay">
+                                <span class="vd-badge-live">MỚI NHẤT</span>
+                                <button type="button" class="vd-play-btn"><i class="fa-solid fa-play"></i></button>
+                            </div>
+                        </div>
+                        <h2 class="vd-video-title mt-3">@featuredVideo.Title</h2>
+                    </a>
+                    <div class="tt-card-meta mb-2">
+                        <i class="fa-regular fa-calendar"></i> @featuredVideo.CreatedAt.ToString("dd/MM/yyyy")
+                    </div>
+                    <p class="tt-card-desc line-clamp-2">@featuredVideo.SeoDescription</p>
+                    <div class="vd-actions">
+                        <a href="https://www.facebook.com/sharer/sharer.php?u=@(Context.Request.Scheme + "://" + Context.Request.Host + featuredUrl)" target="_blank" class="vd-action-btn"><i class="fa-solid fa-share-nodes"></i> Chia sẻ</a>
+                    </div>
+                </div>
+            }
+
+            @if(Model != null && Model.Any()) {
+                <!-- Cac video khac -->
+                <h3 class="sp-section-title">VIDEO LIÊN QUAN</h3>
+                <div class="row g-3 mb-4">
+                    @foreach(var item in Model) {
+                        var videoUrl = $"/video/detail/{item.Slug}.html";
+                        <div class="col-6 col-md-4">
+                            <div class="vd-related-card">
+                                <div class="vd-thumb-wrap">
+                                    <a href="@videoUrl">
+                                        <img src="@(string.IsNullOrEmpty(item.ThumbnailUrl) ? "/assets/images/placeholder.png" : item.ThumbnailUrl)" alt="@item.Title">
+                                        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: white; font-size: 2rem; opacity: 0.8; text-shadow: 0 2px 4px rgba(0,0,0,0.5);"><i class="fa-solid fa-circle-play"></i></div>
+                                    </a>
+                                </div>
+                                <h3 class="vd-rel-name line-clamp-2 mt-2">
+                                    <a href="@videoUrl">@item.Title</a>
+                                </h3>
+                                <div class="tt-hot-meta mt-1" style="font-size: 12px; color: #666;">
+                                    <i class="fa-regular fa-calendar"></i> @item.CreatedAt.ToString("dd/MM/yyyy")
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+
+                <!-- Phan trang -->
+                @if (totalPages > 1)
                 {
-                    <a href="/video/@cat.Slug" class="btn rounded-pill px-4 @(ViewBag.CurrentCategory != null && ViewBag.CurrentCategory.CategoryId == cat.CategoryId ? "btn-danger text-white" : "btn-light")">@cat.Name</a>
+                    <div class="vd-pagination">
+                        @if (currentPage > 1) {
+                            <a href="?page=@(currentPage - 1)" class="vd-page-btn"><i class="fa-solid fa-chevron-left"></i></a>
+                        } else {
+                            <span class="vd-page-btn disabled"><i class="fa-solid fa-chevron-left"></i></span>
+                        }
+
+                        @{
+                            int maxVisible = 3;
+                            int startP = Math.Max(1, currentPage - 1);
+                            int endP = Math.Min(totalPages, startP + maxVisible - 1);
+                            if (endP - startP < maxVisible - 1) { startP = Math.Max(1, endP - maxVisible + 1); }
+                        }
+
+                        @if (startP > 1) {
+                            <a href="?page=1" class="vd-page-btn">1</a>
+                            if (startP > 2) { <span class="vd-page-dots">...</span> }
+                        }
+
+                        @for (int i = startP; i <= endP; i++) {
+                            <a href="?page=@i" class="vd-page-btn @(i == currentPage ? "active" : "")">@i</a>
+                        }
+
+                        @if (endP < totalPages) {
+                            if (endP < totalPages - 1) { <span class="vd-page-dots">...</span> }
+                            <a href="?page=@totalPages" class="vd-page-btn">@totalPages</a>
+                        }
+
+                        @if (currentPage < totalPages) {
+                            <a href="?page=@(currentPage + 1)" class="vd-page-btn"><i class="fa-solid fa-chevron-right"></i></a>
+                        } else {
+                            <span class="vd-page-btn disabled"><i class="fa-solid fa-chevron-right"></i></span>
+                        }
+                    </div>
+                }
+            } @* end if Model.Any *@
+            
+            @if(featuredVideo == null && (Model == null || !Model.Any())) {
+                <div class="text-center py-5">
+                    <i class="fa-solid fa-video-slash fa-3x text-muted mb-3"></i>
+                    <p class="text-muted">Không có video nào trong mục này.</p>
+                </div>
+            }
+        </div>
+
+        <!-- SIDEBAR -->
+        <div class="col-lg-3">
+            <!-- Danh mục video -->
+            <div class="tt-sidebar-box mb-3">
+                <h4 class="tt-sidebar-title">DANH MỤC VIDEO</h4>
+                <ul class="tt-sidebar-list">
+                    <li><a href="/video.html">Tất cả</a></li>
+                    @foreach(var cat in categories.Take(6)) {
+                        <li><a href="/video/@(cat.Slug).html">@cat.Name <span>@cat.ItemCount</span></a></li>
+                    }
+                </ul>
+                @if(categories.Count > 6) {
+                    <a href="javascript:void(0)" onclick="$('.tt-sidebar-list li.d-none').removeClass('d-none'); $(this).hide();" class="tt-sidebar-link">Xem thêm danh mục <i class="fa-solid fa-arrow-right"></i></a>
+                    <ul class="tt-sidebar-list">
+                         @foreach(var cat in categories.Skip(6)) {
+                            <li class="d-none"><a href="/video/@(cat.Slug).html">@cat.Name <span>@cat.ItemCount</span></a></li>
+                        }
+                    </ul>
                 }
             </div>
-        </div>
-    </div>
-}
 
-<div class="row g-4 pt-3">
-    @if (Model != null && Model.Count > 0)
-    {
-        foreach (var video in Model)
-        {
-            <div class="col-md-6 col-lg-4">
-                <a href="/video/detail/@(video.Slug).html" class="text-decoration-none text-dark">
-                    <div class="card video-card h-100 border-0">
-                        <div class="video-thumb">
-                            <img src="@video.ThumbnailUrl" class="lazy" alt="@video.Title">
-                            <div class="play-icon"><i class="mdi mdi-play"></i></div>
+            <!-- Video nổi bật -->
+            @if(hotVideos.Any()) {
+            <div class="tt-sidebar-box mb-3">
+                <h4 class="tt-sidebar-title">VIDEO NỔI BẬT</h4>
+                @foreach(var hv in hotVideos) {
+                    <div class="tt-hot-item">
+                        <div class="vd-thumb-wrap vd-thumb-sm" style="width: 80px; flex-shrink: 0; position: relative;">
+                            <a href="/video/detail/@(hv.Slug).html">
+                                <img src="@(string.IsNullOrEmpty(hv.ThumbnailUrl) ? "/assets/images/placeholder.png" : hv.ThumbnailUrl)" alt="@hv.Title" style="width:100%; aspect-ratio:16/9; object-fit:cover; border-radius: 4px;">
+                                <div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); color:#fff; font-size:16px; opacity:0.8;"><i class="fa-solid fa-circle-play"></i></div>
+                            </a>
                         </div>
-                        <div class="card-body p-4">
-                            <span class="badge bg-danger-subtle text-danger mb-2">@(string.IsNullOrEmpty(video.CategoryName) ? "Youtube" : video.CategoryName)</span>
-                            <h5 class="fw-bold mb-2 line-clamp-2">@video.Title</h5>
-                            <div class="text-muted small">
-                                <i class="mdi mdi-calendar"></i> @video.CreatedAt.ToString("dd/MM/yyyy")
+                        <div class="ms-2">
+                            <a href="/video/detail/@(hv.Slug).html" class="tt-hot-title line-clamp-2" style="font-size: 13px;">@hv.Title</a>
+                            <div class="tt-hot-meta" style="font-size: 11px;">
+                                <i class="fa-regular fa-calendar"></i> @hv.CreatedAt.ToString("dd/MM/yyyy")
                             </div>
                         </div>
                     </div>
-                </a>
+                }
             </div>
-        }
-    }
-    else
-    {
-        <div class="col-12 text-center py-5">
-            <i class="mdi mdi-video-off fs-1 text-muted"></i>
-            <h4 class="text-muted mt-2">Chưa có video nào.</h4>
-        </div>
-    }
-</div>
-
-@if (totalPages > 1)
-{
-    <nav class="mt-5">
-        <ul class="pagination justify-content-center">
-            @for (int i = 1; i <= totalPages; i++)
-            {
-                <li class="page-item @(i == currentPage ? "active" : "")">
-                    <a class="page-link" href="?page=@i">@i</a>
-                </li>
             }
-        </ul>
-    </nav>
-}
+
+            <!-- CTA Box -->
+            <div class="tt-cta-box text-center">
+                <img src="/tuvanvien.png" alt="Tư vấn viên" class="img-fluid rounded-circle mb-3" style="width: 100px; height: 100px; object-fit: cover; border: 3px solid #fff;">
+                <h4 class="text-start">CẦN TƯ VẤN CHỌN MÁY?</h4>
+                <ul class="list-unstyled text-start">
+                    <li><i class="fa-solid fa-check-circle"></i> Đội ngũ kỹ thuật sẵn sàng hỗ trợ</li>
+                    <li><i class="fa-solid fa-check-circle"></i> Tư vấn miễn phí</li>
+                    <li><i class="fa-solid fa-check-circle"></i> Hỗ trợ kỹ thuật 24/7</li>
+                    <li><i class="fa-solid fa-check-circle"></i> Bảo hành chính hãng</li>
+                </ul>
+                <a href="https://zalo.me/@Antigravity.ECommerce.Services.SSetting.GetViewModel().Hotline" target="_blank" class="tt-cta-btn w-100">CHAT ZALO NGAY</a>
+            </div>
+        </div>
+    </div>
+</main>

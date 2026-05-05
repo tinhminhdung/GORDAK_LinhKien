@@ -2,7 +2,9 @@
 @{
     Layout = "~/Views/Shared/_MainLayout.cshtml";
     ViewData["Title"] = Model.Title;
-    var related = ViewBag.Related as List<Antigravity.ECommerce.Models.Video>;
+    var related = ViewBag.Related as List<Antigravity.ECommerce.Models.Video> ?? new List<Antigravity.ECommerce.Models.Video>();
+    var categories = ViewBag.Categories as List<Antigravity.ECommerce.Models.Category> ?? new List<Antigravity.ECommerce.Models.Category>();
+    var hotVideos = ViewBag.HotVideos as List<Antigravity.ECommerce.Models.Video> ?? new List<Antigravity.ECommerce.Models.Video>();
 
     // SEO Schema Setup
     ViewData["SchemaVideo"] = Model;
@@ -30,91 +32,125 @@
             width: 100%; height: 100%;
             border: 0;
         }
-        .video-header {
-            margin-top: 30px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid #eee;
-        }
-        
-        /* Related Videos Side */
-        .related-card {
-            display: flex; gap: 15px; margin-bottom: 15px;
-            transition: all 0.2s ease;
-            text-decoration: none !important;
-            padding: 10px; border-radius: 10px;
-        }
-        .related-card:hover { background: #f8f9fa; }
-        .related-thumb {
-            width: 160px; min-width: 160px; height: 90px;
-            border-radius: 8px; position: relative; overflow: hidden;
-        }
-        .related-thumb img { width: 100%; height: 100%; object-fit: cover; }
-        .related-thumb .time-badge {
-            position: absolute; bottom: 5px; right: 5px;
-            background: rgba(0,0,0,0.8); color: white;
-            font-size: 11px; padding: 2px 5px; border-radius: 4px;
-        }
-        .related-info h6 {
-            color: #000; font-size: 14px; font-weight: 600;
-            display: -webkit-box; -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical; overflow: hidden;
-            line-height: 1.4; margin-bottom: 5px;
-        }
-        .related-info span { color: #606060; font-size: 12px; }
     </style>
 }
 
-<nav aria-label="breadcrumb">
-  <ol class="breadcrumb mt-3 mb-4">
-    <li class="breadcrumb-item"><a href="/">Trang chủ</a></li>
-    <li class="breadcrumb-item"><a href="/video.html">Video</a></li>
-    <li class="breadcrumb-item active" aria-current="page">@Model.Title</li>
-  </ol>
-</nav>
+<div class="container mt-3 mb-2">
+    <nav class="sp-breadcrumb">
+        <a href="/">Trang chủ</a> 
+        <i class="fa-solid fa-chevron-right"></i> 
+        <a href="/video.html">Video</a> 
+        <i class="fa-solid fa-chevron-right"></i> 
+        <span>Chi tiết</span>
+    </nav>
+</div>
 
-<div class="row">
-    <!-- Main Video -->
-    <div class="col-lg-8 mb-5">
-        <div class="video-container">
-            <iframe src="https://www.youtube.com/embed/@Model.YoutubeId?autoplay=0&rel=0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-        </div>
-        
-        <div class="video-header">
-            <h1 class="fw-bold fs-3 mt-2">@Model.Title</h1>
-            <div class="d-flex justify-content-between align-items-center mt-3">
-                <div class="d-flex align-items-center gap-3">
-                    <div class="bg-danger text-white rounded-circle d-flex justify-content-center align-items-center fw-bold" style="width: 45px; height: 45px; font-size: 20px;">
-                        @(!string.IsNullOrEmpty(Model.CategoryName) ? Model.CategoryName.Substring(0,1) : "V")
-                    </div>
-                    <div>
-                        <div class="fw-bold">@Model.CategoryName</div>
-                        <div class="text-muted small">@Model.CreatedAt.ToString("dd MMMM, yyyy")</div>
-                    </div>
+<main class="container mb-5">
+    <div class="row g-4 mt-1">
+        <!-- NỘI DUNG CHÍNH -->
+        <div class="col-lg-9">
+            <div class="vd-player-wrap mb-4">
+                <div class="video-container mb-3">
+                    <iframe src="https://www.youtube.com/embed/@Model.YoutubeId?autoplay=1&rel=0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                </div>
+                
+                <h1 class="vd-video-title fs-3">@Model.Title</h1>
+                <div class="tt-card-meta mb-2">
+                    <i class="fa-regular fa-calendar"></i> @Model.CreatedAt.ToString("dd/MM/yyyy")
+                </div>
+                <div class="tt-card-desc mb-3" style="font-size: 15px; color: #444;">
+                    @Html.Raw(Model.SeoDescription)
+                </div>
+                <div class="vd-actions">
+                    <a href="https://www.facebook.com/sharer/sharer.php?u=@(Context.Request.Scheme + "://" + Context.Request.Host + Context.Request.Path)" target="_blank" class="vd-action-btn"><i class="fa-solid fa-share-nodes"></i> Chia sẻ</a>
                 </div>
             </div>
+
+            <!-- Video liên quan -->
+            @if (related.Any())
+            {
+                <h3 class="sp-section-title mt-5">VIDEO LIÊN QUAN</h3>
+                <div class="row g-3 mb-4">
+                    @foreach (var r in related)
+                    {
+                        var rUrl = $"/video/detail/{r.Slug}.html";
+                        <div class="col-6 col-md-4">
+                            <div class="vd-related-card">
+                                <div class="vd-thumb-wrap">
+                                    <a href="@rUrl">
+                                        <img src="@(string.IsNullOrEmpty(r.ThumbnailUrl) ? "/assets/images/placeholder.png" : r.ThumbnailUrl)" alt="@r.Title" style="width:100%; object-fit:cover; aspect-ratio: 16/9;">
+                                        <div class="vd-play-icon-sm" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: white; font-size: 2rem; opacity: 0.8; text-shadow: 0 2px 4px rgba(0,0,0,0.5);"><i class="fa-solid fa-circle-play"></i></div>
+                                    </a>
+                                </div>
+                                <h3 class="vd-rel-name line-clamp-2 mt-2" style="font-size: 14px; height: 40px; overflow: hidden;">
+                                    <a href="@rUrl" class="text-decoration-none text-dark">@r.Title</a>
+                                </h3>
+                                <div class="tt-hot-meta mt-1" style="font-size: 12px; color: #666;">
+                                    <i class="fa-regular fa-calendar"></i> @r.CreatedAt.ToString("dd/MM/yyyy")
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
         </div>
 
-    </div>
+        <!-- SIDEBAR -->
+        <div class="col-lg-3">
+            <!-- Danh mục video -->
+            <div class="tt-sidebar-box mb-3">
+                <h4 class="tt-sidebar-title">DANH MỤC VIDEO</h4>
+                <ul class="tt-sidebar-list">
+                    <li><a href="/video.html">Tất cả</a></li>
+                    @foreach(var cat in categories.Take(6)) {
+                        <li><a href="/video/@(cat.Slug).html">@cat.Name <span>@cat.ItemCount</span></a></li>
+                    }
+                </ul>
+                @if(categories.Count > 6) {
+                    <a href="javascript:void(0)" onclick="$('.tt-sidebar-list li.d-none').removeClass('d-none'); $(this).hide();" class="tt-sidebar-link">Xem thêm danh mục <i class="fa-solid fa-arrow-right"></i></a>
+                    <ul class="tt-sidebar-list">
+                         @foreach(var cat in categories.Skip(6)) {
+                            <li class="d-none"><a href="/video/@(cat.Slug).html">@cat.Name <span>@cat.ItemCount</span></a></li>
+                        }
+                    </ul>
+                }
+            </div>
 
-    <!-- Sidebar Related Videos -->
-    <div class="col-lg-4">
-        <h5 class="fw-bold mb-4 border-bottom pb-2">Video cùng chuyên mục</h5>
-        @if (related != null && related.Count > 0)
-        {
-            foreach (var r in related)
-            {
-                <a href="/video/detail/@(r.Slug).html" class="related-card">
-                    <div class="related-thumb">
-                        <img src="@r.ThumbnailUrl" alt="@r.Title">
-                        <div class="time-badge"><i class="mdi mdi-play"></i></div>
+            <!-- Video nổi bật -->
+            @if(hotVideos.Any()) {
+            <div class="tt-sidebar-box mb-3">
+                <h4 class="tt-sidebar-title">VIDEO NỔI BẬT</h4>
+                @foreach(var hv in hotVideos) {
+                    <div class="tt-hot-item">
+                        <div class="vd-thumb-wrap vd-thumb-sm" style="width: 80px; flex-shrink: 0; position: relative;">
+                            <a href="/video/detail/@(hv.Slug).html">
+                                <img src="@(string.IsNullOrEmpty(hv.ThumbnailUrl) ? "/assets/images/placeholder.png" : hv.ThumbnailUrl)" alt="@hv.Title" style="width:100%; aspect-ratio:16/9; object-fit:cover; border-radius: 4px;">
+                                <div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); color:#fff; font-size:16px; opacity:0.8;"><i class="fa-solid fa-circle-play"></i></div>
+                            </a>
+                        </div>
+                        <div class="ms-2">
+                            <a href="/video/detail/@(hv.Slug).html" class="tt-hot-title line-clamp-2" style="font-size: 13px;">@hv.Title</a>
+                            <div class="tt-hot-meta" style="font-size: 11px;">
+                                <i class="fa-regular fa-calendar"></i> @hv.CreatedAt.ToString("dd/MM/yyyy")
+                            </div>
+                        </div>
                     </div>
-                    <div class="related-info">
-                        <h6>@r.Title</h6>
-                        <span>@r.CategoryName</span><br/>
-                        <span>@r.CreatedAt.ToString("dd/MM/yyyy")</span>
-                    </div>
-                </a>
+                }
+            </div>
             }
-        }
+
+            <!-- CTA Box -->
+            <div class="tt-cta-box text-center">
+                <img src="/tuvanvien.png" alt="Tư vấn viên" class="img-fluid rounded-circle mb-3" style="width: 100px; height: 100px; object-fit: cover; border: 3px solid #fff;">
+                <h4 class="text-start">CẦN TƯ VẤN CHỌN MÁY?</h4>
+                <ul class="list-unstyled text-start">
+                    <li><i class="fa-solid fa-check-circle"></i> Đội ngũ kỹ thuật sẵn sàng hỗ trợ</li>
+                    <li><i class="fa-solid fa-check-circle"></i> Tư vấn miễn phí</li>
+                    <li><i class="fa-solid fa-check-circle"></i> Hỗ trợ kỹ thuật 24/7</li>
+                    <li><i class="fa-solid fa-check-circle"></i> Bảo hành chính hãng</li>
+                </ul>
+                <a href="https://zalo.me/@Antigravity.ECommerce.Services.SSetting.GetViewModel().Hotline" target="_blank" class="tt-cta-btn w-100">CHAT ZALO NGAY</a>
+            </div>
+        </div>
     </div>
-</div>
+</main>

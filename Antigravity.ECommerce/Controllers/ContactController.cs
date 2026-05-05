@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Microsoft.AspNetCore.Mvc;
 using Antigravity.ECommerce.Models;
 using Antigravity.ECommerce.Framework;
@@ -13,6 +13,16 @@ namespace Antigravity.ECommerce.Controllers
         public IActionResult Index()
         {
             var settings = SSetting.GetViewModel();
+
+            var faqs = Antigravity.ECommerce.Services.SCache.GetOrSet("Contact_FAQs", () => 
+                Antigravity.ECommerce.Services.SFAQ.GetAll().Where(x => x.Status == 1).Take(6).ToList(), 60);
+
+            var contactConnect = Antigravity.ECommerce.Services.SCache.GetOrSet("Contact_Connect", () =>
+                Antigravity.ECommerce.Services.SAdvertising.GetByPosition("Contact_Connect"), 60);
+
+            ViewBag.FAQs = faqs;
+            ViewBag.ContactConnect = contactConnect;
+
             return View(settings);
         }
 

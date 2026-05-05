@@ -89,6 +89,7 @@
                                 <th onclick="changeSort('Title')" class="sort cursor-pointer">Nội dung bài viết <i class="ri-arrow-up-down-line sort-icon @(ViewBag.SortColumn == "Title" ? "active" : "")"></i></th>
                                 <th>Danh mục</th>
                                 <th onclick="changeSort('Views')" class="sort cursor-pointer text-center">Tương tác <i class="ri-arrow-up-down-line sort-icon @(ViewBag.SortColumn == "Views" ? "active" : "")"></i></th>
+                                <th class="text-center">Nổi bật (HOT)</th>
                                 <th onclick="changeSort('Status')" class="sort cursor-pointer text-center">Trạng thái <i class="ri-arrow-up-down-line sort-icon @(ViewBag.SortColumn == "Status" ? "active" : "")"></i></th>
                                 <th class="text-center" style="width: 140px;">Hành động</th>
                             </tr>
@@ -128,6 +129,11 @@
                                             </div>
                                         </td>
                                         <td class="text-center">
+                                            <div class="form-check form-switch form-switch-md form-switch-danger" dir="ltr" style="display: inline-block;">
+                                                <input type="checkbox" class="form-check-input" onchange="updateQuick(@item.NewsId, 'IsHot', this.checked)" @(item.IsHot ? "checked" : "") title="Hiển thị ở khối TIN NỔI BẬT trang chủ/tin tức">
+                                            </div>
+                                        </td>
+                                        <td class="text-center">
                                             @if (item.Status == 1)
                                             {
                                                 <span class="badge bg-success-subtle text-success border border-success-subtle">Đã đăng</span>
@@ -135,10 +141,6 @@
                                             else
                                             {
                                                 <span class="badge bg-warning-subtle text-warning border border-warning-subtle">Bản nháp</span>
-                                            }
-                                            @if (item.IsHot)
-                                            {
-                                                <span class="badge bg-danger-subtle text-danger border border-danger-subtle ms-1">HOT</span>
                                             }
                                         </td>
                                         <td class="text-center">
@@ -300,6 +302,22 @@
                     } else {
                         Swal.fire('Lỗi', 'Cập nhật trạng thái thất bại', 'error');
                     }
+                }
+            });
+        }
+
+        function updateQuick(id, field, value) {
+            $.post('/AdminNews/UpdateQuick', { id: id, field: field, value: value }, function(res) {
+                if(!res.success) {
+                    Swal.fire('Lỗi', res.message, 'error');
+                } else {
+                    Toastify({
+                        text: "Đã cập nhật thay đổi!",
+                        duration: 3000,
+                        gravity: "bottom",
+                        position: "right",
+                        backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)",
+                    }).showToast();
                 }
             });
         }

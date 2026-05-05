@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Antigravity.ECommerce.Models;
 using Antigravity.ECommerce.Services;
@@ -144,6 +144,28 @@ namespace Antigravity.ECommerce.Controllers
             int result = SNews.BulkUpdateStatus(model.Ids, model.Status);
             if (result > 0) SSeo.RefreshSitemapAndCache();
             return Json(new { success = result > 0 });
+        }
+
+        [HttpPost]
+        [Permission("News", ActionType.Edit)]
+        public IActionResult UpdateQuick(int id, string field, bool value)
+        {
+            // Allowed fields for quick update
+            if (field != "IsHot") return Json(new { success = false, message = "Trường không hợp lệ" });
+
+            try
+            {
+                // Dùng ExecuteNonQuery để update nhanh field
+                int val = value ? 1 : 0;
+                string sql = $"UPDATE News SET {field} = {val} WHERE NewsId = {id}";
+                Antigravity.ECommerce.Services.BaseConnectionSql.ExecuteNonQuery(sql);
+                SSeo.RefreshSitemapAndCache();
+                return Json(new { success = true });
+            }
+            catch (System.Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
         }
 
         public class BulkStatusModel {

@@ -58,6 +58,9 @@ namespace Antigravity.ECommerce.Models
         /// <summary> Danh sách ID Sản phẩm liên quan </summary>
         public string? RelatedProducts { get; set; }
 
+        /// <summary> Danh sách ID Phụ kiện liên quan </summary>
+        public string? Accessories { get; set; }
+
         /// <summary> Sản phẩm nổi bật (Trang chủ) </summary>
         public bool IsHot { get; set; }
 
@@ -87,8 +90,16 @@ namespace Antigravity.ECommerce.Models
 
         /// <summary> Từ khóa SEO Meta Keywords </summary>
         public string? SeoKeywords { get; set; }
-        
 
+        /// <summary> Link mua hàng trên Shopee </summary>
+        public string? ShopeeLink { get; set; }
+
+        /// <summary> Link mua hàng trên Lazada </summary>
+        public string? LazadaLink { get; set; }
+
+        /// <summary> Thông số kỹ thuật (HTML) </summary>
+        public string? TechnicalSpecs { get; set; }
+        public string? InstructionVideo { get; set; }
 
         // --- Chế độ bổ trợ (Không lưu DB) ---
         /// <summary> Chuỗi tên các danh mục để hiển thị nhanh </summary>

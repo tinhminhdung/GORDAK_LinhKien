@@ -79,6 +79,7 @@ namespace Antigravity.ECommerce.Framework
                 new SqlParameter("@YoutubeVideo", (object)obj.YoutubeVideo ?? DBNull.Value),
                 new SqlParameter("@Tags", (object)obj.Tags ?? DBNull.Value),
                 new SqlParameter("@RelatedProducts", (object)obj.RelatedProducts ?? DBNull.Value),
+                new SqlParameter("@Accessories", (object)obj.Accessories ?? DBNull.Value),
                 new SqlParameter("@IsHot", obj.IsHot),
                 new SqlParameter("@IsNew", obj.IsNew),
                 new SqlParameter("@IsBestSeller", obj.IsBestSeller),
@@ -86,6 +87,10 @@ namespace Antigravity.ECommerce.Framework
                 new SqlParameter("@SeoTitle", (object)obj.SeoTitle ?? DBNull.Value),
                 new SqlParameter("@SeoDescription", (object)obj.SeoDescription ?? DBNull.Value),
                 new SqlParameter("@SeoKeywords", (object)obj.SeoKeywords ?? DBNull.Value),
+                new SqlParameter("@ShopeeLink", (object)obj.ShopeeLink ?? DBNull.Value),
+                new SqlParameter("@LazadaLink", (object)obj.LazadaLink ?? DBNull.Value),
+                new SqlParameter("@TechnicalSpecs", (object)obj.TechnicalSpecs ?? DBNull.Value),
+                new SqlParameter("@InstructionVideo", (object)obj.InstructionVideo ?? DBNull.Value),
                 new SqlParameter("@CreatedBy", (object)obj.CreatedBy ?? DBNull.Value)
             };
             var result = BaseConnectionSql.ExecuteScalar("SP_Products_Insert", prm);
@@ -114,6 +119,7 @@ namespace Antigravity.ECommerce.Framework
                 new SqlParameter("@YoutubeVideo", (object)obj.YoutubeVideo ?? DBNull.Value),
                 new SqlParameter("@Tags", (object)obj.Tags ?? DBNull.Value),
                 new SqlParameter("@RelatedProducts", (object)obj.RelatedProducts ?? DBNull.Value),
+                new SqlParameter("@Accessories", (object)obj.Accessories ?? DBNull.Value),
                 new SqlParameter("@IsHot", obj.IsHot),
                 new SqlParameter("@IsNew", obj.IsNew),
                 new SqlParameter("@IsBestSeller", obj.IsBestSeller),
@@ -121,6 +127,10 @@ namespace Antigravity.ECommerce.Framework
                 new SqlParameter("@SeoTitle", (object)obj.SeoTitle ?? DBNull.Value),
                 new SqlParameter("@SeoDescription", (object)obj.SeoDescription ?? DBNull.Value),
                 new SqlParameter("@SeoKeywords", (object)obj.SeoKeywords ?? DBNull.Value),
+                new SqlParameter("@ShopeeLink", (object)obj.ShopeeLink ?? DBNull.Value),
+                new SqlParameter("@LazadaLink", (object)obj.LazadaLink ?? DBNull.Value),
+                new SqlParameter("@TechnicalSpecs", (object)obj.TechnicalSpecs ?? DBNull.Value),
+                new SqlParameter("@InstructionVideo", (object)obj.InstructionVideo ?? DBNull.Value),
                 new SqlParameter("@UpdatedBy", (object)obj.UpdatedBy ?? DBNull.Value)
             };
             return BaseConnectionSql.ExecuteNonQuery("SP_Products_Update", prm);

@@ -35,7 +35,8 @@
                             <button class="nav-link text-start py-3 px-4 border-bottom rounded-0" id="nav-smtp-tab" data-bs-toggle="pill" data-bs-target="#nav-smtp" type="button" role="tab"><i class="fas fa-envelope me-2"></i> Cấu hình Email (SMTP)</button>
                             <button class="nav-link text-start py-3 px-4 border-bottom rounded-0" id="nav-seo-tab" data-bs-toggle="pill" data-bs-target="#nav-seo" type="button" role="tab"><i class="fas fa-search me-2"></i> SEO & Analytics</button>
                             <button class="nav-link text-start py-3 px-4 border-bottom rounded-0" id="nav-rank-tab" data-bs-toggle="pill" data-bs-target="#nav-rank" type="button" role="tab"><i class="fas fa-crown me-2"></i> Hạng thành viên</button>
-                            <button class="nav-link text-start py-3 px-4 rounded-0" id="nav-image-tab" data-bs-toggle="pill" data-bs-target="#nav-image" type="button" role="tab"><i class="fas fa-image me-2"></i> Cài đặt Hình ảnh</button>
+                            <button class="nav-link text-start py-3 px-4 border-bottom rounded-0" id="nav-image-tab" data-bs-toggle="pill" data-bs-target="#nav-image" type="button" role="tab"><i class="fas fa-image me-2"></i> Cài đặt Hình ảnh</button>
+                            <button class="nav-link text-start py-3 px-4 rounded-0" id="nav-news-tab" data-bs-toggle="pill" data-bs-target="#nav-news" type="button" role="tab"><i class="fas fa-newspaper me-2"></i> Cấu hình Tin tức</button>
                         </div>
                     </div>
                 </div>
@@ -657,6 +658,35 @@
                                         <button type="button" class="btn btn-warning fw-bold px-4 flex-shrink-0 ms-4" onclick="bulkRegenerateImages()">
                                             <i class="fas fa-redo me-2"></i> TẠO LẠI TẤT CẢ
                                         </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- News Settings -->
+                            <div class="tab-pane fade" id="nav-news" role="tabpanel">
+                                <h5 class="fw-bold mb-4">Cấu hình Tin tức & Bài viết</h5>
+                                <div class="row g-4">
+                                    <div class="col-md-6">
+                                        <div class="card border border-primary-subtle shadow-none rounded-4">
+                                            <div class="card-body">
+                                                <label class="form-label fw-bold"><i class="fas fa-list-ol me-2 text-primary"></i> Số lượng bài viết/trang (Danh sách nhỏ)</label>
+                                                <input type="number" asp-for="NewsPageSize" class="form-control form-control-lg rounded-3" min="1" max="100" />
+                                                <div class="small text-muted mt-2">
+                                                    <i class="fas fa-info-circle me-1"></i> Số bài viết hiển thị ở danh sách bên dưới (Không bao gồm 2 bài lớn). Khuyên dùng: 12, 16, 20.
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="card border border-danger-subtle shadow-none rounded-4">
+                                            <div class="card-body">
+                                                <label class="form-label fw-bold"><i class="fas fa-fire me-2 text-danger"></i> Số bài viết lớn (TIN NỔI BẬT)</label>
+                                                <input type="number" asp-for="NewsBigCount" class="form-control form-control-lg rounded-3" min="1" max="10" />
+                                                <div class="small text-muted mt-2">
+                                                    <i class="fas fa-info-circle me-1"></i> Số lượng bài viết lớn hiển thị đầu trang (Mặc định: 2). Lấy theo các bài viết được tích nút "HOT" trong quản lý tin tức.
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

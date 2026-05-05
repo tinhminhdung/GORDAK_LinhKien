@@ -69,7 +69,9 @@
     if (hasChildren)
     {
         <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle@(activeClass)" href="@GetUrl(Model)">@Model.Name</a>
+            <a class="nav-link dropdown-toggle@(activeClass)" href="@GetUrl(Model)" data-bs-toggle="dropdown">
+                @if(!string.IsNullOrEmpty(Model.Icon)){<i class="@Model.Icon"></i> }@Model.Name <i class="fa-solid fa-chevron-down nav-arr"></i>
+            </a>
             <ul class="dropdown-menu">
                 @foreach (var child in Model.Children)
                 {
@@ -82,16 +84,16 @@
     }
     else
     {
-        <li class="nav-item"><a class="nav-link@(activeClass)" href="@GetUrl(Model)">@Model.Name</a></li>
+        <li class="nav-item"><a class="nav-link@(activeClass)" href="@GetUrl(Model)">@if(!string.IsNullOrEmpty(Model.Icon)){<i class="@Model.Icon"></i> }@Model.Name</a></li>
     }
 }
 else
 {
     if (hasChildren)
     {
-        <li class="dropdown-submenu">
-            <a class="dropdown-item dropdown-toggle d-flex justify-content-between align-items-center@(activeClass)" href="@GetUrl(Model)">
-                @Model.Name <i class="mdi mdi-chevron-right ms-2"></i>
+        <li class="dropdown-submenu dropend">
+            <a class="dropdown-item dropdown-toggle d-flex justify-content-between align-items-center@(activeClass)" href="@GetUrl(Model)" data-bs-toggle="dropdown">
+                <span>@if(!string.IsNullOrEmpty(Model.Icon)){<i class="@Model.Icon me-1"></i> }@Model.Name</span> <i class="fa-solid fa-chevron-right ms-2 nav-arr"></i>
             </a>
             <ul class="dropdown-menu shadow-lg">
                 @foreach (var child in Model.Children)
@@ -105,6 +107,6 @@ else
     }
     else
     {
-        <li><a class="dropdown-item@(activeClass)" href="@GetUrl(Model)">@Model.Name</a></li>
+        <li><a class="dropdown-item@(activeClass)" href="@GetUrl(Model)">@if(!string.IsNullOrEmpty(Model.Icon)){<i class="@Model.Icon me-1"></i> }@Model.Name</a></li>
     }
 }

@@ -90,11 +90,14 @@ namespace Antigravity.ECommerce.Services
                 // Watermark
                 Image_WatermarkUrl = dict.GetValueOrDefault("Image_WatermarkUrl", ""),
                 Image_WatermarkPosition = dict.GetValueOrDefault("Image_WatermarkPosition", "BottomRight"),
-                Image_WatermarkOpacity = int.TryParse(dict.GetValueOrDefault("Image_WatermarkOpacity", "50"), out int wmo) ? wmo : 50,
-                Image_WatermarkSize = int.TryParse(dict.GetValueOrDefault("Image_WatermarkSize", "15"), out int wms) ? wms : 15,
+                Image_WatermarkOpacity = int.TryParse(dict.GetValueOrDefault("Image_WatermarkOpacity", "50"), out int op) ? op : 50,
+                Image_WatermarkSize = int.TryParse(dict.GetValueOrDefault("Image_WatermarkSize", "15"), out int ws) ? ws : 15,
                 Image_WatermarkExcludePaths = dict.GetValueOrDefault("Image_WatermarkExcludePaths", ""),
-                // Đơn hàng / Vận chuyển
-                DefaultShippingFee = decimal.TryParse(dict.GetValueOrDefault("DefaultShippingFee", "0"), out decimal dsf) ? dsf : 0
+                
+                DefaultShippingFee = decimal.TryParse(dict.GetValueOrDefault("DefaultShippingFee", "0"), out decimal dsf) ? dsf : 0,
+
+                NewsPageSize = int.TryParse(dict.GetValueOrDefault("NewsPageSize", "12"), out int nps) ? nps : 12,
+                NewsBigCount = int.TryParse(dict.GetValueOrDefault("NewsBigCount", "2"), out int nbc) ? nbc : 2
             };
         }
 
@@ -164,9 +167,11 @@ namespace Antigravity.ECommerce.Services
             FSetting.UpdateValue("Image_WatermarkOpacity", model.Image_WatermarkOpacity.ToString(), updatedBy);
             FSetting.UpdateValue("Image_WatermarkSize", model.Image_WatermarkSize.ToString(), updatedBy);
             FSetting.UpdateValue("Image_WatermarkExcludePaths", model.Image_WatermarkExcludePaths ?? "", updatedBy);
-
-            // Đơn hàng / Vận chuyển
+            
             FSetting.UpdateValue("DefaultShippingFee", model.DefaultShippingFee.ToString(), updatedBy);
+
+            FSetting.UpdateValue("NewsPageSize", model.NewsPageSize.ToString(), updatedBy);
+            FSetting.UpdateValue("NewsBigCount", model.NewsBigCount.ToString(), updatedBy);
 
             // Áp dụng ngay vào Service runtime
             ImageOptimizerService.EnableOptimization = model.Image_EnableOptimization;

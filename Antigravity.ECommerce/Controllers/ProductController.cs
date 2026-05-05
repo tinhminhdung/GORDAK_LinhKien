@@ -86,24 +86,22 @@ namespace Antigravity.ECommerce.Controllers
             {
                 relatedList = SCache.GetOrSet($"Product_Related_{product.ProductId}", () => {
                     var skus = product.RelatedProducts.Split(',', System.StringSplitOptions.RemoveEmptyEntries);
-                    // Dùng hàm GetBySkus để gom query vào 1 câu lệnh IN (Fix lỗi N+1 Query)
                     return FProduct.GetBySkus(skus);
                 }, 60);
             }
             
-            // Bước 2: Nếu Admin không cài đặt hoặc thiếu số lượng (< 4), tự động lấy thêm sản phẩm cùng danh mục
-            if (relatedList.Count < 4)
+            // Bước 2: Nếu Admin không cài đặt hoặc thiếu số lượng (< 6), tự động lấy thêm sản phẩm cùng danh mục
+            if (relatedList.Count < 6)
             {
                 var catRelated = SCache.GetOrSet($"Product_CatRelated_{product.ProductId}", () => {
-                    return FProduct.Search(null, product.CategoryIds, 1, null, null, null, "CreatedAt", "DESC", 1, 10)
+                    return FProduct.Search(null, product.CategoryIds, 1, null, null, null, "CreatedAt", "DESC", 1, 12)
                                          .Where(x => x.ProductId != product.ProductId)
                                          .ToList();
                 }, 60);
                 
-                // Trộn kết quả mà không làm trùng lặp sản phẩm
                 foreach (var p in catRelated)
                 {
-                    if (relatedList.Count >= 4) break;
+                    if (relatedList.Count >= 6) break;
                     if (!relatedList.Any(x => x.ProductId == p.ProductId))
                     {
                         relatedList.Add(p);
@@ -111,16 +109,63 @@ namespace Antigravity.ECommerce.Controllers
                 }
             }
             
-            ViewBag.RelatedProducts = relatedList.Take(4).ToList();
+            ViewBag.RelatedProducts = relatedList.Take(6).ToList();
 
-            // Lấy thông tin thống kê số sao đánh giá (Ví dụ: 4.5 sao, 20 lượt đánh giá)
+            // Lấy danh sách Phụ kiện liên quan
+            List<Product> accessoriesList = new List<Product>();
+            if (!string.IsNullOrEmpty(product.Accessories))
+            {
+                accessoriesList = SCache.GetOrSet($"Product_Accessories_{product.ProductId}", () => {
+                    var skus = product.Accessories.Split(',', System.StringSplitOptions.RemoveEmptyEntries);
+                    return FProduct.GetBySkus(skus);
+                }, 60);
+            }
+            ViewBag.Accessories = accessoriesList;
+
+            // Xử lý Sản phẩm đã xem (Viewed Products) lưu qua Cookie
+            string viewedCookie = Request.Cookies["ViewedProducts"] ?? "";
+            var viewedListIds = viewedCookie.Split(',', StringSplitOptions.RemoveEmptyEntries).ToList();
+            
+            // Xóa ID hiện tại nếu đã có để đưa lên đầu
+            viewedListIds.Remove(product.ProductId.ToString());
+            viewedListIds.Insert(0, product.ProductId.ToString());
+            
+            // Giữ lại tối đa 10 sản phẩm
+            if (viewedListIds.Count > 10) viewedListIds = viewedListIds.Take(10).ToList();
+            
+            // Cập nhật lại Cookie
+            Response.Cookies.Append("ViewedProducts", string.Join(",", viewedListIds), new CookieOptions { Expires = System.DateTime.Now.AddDays(30) });
+
+            // Lấy data sản phẩm đã xem (trừ sản phẩm hiện tại)
+            var viewedSkusToFetch = viewedListIds.Skip(1).Take(5).ToList();
+            List<Product> viewedProducts = new List<Product>();
+            if (viewedSkusToFetch.Count > 0)
+            {
+                foreach(var idStr in viewedSkusToFetch)
+                {
+                    if (int.TryParse(idStr, out int vId))
+                    {
+                        var vProd = SCache.GetOrSet($"Product_Detail_Id_{vId}", () => FProduct.GetById(vId), 60);
+                        if (vProd != null) viewedProducts.Add(vProd);
+                    }
+                }
+            }
+            ViewBag.ViewedProducts = viewedProducts;
+
+            // Lấy thông tin thống kê số sao đánh giá
             var reviewStats = FReview.GetProductStats(product.ProductId);
-            // Lấy 10 đánh giá gần nhất để hiển thị ra trang đầu tiên
             var reviews = FReview.GetByProductId(product.ProductId, null, 1, 10);
             
             ViewBag.ReviewStats = reviewStats;
             ViewBag.Reviews = reviews;
             ViewData["SchemaReviewStats"] = reviewStats;
+
+            // Load sidebar data: Cam kết từ Gordak
+            ViewBag.Commitments = SCache.GetOrSet("Adv_Product_Commitment", () => SAdvertising.GetByPosition("Product_Commitment"), 60);
+            // Load sidebar data: Chứng nhận đại lý chính thức
+            ViewBag.DealerCert = SCache.GetOrSet("Adv_Product_DealerCert", () => SAdvertising.GetByPosition("Product_DealerCert"), 60);
+            // Load settings cho Zalo link
+            ViewBag.Settings = SSetting.GetViewModel();
 
             // Xây dựng SEO Meta Tags động cho trang chi tiết
             ViewData["Title"] = !string.IsNullOrEmpty(product.SeoTitle) ? product.SeoTitle : product.Name;

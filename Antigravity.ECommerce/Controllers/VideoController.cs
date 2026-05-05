@@ -29,7 +29,6 @@ namespace Antigravity.ECommerce.Controllers
                 {
                     categoryId = cat.CategoryId;
                     ViewBag.CurrentCategory = cat;
-                    // Kế thừa cấu hình SEO từ danh mục
                     ViewData["Title"] = !string.IsNullOrEmpty(cat.SeoTitle) ? cat.SeoTitle : cat.Name;
                     ViewData["Description"] = cat.SeoDescription;
                     ViewData["Keywords"] = cat.SeoKeywords;
@@ -41,24 +40,30 @@ namespace Antigravity.ECommerce.Controllers
                 ViewData["Title"] = "Video - Clip nổi bật";
             }
 
-            // Deferred execution giúp tiết kiệm RAM khi duyệt hàng ngàn Video
-            IEnumerable<Video> allVideos = SVideo.GetAll().Where(x => x.Status == 1);
+            var allVideosList = SVideo.GetAll().Where(x => x.Status == 1).ToList();
             if (categoryId.HasValue)
             {
                 var allCatIds = SCategory.GetDescendantIds(categoryId.Value);
-                allVideos = allVideos.Where(x => allCatIds.Contains(x.CategoryId));
+                allVideosList = allVideosList.Where(x => allCatIds.Contains(x.CategoryId)).ToList();
             }
 
-            var videos = allVideos.OrderByDescending(x => x.CreatedAt);
+            var sortedVideos = allVideosList.OrderByDescending(x => x.CreatedAt).ToList();
             
-            // Tính toán tổng số lượng để phân trang
-            int totalCount = videos.Count();
+            // Tách video đầu tiên (luôn hiện trên cùng) và phân trang phần còn lại
+            Video? featuredVideo = sortedVideos.FirstOrDefault();
+            var remainingVideos = sortedVideos.Skip(1).ToList();
+            
+            int totalCount = remainingVideos.Count;
+            ViewBag.FeaturedVideo = featuredVideo;
             ViewBag.CurrentPage = page;
             ViewBag.PageSize = pageSize;
             ViewBag.TotalCount = totalCount;
             
-            // Trích xuất đúng số lượng video của trang hiện tại
-            var paginatedData = videos.Skip((page - 1) * pageSize).Take(pageSize).ToList();
+            // Bổ sung dữ liệu cho Sidebar
+            ViewBag.HotVideos = sortedVideos.Take(5).ToList();
+            
+            // Phân trang chỉ áp dụng cho phần video nhỏ bên dưới
+            var paginatedData = remainingVideos.Skip((page - 1) * pageSize).Take(pageSize).ToList();
             
             return View(paginatedData);
         }
@@ -76,6 +81,10 @@ namespace Antigravity.ECommerce.Controllers
             // Lấy ngẫu nhiên 6 video liên quan cùng danh mục
             ViewBag.Related = SVideo.Search(null, 1, video.CategoryId, "CreatedAt", "DESC", 1, 6)
                 .Where(v => v.VideoId != video.VideoId).ToList();
+
+            // Bổ sung dữ liệu cho Sidebar
+            ViewBag.Categories = SCategory.Search(null, null, 1, "SortOrder", "ASC", 1, 100, 3);
+            ViewBag.HotVideos = SVideo.GetAll().Where(x => x.Status == 1).OrderByDescending(x => x.CreatedAt).Take(5).ToList();
 
             // Cấu hình thẻ meta SEO
             ViewData["Title"] = !string.IsNullOrEmpty(video.SeoTitle) ? video.SeoTitle : video.Title;

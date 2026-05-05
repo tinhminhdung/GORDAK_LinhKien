@@ -102,5 +102,9 @@ namespace Antigravity.ECommerce.Models
 
         // Đơn hàng / Vận chuyển
         public decimal DefaultShippingFee { get; set; } = 0; // Phí vận chuyển mặc định (0 = Miễn phí)
+        
+        // Tin tức / Giao diện
+        public int NewsPageSize { get; set; } = 12; // Số lượng bài viết nhỏ/trang
+        public int NewsBigCount { get; set; } = 2; // Số lượng bài viết lớn (Nổi bật)
     }
 }

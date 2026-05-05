@@ -14,8 +14,24 @@ namespace Antigravity.ECommerce.Controllers
         /// </summary>
         public IActionResult Index(string kw = "", int page = 1)
         {
-            // Sử dụng deferred execution (IEnumerable) để không bắt RAM nạp toàn bộ dữ liệu ngay lập tức
-            IEnumerable<News> query = SNews.GetAll().Where(x => x.Status == 1);
+            var settings = SSetting.GetViewModel();
+            int pageSize = settings.NewsPageSize > 0 ? settings.NewsPageSize : 12;
+            int bigCount = settings.NewsBigCount > 0 ? settings.NewsBigCount : 2;
+
+            var allNews = SNews.GetAll().Where(x => x.Status == 1).ToList();
+
+            // Nếu không có tìm kiếm và đang ở trang 1, lấy tin NỔI BẬT riêng
+            List<News> bigNews = new List<News>();
+            if (string.IsNullOrEmpty(kw) && page == 1)
+            {
+                bigNews = allNews.Where(x => x.IsHot).OrderByDescending(x => x.SortOrder).ThenByDescending(x => x.CreatedAt).Take(bigCount).ToList();
+                
+                // Loại trừ các bài đã nằm trong BigNews khỏi danh sách nhỏ để tránh trùng lặp
+                var bigIds = bigNews.Select(x => x.NewsId).ToList();
+                allNews = allNews.Where(x => !bigIds.Contains(x.NewsId)).ToList();
+            }
+
+            IEnumerable<News> query = allNews;
             
             // Lọc theo từ khóa (nếu có)
             if (!string.IsNullOrEmpty(kw))
@@ -26,14 +42,17 @@ namespace Antigravity.ECommerce.Controllers
 
             var data = query.OrderByDescending(x => x.CreatedAt);
             
-            // Xử lý phân trang trên SQL/Memory một cách tối ưu nhất bằng Skip.Take
-            int pageSize = 12;
             int total = data.Count();
             var paginatedData = data.Skip((page - 1) * pageSize).Take(pageSize).ToList();
             
             ViewBag.Keyword = kw;
             ViewBag.CurrentPage = page;
             ViewBag.TotalPages = (int)System.Math.Ceiling((double)total / pageSize);
+            ViewBag.BigNews = bigNews;
+
+            // Bổ sung dữ liệu cho Sidebar & Filter
+            ViewBag.Categories = SCategory.GetAll().Where(x => x.Status == 1 && x.CategoryType == 2).OrderBy(x => x.SortOrder).ToList();
+            ViewBag.HotNews = SNews.GetAll().Where(x => x.Status == 1).OrderByDescending(x => x.Views).Take(5).ToList();
 
             // Cấu hình thẻ meta SEO
             ViewData["Title"] = string.IsNullOrEmpty(kw) ? "Tin tức - Bài viết mới nhất" : $"Tìm kiếm: {kw} - Tin tức";
@@ -63,6 +82,10 @@ namespace Antigravity.ECommerce.Controllers
             ViewBag.CurrentPage = page;
             ViewBag.TotalPages = (int)System.Math.Ceiling((double)total / pageSize);
 
+            // Bổ sung dữ liệu cho Sidebar & Filter
+            ViewBag.Categories = SCategory.GetAll().Where(x => x.Status == 1 && x.CategoryType == 2).OrderBy(x => x.SortOrder).ToList();
+            ViewBag.HotNews = SNews.GetAll().Where(x => x.Status == 1).OrderByDescending(x => x.Views).Take(5).ToList();
+
             // Cấu hình thẻ meta SEO
             ViewData["Title"] = !string.IsNullOrEmpty(category.SeoTitle) ? category.SeoTitle : category.Name;
             ViewData["Description"] = category.SeoDescription;
@@ -88,6 +111,10 @@ namespace Antigravity.ECommerce.Controllers
             
             // Lấy ngẫu nhiên 5 bài viết liên quan (cùng trạng thái)
             ViewBag.RelatedNews = SNews.GetAll().Where(x => x.Status == 1 && x.NewsId != item.NewsId).OrderByDescending(x => x.CreatedAt).Take(5).ToList();
+
+            // Bổ sung dữ liệu cho Sidebar
+            ViewBag.Categories = SCategory.GetAll().Where(x => x.Status == 1 && x.CategoryType == 2).OrderBy(x => x.SortOrder).ToList();
+            ViewBag.HotNews = SNews.GetAll().Where(x => x.Status == 1).OrderByDescending(x => x.Views).Take(5).ToList();
 
             // Cấu hình thẻ meta SEO
             ViewData["Title"] = !string.IsNullOrEmpty(item.SeoTitle) ? item.SeoTitle : item.Title;

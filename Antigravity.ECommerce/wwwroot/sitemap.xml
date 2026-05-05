@@ -57,6 +57,15 @@
     </image:image>
   </url>
   <url>
+    <loc>https://localhost:7057/tin-tuc/cong-nghe-ky-thuat.html</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://localhost:7057/uploads/logo.jpg</image:loc>
+      <image:title>Công nghệ - kỹ thuật</image:title>
+    </image:image>
+  </url>
+  <url>
     <loc>https://localhost:7057/san-pham/may-hap-chip.html</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
@@ -1145,7 +1154,7 @@
     <priority>0.7</priority>
     <image:image>
       <image:loc>https://localhost:7057/uploads/UT202Plus.png</image:loc>
-      <image:title>Top thiết bị đo điện bán chạy nhất</image:title>
+      <image:title>Hướng dẫn sử dụng trạm hàn đúng cách để tăng tuổi thọ thiết bị</image:title>
     </image:image>
   </url>
   <url>

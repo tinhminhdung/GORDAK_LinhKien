@@ -58,6 +58,34 @@
                         <label class="form-label">Chi tiết sản phẩm</label>
                         <textarea id="ckeditor-classic" asp-for="DetailDescription"></textarea>
                     </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Thông số kỹ thuật (Tab riêng) <i class="mdi mdi-information text-primary" data-bs-toggle="tooltip" title="Nội dung HTML hiển thị ở tab 'Thông số kỹ thuật' trên trang chi tiết sản phẩm"></i></label>
+                        <textarea id="ckeditor-specs" asp-for="TechnicalSpecs"></textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Video hướng dẫn (Tab riêng) <i class="mdi mdi-information text-primary" data-bs-toggle="tooltip" title="Nội dung HTML/Video hiển thị ở tab 'Video hướng dẫn' trên trang chi tiết sản phẩm"></i></label>
+                        <textarea id="ckeditor-video" asp-for="InstructionVideo"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header"><h5 class="card-title mb-0"><i class="ri-shopping-bag-3-line me-1 text-warning"></i> Link sàn Thương mại điện tử</h5></div>
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label"><i class="fa-solid fa-bag-shopping me-1" style="color:#ee4d2d;"></i> Link Shopee</label>
+                            <input type="text" class="form-control" asp-for="ShopeeLink" placeholder="https://shopee.vn/product/...">
+                            <small class="text-muted">Để trống nếu không bán trên Shopee</small>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label"><i class="fa-solid fa-heart me-1" style="color:#0f136d;"></i> Link Lazada</label>
+                            <input type="text" class="form-control" asp-for="LazadaLink" placeholder="https://lazada.vn/products/...">
+                            <small class="text-muted">Để trống nếu không bán trên Lazada</small>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -95,19 +123,13 @@
                             <input type="number" class="form-control" asp-for="Weight" value="0">
                         </div>
                     </div>
-
-                    <div class="d-flex justify-content-between align-items-center">
-                        <a href="/AdminProduct" class="btn btn-light px-4"><i class="ri-arrow-go-back-line me-1"></i>Quay lại</a>
-                        <button type="submit" class="btn btn-success px-5"><i class="ri-save-line me-1"></i>Lưu sản phẩm</button>
-                    </div>
-
                 </div>
             </div>
 
             <!-- MULTIMEDIA GALLERY -->
             <div class="card">
                 <div class="card-header d-flex align-items-center">
-                    <h5 class="card-title mb-0 flex-grow-1">Thư viện Ảnh & Video (Gallery)</h5>
+                    <h5 class="card-title mb-0 flex-grow-1">Thư viện Ảnh &amp; Video (Gallery)</h5>
                     <div class="flex-shrink-0 d-flex gap-2">
                         <button class="btn btn-soft-danger btn-sm" type="button" onclick="addVideoPrompt()"><i class="ri-youtube-line align-bottom me-1"></i>Thêm Video Youtube</button>
                         <button class="btn btn-soft-primary btn-sm" type="button" onclick="openFileManager('AlbumImage')"><i class="ri-image-add-line align-bottom me-1"></i>Thêm Ảnh Album</button>
@@ -127,9 +149,9 @@
             </div>
 
             <div class="card border-0 bg-transparent">
-                <div class="card-body p-0 d-flex justify-content-between">
-                    
-                    
+                <div class="card-body p-0 d-flex justify-content-between align-items-center">
+                    <a href="/AdminProduct" class="btn btn-light px-4"><i class="ri-arrow-go-back-line me-1"></i>Quay lại</a>
+                    <button type="submit" class="btn btn-success px-5"><i class="ri-save-line me-1"></i>Lưu sản phẩm</button>
                 </div>
             </div>
         </div>
@@ -204,6 +226,19 @@
                             }
                         </select>
                         <input type="hidden" asp-for="RelatedProducts" id="RelatedProducts">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Phụ kiện liên quan (Hiển thị ở cột bên phải)</label>
+                        <select class="form-control selectpicker" data-live-search="true" multiple data-selected-text-format="count > 3" id="accessories_select" title="Tìm & chọn phụ kiện..." data-actions-box="true">
+                            @if(ViewBag.AllProducts != null)
+                            {
+                                foreach(var item in ViewBag.AllProducts as List<Antigravity.ECommerce.Models.Product>)
+                                {
+                                    <option value="@item.SKU" data-subtext="@item.Name">@item.SKU</option>
+                                }
+                            }
+                        </select>
+                        <input type="hidden" asp-for="Accessories" id="Accessories">
                     </div>
                     <hr>
                     <div class="mb-3">
@@ -284,11 +319,16 @@
     
         document.addEventListener("DOMContentLoaded", function() {
             initEditor('ckeditor-classic', 500);
+            initEditor('ckeditor-specs', 350);
+            initEditor('ckeditor-video', 350);
 
             // Load Existing Tags
             // Init Related Products
             const relSkus = '@Model.RelatedProducts' ? '@Model.RelatedProducts'.split(',') : [];
             $('#related_products_select').selectpicker('val', relSkus);
+
+            const accSkus = '@Model.Accessories' ? '@Model.Accessories'.split(',') : [];
+            $('#accessories_select').selectpicker('val', accSkus);
 
             initPriceFormatting();
             initTagsSystem();
@@ -297,6 +337,10 @@
 
         $('#related_products_select').on('change', function() {
             $('#RelatedProducts').val($(this).val() ? $(this).val().join(',') : '');
+        });
+
+        $('#accessories_select').on('change', function() {
+            $('#Accessories').val($(this).val() ? $(this).val().join(',') : '');
         });
 
         function openFileManager(fieldId) {
