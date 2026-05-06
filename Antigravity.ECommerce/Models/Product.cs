@@ -97,9 +97,17 @@ namespace Antigravity.ECommerce.Models
         /// <summary> Link mua hàng trên Lazada </summary>
         public string? LazadaLink { get; set; }
 
-        /// <summary> Thông số kỹ thuật (HTML) </summary>
         public string? TechnicalSpecs { get; set; }
         public string? InstructionVideo { get; set; }
+
+        /// <summary> ID danh mục thương hiệu (CategoryType = 2) </summary>
+        public int? BrandId { get; set; }
+
+        /// <summary> ID danh mục bảo hành (CategoryType = 3) </summary>
+        public int? WarrantyId { get; set; }
+        
+        /// <summary> ID tình trạng sản phẩm (Từ bảng ProductOptions) </summary>
+        public int? ConditionId { get; set; }
 
         // --- Chế độ bổ trợ (Không lưu DB) ---
         /// <summary> Chuỗi tên các danh mục để hiển thị nhanh </summary>

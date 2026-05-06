@@ -86,11 +86,20 @@
 									<li class="nav-item">
 										<a href="/AdminCategory?type=1" class="nav-link @(Context.Request.Query["type"] == "1" ? "active" : "")">Danh mục Sản phẩm</a>
 									</li>
+									<li class="nav-item">
+										<a href="/AdminProductOption?type=1" class="nav-link @(Context.Request.Path.Value.StartsWith("/AdminProductOption") && Context.Request.Query["type"] == "1" ? "active" : "")">Quản lý Thương hiệu</a>
+									</li>
+									<li class="nav-item">
+										<a href="/AdminProductOption?type=2" class="nav-link @(Context.Request.Path.Value.StartsWith("/AdminProductOption") && Context.Request.Query["type"] == "2" ? "active" : "")">Quản lý Tình trạng</a>
+									</li>
+									<li class="nav-item">
+										<a href="/AdminProductOption?type=3" class="nav-link @(Context.Request.Path.Value.StartsWith("/AdminProductOption") && Context.Request.Query["type"] == "3" ? "active" : "")">Quản lý Bảo hành</a>
+									</li>
 								}
 								@if (PermissionHelper.CanView(Context, "Products"))
 								{
 									<li class="nav-item">
-										<a href="/AdminProduct" class="nav-link @(Context.Request.Path.Value.StartsWith("/AdminProduct") ? "active" : "")">Danh sách Sản phẩm</a>
+										<a href="/AdminProduct" class="nav-link @(Context.Request.Path.Value.StartsWith("/AdminProduct") && !Context.Request.Path.Value.StartsWith("/AdminProductOption") ? "active" : "")">Danh sách Sản phẩm</a>
 									</li>
 								}
 							</ul>

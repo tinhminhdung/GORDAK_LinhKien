@@ -91,6 +91,9 @@ namespace Antigravity.ECommerce.Framework
                 new SqlParameter("@LazadaLink", (object)obj.LazadaLink ?? DBNull.Value),
                 new SqlParameter("@TechnicalSpecs", (object)obj.TechnicalSpecs ?? DBNull.Value),
                 new SqlParameter("@InstructionVideo", (object)obj.InstructionVideo ?? DBNull.Value),
+                new SqlParameter("@BrandId", (object)obj.BrandId ?? DBNull.Value),
+                new SqlParameter("@WarrantyId", (object)obj.WarrantyId ?? DBNull.Value),
+                new SqlParameter("@ConditionId", (object)obj.ConditionId ?? DBNull.Value),
                 new SqlParameter("@CreatedBy", (object)obj.CreatedBy ?? DBNull.Value)
             };
             var result = BaseConnectionSql.ExecuteScalar("SP_Products_Insert", prm);
@@ -131,6 +134,9 @@ namespace Antigravity.ECommerce.Framework
                 new SqlParameter("@LazadaLink", (object)obj.LazadaLink ?? DBNull.Value),
                 new SqlParameter("@TechnicalSpecs", (object)obj.TechnicalSpecs ?? DBNull.Value),
                 new SqlParameter("@InstructionVideo", (object)obj.InstructionVideo ?? DBNull.Value),
+                new SqlParameter("@BrandId", (object)obj.BrandId ?? DBNull.Value),
+                new SqlParameter("@WarrantyId", (object)obj.WarrantyId ?? DBNull.Value),
+                new SqlParameter("@ConditionId", (object)obj.ConditionId ?? DBNull.Value),
                 new SqlParameter("@UpdatedBy", (object)obj.UpdatedBy ?? DBNull.Value)
             };
             return BaseConnectionSql.ExecuteNonQuery("SP_Products_Update", prm);

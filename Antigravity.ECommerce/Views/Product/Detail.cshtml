@@ -19,13 +19,31 @@
     if (!string.IsNullOrEmpty(Model.MainImage)) allImages.Add(Model.MainImage);
     allImages.AddRange(gallery);
 
+    // Tìm danh mục chính của sản phẩm để hiển thị trên Breadcrumb
+    Category mainCat = null;
+    if (!string.IsNullOrEmpty(Model.CategoryIds))
+    {
+        var firstCatIdStr = Model.CategoryIds.Split(',', StringSplitOptions.RemoveEmptyEntries).FirstOrDefault();
+        if (int.TryParse(firstCatIdStr, out int catId))
+        {
+            mainCat = SCategory.GetById(catId);
+        }
+    }
+
     // SEO Schema
     ViewData["SchemaProduct"] = Model;
-    ViewData["SchemaBreadcrumbs"] = new List<BreadcrumbItem> {
+    
+    var schemaBreadcrumbs = new List<BreadcrumbItem> {
         new BreadcrumbItem { Name = "Trang chủ", Url = "/" },
-        new BreadcrumbItem { Name = "Sản phẩm", Url = "/san-pham.html" },
-        new BreadcrumbItem { Name = Model.Name, Url = Context.Request.Path }
+        new BreadcrumbItem { Name = "Sản phẩm", Url = "/san-pham.html" }
     };
+    if (mainCat != null)
+    {
+        schemaBreadcrumbs.Add(new BreadcrumbItem { Name = mainCat.Name, Url = $"/san-pham/{mainCat.Slug}.html" });
+    }
+    schemaBreadcrumbs.Add(new BreadcrumbItem { Name = Model.Name, Url = Context.Request.Path });
+    ViewData["SchemaBreadcrumbs"] = schemaBreadcrumbs;
+
     if (videos.Count > 0)
     {
         ViewData["SchemaVideo"] = new Video {
@@ -45,6 +63,11 @@
         <i class="fa-solid fa-chevron-right separator"></i> 
         <a href="/san-pham.html">Sản phẩm</a>
         <i class="fa-solid fa-chevron-right separator"></i> 
+        @if(mainCat != null)
+        {
+            <a href="/san-pham/@(mainCat.Slug).html">@mainCat.Name</a>
+            <i class="fa-solid fa-chevron-right separator"></i> 
+        }
         <span class="active">@Model.Name</span>
     </div>
 
@@ -93,15 +116,22 @@
                 }
                 <tr>
                   <td class="pd2-meta-label">Thương hiệu:</td>
-                  <td>GORDAK</td>
+                  <td>@(Model.BrandId > 0 ? Antigravity.ECommerce.Services.SProductOption.GetById(Model.BrandId.Value)?.Name ?? "GORDAK" : "GORDAK")</td>
                 </tr>
                 <tr>
                   <td class="pd2-meta-label">Tình trạng:</td>
-                  <td class="@(Model.Stock > 0 ? "pd2-status-green" : "text-danger")">@(Model.Stock > 0 ? "Còn hàng" : "Hết hàng")</td>
+                  @if(Model.ConditionId > 0)
+                  {
+                      <td class="pd2-status-green">@(Antigravity.ECommerce.Services.SProductOption.GetById(Model.ConditionId.Value)?.Name ?? (Model.Stock > 0 ? "Còn hàng" : "Hết hàng"))</td>
+                  }
+                  else
+                  {
+                      <td class="@(Model.Stock > 0 ? "pd2-status-green" : "text-danger")">@(Model.Stock > 0 ? "Còn hàng" : "Hết hàng")</td>
+                  }
                 </tr>
                 <tr>
                   <td class="pd2-meta-label">Bảo hành:</td>
-                  <td>12 tháng</td>
+                  <td>@(Model.WarrantyId > 0 ? Antigravity.ECommerce.Services.SProductOption.GetById(Model.WarrantyId.Value)?.Name ?? "12 tháng" : "12 tháng")</td>
                 </tr>
                 @if(!string.IsNullOrEmpty(Model.Unit)){
                 <tr>
@@ -436,8 +466,10 @@
   <div class="modal-dialog modal-dialog-centered modal-lg d-flex justify-content-center">
     <div class="modal-content border-0 bg-transparent align-items-center">
       <div class="position-relative d-inline-block">
-        <button type="button" class="btn-close position-absolute" data-bs-dismiss="modal" aria-label="Close" style="top: 10px; right: 10px; z-index: 1050; background-color: rgba(0,0,0,0.5); filter: invert(1); border-radius: 50%; opacity: 1; padding: 10px; cursor: pointer;"></button>
-        <img id="modalZoomImg" src="@(allImages.Count > 0 ? allImages[0] : "")" class="img-fluid rounded bg-white p-2" style="max-height: 85vh;" alt="Phóng to ảnh">
+        <button type="button" class="position-absolute d-flex align-items-center justify-content-center" data-bs-dismiss="modal" aria-label="Close" style="top: 10px; right: 10px; z-index: 1050; width: 36px; height: 36px; background-color: rgba(0,0,0,0.6); color: #fff; border-radius: 50%; opacity: 1; cursor: pointer; border: none; transition: background 0.3s;" onmouseover="this.style.backgroundColor='rgba(0,0,0,0.9)'" onmouseout="this.style.backgroundColor='rgba(0,0,0,0.6)'">
+            <i class="fa-solid fa-xmark fs-5"></i>
+        </button>
+        <img id="modalZoomImg" src="@(allImages.Count > 0 ? allImages[0] : "")" class="img-fluid rounded bg-white p-2" style="max-height: 85vh; border: 2px solid #e9ebec;" alt="Phóng to ảnh">
       </div>
     </div>
   </div>

@@ -51,6 +51,48 @@
                         </div>
                     </div>
 
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <label class="form-label">Thương hiệu</label>
+                            <select class="form-select" asp-for="BrandId">
+                                <option value="">-- Chọn thương hiệu --</option>
+                                @if(ViewBag.Brands != null)
+                                {
+                                    foreach(var item in ViewBag.Brands as List<Antigravity.ECommerce.Models.ProductOption>)
+                                    {
+                                        <option value="@item.Id">@item.Name</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Tình trạng</label>
+                            <select class="form-select" asp-for="ConditionId">
+                                <option value="">-- Tình trạng (Mới, Cũ...) --</option>
+                                @if(ViewBag.Conditions != null)
+                                {
+                                    foreach(var item in ViewBag.Conditions as List<Antigravity.ECommerce.Models.ProductOption>)
+                                    {
+                                        <option value="@item.Id">@item.Name</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Bảo hành</label>
+                            <select class="form-select" asp-for="WarrantyId">
+                                <option value="">-- Chọn thời gian bảo hành --</option>
+                                @if(ViewBag.Warranties != null)
+                                {
+                                    foreach(var item in ViewBag.Warranties as List<Antigravity.ECommerce.Models.ProductOption>)
+                                    {
+                                        <option value="@item.Id">@item.Name</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+
                     <div class="mb-3">
                         <label class="form-label">Mô tả ngắn</label>
                         <textarea class="form-control" id="ShortDescription" asp-for="ShortDescription" rows="4" placeholder="Nhập mô tả ngắn gọn về sản phẩm..."></textarea>

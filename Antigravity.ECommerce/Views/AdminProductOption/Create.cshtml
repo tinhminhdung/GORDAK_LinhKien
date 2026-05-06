@@ -1,0 +1,46 @@
+@model Antigravity.ECommerce.Models.ProductOption
+@{
+    ViewData["Title"] = "Thêm " + ViewBag.PageTitle;
+    Layout = "_AdminLayout";
+}
+
+<div class="row">
+    <div class="col-12">
+        <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+            <h4 class="mb-sm-0">Thêm @ViewBag.PageTitle</h4>
+        </div>
+    </div>
+</div>
+
+<form action="/AdminProductOption/Create" method="post">
+    <input type="hidden" asp-for="Type" />
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label class="form-label">Tiêu đề (@ViewBag.PageTitle) <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" asp-for="Name" required placeholder="Nhập tiêu đề...">
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Thứ tự hiển thị</label>
+                            <input type="number" class="form-control" asp-for="SortOrder">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Trạng thái</label>
+                            <select class="form-control" asp-for="Status">
+                                <option value="1">Hiển thị</option>
+                                <option value="0">Đang ẩn</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer text-end">
+                    <a href="/AdminProductOption?type=@Model.Type" class="btn btn-light me-2">Hủy bỏ</a>
+                    <button type="submit" class="btn btn-success">Lưu dữ liệu</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

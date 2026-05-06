@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Antigravity.ECommerce.Models;
 using Antigravity.ECommerce.Services;
@@ -42,6 +42,9 @@ namespace Antigravity.ECommerce.Controllers
         public IActionResult Create()
         {
             ViewBag.Categories = SCategory.GetHierarchical().Where(x => x.CategoryType == 1).ToList();
+            ViewBag.Brands = SProductOption.GetAll().Where(x => x.Type == 1).ToList();
+            ViewBag.Conditions = SProductOption.GetAll().Where(x => x.Type == 2).ToList();
+            ViewBag.Warranties = SProductOption.GetAll().Where(x => x.Type == 3).ToList();
             ViewBag.AllProducts = SProduct.GetAll(); // Để chọn sản phẩm liên quan
             return View(new Product { Status = 1, Price = 0, Stock = 0, OldPrice = 0, PurchasePrice = 0 });
         }
@@ -66,6 +69,9 @@ namespace Antigravity.ECommerce.Controllers
                 }
             }
             ViewBag.Categories = SCategory.GetHierarchical().Where(x => x.CategoryType == 1).ToList();
+            ViewBag.Brands = SProductOption.GetAll().Where(x => x.Type == 1).ToList();
+            ViewBag.Conditions = SProductOption.GetAll().Where(x => x.Type == 2).ToList();
+            ViewBag.Warranties = SProductOption.GetAll().Where(x => x.Type == 3).ToList();
             ViewBag.AllProducts = SProduct.GetAll();
             return View(model);
         }
@@ -78,6 +84,9 @@ namespace Antigravity.ECommerce.Controllers
             if (product == null) return NotFound();
             
             ViewBag.Categories = SCategory.GetHierarchical().Where(x => x.CategoryType == 1).ToList();
+            ViewBag.Brands = SProductOption.GetAll().Where(x => x.Type == 1).ToList();
+            ViewBag.Conditions = SProductOption.GetAll().Where(x => x.Type == 2).ToList();
+            ViewBag.Warranties = SProductOption.GetAll().Where(x => x.Type == 3).ToList();
             ViewBag.AllProducts = SProduct.GetAll(); // Để chọn sản phẩm liên quan
             return View(product);
         }
@@ -102,6 +111,9 @@ namespace Antigravity.ECommerce.Controllers
                 }
             }
             ViewBag.Categories = SCategory.GetHierarchical().Where(x => x.CategoryType == 1).ToList();
+            ViewBag.Brands = SProductOption.GetAll().Where(x => x.Type == 1).ToList();
+            ViewBag.Conditions = SProductOption.GetAll().Where(x => x.Type == 2).ToList();
+            ViewBag.Warranties = SProductOption.GetAll().Where(x => x.Type == 3).ToList();
             ViewBag.AllProducts = SProduct.GetAll();
             return View(model);
         }

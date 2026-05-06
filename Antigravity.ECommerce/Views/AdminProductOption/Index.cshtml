@@ -1,0 +1,108 @@
+@model IEnumerable<Antigravity.ECommerce.Models.ProductOption>
+@{
+    ViewData["Title"] = "Quản lý " + ViewBag.PageTitle;
+    Layout = "_AdminLayout";
+}
+
+<div class="row">
+    <div class="col-12">
+        <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+            <h4 class="mb-sm-0">Quản lý @ViewBag.PageTitle</h4>
+            <div class="page-title-right">
+                <ol class="breadcrumb m-0">
+                    <li class="breadcrumb-item"><a href="javascript: void(0);">Sản phẩm</a></li>
+                    <li class="breadcrumb-item active">@ViewBag.PageTitle</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header border-0">
+                <div class="d-flex align-items-center">
+                    <h5 class="card-title mb-0 flex-grow-1">Danh sách @ViewBag.PageTitle</h5>
+                    <div class="flex-shrink-0">
+                        <a href="/AdminProductOption/Create?type=@ViewBag.Type" class="btn btn-primary btn-sm"><i class="ri-add-line align-bottom me-1"></i> Thêm mới</a>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th width="80">ID</th>
+                            <th>Tiêu đề</th>
+                            <th width="100" class="text-center">Thứ tự</th>
+                            <th width="120" class="text-center">Trạng thái</th>
+                            <th width="120" class="text-center">Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model != null && Model.Any())
+                        {
+                            foreach (var item in Model)
+                            {
+                                <tr id="row-@item.Id">
+                                    <td>@item.Id</td>
+                                    <td class="fw-bold text-primary">@item.Name</td>
+                                    <td class="text-center">@item.SortOrder</td>
+                                    <td class="text-center">
+                                        @if (item.Status == 1)
+                                        {
+                                            <span class="badge bg-success">Hiển thị</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-danger">Đang ẩn</span>
+                                        }
+                                    </td>
+                                    <td class="text-center">
+                                        <a href="/AdminProductOption/Edit/@item.Id" class="btn btn-sm btn-info" title="Sửa"><i class="ri-edit-2-line"></i></a>
+                                        <button class="btn btn-sm btn-danger" onclick="deleteItem(@item.Id)" title="Xóa"><i class="ri-delete-bin-line"></i></button>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="5" class="text-center py-4 text-muted">Chưa có dữ liệu nào.</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function deleteItem(id) {
+            Swal.fire({
+                title: "Bạn có chắc chắn?",
+                text: "Dữ liệu sẽ bị xóa vĩnh viễn và không thể khôi phục!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#f06548",
+                cancelButtonColor: "#878a99",
+                confirmButtonText: "Đồng ý Xóa",
+                cancelButtonText: "Hủy bỏ"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.post('/AdminProductOption/Delete/' + id, function(res) {
+                        if (res.success) {
+                            $("#row-" + id).fadeOut();
+                            Toastify({text: "Xóa thành công", className: "bg-success"}).showToast();
+                        } else {
+                            Swal.fire("Lỗi!", res.message, "error");
+                        }
+                    });
+                }
+            });
+        }
+    </script>
+}
