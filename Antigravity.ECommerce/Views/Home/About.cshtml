@@ -195,14 +195,15 @@
   <div class="container">
     <h2 class="gt-section-title mb-4">CHỨNG NHẬN & UY TÍN</h2>
     <div class="row g-3 align-items-stretch">
-      @if(aboutCert.Count > 0)
+      @if(aboutCert != null && aboutCert.Count > 0)
       {
         @foreach(var cert in aboutCert)
         {
+          if (cert == null) continue;
         <div class="col-6 col-md-2 text-center">
           <div class="gt-cert-card">
-            <img src="@cert.Image" alt="@cert.Title">
-            <small>@cert.Title</small>
+            <img src="@(cert.Image ?? "/assets/images/placeholder.png")" alt="@(cert.Title ?? "")">
+            <small>@(cert.Title ?? "")</small>
           </div>
         </div>
         }

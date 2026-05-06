@@ -60,7 +60,10 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.UseResponseCompression();
+if (!app.Environment.IsDevelopment())
+{
+    app.UseResponseCompression();
+}
 
 // ── Image Optimization: Tự động phục vụ ảnh WebP thumbnail ──
 // Đặt TRƯỚC UseStaticFiles để chặn request ảnh trước

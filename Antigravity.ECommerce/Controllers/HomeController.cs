@@ -100,8 +100,12 @@ public class HomeController : Controller
     /// <summary>
     /// Trang giới thiệu thương hiệu Gordak (/gioi-thieu.html)
     /// </summary>
+    [Route("gioi-thieu.html")]
     public IActionResult About()
     {
+        Antigravity.ECommerce.Services.SCache.Remove("Advertising_All");
+        Antigravity.ECommerce.Services.SCache.Remove("About_Cert");
+
         // Dữ liệu riêng cho trang Giới thiệu
         var aboutHero = Antigravity.ECommerce.Services.SCache.GetOrSet("About_Hero", () =>
             Antigravity.ECommerce.Services.SAdvertising.GetByPosition("About_Hero")?.FirstOrDefault(), 60);
@@ -136,6 +140,14 @@ public class HomeController : Controller
         ViewBag.AboutCert = aboutCert;
 
         return View();
+    }
+    
+    [Route("clear-cache")]
+    public IActionResult ClearCache()
+    {
+        Antigravity.ECommerce.Services.SCache.Remove("Advertising_All");
+        Antigravity.ECommerce.Services.SCache.Remove("About_Cert");
+        return Content("OK");
     }
     #endregion
 

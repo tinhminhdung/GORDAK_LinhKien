@@ -75,7 +75,7 @@ namespace Antigravity.ECommerce.Controllers
         #region 2. Chi tiết sản phẩm
         /// <summary>
         /// Trang xem chi tiết một sản phẩm
-        /// </summary>
+        /// </summary>        // Trigger restart for cache update
         public IActionResult Detail(string slug)
         {
             // Load thông tin sản phẩm có cache
