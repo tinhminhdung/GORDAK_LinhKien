@@ -108,21 +108,6 @@
                 }
             });
         }
-
-        // Fix Desktop Menu Navigation
-        document.addEventListener("DOMContentLoaded", function() {
-            if (window.innerWidth >= 992) {
-                var dropdowns = document.querySelectorAll('.desktop-nav .dropdown-toggle');
-                dropdowns.forEach(function(el) {
-                    el.addEventListener('click', function(e) {
-                        var href = this.getAttribute('href');
-                        if (href && href !== '#' && href !== 'javascript:void(0)') {
-                            window.location.href = href;
-                        }
-                    });
-                });
-            }
-        });
     </script>
 
     <!-- SEO & Performance Infrastructure (Separate and reusable) -->

@@ -99,6 +99,10 @@
                   <td class="pd2-meta-label">Tình trạng:</td>
                   <td class="@(Model.Stock > 0 ? "pd2-status-green" : "text-danger")">@(Model.Stock > 0 ? "Còn hàng" : "Hết hàng")</td>
                 </tr>
+                <tr>
+                  <td class="pd2-meta-label">Bảo hành:</td>
+                  <td>12 tháng</td>
+                </tr>
                 @if(!string.IsNullOrEmpty(Model.Unit)){
                 <tr>
                   <td class="pd2-meta-label">Đơn vị:</td>
@@ -108,8 +112,18 @@
               </table>
 
               <div class="pd2-price-wrap">
+                @{
+                  decimal vatRate = 0.08m;
+                  decimal priceNoVat = Math.Round(Model.Price / (1 + vatRate));
+                }
+                @if(Model.Price > 0){
                 <div class="pd2-price-row">
-                  <span style="color:#666;">Giá bán:</span>
+                  <span style="color:#666;"><b style="color:#e30000;">Giá</b> (Chưa VAT):</span>
+                  <span class="pd2-price-red">@priceNoVat.ToString("N0")đ</span>
+                </div>
+                }
+                <div class="pd2-price-row">
+                  <span style="color:#666;"><b style="color:#e30000;">Giá bán</b>@(Model.Price > 0 ? " (VAT 8 %)" : ""):</span>
                   <span class="pd2-price-main">@Model.Price.ToString("N0")đ</span>
                 </div>
                 @if(Model.OldPrice > Model.Price){
@@ -262,21 +276,18 @@
         {
         <div class="pd2-sidebar-box">
           <h3 class="pd2-sidebar-title">CHỨNG NHẬN ĐẠI LÝ CHÍNH THỨC</h3>
-          <div class="pd2-cert-content">
-            @{var cert = dealerCerts.First();}
-            @if(!string.IsNullOrEmpty(cert.Image))
+          <div class="pd2-cert-content" style="text-align:left; display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+            @foreach(var cert in dealerCerts)
             {
-              <img src="@cert.Image" alt="@cert.Title" class="pd2-cert-img" style="max-width: 80px;">
+              @if(!string.IsNullOrEmpty(cert.Image))
+              {
+                <img src="@cert.Image" alt="@cert.Title" class="pd2-cert-img" style="max-width:calc(50% - 8px); height:auto; object-fit:contain; margin-bottom:0; border-radius:4px;">
+              }
             }
-            <div style="font-weight: bold; color: #1a3c8a; font-size: 14px; margin-bottom: 10px;">@cert.Title</div>
-            @if(!string.IsNullOrEmpty(cert.Link))
-            {
-              <a href="@cert.Link" class="pd2-cert-btn">Xem chứng nhận</a>
-            }
-            else
-            {
-              <a href="/gioi-thieu.html" class="pd2-cert-btn">Xem chứng nhận</a>
-            }
+          </div>
+          <div style="text-align:right; padding:10px 15px 5px;">
+            @{var certLink = dealerCerts.FirstOrDefault(x => !string.IsNullOrEmpty(x.Link));}
+            <a href="@(certLink != null ? certLink.Link : "/gioi-thieu.html")" class="pd2-cert-btn">Xem chứng nhận</a>
           </div>
         </div>
         }

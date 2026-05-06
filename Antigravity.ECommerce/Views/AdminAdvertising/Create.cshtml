@@ -79,14 +79,13 @@
                     <div class="mb-3">
                         <select class="form-select" asp-for="Position" id="Position" onchange="updateLabels()" required>
                             <option value="Home_Slide">Trang chủ - Slide lớn</option>
-                            <option value="Home_Top">Trang chủ - Banner đầu trang</option>
-                            <option value="Home_Middle">Trang chủ - Banner giữa</option>
-                            <option value="Home_WhyChoose">Trang chủ - Vì sao chọn Gordak</option>
-                            <option value="Home_BrandStat">Trang chủ - Thống kê Thương hiệu</option>
-                            <option value="Home_BrandIntro">Trang chủ - Giới thiệu Thương hiệu</option>
-                            <option value="Sidebar_Right">Cột phải - Sidebar</option>
-                            <option value="Product_Detail">Trang chi tiết sản phẩm</option>
-                            <option value="Popup">Popup Quảng cáo</option>
+                            <option disabled>── Trang Sản phẩm ──</option>
+                            <option value="Product_Commitment">Cam kết chất lượng</option>
+                            <option value="Product_DealerCert">Chứng nhận đại lý</option>
+                            <option disabled>── Trang chủ - Module ──</option>
+                            <option value="Home_WhyChoose">Vì sao chọn chúng tôi</option>
+                            <option value="Home_BrandIntro">Giới thiệu Thương hiệu</option>
+                            <option value="Home_BrandStat">Thống kê Thương hiệu</option>
                             <option disabled>── Trang Giới thiệu ──</option>
                             <option value="About_Hero">Giới thiệu - Banner đầu trang</option>
                             <option value="About_Intro">Giới thiệu - Về Gordak</option>
@@ -260,6 +259,14 @@
                 link: { show: false },
                 target: false, schedule: false
             },
+            'Product_DealerCert': {
+                title: 'Tiêu đề chứng nhận <span class="text-danger">*</span>',
+                image: { show: true, label: 'Ảnh chứng nhận <span class="text-danger">*</span>', col: 'col-md-12' },
+                videoUrl: { show: false, label: '', col: 'col-md-6' },
+                description: { show: true, label: 'Mô tả ngắn', rows: 3 },
+                link: { show: true, label: 'Đường dẫn liên kết', placeholder: '/gioi-thieu.html' },
+                target: false, schedule: false
+            },
             '_default': {
                 title: 'Tiêu đề Banner <span class="text-danger">*</span>',
                 image: { show: true, label: 'Ảnh Banner', col: 'col-md-6' },
@@ -332,7 +339,15 @@
             document.getElementById('group_Schedule').style.display = cfg.schedule ? '' : 'none';
         }
 
-        // Gọi ngay khi trang load
-        document.addEventListener('DOMContentLoaded', updateLabels);
+        // Auto-select position from query parameter (khi tạo mới từ trang lọc)
+        document.addEventListener('DOMContentLoaded', function() {
+            var params = new URLSearchParams(window.location.search);
+            var pos = params.get('position');
+            if (pos) {
+                var sel = document.getElementById('Position');
+                if (sel) sel.value = pos;
+            }
+            updateLabels();
+        });
     </script>
 }

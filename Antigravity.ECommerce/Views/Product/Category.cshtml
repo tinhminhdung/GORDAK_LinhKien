@@ -5,9 +5,35 @@
     ViewData["Title"] = category != null ? category.Name : (ViewBag.Keyword != null ? "Tìm kiếm: " + ViewBag.Keyword : "Tất cả sản phẩm");
 
     // Lấy danh sách danh mục gốc để hiển thị
-    var parentCategories = Antigravity.ECommerce.Services.SCache.GetOrSet("Home_Categories", () => Antigravity.ECommerce.Services.SCategory.GetAll().Where(x => x.ParentId == 0 && (x.CategoryType == 1 || x.CategoryType == null)).OrderBy(x => x.SortOrder).ToList(), 60);
+    var allProductCats = Antigravity.ECommerce.Services.SCategory.GetAll().Where(x => x.CategoryType == 1 || x.CategoryType == null).ToList();
+    var parentCategories = Antigravity.ECommerce.Services.SCache.GetOrSet("Home_Categories", () => allProductCats.Where(x => x.ParentId == 0).OrderBy(x => x.SortOrder).ToList(), 60);
+    
+    // Đếm số lượng sản phẩm thực tế theo CategoryId từ DB
+    var productCounts = Antigravity.ECommerce.Services.SCache.GetOrSet("Product_CountByCategory", () => Antigravity.ECommerce.Services.SProduct.CountByCategory(), 10);
+    var catLookup = allProductCats.ToLookup(x => x.ParentId);
+    
+    // Hàm tính tổng sản phẩm của 1 category + tất cả con cháu
+    int SumDescendants(int catId) {
+        int count = productCounts != null && productCounts.ContainsKey(catId) ? productCounts[catId] : 0;
+        foreach (var child in catLookup[catId]) {
+            count += SumDescendants(child.CategoryId);
+        }
+        return count;
+    }
+    
+    // Tính aggregate counts cho từng category cha
+    var aggregateCounts = new Dictionary<int, int>();
+    int totalAllProducts = 0;
+    if (parentCategories != null) {
+        foreach (var pc in parentCategories) {
+            int sum = SumDescendants(pc.CategoryId);
+            aggregateCounts[pc.CategoryId] = sum;
+            totalAllProducts += sum;
+        }
+    }
+
     var bestSellers = Antigravity.ECommerce.Services.SCache.GetOrSet("Product_BestSellers", () => Antigravity.ECommerce.Services.SProduct.Search(null, null, 1, true, null, null, "SortOrder", "ASC", 1, 12), 60);
-    var commitments = Antigravity.ECommerce.Services.SCache.GetOrSet("Product_Commitments", () => Antigravity.ECommerce.Services.SAdvertising.GetByPosition("Product_Commitment"), 60);
+    var commitments = Antigravity.ECommerce.Services.SAdvertising.GetByPosition("Product_Commitment");
 
     // SEO Schema Setup
     ViewData["SchemaBreadcrumbs"] = new List<Antigravity.ECommerce.Models.BreadcrumbItem> {
@@ -31,7 +57,7 @@
   <div class="sp-cat-list">
     <a href="/san-pham.html" class="sp-cat-item @(category == null ? "active" : "")">
       <i class="fa-solid fa-border-all"></i>
-      <div><strong>Tất cả sản phẩm</strong><small>@(ViewBag.TotalCount ?? (Model != null ? Model.Count : 0)) sản phẩm</small></div>
+      <div><strong>Tất cả sản phẩm</strong><small>@totalAllProducts sản phẩm</small></div>
     </a>
     @if(parentCategories != null)
     {
@@ -43,7 +69,7 @@
           } else {
             <i class="@(cat.Icon ?? "fa-solid fa-box")"></i>
           }
-          <div><strong>@cat.Name</strong><small>@cat.ItemCount sản phẩm</small></div>
+          <div><strong>@cat.Name</strong><small>@(aggregateCounts != null && aggregateCounts.ContainsKey(cat.CategoryId) ? aggregateCounts[cat.CategoryId] : cat.ItemCount) sản phẩm</small></div>
         </a>
       }
     }

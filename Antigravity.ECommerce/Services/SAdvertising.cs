@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Data.SqlClient;
 using Antigravity.ECommerce.Models;
 using Antigravity.ECommerce.Framework;
@@ -29,7 +30,8 @@ namespace Antigravity.ECommerce.Services
             var now = DateTime.Now;
             return all.FindAll(x => x.Position == position && x.Status == 1 
                                 && (x.StartDate == null || x.StartDate <= now)
-                                && (x.EndDate == null || x.EndDate >= now));
+                                && (x.EndDate == null || x.EndDate >= now))
+                      .OrderBy(x => x.SortOrder).ToList();
         }
 
         public static int Insert(Advertising obj)

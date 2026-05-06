@@ -165,9 +165,9 @@ namespace Antigravity.ECommerce.Controllers
             ViewData["SchemaReviewStats"] = reviewStats;
 
             // Load sidebar data: Cam kết từ Gordak
-            ViewBag.Commitments = SCache.GetOrSet("Adv_Product_Commitment", () => SAdvertising.GetByPosition("Product_Commitment"), 60);
+            ViewBag.Commitments = SAdvertising.GetByPosition("Product_Commitment");
             // Load sidebar data: Chứng nhận đại lý chính thức
-            ViewBag.DealerCert = SCache.GetOrSet("Adv_Product_DealerCert", () => SAdvertising.GetByPosition("Product_DealerCert"), 60);
+            ViewBag.DealerCert = SAdvertising.GetByPosition("Product_DealerCert");
             // Load settings cho Zalo link
             ViewBag.Settings = SSetting.GetViewModel();
 

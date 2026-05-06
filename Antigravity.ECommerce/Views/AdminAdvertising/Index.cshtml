@@ -30,7 +30,7 @@
                 <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#restoreModal">
                     <i class="ri-refresh-line align-middle me-1"></i> Khôi phục mẫu gốc
                 </button>
-                <a href="/AdminAdvertising/Create" class="btn btn-primary">
+                <a href="/AdminAdvertising/Create@(string.IsNullOrEmpty(position) ? "" : "?position=" + position)" class="btn btn-primary">
                     <i class="ri-add-line align-middle me-1"></i> Thêm Banner mới
                 </a>
             </div>
@@ -158,7 +158,11 @@
                                             <br/>
                                             <small class="text-muted">Mở: @item.Target</small>
                                         </td>
-                                        <td>@item.SortOrder</td>
+                                        <td>
+                                            <input type="number" class="form-control form-control-sm text-center" 
+                                                   value="@item.SortOrder" style="width:70px;" 
+                                                   onchange="updateSortOrder(@item.AdvertisingId, this.value)">
+                                        </td>
                                         <td>
                                             <div class="form-check form-switch form-switch-success mb-0">
                                                 <input class="form-check-input status-switch" type="checkbox" data-id="@item.AdvertisingId"
@@ -171,7 +175,7 @@
                                         </td>
                                         <td class="text-center">
                                             <div class="d-flex justify-content-center gap-1">
-                                                <a href="/AdminAdvertising/Edit/@item.AdvertisingId" class="btn btn-sm btn-soft-info" title="Chỉnh sửa">
+                                                <a href="/AdminAdvertising/Edit/@(item.AdvertisingId)@(string.IsNullOrEmpty(position) ? "" : "?position=" + position)" class="btn btn-sm btn-soft-info" title="Chỉnh sửa">
                                                     <i class="ri-pencil-line"></i>
                                                 </a>
                                                 <button class="btn btn-sm btn-soft-danger" onclick="deleteItem(@item.AdvertisingId)" title="Xóa">
@@ -393,6 +397,21 @@
                             }
                         }
                     });
+                }
+            });
+        }
+
+        function updateSortOrder(id, value) {
+            $.ajax({
+                url: '/AdminAdvertising/UpdateSortOrder',
+                type: 'POST',
+                data: { id: id, sortOrder: value },
+                success: function(res) {
+                    if (res.success) {
+                        Toastify({ text: 'Đã cập nhật thứ tự!', duration: 1500, gravity: 'top', position: 'right', backgroundColor: '#0ab39c' }).showToast();
+                    } else {
+                        Swal.fire('Lỗi', 'Cập nhật thất bại', 'error');
+                    }
                 }
             });
         }

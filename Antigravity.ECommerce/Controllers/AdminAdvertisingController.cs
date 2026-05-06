@@ -10,7 +10,7 @@ namespace Antigravity.ECommerce.Controllers
     [Permission("Advertising")]
     public class AdminAdvertisingController : Controller
     {
-        public IActionResult Index(string kw = "", string position = "", int? status = null, string sort = "CreatedAt", string order = "DESC", int page = 1, int size = 20)
+        public IActionResult Index(string kw = "", string position = "", int? status = null, string sort = "SortOrder", string order = "ASC", int page = 1, int size = 20)
         {
             var list = SAdvertising.Search(kw, position, status, sort, order, page, size);
             ViewBag.SortColumn = sort;
@@ -39,7 +39,7 @@ namespace Antigravity.ECommerce.Controllers
                 model.CreatedBy = User.Identity?.Name ?? "Admin";
                 SAdvertising.Insert(model);
                 SSeo.RefreshSitemapAndCache();
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", new { position = model.Position });
             }
             return View(model);
         }
@@ -59,7 +59,7 @@ namespace Antigravity.ECommerce.Controllers
                 model.UpdatedBy = User.Identity?.Name ?? "Admin";
                 SAdvertising.Update(model);
                 SSeo.RefreshSitemapAndCache();
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", new { position = model.Position });
             }
             return View(model);
         }
@@ -91,6 +91,17 @@ namespace Antigravity.ECommerce.Controllers
             int result = SAdvertising.BulkUpdateStatus(model.Ids, model.Status);
             if (result > 0) SSeo.RefreshSitemapAndCache();
             return Json(new { success = result > 0 });
+        }
+
+        [HttpPost]
+        public IActionResult UpdateSortOrder(int id, int sortOrder)
+        {
+            var item = SAdvertising.GetById(id);
+            if (item == null) return Json(new { success = false, message = "Không tìm thấy" });
+            item.SortOrder = sortOrder;
+            item.UpdatedBy = User.Identity?.Name ?? "Admin";
+            SAdvertising.Update(item);
+            return Json(new { success = true });
         }
 
         [HttpPost]

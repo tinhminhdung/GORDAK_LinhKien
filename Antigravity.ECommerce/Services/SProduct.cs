@@ -58,5 +58,36 @@ namespace Antigravity.ECommerce.Services
             if (result > 0) SCache.Remove("Products_All");
             return result;
         }
+
+        /// <summary>
+        /// Đếm số lượng sản phẩm (Status=1) theo từng CategoryId.
+        /// Sản phẩm có thể thuộc nhiều danh mục (CategoryIds chứa dấu phẩy), nên mỗi SP được đếm cho tất cả danh mục của nó.
+        /// Trả về Dictionary[CategoryId → Count].
+        /// </summary>
+        public static Dictionary<int, int> CountByCategory()
+        {
+            var result = new Dictionary<int, int>();
+            var sql = "SELECT CategoryIds FROM Products WHERE Status = 1 AND CategoryIds IS NOT NULL AND CategoryIds <> ''";
+            var products = BaseConnectionSql.Query<Product>(sql);
+            if (products != null)
+            {
+                foreach (var p in products)
+                {
+                    if (string.IsNullOrEmpty(p.CategoryIds)) continue;
+                    var ids = p.CategoryIds.Split(',', StringSplitOptions.RemoveEmptyEntries);
+                    foreach (var idStr in ids)
+                    {
+                        if (int.TryParse(idStr.Trim(), out int catId))
+                        {
+                            if (result.ContainsKey(catId))
+                                result[catId]++;
+                            else
+                                result[catId] = 1;
+                        }
+                    }
+                }
+            }
+            return result;
+        }
     }
 }
