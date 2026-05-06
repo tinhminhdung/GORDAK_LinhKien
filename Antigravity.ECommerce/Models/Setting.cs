@@ -106,5 +106,9 @@ namespace Antigravity.ECommerce.Models
         // Tin tức / Giao diện
         public int NewsPageSize { get; set; } = 12; // Số lượng bài viết nhỏ/trang
         public int NewsBigCount { get; set; } = 2; // Số lượng bài viết lớn (Nổi bật)
+
+        // Cấu hình hiển thị Sản phẩm
+        public int Home_HotProductCount { get; set; } = 8; // Số lượng Sản phẩm Nổi bật trang chủ
+        public int Product_PageSize { get; set; } = 12; // Số lượng Sản phẩm trên trang danh sách
     }
 }

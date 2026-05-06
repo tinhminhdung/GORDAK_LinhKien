@@ -20,8 +20,9 @@ public class HomeController : Controller
     public IActionResult Index()
     {
         // 1. Lấy danh sách Sản phẩm Nổi bật
-        var hotProducts = Antigravity.ECommerce.Services.SCache.GetOrSet("Home_HotProducts", () => 
-            Antigravity.ECommerce.Framework.FProduct.Search(null, null, 1, true, null, null, "CreatedAt", "DESC", 1, 8), 60);
+        int hotCount = int.TryParse(Antigravity.ECommerce.Services.SSetting.GetValue("Home_HotProductCount"), out int h) ? h : 8;
+        var hotProducts = Antigravity.ECommerce.Services.SCache.GetOrSet("Home_HotProducts_" + hotCount, () => 
+            Antigravity.ECommerce.Framework.FProduct.Search(null, null, 1, true, null, null, "CreatedAt", "DESC", 1, hotCount), 60);
             
         // 2. Lấy các loại Banner Quảng cáo theo Vị trí
         var banners = Antigravity.ECommerce.Services.SCache.GetOrSet("Home_SlideBanners", () => 

@@ -6,14 +6,8 @@
     var hotProducts = ViewBag.HotProducts as List<Product>;
     var categories = ViewBag.Categories as List<Category>;
     var banners = ViewBag.Banners as List<Advertising> ?? new List<Advertising>();
-    var topBanners = ViewBag.TopBanners as List<Advertising> ?? new List<Advertising>();
-    var middleBanners = ViewBag.MiddleBanners as List<Advertising> ?? new List<Advertising>();
-    var popupBanners = ViewBag.PopupBanners as List<Advertising> ?? new List<Advertising>();
     var videos = ViewBag.Videos as List<Video> ?? new List<Video>();
     var news = ViewBag.News as List<News> ?? new List<News>();
-    var faqs = ViewBag.FAQs as List<FAQ> ?? new List<FAQ>();
-    var galleries = ViewBag.Galleries as List<Gallery> ?? new List<Gallery>();
-    ViewData["SchemaFAQs"] = faqs;
 }
 
 <script type="application/ld+json">
@@ -33,51 +27,9 @@
               </div>
           }
       }
-      else
-      {
-          <div class="hero-slide">
-            <img src="/assets/images/banner1.jpg" class="banner-img" alt="Banner 1">
-            <div class="hero-overlay container">
-              <div class="row align-items-center h-100">
-                <div class="col-lg-6 col-12">
-                  <h1 class="hero-title">NHÀ PHÂN PHỐI<br><span class="hero-gold">CHÍNH HÃNG</span>CÁC SẢN PHẨM GORDAK<br>TẠI VIỆT NAM</h1>
-                  <ul class="hero-list list-unstyled">
-                    <li><i class="fa-solid fa-check hero-check"></i> 100% sản phẩm chính hãng</li>
-                    <li><i class="fa-solid fa-check hero-check"></i> Bảo hành chính hãng 12 - 24 tháng</li>
-                    <li><i class="fa-solid fa-check hero-check"></i> Đầy đủ giấy tờ CO, CQ</li>
-                    <li><i class="fa-solid fa-check hero-check"></i> Hỗ trợ kỹ thuật chuyên sâu</li>
-                  </ul>
-                </div>
-                <div class="col-lg-6 d-none d-lg-flex justify-content-center">
-                  <img src="/assets/images/z7775799550819_90d29c67ea55bc2ff67f102c9764392b.jpg" class="hero-product-img" alt="Hero Product" />
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="hero-slide"><img src="/assets/images/banner2.png" class="banner-img" alt="Banner 2"></div>
-          <div class="hero-slide"><img src="/assets/images/banner3.png" class="banner-img" alt="Banner 3"></div>
-          <div class="hero-slide"><img src="/assets/images/banner4.png" class="banner-img" alt="Banner 4"></div>
-      }
+  
     </div>
-    <!-- Cert box (desktop only) -->
-    <div class="cert-box d-none d-lg-block">
-      <div class="cert-gold-wrap text-center">
-        <div class="cert-label">GORDAK</div>
-        <div class="cert-sub">AUTHORIZED DISTRIBUTOR</div>
-        <div class="cert-loc">VIETNAM</div>
-        <div class="cert-stars">★★★</div>
-      </div>
-      <h3 class="cert-title">CHỨNG NHẬN ĐẠI LÝ CHÍNH THỨC TẠI VIỆT NAM</h3>
-      <p class="cert-desc">GORDAK ủy quyền NHẬT MINH ESC phân phối chính hãng các sản phẩm GORDAK tại thị trường Việt Nam.</p>
-      <a href="/gioi-thieu.html" class="btn-cert d-block text-center">Xem chứng nhận</a>
-    </div>
-    <!-- Cert box mobile (inside slider) -->
-    <div class="cert-badge-mobile d-lg-none">
-      <div class="cert-label-sm">GORDAK</div>
-      <small>AUTHORIZED DISTRIBUTOR</small>
-      <div class="cert-loc-sm">VIETNAM</div>
-      <div class="cert-stars-sm">★★★</div>
-    </div>
+
     <!-- Dots -->
     <div class="slider-dots" id="slider-dots">
       @{
@@ -129,25 +81,25 @@
     <a href="/san-pham.html" class="view-all">Xem tất cả <i class="fa-solid fa-chevron-right"></i></a>
   </div>
   <div class="row g-3">
-    @{ int pCount = 0; }
-    @foreach(var p in hotProducts.Take(5))
+    @foreach(var p in hotProducts)
     {
-        pCount++;
-        <div class="col-6 col-lg @(pCount==5?"d-none d-lg-block":"")">
-          <div class="product-card position-relative">
+        <div class="col-6 col-md-4 col-lg-3 col-xl-2-4">
+          <div class="product-card position-relative h-100 d-flex flex-column">
             @if(p.IsHot){<span class="badge-hot">HOT</span>}
             <span class="badge-heart" onclick="toggleWishlist(@p.ProductId)" style="cursor:pointer"><i class="fa-regular fa-heart"></i></span>
-            <a href="/san-pham/detail/@(p.Slug).html" class="d-block text-center mb-2">
-                <img src="@(string.IsNullOrEmpty(p.MainImage) ? "/assets/images/placeholder.png" : p.MainImage)" class="product-img" alt="@p.Name">
+            <a href="/san-pham/detail/@(p.Slug).html" class="d-block text-center mb-2" style="height: 180px;">
+                <img src="@(string.IsNullOrEmpty(p.MainImage) ? "/assets/images/placeholder.png" : p.MainImage)" class="product-img h-100 w-100 object-fit-contain" alt="@p.Name">
             </a>
             <h3 class="product-name"><a href="/san-pham/detail/@(p.Slug).html" class="text-decoration-none text-dark">@p.Name</a></h3>
             <p class="product-desc line-clamp-2" style="font-size:12px; color:#666;">@(string.IsNullOrEmpty(p.ShortDescription) ? p.Name : p.ShortDescription)</p>
-            <div class="product-price">@p.Price.ToString("N0")đ</div>
-            <div class="product-actions d-flex gap-2">
-              <a href="/san-pham/detail/@(p.Slug).html" class="btn-outline-gd flex-fill text-center">Chi tiết</a>
-              <a href="javascript:void(0)" onclick="addToCart(@p.ProductId,1)" class="btn-gd flex-fill d-flex align-items-center justify-content-center gap-1">
-                <i class="fa-solid fa-cart-shopping"></i> Mua ngay
-              </a>
+            <div class="mt-auto">
+                <div class="product-price">@p.Price.ToString("N0")đ</div>
+                <div class="product-actions d-flex gap-2 mt-2">
+                  <a href="/san-pham/detail/@(p.Slug).html" class="btn-outline-gd flex-fill text-center px-0 py-1" style="font-size:13px;">Chi tiết</a>
+                  <a href="javascript:void(0)" onclick="addToCart(@p.ProductId,1)" class="btn-gd flex-fill d-flex align-items-center justify-content-center gap-1 py-1" style="font-size:13px;">
+                    <i class="fa-solid fa-cart-shopping"></i> Mua
+                  </a>
+                </div>
             </div>
           </div>
         </div>
@@ -163,7 +115,7 @@
 @if(whyChooseList.Count > 0)
 {
 <section class="container section-why mt-5">
-  <h2 class="section-title text-center mb-4">VÌ SAO CHỌN GORDAK TẠI CHÚNG TÔI?</h2>
+  <h2 class="section-title text-center mb-4">VÌ SAO CHỌN GORDAK TẠI NHẬT MINH ESC?</h2>
   <div class="row g-4 why-desktop d-none d-lg-flex justify-content-center">
     @foreach(var item in whyChooseList)
     {
@@ -213,7 +165,7 @@
   <div class="row g-4 align-items-center brand-card">
     <div class="col-lg-5">
       <div class="brand-img-wrap">
-        <img src="@(brandIntro?.Image ?? "/assets/images/z7775799762257_f058bd78c3b1f94e77da2c4eda69efb3.jpg")" alt="@(brandIntro?.Title ?? "VỀ THƯƠNG HIỆU GORDAK")" class="factory-img w-100">
+        <img src="@brandIntro?.Image" alt="@(brandIntro?.Title ?? "VỀ THƯƠNG HIỆU GORDAK")" class="factory-img w-100">
       </div>
     </div>
     <div class="col-lg-7">
@@ -299,22 +251,6 @@
   </div>
 </section>
 
-<!-- ======== CTA ======== -->
-<section class="cta-section mt-5 mb-5">
-  <div class="container">
-    <div class="row align-items-center py-4">
-      <div class="col-lg-6 text-center text-lg-start mb-3 mb-lg-0">
-        <h2 class="cta-title">BẠN CẦN TƯ VẤN CHỌN MÁY PHÙ HỢP?</h2>
-        <p class="cta-sub">Đội ngũ kỹ thuật của chúng tôi luôn sẵn sàng hỗ trợ bạn!</p>
-      </div>
-      <div class="col-lg-6 d-flex justify-content-center justify-content-lg-end gap-3 flex-wrap">
-        <a href="/lien-he.html" class="cta-btn-white">NHẬN BÁO GIÁ NGAY</a>
-        <a href="#" class="cta-btn-outline">CHAT ZALO NGAY <i class="fa-solid fa-comment-dots"></i></a>
-      </div>
-    </div>
-  </div>
-</section>
-
 <!-- ======== VIDEO MODAL ======== -->
 <div class="modal fade" id="videoModal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-lg modal-dialog-centered">
@@ -356,26 +292,4 @@
   });
 </script>
 
-@if (popupBanners.Count > 0)
-{
-    var popup = popupBanners[0];
-    <div class="modal fade" id="popupModal" tabindex="-1">
-        <div class="modal-dialog modal-dialog-centered modal-lg">
-            <div class="modal-content border-0 rounded-4 overflow-hidden shadow-lg">
-                <button type="button" class="btn-close position-absolute top-0 end-0 m-3 z-3 bg-white rounded-circle p-2 shadow" data-bs-dismiss="modal"></button>
-                <a href="@popup.Link" target="@(popup.Target ?? "_self")">
-                    <img src="@popup.Image" class="w-100" alt="@popup.Title" style="max-height:500px;object-fit:cover;">
-                </a>
-            </div>
-        </div>
-    </div>
-    <script>
-        setTimeout(function(){
-            if(!sessionStorage.getItem('popupShown')){
-                new bootstrap.Modal(document.getElementById('popupModal')).show();
-                sessionStorage.setItem('popupShown','1');
-            }
-        }, 2000);
-    </script>
-}
 }

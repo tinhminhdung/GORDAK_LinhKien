@@ -97,7 +97,10 @@ namespace Antigravity.ECommerce.Services
                 DefaultShippingFee = decimal.TryParse(dict.GetValueOrDefault("DefaultShippingFee", "0"), out decimal dsf) ? dsf : 0,
 
                 NewsPageSize = int.TryParse(dict.GetValueOrDefault("NewsPageSize", "12"), out int nps) ? nps : 12,
-                NewsBigCount = int.TryParse(dict.GetValueOrDefault("NewsBigCount", "2"), out int nbc) ? nbc : 2
+                NewsBigCount = int.TryParse(dict.GetValueOrDefault("NewsBigCount", "2"), out int nbc) ? nbc : 2,
+
+                Home_HotProductCount = int.TryParse(dict.GetValueOrDefault("Home_HotProductCount", "8"), out int hpc) ? hpc : 8,
+                Product_PageSize = int.TryParse(dict.GetValueOrDefault("Product_PageSize", "12"), out int pps) ? pps : 12
             };
         }
 
@@ -172,6 +175,9 @@ namespace Antigravity.ECommerce.Services
 
             FSetting.UpdateValue("NewsPageSize", model.NewsPageSize.ToString(), updatedBy);
             FSetting.UpdateValue("NewsBigCount", model.NewsBigCount.ToString(), updatedBy);
+            
+            FSetting.UpdateValue("Home_HotProductCount", model.Home_HotProductCount.ToString(), updatedBy);
+            FSetting.UpdateValue("Product_PageSize", model.Product_PageSize.ToString(), updatedBy);
 
             // Áp dụng ngay vào Service runtime
             ImageOptimizerService.EnableOptimization = model.Image_EnableOptimization;

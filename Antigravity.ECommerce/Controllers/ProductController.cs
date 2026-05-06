@@ -16,10 +16,12 @@ namespace Antigravity.ECommerce.Controllers
         /// </summary>
         public IActionResult Index(int page = 1)
         {
+            int pageSize = int.TryParse(SSetting.GetValue("Product_PageSize"), out int pps) ? pps : 12;
+
             // Sử dụng SCache để lưu trữ kết quả truy vấn, giảm tải cho Database
-            var products = SCache.GetOrSet($"Product_Index_Page_{page}", () => FProduct.Search(null, null, 1, null, null, null, "CreatedAt", "DESC", page, 12), 60);
+            var products = SCache.GetOrSet($"Product_Index_Page_{page}_{pageSize}", () => FProduct.Search(null, null, 1, null, null, null, "CreatedAt", "DESC", page, pageSize), 60);
             
-            ViewBag.PageCount = products.Count > 0 ? (int)System.Math.Ceiling((double)products[0].TotalCount / 12) : 0;
+            ViewBag.PageCount = products.Count > 0 ? (int)System.Math.Ceiling((double)products[0].TotalCount / pageSize) : 0;
             ViewBag.PageIndex = page;
             ViewBag.Category = new Category { Name = "Tất cả sản phẩm" };
 
@@ -43,8 +45,10 @@ namespace Antigravity.ECommerce.Controllers
             string sortColumn = sort == "price_desc" || sort == "price_asc" ? "Price" : "CreatedAt";
             string sortOrder = sort == "price_asc" ? "ASC" : "DESC";
 
+            int pageSize = int.TryParse(SSetting.GetValue("Product_PageSize"), out int pps) ? pps : 12;
+
             // Tạo khóa Cache linh hoạt dựa trên các bộ lọc
-            string cacheKey = $"Product_Category_{category.CategoryId}_{priceMin}_{priceMax}_{sort}_{page}";
+            string cacheKey = $"Product_Category_{category.CategoryId}_{priceMin}_{priceMax}_{sort}_{page}_{pageSize}";
             
             // Lấy toàn bộ ID của danh mục con cháu để truyền vào SQL Stored Procedure
             var allCatIds = SCategory.GetDescendantIds(category.CategoryId);
@@ -52,10 +56,10 @@ namespace Antigravity.ECommerce.Controllers
 
             // Giảm thời gian Cache xuống 5 phút nếu người dùng có tương tác lọc giá/sắp xếp để tránh phình rác bộ nhớ (Cache Bloat)
             int cacheMinutes = (priceMin.HasValue || priceMax.HasValue || sort != "newest") ? 5 : 60;
-            var products = SCache.GetOrSet(cacheKey, () => FProduct.Search(null, catIdString, 1, null, priceMin, priceMax, sortColumn, sortOrder, page, 12), cacheMinutes);
+            var products = SCache.GetOrSet(cacheKey, () => FProduct.Search(null, catIdString, 1, null, priceMin, priceMax, sortColumn, sortOrder, page, pageSize), cacheMinutes);
             
             ViewBag.Category = category;
-            ViewBag.PageCount = products.Count > 0 ? (int)System.Math.Ceiling((double)products[0].TotalCount / 12) : 0;
+            ViewBag.PageCount = products.Count > 0 ? (int)System.Math.Ceiling((double)products[0].TotalCount / pageSize) : 0;
             ViewBag.PageIndex = page;
 
             // Truyền dữ liệu SEO của danh mục ra View

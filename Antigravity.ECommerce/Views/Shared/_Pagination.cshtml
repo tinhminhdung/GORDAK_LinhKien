@@ -1,4 +1,4 @@
-﻿@using Microsoft.AspNetCore.Routing
+@using Microsoft.AspNetCore.Routing
 @model object
 @{
     var dict = new RouteValueDictionary(Model);
@@ -9,57 +9,43 @@
 
 @if (totalPages > 1)
 {
-    <div class="d-flex justify-content-center mt-3">
-        <nav aria-label="Page navigation example">
-            <ul class="pagination pagination-separated justify-content-center mb-0">
-                @if (pageIndex > 1)
-                {
-                    <li class="page-item">
-                        <a class="page-link" href="javascript:void(0);" onclick="@(jsFunction + "(" + (pageIndex - 1) + ")")">Trước</a>
-                    </li>
-                }
+    <div class="vd-pagination mt-4 mb-2">
+        @if (pageIndex > 1)
+        {
+            <a class="vd-page-btn" href="javascript:void(0);" onclick="@(jsFunction + "(" + (pageIndex - 1) + ")")"><i class="fa-solid fa-chevron-left" style="font-size:11px;"></i></a>
+        }
 
-                @{
-                    int range = 2; // Number of pages around current page
-                    
-                    // Always show 1
-                    <li class="page-item @(pageIndex == 1 ? "active" : "")">
-                        <a class="page-link" href="javascript:void(0);" onclick="@(jsFunction + "(1)")">1</a>
-                    </li>
+        @{
+            int range = 2; // Number of pages around current page
+            
+            // Always show 1
+            <a class="vd-page-btn @(pageIndex == 1 ? "active" : "")" href="javascript:void(0);" onclick="@(jsFunction + "(1)")">1</a>
 
-                    if (pageIndex - range > 2)
-                    {
-                        <li class="page-item disabled"><span class="page-link">...</span></li>
-                    }
+            if (pageIndex - range > 2)
+            {
+                <span class="vd-page-dots">...</span>
+            }
 
-                    for (int i = Math.Max(2, pageIndex - range); i <= Math.Min(totalPages - 1, pageIndex + range); i++)
-                    {
-                        <li class="page-item @(i == pageIndex ? "active" : "")">
-                            <a class="page-link" href="javascript:void(0);" onclick="@(jsFunction + "(" + i + ")")">@i</a>
-                        </li>
-                    }
+            for (int i = Math.Max(2, pageIndex - range); i <= Math.Min(totalPages - 1, pageIndex + range); i++)
+            {
+                <a class="vd-page-btn @(i == pageIndex ? "active" : "")" href="javascript:void(0);" onclick="@(jsFunction + "(" + i + ")")">@i</a>
+            }
 
-                    if (pageIndex + range < totalPages - 1)
-                    {
-                        <li class="page-item disabled"><span class="page-link">...</span></li>
-                    }
+            if (pageIndex + range < totalPages - 1)
+            {
+                <span class="vd-page-dots">...</span>
+            }
 
-                    // Always show last if > 1
-                    if (totalPages > 1)
-                    {
-                        <li class="page-item @(pageIndex == totalPages ? "active" : "")">
-                            <a class="page-link" href="javascript:void(0);" onclick="@(jsFunction + "(" + totalPages + ")")">@totalPages</a>
-                        </li>
-                    }
-                }
+            // Always show last if > 1
+            if (totalPages > 1)
+            {
+                <a class="vd-page-btn @(pageIndex == totalPages ? "active" : "")" href="javascript:void(0);" onclick="@(jsFunction + "(" + totalPages + ")")">@totalPages</a>
+            }
+        }
 
-                @if (pageIndex < totalPages)
-                {
-                    <li class="page-item">
-                        <a class="page-link" href="javascript:void(0);" onclick="@(jsFunction + "(" + (pageIndex + 1) + ")")">Tiếp</a>
-                    </li>
-                }
-            </ul>
-        </nav>
+        @if (pageIndex < totalPages)
+        {
+            <a class="vd-page-btn" href="javascript:void(0);" onclick="@(jsFunction + "(" + (pageIndex + 1) + ")")"><i class="fa-solid fa-chevron-right" style="font-size:11px;"></i></a>
+        }
     </div>
 }

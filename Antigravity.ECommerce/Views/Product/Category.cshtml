@@ -22,31 +22,35 @@
 }
 
 <!-- ======== BREADCRUMB ======== -->
-<div class="container mt-3 mb-2">
+<div class="container mt-3 mb-4">
   <nav class="sp-breadcrumb"><a href="/">Trang chủ</a> <i class="fa-solid fa-chevron-right"></i> <span>@(category != null ? category.Name : (ViewBag.Keyword != null ? "Tìm kiếm: " + ViewBag.Keyword : "Sản phẩm"))</span></nav>
 </div>
 
 <!-- ======== CATEGORY FILTER ======== -->
 <div class="container mb-3">
-  <div class="sp-cat-list d-flex flex-wrap pb-2 gap-2">
-    <a href="/san-pham.html" class="sp-cat-item @(category == null ? "active" : "") d-flex align-items-center gap-3 px-3 py-2 border rounded text-decoration-none text-dark bg-white" style="min-width: 180px;">
-      <i class="fa-solid fa-border-all fs-3 text-primary"></i>
-      <div><strong class="d-block lh-1 mb-1">Tất cả sản phẩm</strong><small class="text-muted" style="font-size:12px;">@(ViewBag.TotalCount ?? (Model != null ? Model.Count : 0)) sản phẩm</small></div>
+  <div class="sp-cat-list">
+    <a href="/san-pham.html" class="sp-cat-item @(category == null ? "active" : "")">
+      <i class="fa-solid fa-border-all"></i>
+      <div><strong>Tất cả sản phẩm</strong><small>@(ViewBag.TotalCount ?? (Model != null ? Model.Count : 0)) sản phẩm</small></div>
     </a>
     @if(parentCategories != null)
     {
       foreach(var cat in parentCategories)
       {
-        <a href="/san-pham/@(cat.Slug).html" class="sp-cat-item @((category != null && category.CategoryId == cat.CategoryId) ? "active" : "") d-flex align-items-center gap-3 px-3 py-2 border rounded text-decoration-none text-dark bg-white" style="min-width: 180px;">
-          <i class="@(cat.Icon ?? "fa-solid fa-box") fs-3 @((category != null && category.CategoryId == cat.CategoryId) ? "text-danger" : "text-dark")"></i>
-          <div><strong class="d-block lh-1 mb-1">@cat.Name</strong><small class="text-muted" style="font-size:12px;">@cat.ItemCount sản phẩm</small></div>
+        <a href="/san-pham/@(cat.Slug).html" class="sp-cat-item @((category != null && category.CategoryId == cat.CategoryId) ? "active" : "")">
+          @if(!string.IsNullOrEmpty(cat.Image)){
+            <img src="@cat.Image" alt="@cat.Name" style="width: 32px; height: 32px; object-fit: contain;" />
+          } else {
+            <i class="@(cat.Icon ?? "fa-solid fa-box")"></i>
+          }
+          <div><strong>@cat.Name</strong><small>@cat.ItemCount sản phẩm</small></div>
         </a>
       }
     }
   </div>
   
   <!-- Mobile & Desktop Filter Trigger -->
-  <div class="d-flex justify-content-between align-items-center mt-3 border-top pt-3">
+  <div class="d-flex justify-content-between align-items-center mt-3 border-top pt-3 d-lg-none">
     <div class="fw-bold text-dark"><i class="fa-solid fa-list me-1"></i> Hiển thị @(Model != null ? Model.Count : 0) sản phẩm</div>
     <button class="btn btn-outline-dark btn-sm rounded-1 px-3 d-flex align-items-center gap-2" data-bs-toggle="offcanvas" data-bs-target="#filterOffcanvas">
       <i class="fa-solid fa-sliders"></i> Lọc & Sắp xếp
@@ -96,16 +100,26 @@
   <!-- Pagination -->
   @if (ViewBag.PageCount > 1)
   {
-      <nav class="mt-4 mb-5">
-          <ul class="pagination pagination-rounded justify-content-center">
-              @for (int i = 1; i <= ViewBag.PageCount; i++)
-              {
-                  <li class="page-item @(i == ViewBag.PageIndex ? "active" : "")">
-                      <a class="page-link" href="?q=@ViewBag.Keyword&page=@i&priceMin=@Context.Request.Query["priceMin"]&priceMax=@Context.Request.Query["priceMax"]&sort=@Context.Request.Query["sort"]">@i</a>
-                  </li>
-              }
-          </ul>
-      </nav>
+      int pIndex = ViewBag.PageIndex ?? 1;
+      int pCount = ViewBag.PageCount;
+      string qParams = $"&q={ViewBag.Keyword}&priceMin={Context.Request.Query["priceMin"]}&priceMax={Context.Request.Query["priceMax"]}&sort={Context.Request.Query["sort"]}";
+
+      <div class="vd-pagination mt-4 mb-5">
+          @if (pIndex > 1)
+          {
+              <a class="vd-page-btn" href="?page=@(pIndex - 1)@qParams"><i class="fa-solid fa-chevron-left" style="font-size:11px;"></i></a>
+          }
+
+          @for (int i = 1; i <= pCount; i++)
+          {
+              <a class="vd-page-btn @(i == pIndex ? "active" : "")" href="?page=@(i)@qParams">@i</a>
+          }
+
+          @if (pIndex < pCount)
+          {
+              <a class="vd-page-btn" href="?page=@(pIndex + 1)@qParams"><i class="fa-solid fa-chevron-right" style="font-size:11px;"></i></a>
+          }
+      </div>
   }
 </div>
 
@@ -169,7 +183,7 @@
     <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
   </div>
   <div class="offcanvas-body">
-    <form action="" method="get">
+    <form method="get">
         @if (ViewBag.Keyword != null) {
             <input type="hidden" name="q" value="@ViewBag.Keyword" />
         }
@@ -230,6 +244,21 @@
         .noUi-connect { background: var(--bs-primary); }
         .noUi-handle { border-radius: 50%; background: #fff; border: 2px solid var(--bs-primary); width: 20px !important; height: 20px !important; right: -10px !important; top: -7px !important; }
         .noUi-handle::before, .noUi-handle::after { display: none; }
+
+        /* Commit Bar Separators */
+        @@media (min-width: 992px) {
+            .sp-commit-bar { gap: 0; padding-left: 0; padding-right: 0; }
+            .sp-commit-item { position: relative; padding: 0 2px; justify-content: center; }
+            .sp-commit-item:not(:last-child)::after { 
+                content: ''; 
+                position: absolute; 
+                right: 0; 
+                top: -20px; 
+                height: calc(100% + 40px); 
+                width: 1px; 
+                background-color: #e5e5e5; 
+            }
+        }
     </style>
 }
 

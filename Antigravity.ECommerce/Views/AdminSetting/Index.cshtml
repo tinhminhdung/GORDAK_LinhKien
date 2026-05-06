@@ -36,7 +36,8 @@
                             <button class="nav-link text-start py-3 px-4 border-bottom rounded-0" id="nav-seo-tab" data-bs-toggle="pill" data-bs-target="#nav-seo" type="button" role="tab"><i class="fas fa-search me-2"></i> SEO & Analytics</button>
                             <button class="nav-link text-start py-3 px-4 border-bottom rounded-0" id="nav-rank-tab" data-bs-toggle="pill" data-bs-target="#nav-rank" type="button" role="tab"><i class="fas fa-crown me-2"></i> Hạng thành viên</button>
                             <button class="nav-link text-start py-3 px-4 border-bottom rounded-0" id="nav-image-tab" data-bs-toggle="pill" data-bs-target="#nav-image" type="button" role="tab"><i class="fas fa-image me-2"></i> Cài đặt Hình ảnh</button>
-                            <button class="nav-link text-start py-3 px-4 rounded-0" id="nav-news-tab" data-bs-toggle="pill" data-bs-target="#nav-news" type="button" role="tab"><i class="fas fa-newspaper me-2"></i> Cấu hình Tin tức</button>
+                            <button class="nav-link text-start py-3 px-4 border-bottom rounded-0" id="nav-news-tab" data-bs-toggle="pill" data-bs-target="#nav-news" type="button" role="tab"><i class="fas fa-newspaper me-2"></i> Cấu hình Tin tức</button>
+                            <button class="nav-link text-start py-3 px-4 rounded-0" id="nav-product-tab" data-bs-toggle="pill" data-bs-target="#nav-product" type="button" role="tab"><i class="fas fa-box me-2"></i> Cấu hình Sản phẩm</button>
                         </div>
                     </div>
                 </div>
@@ -684,6 +685,35 @@
                                                 <input type="number" asp-for="NewsBigCount" class="form-control form-control-lg rounded-3" min="1" max="10" />
                                                 <div class="small text-muted mt-2">
                                                     <i class="fas fa-info-circle me-1"></i> Số lượng bài viết lớn hiển thị đầu trang (Mặc định: 2). Lấy theo các bài viết được tích nút "HOT" trong quản lý tin tức.
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Product Settings -->
+                            <div class="tab-pane fade" id="nav-product" role="tabpanel">
+                                <h5 class="fw-bold mb-4">Cấu hình Hiển thị Sản phẩm</h5>
+                                <div class="row g-4">
+                                    <div class="col-md-6">
+                                        <div class="card border border-warning-subtle shadow-none rounded-4">
+                                            <div class="card-body">
+                                                <label class="form-label fw-bold"><i class="fas fa-star me-2 text-warning"></i> Sản phẩm Nổi bật (Trang chủ)</label>
+                                                <input type="number" asp-for="Home_HotProductCount" class="form-control form-control-lg rounded-3" min="1" max="100" />
+                                                <div class="small text-muted mt-2">
+                                                    <i class="fas fa-info-circle me-1"></i> Số lượng sản phẩm có đánh dấu Nổi bật (HOT) hiển thị trên Trang chủ.
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="card border border-info-subtle shadow-none rounded-4">
+                                            <div class="card-body">
+                                                <label class="form-label fw-bold"><i class="fas fa-th-large me-2 text-info"></i> Số lượng sản phẩm/trang</label>
+                                                <input type="number" asp-for="Product_PageSize" class="form-control form-control-lg rounded-3" min="1" max="100" />
+                                                <div class="small text-muted mt-2">
+                                                    <i class="fas fa-info-circle me-1"></i> Số lượng sản phẩm hiển thị trên mỗi trang trong trang Danh mục hoặc Tất cả sản phẩm.
                                                 </div>
                                             </div>
                                         </div>

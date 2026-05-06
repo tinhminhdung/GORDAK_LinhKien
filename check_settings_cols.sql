@@ -1,0 +1,3 @@
+﻿USE [GORDAK]
+GO
+SELECT TOP 1 * FROM Settings
