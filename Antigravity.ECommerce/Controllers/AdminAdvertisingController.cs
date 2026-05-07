@@ -157,16 +157,29 @@ namespace Antigravity.ECommerce.Controllers
                     });
                     break;
 
-                case "About_Intro":
-                    var introDefaults = new List<Advertising>
+                case "About_HeroStat":
+                    var heroStatDefaults = new List<Advertising>
                     {
-                        new Advertising { Title = "GIỚI THIỆU VỀ GORDAK", Description = "Với định hướng tập trung vào chất lượng và sự đổi mới, Gordak không ngừng nghiên cứu và cải tiến công nghệ để mang đến những giải pháp hàn và sửa chữa hiệu quả, an toàn và thân thiện với người dùng.", Image = "/assets/images/z7775799762257_f058bd78c3b1f94e77da2c4eda69efb3.jpg", Position = "About_Intro", SortOrder = 1, Status = 1 },
-                        new Advertising { Title = "Công nghệ kiểm soát nhiệt thông minh", VideoUrl = "fa-solid fa-check", Position = "About_Intro", SortOrder = 2, Status = 1 },
-                        new Advertising { Title = "Độ bền cao, hoạt động ổn định", VideoUrl = "fa-solid fa-check", Position = "About_Intro", SortOrder = 3, Status = 1 },
-                        new Advertising { Title = "Thiết kế tối ưu, dễ sử dụng", VideoUrl = "fa-solid fa-check", Position = "About_Intro", SortOrder = 4, Status = 1 },
-                        new Advertising { Title = "Đáp ứng tiêu chuẩn kỹ thuật quốc tế", VideoUrl = "fa-solid fa-check", Position = "About_Intro", SortOrder = 5, Status = 1 }
+                        new Advertising { Title = "Hơn 30 năm", Description = "Kinh nghiệm trong ngành", VideoUrl = "fa-solid fa-clock-rotate-left", Position = "About_HeroStat", SortOrder = 1, Status = 1 },
+                        new Advertising { Title = "Phân phối rộng rãi", Description = "Có mặt tại nhiều quốc gia", VideoUrl = "fa-solid fa-earth-americas", Position = "About_HeroStat", SortOrder = 2, Status = 1 },
+                        new Advertising { Title = "Đa dạng sản phẩm", Description = "Hơn 100 sản phẩm chất lượng cao", VideoUrl = "fa-solid fa-cubes", Position = "About_HeroStat", SortOrder = 3, Status = 1 },
+                        new Advertising { Title = "Chất lượng đảm bảo", Description = "Kiểm định nghiêm ngặt trước khi đến tay khách", VideoUrl = "fa-solid fa-medal", Position = "About_HeroStat", SortOrder = 4, Status = 1 }
                     };
-                    foreach (var d in introDefaults) { d.CreatedBy = createdBy; SAdvertising.Insert(d); }
+                    foreach (var d in heroStatDefaults) { d.CreatedBy = createdBy; SAdvertising.Insert(d); }
+                    break;
+
+                case "About_Intro":
+                    SAdvertising.Insert(new Advertising
+                    {
+                        Title = "GIỚI THIỆU VỀ GORDAK",
+                        Description = "<p class=\"gt-about-desc\">Với định hướng tập trung vào chất lượng và sự đổi mới, Gordak không ngừng nghiên cứu và cải tiến công nghệ để mang đến những giải pháp hàn và sửa chữa hiệu quả, an toàn và thân thiện với người dùng.</p><ul class=\"gt-check-list\"><li><i class=\"fa-solid fa-check\"></i> Công nghệ kiểm soát nhiệt thông minh</li><li><i class=\"fa-solid fa-check\"></i> Độ bền cao, hoạt động ổn định</li><li><i class=\"fa-solid fa-check\"></i> Thiết kế tối ưu, dễ sử dụng</li><li><i class=\"fa-solid fa-check\"></i> Đáp ứng tiêu chuẩn kỹ thuật quốc tế</li></ul>",
+                        Image = "/assets/images/z7775799762257_f058bd78c3b1f94e77da2c4eda69efb3.jpg",
+                        Link = "/san-pham.html",
+                        Position = "About_Intro",
+                        SortOrder = 1,
+                        Status = 1,
+                        CreatedBy = createdBy
+                    });
                     break;
 
                 case "About_CoreValues":
@@ -183,13 +196,23 @@ namespace Antigravity.ECommerce.Controllers
                 case "About_Timeline":
                     var tlDefaults = new List<Advertising>
                     {
-                        new Advertising { Title = "Khởi đầu & phát triển", Link = "Tập trung nghiên cứu và phát triển thiết bị hàn chất lượng cao.", VideoUrl = "fa-solid fa-rocket", Position = "About_Timeline", SortOrder = 1, Status = 1 },
-                        new Advertising { Title = "Mở rộng thị trường", Link = "Sản phẩm Gordak có mặt tại nhiều quốc gia và khu vực.", VideoUrl = "fa-solid fa-globe", Position = "About_Timeline", SortOrder = 2, Status = 1 },
-                        new Advertising { Title = "Nâng cao chất lượng", Link = "Liên tục cải tiến công nghệ, tối ưu hiệu suất và độ bền sản phẩm.", VideoUrl = "fa-solid fa-chart-line", Position = "About_Timeline", SortOrder = 3, Status = 1 },
-                        new Advertising { Title = "Đổi mới không ngừng", Link = "Phát triển các giải pháp hàn hiện đại, phù hợp với xu hướng mới.", VideoUrl = "fa-solid fa-microchip", Position = "About_Timeline", SortOrder = 4, Status = 1 },
-                        new Advertising { Title = "Đồng hành cùng khách hàng", Link = "Luôn lắng nghe và hỗ trợ để mang lại giá trị tốt nhất cho khách hàng.", VideoUrl = "fa-solid fa-heart", Position = "About_Timeline", SortOrder = 5, Status = 1 }
+                        new Advertising { Title = "Khởi đầu & phát triển", Description = "Tập trung nghiên cứu và phát triển thiết bị hàn chất lượng cao.", VideoUrl = "fa-solid fa-rocket", Position = "About_Timeline", SortOrder = 1, Status = 1 },
+                        new Advertising { Title = "Mở rộng thị trường", Description = "Sản phẩm Gordak có mặt tại nhiều quốc gia và khu vực.", VideoUrl = "fa-solid fa-globe", Position = "About_Timeline", SortOrder = 2, Status = 1 },
+                        new Advertising { Title = "Nâng cao chất lượng", Description = "Liên tục cải tiến công nghệ, tối ưu hiệu suất và độ bền sản phẩm.", VideoUrl = "fa-solid fa-chart-line", Position = "About_Timeline", SortOrder = 3, Status = 1 },
+                        new Advertising { Title = "Đổi mới không ngừng", Description = "Phát triển các giải pháp hàn hiện đại, phù hợp với xu hướng mới.", VideoUrl = "fa-solid fa-microchip", Position = "About_Timeline", SortOrder = 4, Status = 1 },
+                        new Advertising { Title = "Đồng hành cùng khách hàng", Description = "Luôn lắng nghe và hỗ trợ để mang lại giá trị tốt nhất cho khách hàng.", VideoUrl = "fa-solid fa-heart", Position = "About_Timeline", SortOrder = 5, Status = 1 }
                     };
                     foreach (var d in tlDefaults) { d.CreatedBy = createdBy; SAdvertising.Insert(d); }
+                    break;
+
+                case "About_JourneyImages":
+                    var jiDefaults = new List<Advertising>
+                    {
+                        new Advertising { Title = "Nhà máy Gordak", Description = "Nhà máy sản xuất hiện đại tại Trung Quốc.", Image = "/assets/images/z7775799762257_f058bd78c3b1f94e77da2c4eda69efb3.jpg", Position = "About_JourneyImages", SortOrder = 1, Status = 1 },
+                        new Advertising { Title = "Dây chuyền sản xuất", Description = "Dây chuyền sản xuất tự động hoá cao.", Image = "/assets/images/z7775799762257_f058bd78c3b1f94e77da2c4eda69efb3.jpg", Position = "About_JourneyImages", SortOrder = 2, Status = 1 },
+                        new Advertising { Title = "Sản phẩm tiêu biểu", Description = "Các sản phẩm Gordak được trưng bày.", Image = "/assets/images/z7775799762257_f058bd78c3b1f94e77da2c4eda69efb3.jpg", Position = "About_JourneyImages", SortOrder = 3, Status = 1 }
+                    };
+                    foreach (var d in jiDefaults) { d.CreatedBy = createdBy; SAdvertising.Insert(d); }
                     break;
 
                 case "Product_Commitment":
@@ -206,10 +229,10 @@ namespace Antigravity.ECommerce.Controllers
                 case "About_Cert":
                     var certDefaults = new List<Advertising>
                     {
-                        new Advertising { Title = "Chứng nhận đại lý chính thức", Image = "/assets/images/z7775799762257_f058bd78c3b1f94e77da2c4eda69efb3.jpg", Position = "About_Cert", SortOrder = 1, Status = 1 },
-                        new Advertising { Title = "Chứng nhận ISO 9001:2015", Image = "/assets/images/z7775799762257_f058bd78c3b1f94e77da2c4eda69efb3.jpg", Position = "About_Cert", SortOrder = 2, Status = 1 },
-                        new Advertising { Title = "Chứng nhận CO, CQ đầy đủ", Image = "/assets/images/z7775799762257_f058bd78c3b1f94e77da2c4eda69efb3.jpg", Position = "About_Cert", SortOrder = 3, Status = 1 },
-                        new Advertising { Title = "Nhà phân phối chính hãng tại Việt Nam", Image = "/assets/images/z7775799762257_f058bd78c3b1f94e77da2c4eda69efb3.jpg", Position = "About_Cert", SortOrder = 4, Status = 1 }
+                        new Advertising { Title = "Chứng nhận đại lý chính thức", Description = "Được cấp bởi Gordak, xác nhận đại lý phân phối chính hãng.", Image = "/assets/images/z7775799762257_f058bd78c3b1f94e77da2c4eda69efb3.jpg", Position = "About_Cert", SortOrder = 1, Status = 1 },
+                        new Advertising { Title = "Chứng nhận ISO 9001:2015", Description = "Hệ thống quản lý chất lượng đạt tiêu chuẩn quốc tế.", Image = "/assets/images/z7775799762257_f058bd78c3b1f94e77da2c4eda69efb3.jpg", Position = "About_Cert", SortOrder = 2, Status = 1 },
+                        new Advertising { Title = "Chứng nhận CO, CQ đầy đủ", Description = "Đầy đủ giấy tờ chứng nhận nguồn gốc, chất lượng sản phẩm.", Image = "/assets/images/z7775799762257_f058bd78c3b1f94e77da2c4eda69efb3.jpg", Position = "About_Cert", SortOrder = 3, Status = 1 },
+                        new Advertising { Title = "Nhà phân phối chính hãng tại Việt Nam", Description = "Ủy quyền phân phối độc quyền sản phẩm Gordak tại Việt Nam.", Image = "/assets/images/z7775799762257_f058bd78c3b1f94e77da2c4eda69efb3.jpg", Position = "About_Cert", SortOrder = 4, Status = 1 }
                     };
                     foreach (var d in certDefaults) { d.CreatedBy = createdBy; SAdvertising.Insert(d); }
                     break;

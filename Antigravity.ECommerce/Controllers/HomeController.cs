@@ -103,7 +103,14 @@ public class HomeController : Controller
     [Route("gioi-thieu.html")]
     public IActionResult About()
     {
+        // Clear cache để đảm bảo dữ liệu mới nhất
         Antigravity.ECommerce.Services.SCache.Remove("Advertising_All");
+        Antigravity.ECommerce.Services.SCache.Remove("About_Hero");
+        Antigravity.ECommerce.Services.SCache.Remove("About_HeroStat");
+        Antigravity.ECommerce.Services.SCache.Remove("About_Intro");
+        Antigravity.ECommerce.Services.SCache.Remove("About_CoreValues");
+        Antigravity.ECommerce.Services.SCache.Remove("About_Timeline");
+        Antigravity.ECommerce.Services.SCache.Remove("About_JourneyImages");
         Antigravity.ECommerce.Services.SCache.Remove("About_Cert");
 
         // Dữ liệu riêng cho trang Giới thiệu
@@ -116,8 +123,9 @@ public class HomeController : Controller
         var aboutCoreValues = Antigravity.ECommerce.Services.SCache.GetOrSet("About_CoreValues", () =>
             Antigravity.ECommerce.Services.SAdvertising.GetByPosition("About_CoreValues"), 60);
 
-        var brandStats = Antigravity.ECommerce.Services.SCache.GetOrSet("Home_BrandStat", () =>
-            Antigravity.ECommerce.Services.SAdvertising.GetByPosition("Home_BrandStat"), 60);
+        // Thống kê hero riêng cho trang Giới thiệu
+        var heroStats = Antigravity.ECommerce.Services.SCache.GetOrSet("About_HeroStat", () =>
+            Antigravity.ECommerce.Services.SAdvertising.GetByPosition("About_HeroStat"), 60);
 
         // Sản phẩm tiêu biểu (5 sản phẩm hot nhất)
         var featuredProducts = Antigravity.ECommerce.Services.SCache.GetOrSet("About_FeaturedProducts", () =>
@@ -131,13 +139,18 @@ public class HomeController : Controller
         var aboutCert = Antigravity.ECommerce.Services.SCache.GetOrSet("About_Cert", () =>
             Antigravity.ECommerce.Services.SAdvertising.GetByPosition("About_Cert"), 60);
 
+        // Ảnh hành trình
+        var aboutJourneyImages = Antigravity.ECommerce.Services.SCache.GetOrSet("About_JourneyImages", () =>
+            Antigravity.ECommerce.Services.SAdvertising.GetByPosition("About_JourneyImages"), 60);
+
         ViewBag.AboutHero = aboutHero;
         ViewBag.AboutIntro = aboutIntro;
         ViewBag.AboutCoreValues = aboutCoreValues;
-        ViewBag.BrandStats = brandStats;
+        ViewBag.HeroStats = heroStats;
         ViewBag.FeaturedProducts = featuredProducts;
         ViewBag.AboutTimeline = aboutTimeline;
         ViewBag.AboutCert = aboutCert;
+        ViewBag.AboutJourneyImages = aboutJourneyImages;
 
         return View();
     }

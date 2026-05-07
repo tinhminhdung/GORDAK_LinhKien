@@ -6,10 +6,10 @@
     var aboutIntro = ViewBag.AboutIntro as List<Advertising> ?? new List<Advertising>();
     var aboutCoreValues = ViewBag.AboutCoreValues as List<Advertising> ?? new List<Advertising>();
     var introMain = aboutIntro.FirstOrDefault();
-    var introList = aboutIntro.Skip(1).ToList();
-    var brandStats = ViewBag.BrandStats as List<Advertising> ?? new List<Advertising>();
+    var heroStats = ViewBag.HeroStats as List<Advertising> ?? new List<Advertising>();
     var featuredProducts = ViewBag.FeaturedProducts as List<Product> ?? new List<Product>();
     var aboutTimeline = ViewBag.AboutTimeline as List<Advertising> ?? new List<Advertising>();
+    var aboutJourneyImages = ViewBag.AboutJourneyImages as List<Advertising> ?? new List<Advertising>();
     var aboutCert = ViewBag.AboutCert as List<Advertising> ?? new List<Advertising>();
 }
 
@@ -19,19 +19,19 @@
     <nav class="sp-breadcrumb"><a href="/">Trang chủ</a> <i class="fa-solid fa-chevron-right"></i> <span>Về thương hiệu Gordak</span></nav>
 </div>
 
-<!-- ======== HERO BANNER ======== -->
-<section class="gt-hero">
+<!-- ======== HERO BANNER - Ảnh to, mờ dần trái→phải ======== -->
+<section class="gt-hero" style="--gt-hero-bg: url('@(aboutHero?.Image ?? "/assets/images/z7775799762257_f058bd78c3b1f94e77da2c4eda69efb3.jpg")');">
   <div class="container">
     <div class="row align-items-center">
-      <div class="col-lg-7">
+      <div class="col-lg-6">
         <p class="gt-hero-label">@(aboutHero?.Link ?? "VỀ THƯƠNG HIỆU")</p>
         <h1 class="gt-hero-title">@(aboutHero?.Title ?? "GORDAK")</h1>
         <p class="gt-hero-subtitle">@(aboutHero?.VideoUrl ?? "Nhà sản xuất thiết bị hàn & rework hàng đầu thế giới")</p>
         <p class="gt-hero-desc">@(aboutHero?.Description ?? "Gordak là thương hiệu nổi tiếng trong lĩnh vực thiết bị hàn và sửa chữa điện tử. Với công nghệ hiện đại, độ bền vượt trội và hiệu suất ổn định, sản phẩm của Gordak được tin dùng bởi kỹ thuật viên và doanh nghiệp tại nhiều quốc gia trên thế giới.")</p>
-        @if(brandStats.Count > 0)
+        @if(heroStats.Count > 0)
         {
         <div class="row g-3 mt-3">
-            @foreach(var stat in brandStats)
+            @foreach(var stat in heroStats)
             {
             <div class="col-6 col-md-3 position-relative gt-stat-col">
                 <div class="gt-stat">
@@ -47,14 +47,14 @@
         </div>
         }
       </div>
-      <div class="col-lg-5 text-center d-none d-lg-block">
-        <img src="@(aboutHero?.Image ?? "/assets/images/z7775799762257_f058bd78c3b1f94e77da2c4eda69efb3.jpg")" alt="Gordak Factory" class="gt-hero-img">
+      <div class="col-lg-6 text-center d-none d-lg-block">
+        
       </div>
     </div>
   </div>
 </section>
 
-<!-- ======== GIỚI THIỆU ======== -->
+<!-- ======== GIỚI THIỆU (1 bài duy nhất, Description chứa HTML checklist) ======== -->
 <section class="container gt-about-sec">
   <div class="row align-items-center g-4">
     <div class="col-lg-5">
@@ -62,24 +62,21 @@
     </div>
     <div class="col-lg-7">
       <h2 class="gt-section-title">@(introMain?.Title ?? "GIỚI THIỆU VỀ GORDAK")</h2>
-      <p class="gt-about-desc">@(introMain?.Description ?? "Với định hướng tập trung vào chất lượng và sự đổi mới, Gordak không ngừng nghiên cứu và cải tiến công nghệ để mang đến những giải pháp hàn và sửa chữa hiệu quả, an toàn và thân thiện với người dùng.")</p>
+      @if(!string.IsNullOrEmpty(introMain?.Description))
+      {
+        @Html.Raw(introMain.Description)
+      }
+      else
+      {
+      <p class="gt-about-desc">Với định hướng tập trung vào chất lượng và sự đổi mới, Gordak không ngừng nghiên cứu và cải tiến công nghệ để mang đến những giải pháp hàn và sửa chữa hiệu quả, an toàn và thân thiện với người dùng.</p>
       <ul class="gt-check-list">
-        @if(introList.Count > 0)
-        {
-          foreach(var item in introList)
-          {
-            <li><i class="@(item.VideoUrl ?? "fa-solid fa-check")"></i> @item.Title</li>
-          }
-        }
-        else
-        {
         <li><i class="fa-solid fa-check"></i> Công nghệ kiểm soát nhiệt thông minh</li>
         <li><i class="fa-solid fa-check"></i> Độ bền cao, hoạt động ổn định</li>
         <li><i class="fa-solid fa-check"></i> Thiết kế tối ưu, dễ sử dụng</li>
         <li><i class="fa-solid fa-check"></i> Đáp ứng tiêu chuẩn kỹ thuật quốc tế</li>
-        }
       </ul>
-      <a href="/san-pham.html" class="gt-about-btn mt-3">Xem các sản phẩm Gordak <i class="fa-solid fa-chevron-right"></i></a>
+      }
+      <a href="@(introMain?.Link ?? "/san-pham.html")" class="gt-about-btn mt-3">Xem các sản phẩm Gordak <i class="fa-solid fa-chevron-right"></i></a>
     </div>
   </div>
 </section>
@@ -97,7 +94,7 @@
         <div class="gt-core-card">
           @if (!string.IsNullOrEmpty(item.Image))
           { <img src="@item.Image" alt="@item.Title" style="max-height:40px; margin-bottom:12px;"> }
-          else
+          else if (!string.IsNullOrEmpty(item.VideoUrl))
           { <i class="@item.VideoUrl"></i> }
           <strong>@item.Title</strong>
           <small>@(item.Description ?? item.Link)</small>
@@ -122,39 +119,65 @@
 <section class="container gt-journey-sec">
   <h2 class="gt-section-title mb-4">HÀNH TRÌNH PHÁT TRIỂN</h2>
   <div class="row g-4">
-    <div class="col-lg-6">
+    <div class="col-lg-5">
       <div class="gt-timeline">
         @if(aboutTimeline.Count > 0)
         {
           @foreach(var tl in aboutTimeline)
           {
-          <div class="gt-tl-item"><div class="gt-tl-dot"><i class="@(tl.VideoUrl ?? "fa-solid fa-rocket")"></i></div><div><strong>@tl.Title</strong><p>@(tl.Description ?? tl.Link)</p></div></div>
+          <div class="gt-tl-item">
+            <div class="gt-tl-dot">
+              @if (!string.IsNullOrEmpty(tl.Image))
+              { <img src="@tl.Image" alt="" style="width:14px; height:14px; object-fit:contain;"> }
+              else
+              { <i class="@(tl.VideoUrl ?? "fa-solid fa-rocket")"></i> }
+            </div>
+            <div><strong>@tl.Title</strong><p>@(tl.Description ?? tl.Link)</p></div>
+          </div>
           }
         }
         else
         {
-        <div class="gt-tl-item"><div class="gt-tl-dot"><i class="fa-solid fa-rocket"></i></div><div><strong>Khởi đầu & phát triển</strong><p>Tập trung nghiên cứu và phát triển thiết bị hàn chất lượng cao.</p></div></div>
+        <div class="gt-tl-item"><div class="gt-tl-dot"><i class="fa-solid fa-rocket"></i></div><div><strong>Khởi đầu &amp; phát triển</strong><p>Tập trung nghiên cứu và phát triển thiết bị hàn chất lượng cao.</p></div></div>
         <div class="gt-tl-item"><div class="gt-tl-dot"><i class="fa-solid fa-globe"></i></div><div><strong>Mở rộng thị trường</strong><p>Sản phẩm Gordak có mặt tại nhiều quốc gia và khu vực.</p></div></div>
         <div class="gt-tl-item"><div class="gt-tl-dot"><i class="fa-solid fa-chart-line"></i></div><div><strong>Nâng cao chất lượng</strong><p>Liên tục cải tiến công nghệ, tối ưu hiệu suất và độ bền sản phẩm.</p></div></div>
         <div class="gt-tl-item"><div class="gt-tl-dot"><i class="fa-solid fa-microchip"></i></div><div><strong>Đổi mới không ngừng</strong><p>Phát triển các giải pháp hàn hiện đại, phù hợp với xu hướng mới.</p></div></div>
         <div class="gt-tl-item"><div class="gt-tl-dot"><i class="fa-solid fa-heart"></i></div><div><strong>Đồng hành cùng khách hàng</strong><p>Luôn lắng nghe và hỗ trợ để mang lại giá trị tốt nhất cho khách hàng.</p></div></div>
         }
       </div>
-      <div class="gt-quote-bar">
-        <p class="mb-0">Trên hành trình phát triển, Gordak luôn giữ vững cam kết mang đến sản phẩm chất lượng<br>và dịch vụ đáng tin cậy cho khách hàng toàn cầu.</p>
-      </div>
     </div>
-    <div class="col-lg-6 d-none d-lg-block">
-      <div class="row g-3">
-        <div class="col-6"><img src="@(introMain?.Image ?? "/assets/images/z7775799762257_f058bd78c3b1f94e77da2c4eda69efb3.jpg")" alt="" class="gt-journey-img"></div>
-        <div class="col-6"><img src="/assets/images/z7775799762257_f058bd78c3b1f94e77da2c4eda69efb3.jpg" alt="" class="gt-journey-img"></div>
-        <div class="col-12"><img src="@(aboutHero?.Image ?? "/assets/images/z7775799762257_f058bd78c3b1f94e77da2c4eda69efb3.jpg")" alt="" class="gt-journey-img" style="height:200px"></div>
+    <div class="col-lg-7 d-none d-lg-block">
+      <div class="gt-journey-grid">
+        @if(aboutJourneyImages.Count > 0)
+        {
+          @for(int i = 0; i < aboutJourneyImages.Count; i++)
+          {
+            var ji = aboutJourneyImages[i];
+            if(i == 0)
+            {
+            <div class="gt-jimg gt-jimg-large"><img src="@ji.Image" alt="@ji.Title"></div>
+            }
+            else
+            {
+            <div class="gt-jimg gt-jimg-small"><img src="@ji.Image" alt="@ji.Title"></div>
+            }
+          }
+        }
+        else
+        {
+        <div class="gt-jimg gt-jimg-large"><img src="/assets/images/z7775799762257_f058bd78c3b1f94e77da2c4eda69efb3.jpg" alt=""></div>
+        <div class="gt-jimg gt-jimg-small"><img src="/assets/images/z7775799762257_f058bd78c3b1f94e77da2c4eda69efb3.jpg" alt=""></div>
+        <div class="gt-jimg gt-jimg-small"><img src="/assets/images/z7775799762257_f058bd78c3b1f94e77da2c4eda69efb3.jpg" alt=""></div>
+        }
       </div>
     </div>
   </div>
+  <div class="gt-quote-bar">
+    <p class="mb-0">Trên hành trình phát triển, Gordak luôn giữ vững cam kết mang đến sản phẩm chất lượng<br>và dịch vụ đáng tin cậy cho khách hàng toàn cầu.</p>
+  </div>
 </section>
 
-<!-- ======== SẢN PHẨM TIÊU BIỂU (cùng kiểu trang chủ) ======== -->
+<!-- ======== SẢN PHẨM TIÊU BIỂU ======== -->
 @if(featuredProducts.Count > 0)
 {
 <section class="gt-featured-sec">
@@ -193,7 +216,7 @@
 <!-- ======== CHỨNG NHẬN ======== -->
 <section class="gt-cert-sec">
   <div class="container">
-    <h2 class="gt-section-title mb-4">CHỨNG NHẬN & UY TÍN</h2>
+    <h2 class="gt-section-title mb-4">CHỨNG NHẬN &amp; UY TÍN</h2>
     <div class="row g-3 align-items-stretch">
       @if(aboutCert != null && aboutCert.Count > 0)
       {
@@ -210,10 +233,10 @@
       }
       else
       {
-      <div class="col-6 col-md-2 text-center"><div class="gt-cert-card"><img src="@(aboutHero?.Image ?? "/assets/images/z7775799762257_f058bd78c3b1f94e77da2c4eda69efb3.jpg")" alt=""><small>Chứng nhận<br>đại lý chính thức</small></div></div>
-      <div class="col-6 col-md-2 text-center"><div class="gt-cert-card"><img src="@(aboutHero?.Image ?? "/assets/images/z7775799762257_f058bd78c3b1f94e77da2c4eda69efb3.jpg")" alt=""><small>Chứng nhận<br>ISO 9001:2015</small></div></div>
-      <div class="col-6 col-md-2 text-center"><div class="gt-cert-card"><img src="@(aboutHero?.Image ?? "/assets/images/z7775799762257_f058bd78c3b1f94e77da2c4eda69efb3.jpg")" alt=""><small>Chứng nhận<br>CO, CQ đầy đủ</small></div></div>
-      <div class="col-6 col-md-2 text-center"><div class="gt-cert-card"><img src="@(aboutHero?.Image ?? "/assets/images/z7775799762257_f058bd78c3b1f94e77da2c4eda69efb3.jpg")" alt=""><small>Nhà phân phối chính hãng<br>tại Việt Nam</small></div></div>
+      <div class="col-6 col-md-2 text-center"><div class="gt-cert-card"><img src="/assets/images/z7775799762257_f058bd78c3b1f94e77da2c4eda69efb3.jpg" alt=""><small>Chứng nhận<br>đại lý chính thức</small></div></div>
+      <div class="col-6 col-md-2 text-center"><div class="gt-cert-card"><img src="/assets/images/z7775799762257_f058bd78c3b1f94e77da2c4eda69efb3.jpg" alt=""><small>Chứng nhận<br>ISO 9001:2015</small></div></div>
+      <div class="col-6 col-md-2 text-center"><div class="gt-cert-card"><img src="/assets/images/z7775799762257_f058bd78c3b1f94e77da2c4eda69efb3.jpg" alt=""><small>Chứng nhận<br>CO, CQ đầy đủ</small></div></div>
+      <div class="col-6 col-md-2 text-center"><div class="gt-cert-card"><img src="/assets/images/z7775799762257_f058bd78c3b1f94e77da2c4eda69efb3.jpg" alt=""><small>Nhà phân phối chính hãng<br>tại Việt Nam</small></div></div>
       }
       <div class="col-12 col-md-4">
         <div class="gt-cert-text-box">

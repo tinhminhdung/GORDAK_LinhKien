@@ -66,9 +66,11 @@
                                 <option value="Home_BrandStat" selected="@(position == "Home_BrandStat")">Thống kê Thương hiệu</option>
                                 <option disabled>── Trang Giới thiệu ──</option>
                                 <option value="About_Hero" selected="@(position == "About_Hero")">Giới thiệu - Banner đầu trang</option>
+                                <option value="About_HeroStat" selected="@(position == "About_HeroStat")">Giới thiệu - Thống kê hero</option>
                                 <option value="About_Intro" selected="@(position == "About_Intro")">Giới thiệu - Về Gordak</option>
                                 <option value="About_CoreValues" selected="@(position == "About_CoreValues")">Giới thiệu - Giá trị cốt lõi</option>
                                 <option value="About_Timeline" selected="@(position == "About_Timeline")">Giới thiệu - Hành trình</option>
+                                <option value="About_JourneyImages" selected="@(position == "About_JourneyImages")">Giới thiệu - Ảnh hành trình</option>
                                 <option value="About_Cert" selected="@(position == "About_Cert")">Giới thiệu - Chứng nhận</option>
                                 <option disabled>── Trang Liên hệ ──</option>
                                 <option value="Contact_Connect" selected="@(position == "Contact_Connect")">Kết nối với Gordak</option>
@@ -488,6 +490,15 @@
                             <small class="text-muted">Tiêu đề GORDAK, mô tả & ảnh bên phải</small>
                         </div>
                     </button>
+                    <button type="button" class="btn btn-outline-info text-start p-3 rounded-3 d-flex align-items-center" onclick="restoreSection('About_HeroStat', 'Thống kê Hero Giới Thiệu')">
+                        <div class="bg-info bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center flex-shrink-0" style="width:40px;height:40px;">
+                            <i class="fas fa-chart-bar text-info"></i>
+                        </div>
+                        <div class="ms-3">
+                            <div class="fw-bold">Thống kê Hero Giới Thiệu</div>
+                            <small class="text-muted">4 mục: Hơn 30 năm, Phân phối rộng rãi, Đa dạng SP...</small>
+                        </div>
+                    </button>
                     <button type="button" class="btn btn-outline-primary text-start p-3 rounded-3 d-flex align-items-center" onclick="restoreSection('About_Intro', 'Giới Thiệu Về Gordak')">
                         <div class="bg-primary bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center flex-shrink-0" style="width:40px;height:40px;">
                             <i class="fas fa-info-circle text-primary"></i>
@@ -513,6 +524,15 @@
                         <div class="ms-3">
                             <div class="fw-bold">Hành trình phát triển</div>
                             <small class="text-muted">5 mốc: Khởi đầu, Mở rộng, Nâng cao...</small>
+                        </div>
+                    </button>
+                    <button type="button" class="btn btn-outline-secondary text-start p-3 rounded-3 d-flex align-items-center" onclick="restoreSection('About_JourneyImages', 'Ảnh hành trình')">
+                        <div class="bg-secondary bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center flex-shrink-0" style="width:40px;height:40px;">
+                            <i class="fas fa-images text-secondary"></i>
+                        </div>
+                        <div class="ms-3">
+                            <div class="fw-bold">Ảnh hành trình</div>
+                            <small class="text-muted">3 ảnh minh hoạ khu vực hành trình phát triển</small>
                         </div>
                     </button>
                     <button type="button" class="btn btn-outline-danger text-start p-3 rounded-3 d-flex align-items-center" onclick="restoreSection('About_Cert', 'Chứng nhận & Uy tín')">

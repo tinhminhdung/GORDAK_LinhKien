@@ -17,7 +17,7 @@
                     <div class="row">
                         <div class="col-md-6" id="group_Image">
                             <div class="mb-3">
-                                <label class="form-label" id="label_Image">Ảnh Banner</label>
+                                <label class="form-label" id="label_Image">Ảnh Banner <small class="text-muted">(ưu tiên hơn icon nếu có cả 2)</small></label>
                                 <div class="input-group">
                                     <input type="text" class="form-control" asp-for="Image" id="Image" readonly>
                                     <button class="btn btn-primary" type="button" onclick="browseImage('Image')">Chọn ảnh</button>
@@ -29,15 +29,18 @@
                         </div>
                         <div class="col-md-6" id="group_VideoUrl">
                             <div class="mb-3">
-                                <label class="form-label" id="label_VideoUrl">YouTube Video ID (Nếu có)</label>
-                                <input type="text" class="form-control" asp-for="VideoUrl" id="VideoUrl" placeholder="VD: 60ItHLz5WEA">
+                                <label class="form-label" id="label_VideoUrl">Icon FontAwesome <small class="text-muted">VD: fa-solid fa-shield</small></label>
+                                <input type="text" class="form-control" asp-for="VideoUrl" id="VideoUrl" placeholder="VD: fa-solid fa-shield-halved">
+                                <div id="icon_preview" class="mt-2 text-center border rounded p-2 d-none">
+                                    <i class="" style="font-size:32px; color:#1a3c8a;"></i>
+                                </div>
                             </div>
                         </div>
                     </div>
 
                     <div class="mb-3" id="group_Description">
                         <label class="form-label" id="label_Description">Mô tả <span class="text-danger">*</span></label>
-                        <textarea class="form-control" asp-for="Description" rows="3" placeholder="Nhập nội dung mô tả..."></textarea>
+                        <textarea class="form-control" asp-for="Description" id="Description" rows="5" placeholder="Nhập nội dung mô tả..."></textarea>
                     </div>
 
                     <div class="mb-3" id="group_Link">
@@ -88,9 +91,11 @@
                             <option value="Home_BrandStat">Thống kê Thương hiệu</option>
                             <option disabled>── Trang Giới thiệu ──</option>
                             <option value="About_Hero">Giới thiệu - Banner đầu trang</option>
+                            <option value="About_HeroStat">Giới thiệu - Thống kê hero</option>
                             <option value="About_Intro">Giới thiệu - Về Gordak</option>
                             <option value="About_CoreValues">Giới thiệu - Giá trị cốt lõi</option>
                             <option value="About_Timeline">Giới thiệu - Hành trình phát triển</option>
+                            <option value="About_JourneyImages">Giới thiệu - Ảnh hành trình</option>
                             <option value="About_Cert">Giới thiệu - Chứng nhận</option>
                             <option disabled>── Trang Liên hệ ──</option>
                             <option value="Contact_Connect">Liên hệ - Kết nối với Gordak</option>
@@ -150,6 +155,8 @@
 </div>
 
 @section Scripts {
+    <!-- CKEditor 4 CDN -->
+    <script src="https://cdn.ckeditor.com/4.22.1/standard/ckeditor.js"></script>
     <script>
         // Chọn ảnh qua File Manager
         let currentImageField = '';
@@ -177,13 +184,25 @@
             }
         });
 
-        // Cấu hình hiển thị form theo từng loại Position
+        // Preview icon khi nhập
+        document.getElementById('VideoUrl')?.addEventListener('input', function() {
+            var val = this.value.trim();
+            var preview = document.getElementById('icon_preview');
+            if (val && val.includes('fa-')) {
+                preview.classList.remove('d-none');
+                preview.querySelector('i').className = val;
+            } else {
+                preview.classList.add('d-none');
+            }
+        });
+
+        // Cấu hình hiển thị form - GIỐNG file Edit.cshtml
         var fieldConfig = {
             'Home_WhyChoose': {
                 title: 'Tiêu đề USP <span class="text-danger">*</span>',
-                image: { show: true, label: 'Ảnh thay thế icon <small class="text-muted">(ưu tiên hơn icon)</small>', col: 'col-md-6' },
+                image: { show: true, label: 'Ảnh thay thế icon <small class="text-muted">(ưu tiên hơn icon nếu có cả 2)</small>', col: 'col-md-6' },
                 videoUrl: { show: true, label: 'Icon FontAwesome <small class="text-muted">VD: fa-solid fa-shield</small>', col: 'col-md-6' },
-                description: { show: true, label: 'Mô tả chính <span class="text-danger">*</span>' },
+                description: { show: true, label: 'Mô tả chính <span class="text-danger">*</span>', useCK: true },
                 link: { show: false },
                 target: false, schedule: false
             },
@@ -191,79 +210,95 @@
                 title: 'Con số thống kê <span class="text-danger">*</span> <small class="text-muted">VD: 20+, 100%, 50+</small>',
                 image: { show: true, label: 'Ảnh thay thế icon <small class="text-muted">(ưu tiên hơn icon)</small>', col: 'col-md-6' },
                 videoUrl: { show: true, label: 'Icon FontAwesome <small class="text-muted">VD: fa-solid fa-globe</small>', col: 'col-md-6' },
-                description: { show: false },
-                link: { show: true, label: 'Nhãn mô tả <span class="text-danger">*</span> <small class="text-muted">VD: NĂM KINH NGHIỆM</small>' },
+                description: { show: true, label: 'Nhãn mô tả <small class="text-muted">VD: NĂM KINH NGHIỆM</small>', useCK: true },
+                link: { show: true, label: 'Nhãn mô tả (dự phòng)' },
                 target: false, schedule: false
             },
             'Home_BrandIntro': {
                 title: 'Tiêu đề phần giới thiệu <span class="text-danger">*</span>',
                 image: { show: true, label: 'Ảnh nhà máy / Thương hiệu', col: 'col-md-12' },
                 videoUrl: { show: true, label: 'Đoạn mô tả thứ 2 <small class="text-muted">(hiển thị bên dưới đoạn 1)</small>', col: 'col-md-12', textarea: true, rows: 3 },
-                description: { show: true, label: 'Đoạn mô tả chính <span class="text-danger">*</span>', rows: 4 },
+                description: { show: true, label: 'Đoạn mô tả chính <span class="text-danger">*</span>', rows: 4, useCK: true },
                 link: { show: true, label: 'Đường dẫn "Tìm hiểu thêm"', placeholder: '/gioi-thieu.html' },
                 target: false, schedule: false
             },
             'About_Hero': {
                 title: 'Tiêu đề Banner <span class="text-danger">*</span>',
-                image: { show: true, label: 'Ảnh bên phải <span class="text-danger">*</span>', col: 'col-md-12' },
+                image: { show: true, label: 'Ảnh nền hero (chìm dần vào nền) <span class="text-danger">*</span>', col: 'col-md-12' },
                 videoUrl: { show: true, label: 'Tiêu đề phụ (Subtitle)', col: 'col-md-6' },
-                description: { show: true, label: 'Đoạn mô tả ngắn', rows: 4 },
+                description: { show: true, label: 'Đoạn mô tả ngắn', rows: 4, useCK: true },
                 link: { show: true, label: 'Nhãn nhỏ trên cùng (VD: VỀ THƯƠNG HIỆU)' },
                 target: false, schedule: false
             },
+            'About_HeroStat': {
+                title: 'Con số / Tiêu đề thống kê <span class="text-danger">*</span> <small class="text-muted">VD: Hơn 30 năm, 100+</small>',
+                image: { show: true, label: 'Ảnh thay thế icon <small class="text-muted">(ưu tiên hơn icon nếu có cả 2)</small>', col: 'col-md-6' },
+                videoUrl: { show: true, label: 'Icon FontAwesome <small class="text-muted">VD: fa-solid fa-clock-rotate-left</small>', col: 'col-md-6' },
+                description: { show: true, label: 'Nhãn mô tả <small class="text-muted">VD: Kinh nghiệm trong ngành</small>', useCK: true },
+                link: { show: false },
+                target: false, schedule: false
+            },
             'About_Intro': {
-                title: 'Tiêu đề (hoặc nội dung checklist) <span class="text-danger">*</span>',
-                image: { show: true, label: 'Ảnh giới thiệu (nếu là mục chính)', col: 'col-md-12' },
-                videoUrl: { show: true, label: 'Icon FontAwesome (nếu là checklist)', col: 'col-md-12' },
-                description: { show: true, label: 'Mô tả (nếu là mục chính)', rows: 4 },
+                title: 'Tiêu đề mục Giới thiệu <span class="text-danger">*</span>',
+                image: { show: true, label: 'Ảnh giới thiệu', col: 'col-md-6' },
+                videoUrl: { show: true, label: 'Icon FontAwesome <small class="text-muted">VD: fa-solid fa-check</small>', col: 'col-md-6' },
+                description: { show: true, label: 'Nội dung mô tả + danh sách checklist <span class="text-danger">*</span> <small class="text-muted">Sử dụng editor để tạo danh sách</small>', rows: 6, useCK: true },
                 link: { show: false },
                 target: false, schedule: false
             },
             'About_CoreValues': {
                 title: 'Tên giá trị cốt lõi <span class="text-danger">*</span>',
-                image: { show: false, label: '', col: 'col-md-6' },
-                videoUrl: { show: true, label: 'Icon FontAwesome <small class="text-muted">VD: fa-solid fa-gem</small>', col: 'col-md-12' },
-                description: { show: true, label: 'Mô tả ngắn', rows: 3 },
+                image: { show: true, label: 'Ảnh minh hoạ <small class="text-muted">(ưu tiên hơn icon nếu có cả 2)</small>', col: 'col-md-6' },
+                videoUrl: { show: true, label: 'Icon FontAwesome <small class="text-muted">VD: fa-solid fa-gem</small>', col: 'col-md-6' },
+                description: { show: true, label: 'Mô tả ngắn', rows: 3, useCK: true },
                 link: { show: false },
                 target: false, schedule: false
             },
             'About_Timeline': {
                 title: 'Tiêu đề mốc sự kiện <span class="text-danger">*</span>',
-                image: { show: false, label: '', col: 'col-md-6' },
-                videoUrl: { show: true, label: 'Icon FontAwesome <small class="text-muted">VD: fa-solid fa-rocket</small>', col: 'col-md-12' },
-                description: { show: false },
-                link: { show: true, label: 'Mô tả sự kiện <span class="text-danger">*</span>' },
+                image: { show: true, label: 'Ảnh minh hoạ <small class="text-muted">(ưu tiên hơn icon nếu có cả 2)</small>', col: 'col-md-6' },
+                videoUrl: { show: true, label: 'Icon FontAwesome <small class="text-muted">VD: fa-solid fa-rocket</small>', col: 'col-md-6' },
+                description: { show: true, label: 'Mô tả sự kiện <span class="text-danger">*</span>', useCK: true },
+                link: { show: false },
+                target: false, schedule: false
+            },
+            'About_JourneyImages': {
+                title: 'Tiêu đề ảnh <span class="text-danger">*</span>',
+                image: { show: true, label: 'Ảnh hành trình <span class="text-danger">*</span>', col: 'col-md-12' },
+                videoUrl: { show: false, label: '', col: 'col-md-6' },
+                description: { show: true, label: 'Mô tả ảnh (tuỳ chọn)', useCK: true },
+                link: { show: false },
                 target: false, schedule: false
             },
             'About_Cert': {
                 title: 'Tiêu đề chứng nhận <span class="text-danger">*</span>',
-                image: { show: true, label: 'Ảnh chứng nhận <span class="text-danger">*</span>', col: 'col-md-12' },
-                videoUrl: { show: false, label: '', col: 'col-md-6' },
-                description: { show: false },
+                image: { show: true, label: 'Ảnh chứng nhận <span class="text-danger">*</span>', col: 'col-md-6' },
+                videoUrl: { show: true, label: 'Icon FontAwesome <small class="text-muted">(tuỳ chọn)</small>', col: 'col-md-6' },
+                description: { show: true, label: 'Mô tả chứng nhận', useCK: true },
                 link: { show: false },
                 target: false, schedule: false
             },
             'Product_Commitment': {
                 title: 'Tiêu đề cam kết <span class="text-danger">*</span>',
-                image: { show: false, label: '', col: 'col-md-6' },
-                videoUrl: { show: true, label: 'Icon FontAwesome <small class="text-muted">VD: fa-solid fa-shield-halved</small>', col: 'col-md-12' },
-                description: { show: true, label: 'Mô tả ngắn <span class="text-danger">*</span>', rows: 3 },
+                image: { show: true, label: 'Ảnh minh hoạ <small class="text-muted">(ưu tiên hơn icon nếu có cả 2)</small>', col: 'col-md-6' },
+                videoUrl: { show: true, label: 'Icon FontAwesome <small class="text-muted">VD: fa-solid fa-shield-halved</small>', col: 'col-md-6' },
+                description: { show: true, label: 'Mô tả ngắn <span class="text-danger">*</span>', rows: 3, useCK: true },
                 link: { show: false },
                 target: false, schedule: false
             },
             'Contact_Connect': {
                 title: 'Tiêu đề khối <span class="text-danger">*</span>',
-                image: { show: false, label: '', col: 'col-md-6' },
-                videoUrl: { show: true, label: 'Icon FontAwesome <small class="text-muted">VD: fa-solid fa-user-tie</small>', col: 'col-md-12' },
-                description: { show: true, label: 'Mô tả ngắn <span class="text-danger">*</span>', rows: 3 },
+                image: { show: true, label: 'Ảnh minh hoạ <small class="text-muted">(ưu tiên hơn icon nếu có cả 2)</small>', col: 'col-md-6' },
+                videoUrl: { show: true, label: 'Icon FontAwesome <small class="text-muted">VD: fa-solid fa-user-tie</small>', col: 'col-md-6' },
+                description: { show: true, label: 'Mô tả ngắn <span class="text-danger">*</span>', rows: 3, useCK: true },
                 link: { show: false },
                 target: false, schedule: false
             },
             'Product_DealerCert': {
                 title: 'Tiêu đề chứng nhận <span class="text-danger">*</span>',
-                image: { show: true, label: 'Ảnh chứng nhận <span class="text-danger">*</span>', col: 'col-md-12' },
-                videoUrl: { show: false, label: '', col: 'col-md-6' },
-                description: { show: true, label: 'Mô tả ngắn', rows: 3 },
+                image: { show: true, label: 'Ảnh chứng nhận <span class="text-danger">*</span>', col: 'col-md-6' },
+                videoUrl: { show: true, label: 'Icon FontAwesome <small class="text-muted">(tuỳ chọn)</small>', col: 'col-md-6' },
+                description: { show: true, label: 'Mô tả ngắn', rows: 3, useCK: true },
                 link: { show: true, label: 'Đường dẫn liên kết', placeholder: '/gioi-thieu.html' },
                 target: false, schedule: false
             },
@@ -271,32 +306,30 @@
                 title: 'Tiêu đề Banner <span class="text-danger">*</span>',
                 image: { show: true, label: 'Ảnh Banner', col: 'col-md-6' },
                 videoUrl: { show: true, label: 'YouTube Video ID (Nếu có)', col: 'col-md-6' },
-                description: { show: false },
+                description: { show: true, label: 'Mô tả', useCK: true },
                 link: { show: true, label: 'Đường dẫn liên kết (Link)', placeholder: 'https://...' },
                 target: true, schedule: true
             }
         };
 
+        var ckInstance = null;
+
         function updateLabels() {
             var pos = document.getElementById('Position').value;
             var cfg = fieldConfig[pos] || fieldConfig['_default'];
 
-            // Title
             document.getElementById('label_Title').innerHTML = cfg.title;
 
-            // Image
             var gImg = document.getElementById('group_Image');
             gImg.style.display = cfg.image.show ? '' : 'none';
-            gImg.className = cfg.image.col + (cfg.image.col ? '' : ' col-md-6');
+            gImg.className = cfg.image.col || 'col-md-6';
             document.getElementById('label_Image').innerHTML = cfg.image.label || 'Ảnh Banner';
 
-            // VideoUrl
             var gVid = document.getElementById('group_VideoUrl');
             gVid.style.display = cfg.videoUrl.show ? '' : 'none';
             gVid.className = cfg.videoUrl.col || 'col-md-6';
-            document.getElementById('label_VideoUrl').innerHTML = cfg.videoUrl.label || 'YouTube Video ID';
-            
-            // Đổi input thành textarea nếu cần
+            document.getElementById('label_VideoUrl').innerHTML = cfg.videoUrl.label || 'Icon FontAwesome';
+
             var vidInput = document.getElementById('VideoUrl');
             if (cfg.videoUrl.textarea && vidInput.tagName === 'INPUT') {
                 var ta = document.createElement('textarea');
@@ -316,16 +349,28 @@
                 vidInput.parentNode.replaceChild(inp, vidInput);
             }
 
-            // Description
             var gDesc = document.getElementById('group_Description');
             gDesc.style.display = cfg.description.show ? '' : 'none';
             if (cfg.description.show) {
                 document.getElementById('label_Description').innerHTML = cfg.description.label;
-                var descArea = gDesc.querySelector('textarea');
-                if (descArea) descArea.rows = cfg.description.rows || 3;
             }
 
-            // Link
+            if (cfg.description.useCK) {
+                if (!ckInstance) {
+                    ckInstance = CKEDITOR.replace('Description', {
+                        height: 250,
+                        removeButtons: 'About',
+                        filebrowserImageUploadUrl: '/FileManager/UploadImage',
+                        filebrowserBrowseUrl: '/FileManager/Index?mode=select'
+                    });
+                }
+            } else {
+                if (ckInstance) {
+                    ckInstance.destroy();
+                    ckInstance = null;
+                }
+            }
+
             var gLink = document.getElementById('group_Link');
             gLink.style.display = cfg.link.show ? '' : 'none';
             if (cfg.link.show) {
@@ -334,12 +379,11 @@
                 if (linkInput && cfg.link.placeholder) linkInput.placeholder = cfg.link.placeholder;
             }
 
-            // Target & Schedule
             document.getElementById('group_Target').style.display = cfg.target ? '' : 'none';
             document.getElementById('group_Schedule').style.display = cfg.schedule ? '' : 'none';
         }
 
-        // Auto-select position from query parameter (khi tạo mới từ trang lọc)
+        // Auto-select position from query parameter
         document.addEventListener('DOMContentLoaded', function() {
             var params = new URLSearchParams(window.location.search);
             var pos = params.get('position');

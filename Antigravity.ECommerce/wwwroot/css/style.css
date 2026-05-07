@@ -3775,3 +3775,308 @@ img {
 
 /* Fix Pagination Hover Color */
 .vd-page-btn.active { color: #fff !important; }
+
+/* ========================================================
+   OVERRIDE: TRANG GIỚI THIỆU - Ảnh chìm dần vào nền
+   ======================================================== */
+.gt-hero {
+    position: relative;
+    color: #fff;
+    padding: 55px 0 40px;
+    overflow: hidden;
+    background: #0d1b4a;
+    min-height: 380px;
+}
+/* Ảnh nền phía sau - hiện rõ bên phải, mờ dần bên trái */
+.gt-hero::before {
+    content: '';
+    position: absolute;
+    top: 0; right: 0; bottom: 0;
+    width: 65%;
+    background: var(--gt-hero-bg, url('/assets/images/z7775799762257_f058bd78c3b1f94e77da2c4eda69efb3.jpg'));
+    background-size: cover;
+    background-position: center;
+    opacity: 0.55;
+    z-index: 0;
+}
+/* Gradient mờ dần: đậm trái → nhạt phải */
+.gt-hero::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to right,
+        #0d1b4a 0%,
+        #0d1b4a 30%,
+        rgba(13,27,74,0.92) 42%,
+        rgba(13,27,74,0.65) 58%,
+        rgba(13,27,74,0.35) 75%,
+        rgba(13,27,74,0.15) 100%
+    );
+    z-index: 1;
+}
+.gt-hero > .container {
+    position: relative;
+    z-index: 2;
+}
+/* Ảnh foreground bên phải - to, bo tròn, có shadow */
+.gt-hero-img-wrap {
+    position: relative;
+}
+.gt-hero-img {
+    max-height: 380px;
+    object-fit: cover;
+    width: 100%;
+    border-radius: 12px;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+}
+/* Gradient mask cho ảnh foreground - chìm cạnh trái + dưới */
+.gt-hero-img-wrap::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 12px;
+    background: linear-gradient(to right, rgba(13,27,74,0.6) 0%, rgba(13,27,74,0) 20%),
+                linear-gradient(to top, rgba(13,27,74,0.4) 0%, rgba(13,27,74,0) 25%);
+    pointer-events: none;
+}
+.gt-hero-label {
+    font-size: 13px;
+    letter-spacing: 3px;
+    opacity: 0.7;
+    font-weight: 500;
+}
+.gt-hero-title {
+    font-size: 56px;
+    font-weight: 900;
+    letter-spacing: 4px;
+    text-shadow: 0 2px 12px rgba(0,0,0,0.3);
+}
+.gt-hero-subtitle {
+    font-size: 18px;
+    color: #ffd12a;
+    font-style: italic;
+}
+.gt-hero-desc {
+    font-size: 14px;
+    line-height: 1.8;
+    opacity: 0.85;
+    max-width: 580px;
+    color: #c8d6f0;
+}
+/* Stat icons - nhẹ, mảnh giống mẫu */
+.gt-stat i {
+    font-size: 28px;
+    color: rgba(255,255,255,0.5);
+    display: block;
+    margin-bottom: 8px;
+    filter: none;
+}
+.gt-stat img {
+    max-height: 28px;
+    display: block;
+    margin: 0 auto 8px;
+    filter: none;
+    opacity: 0.7;
+}
+.gt-stat strong {
+    font-weight: 700;
+    font-size: 13px;
+    color: #fff;
+    display: block;
+    margin-bottom: 4px;
+}
+.gt-stat small {
+    opacity: 1;
+    color: rgba(255,255,255,0.45);
+    font-size: 11px;
+    display: block;
+    line-height: 1.4;
+}
+.gt-stat small::before {
+    content: none !important;
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
+    background: none !important;
+}
+/* Mũi tên phân cách - vàng gold nhẹ giống mẫu */
+.gt-stat-col:not(:last-child)::after {
+    background: linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,255,255,0.12) 50%, rgba(255,255,255,0) 100%) !important;
+}
+.gt-stat-col:not(:last-child)::before {
+    width: 6px !important;
+    height: 6px !important;
+    border-top: 1.5px solid rgba(255,209,42,0.5) !important;
+    border-right: 1.5px solid rgba(255,209,42,0.5) !important;
+    filter: none !important;
+}
+/* Nút "Xem các sản phẩm Gordak" - nền xanh đậm giống mẫu */
+.gt-about-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #fff;
+    background: #1a3c8a;
+    font-weight: 600;
+    font-size: 14px;
+    text-decoration: none;
+    padding: 12px 24px;
+    border-radius: 6px;
+    border: none;
+    transition: 0.2s;
+}
+.gt-about-btn:hover {
+    background: #122b63;
+    color: #fff;
+}
+
+/* Checklist trong About Intro - từ CKEditor output <ul><li> */
+.gt-about-sec .col-lg-7 ul,
+.gt-about-sec .col-lg-7 ul.gt-check-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 15px;
+}
+.gt-about-sec .col-lg-7 ul li {
+    position: relative;
+    padding: 8px 0 8px 32px;
+    font-size: 14px;
+    color: #333;
+    font-weight: 500;
+    line-height: 1.6;
+}
+/* Check icon tự thêm qua CSS ::before - FontAwesome check */
+.gt-about-sec .col-lg-7 ul li::before {
+    content: '\f058';
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    position: absolute;
+    left: 0;
+    top: 8px;
+    color: #1a3c8a;
+    font-size: 16px;
+}
+/* Nếu đã có icon <i> bên trong (từ RestoreDefaults) thì ẩn ::before */
+.gt-about-sec .col-lg-7 ul li:has(> i)::before {
+    display: none;
+}
+.gt-about-sec .col-lg-7 ul li i {
+    color: #1a3c8a;
+    margin-right: 8px;
+    font-size: 16px;
+}
+@media (max-width: 991px) {
+    .gt-hero { padding: 30px 0; text-align: center; min-height: auto; }
+    .gt-hero::before { width: 100%; opacity: 0.2; }
+    .gt-hero-title { font-size: 36px; }
+    .gt-hero-desc { max-width: 100%; }
+    .gt-hero-img-wrap::after { display: none; }
+}
+
+/* ========================================================
+   Journey Image Grid - giống mẫu gốc
+   ======================================================== */
+.gt-journey-grid {
+    display: grid;
+    gap: 10px;
+    height: 100%;
+}
+/* Ảnh đầu tiên: to, chiếm full width */
+.gt-jimg-large {
+    grid-column: 1 / -1;
+    border-radius: 10px;
+    overflow: hidden;
+}
+.gt-jimg-large img {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+    border-radius: 10px;
+    display: block;
+}
+/* Ảnh nhỏ: tự chia đều trong grid */
+.gt-jimg-small {
+    border-radius: 10px;
+    overflow: hidden;
+}
+.gt-jimg-small img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 10px;
+    display: block;
+}
+/* Auto-layout: ảnh nhỏ chia đều trong hàng */
+.gt-journey-grid {
+    grid-template-columns: 1fr;
+}
+/* Khi có 3 ảnh (1 lớn + 2 nhỏ) */
+.gt-journey-grid:has(.gt-jimg-small:nth-child(2):last-child) {
+    grid-template-columns: 1fr 1fr;
+}
+.gt-journey-grid:has(.gt-jimg-small:nth-child(2):last-child) .gt-jimg-large {
+    grid-column: 1 / -1;
+}
+/* Khi có 4 ảnh (1 lớn + 3 nhỏ) */
+.gt-journey-grid:has(.gt-jimg-small:nth-child(4)) {
+    grid-template-columns: 1fr 1fr 1fr;
+}
+.gt-journey-grid:has(.gt-jimg-small:nth-child(4)) .gt-jimg-large {
+    grid-column: 1 / -1;
+}
+/* Fallback: dùng flex cho tương thích */
+@supports not selector(:has(*)) {
+    .gt-journey-grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+    .gt-jimg-large { width: 100%; }
+    .gt-jimg-small { flex: 1 1 calc(50% - 5px); min-width: calc(33% - 7px); }
+}
+
+/* Quote bar - giống mẫu gốc */
+.gt-journey-sec > .gt-quote-bar {
+    margin-top: 30px;
+    text-align: center;
+    border-left: 4px solid #1a3c8a;
+    border-top: none;
+    border-radius: 0 8px 8px 0;
+    padding: 20px 30px;
+    background: #f5f7fa;
+}
+.gt-journey-sec > .gt-quote-bar p {
+    font-size: 14px;
+    color: #555;
+    line-height: 1.6;
+    font-style: italic;
+}
+
+/* Featured section - border trên đầu */
+.gt-featured-sec {
+    border-top: 1px solid #e5e5e5;
+}
+
+/* Nút "Xem tất cả sản phẩm" - giống mẫu */
+.view-all-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 25px;
+    padding: 10px 24px;
+    border: 1.5px solid #1a3c8a;
+    border-radius: 6px;
+    color: #1a3c8a;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.2s;
+    background: #fff;
+}
+.view-all-btn:hover {
+    background: #1a3c8a;
+    color: #fff;
+}
+.view-all-btn i {
+    font-size: 11px;
+}
