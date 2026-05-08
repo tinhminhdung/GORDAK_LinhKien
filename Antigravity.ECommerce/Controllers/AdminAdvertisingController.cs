@@ -254,10 +254,9 @@ namespace Antigravity.ECommerce.Controllers
                 case "Contact_Connect":
                     var connectDefaults = new List<Advertising>
                     {
-                        new Advertising { Title = "Tư vấn chuyên nghiệp", Description = "Đội ngũ giàu kinh nghiệm,<br>hỗ trợ tận tâm", VideoUrl = "fa-solid fa-user-tie", Position = "Contact_Connect", SortOrder = 1, Status = 1 },
-                        new Advertising { Title = "Hỗ trợ nhanh chóng", Description = "Phản hồi kịp thời,<br>giải đáp mọi thắc mắc", VideoUrl = "fa-solid fa-bolt", Position = "Contact_Connect", SortOrder = 2, Status = 1 },
-                        new Advertising { Title = "Đồng hành lâu dài", Description = "Cam kết mang đến sản phẩm<br>và dịch vụ tốt nhất", VideoUrl = "fa-solid fa-handshake", Position = "Contact_Connect", SortOrder = 3, Status = 1 },
-                        new Advertising { Title = "Sản phẩm chính hãng", Description = "100% sản phẩm<br>chính hãng Gordak", VideoUrl = "fa-solid fa-shield-halved", Position = "Contact_Connect", SortOrder = 4, Status = 1 }
+                        new Advertising { Title = "Tư vấn chuyên nghiệp", Description = "Đội ngũ giàu kinh nghiệm,<br>hỗ trợ tận tâm", VideoUrl = "fa-regular fa-circle-check", Position = "Contact_Connect", SortOrder = 1, Status = 1 },
+                        new Advertising { Title = "Hỗ trợ nhanh chóng", Description = "Phản hồi kịp thời,<br>giải đáp mọi thắc mắc", VideoUrl = "fa-solid fa-shield-check", Position = "Contact_Connect", SortOrder = 2, Status = 1 },
+                        new Advertising { Title = "Đồng hành lâu dài", Description = "Cam kết mang đến sản phẩm<br>và dịch vụ tốt nhất", VideoUrl = "fa-solid fa-handshake", Position = "Contact_Connect", SortOrder = 3, Status = 1 }
                     };
                     foreach (var d in connectDefaults) { d.CreatedBy = createdBy; SAdvertising.Insert(d); }
                     break;
