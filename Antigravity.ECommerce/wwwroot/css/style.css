@@ -2578,47 +2578,52 @@ img {
     }
 
 .lh-connect-sec {
-    margin: 48px 0 40px;
+    margin: 40px 0 36px;
 }
 
 .lh-connect-box {
-    background: #f4f8ff;
-    border: 1px solid #e0eaf8;
-    border-radius: 10px;
-    padding: 20px 28px;
+    background: #f5f8ff;
+    border: 1px solid #dde8fb;
+    border-radius: 8px;
+    padding: 18px 24px;
     display: flex;
-    align-items: center;
+    align-items: stretch;
     gap: 0;
 }
 
 .lh-connect-left {
-    min-width: 210px;
-    padding-right: 24px;
-    border-right: 1px solid #ccd9f0;
+    min-width: 310px;
+    max-width: 310px;
+    padding-right: 5px;
+    border-right: 2px solid #c8d8f4;
     flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 .lh-connect-title {
-    font-size: 18px;
-    font-weight: 800;
+    font-size: 16px;
+    font-weight: 900;
     color: #0D1773;
-    margin-bottom: 4px;
+    margin-bottom: 6px;
     text-transform: uppercase;
-    line-height: 1.2;
+    line-height: 1.3;
+    letter-spacing: 0.3px;
 }
 
 .lh-connect-desc {
-    font-size: 13px;
-    color: #666;
-    line-height: 1.6;
+    font-size: 12.5px;
+    color: #777;
+    line-height: 1.5;
     margin: 0;
 }
 
 .lh-connect-right {
     flex: 1;
-    padding-left: 24px;
+    padding-left: 20px;
     display: flex;
-    gap: 4px;
+    gap: 0;
     flex-wrap: nowrap;
     align-items: center;
 }
@@ -2627,14 +2632,18 @@ img {
     flex: 1;
     min-width: 0;
     display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 6px 10px;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 19px 52px;
 }
 
+    .lh-val-card:last-child {
+        border-right: none;
+    }
+
 .lh-val-card-icon {
-    width: 44px;
-    height: 44px;
+    width: 48px;
+    height: 48px;
     flex-shrink: 0;
     display: flex;
     align-items: center;
@@ -2642,13 +2651,13 @@ img {
 }
 
     .lh-val-card-icon img {
-        width: 40px;
-        height: 40px;
+        width: 46px;
+        height: 46px;
         object-fit: contain;
     }
 
     .lh-val-card-icon i {
-        font-size: 32px;
+        font-size: 40px;
         color: #1a3c8a;
     }
 
@@ -2666,6 +2675,11 @@ img {
     color: #555;
     line-height: 1.4;
     display: block;
+}
+
+.lh-val-card-body p {
+    line-height: 21px;
+    padding-top: 5px;
 }
 
 .lh-faq-section {
@@ -2726,103 +2740,188 @@ img {
     border-top: none;
 }
 
+/* ---- CTA: CAN TU VAN THEM? ---- */
 .lh-cta-section {
-    background: linear-gradient(135deg, #0d1b4a 0%, #1a3c8a 100%);
-    color: #fff;
-    padding: 50px 0;
-    margin-top: 20px;
-}
-
-.lh-cta-wrap {
-    position: relative;
-}
-
-.lh-cta-title {
-    font-size: 24px;
-    font-weight: 900;
+    background: transparent;
     margin-bottom: 8px;
 }
 
-.lh-cta-section p {
-    font-size: 14px;
-    opacity: 0.9;
-    margin-bottom: 5px;
+.lh-cta-inner {
+    display: flex;
+    align-items: stretch;
+    min-height: 185px;
+    background: #011A56;
+    border-radius: 12px;
+    overflow: hidden;
+    color: #fff;
+    position: relative;
 }
 
-.lh-cta-section span {
-    font-size: 13px;
+.lh-cta-person {
+    width: 230px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+    overflow: hidden;
+    border-radius: 12px 0 0 12px;
 }
 
-    .lh-cta-section span i {
-        color: #4ecdc4;
-        margin-right: 5px;
+    .lh-cta-person img {
+        width: 100%;
+        height: 215px;
+        object-fit: contain;
+        object-position: bottom center;
+        display: block;
+        margin-top: -30px;
     }
 
-.lh-cta-img {
-    max-height: 200px;
-    border-radius: 10px;
-    object-fit: cover;
+.lh-cta-body {
+    flex: 1;
+    padding: 24px 22px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-width: 0;
 }
+
+.lh-cta-title {
+    font-size: 22px;
+    font-weight: 900;
+    color: #fff;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    line-height: 1.2;
+}
+
+.lh-cta-subtitle {
+    font-size: 13.5px;
+    color: rgba(255,255,255,0.85);
+    margin-bottom: 12px;
+    line-height: 1.5;
+}
+
+.lh-cta-features {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-bottom: 18px;
+}
+
+.lh-cta-feature {
+    font-size: 13px;
+    color: rgba(255,255,255,0.9);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+    .lh-cta-feature i {
+        color: #4ecdc4;
+        font-size: 15px;
+    }
+
+.lh-cta-btns {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.lh-cta-btn-call {
+    background: #f5a623;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 10px 22px;
+    font-size: 14px;
+    font-weight: 700;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: 0.2s;
+    white-space: nowrap;
+}
+
+    .lh-cta-btn-call:hover {
+        background: #e09018;
+        color: #fff;
+    }
+
+.lh-cta-btn-zalo {
+    background: #fff;
+    color: #0d1b4a;
+    border: 2px solid #fff;
+    border-radius: 6px;
+    padding: 9px 20px;
+    font-size: 14px;
+    font-weight: 700;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: 0.2s;
+    white-space: nowrap;
+}
+
+    .lh-cta-btn-zalo:hover {
+        background: #e8f0ff;
+        border-color: #e8f0ff;
+        color: #0d1b4a;
+    }
+
+    .lh-cta-btn-zalo .zalo-badge {
+        background: #0068ff;
+        color: #fff;
+        font-size: 11px;
+        font-weight: 800;
+        padding: 2px 7px;
+        border-radius: 4px;
+        letter-spacing: 0.5px;
+    }
+
+.lh-cta-product {
+    width: 420px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+    overflow: hidden;
+    padding: 8px 10px 0 0;
+}
+
+    .lh-cta-product img {
+        width: 100%;
+        height: 210px;
+        object-fit: contain;
+        object-position: bottom right;
+        display: block;
+        filter: drop-shadow(-4px 4px 10px rgba(0,0,0,0.35));
+    }
 
 @media (max-width: 991px) {
-    .lh-page-title {
-        font-size: 22px;
-    }
-
-    .lh-form-box {
-        padding: 22px 18px;
-    }
-
-    .lh-connect-box {
-        flex-direction: column;
-        padding: 18px 16px;
-        gap: 16px;
-    }
-
-    .lh-connect-left {
-        border-right: none;
-        border-bottom: 1px solid #ccd9f0;
-        padding-right: 0;
-        padding-bottom: 14px;
-        min-width: unset;
-        width: 100%;
-    }
-
-    .lh-connect-right {
-        padding-left: 0;
-        width: 100%;
-        flex-wrap: wrap;
-        gap: 8px;
-    }
-
-    .lh-val-card {
-        min-width: calc(50% - 8px);
-        flex: 0 0 calc(50% - 8px);
-    }
-
-    .lh-cta-section {
-        text-align: center;
-        padding: 30px 0;
-    }
-
-        .lh-cta-section .d-flex {
-            justify-content: center;
-        }
+    .lh-page-title { font-size: 22px; }
+    .lh-form-box { padding: 22px 18px; }
+    .lh-connect-box { flex-direction: column; padding: 18px 16px; gap: 16px; }
+    .lh-connect-left { border-right: none; border-bottom: 1px solid #ccd9f0; padding-right: 0; padding-bottom: 14px; min-width: unset; width: 100%; }
+    .lh-connect-right { padding-left: 0; width: 100%; flex-wrap: wrap; gap: 8px; }
+    .lh-val-card { min-width: calc(50% - 8px); flex: 0 0 calc(50% - 8px); }
+    .lh-cta-product { display: none; }
+    .lh-cta-person { width: 130px; }
+    .lh-cta-body { padding: 20px 16px; }
+    .lh-cta-title { font-size: 18px; }
+    .lh-cta-features { gap: 10px; }
 }
 
 @media (max-width: 575px) {
-    .lh-faq-title {
-        font-size: 18px;
-    }
-
-    .lh-val-card {
-        min-width: 100%;
-    }
-
-    .lh-connect-title {
-        font-size: 17px;
-    }
+    .lh-faq-title { font-size: 18px; }
+    .lh-val-card { min-width: 100%; }
+    .lh-connect-title { font-size: 17px; }
+    .lh-cta-person { display: none; }
+    .lh-cta-btns { flex-direction: column; align-items: flex-start; }
 }
+
 
 /* ========================================================
    TRANG GIO HANG (prefix: .gh-)
@@ -3954,10 +4053,6 @@ img {
 .gt-hero > .container {
     position: relative;
     z-index: 2;
-}
-/* Ảnh foreground bên phải - to, bo tròn, có shadow */
-.gt-hero-img-wrap {
-    position: relative;
 }
 .gt-hero-img {
     max-height: 380px;
