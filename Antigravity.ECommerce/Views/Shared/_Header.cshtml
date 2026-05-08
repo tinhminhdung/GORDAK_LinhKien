@@ -51,11 +51,8 @@
       <div class="col-auto">
         <a href="/" class="d-flex align-items-center text-decoration-none logo-wrap">
           @if(!string.IsNullOrEmpty(settings.Logo)) {
-              <img src="@settings.Logo" alt="@settings.SiteTitle" style="height: 40px; max-width: 200px; object-fit: contain;">
-          } else {
-              <div class="logo-mark">G</div>
-              <div class="logo-text">GORDAK<small>TOOLS FOR LIFE</small></div>
-          }
+              <img src="@settings.Logo" alt="@settings.SiteTitle" style="max-width: 200px; object-fit: contain;">
+          } 
         </a>
       </div>
       <!-- Search -->
@@ -69,7 +66,7 @@
       <div class="col-auto d-flex align-items-center gap-4">
         <div class="quick-item d-flex align-items-center gap-2">
           <i class="fa-solid fa-phone-volume qi-icon"></i>
-          <div><b>Hotline tư vấn</b><span class="d-block text-muted small">@(settings.Hotline ?? "0963 344 888")</span></div>
+          <div><b>Hotline tư vấn</b><span class="d-block text-muted small">@settings.Hotline </span></div>
         </div>
         @if(!string.IsNullOrEmpty(settings.Zalo)) {
         <a href="https://zalo.me/@settings.Zalo" target="_blank" class="quick-item d-flex align-items-center gap-2 text-decoration-none text-dark">

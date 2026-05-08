@@ -91,6 +91,7 @@
                 </div>
             </div>
         </div>
+
         <div class="col-lg-4">
             <div class="card">
                 <div class="card-body">
@@ -105,14 +106,22 @@
                         <label class="form-label">Thứ tự hiển thị</label>
                         <input type="number" class="form-control" asp-for="SortOrder" value="@(Model.SortOrder == 0 ? 1 : Model.SortOrder)" />
                     </div>
-                    
+                    <div class="mb-3">
+                        <div class="d-flex align-items-center justify-content-between p-3 bg-light rounded">
+                            <div>
+                                <label class="form-label mb-0 fw-semibold">Video nổi bật</label>
+                                <p class="text-muted fs-12 mb-0">Hiển thị ở khối "VIDEO NỔI BẬT" sidebar</p>
+                            </div>
+                            <div class="form-check form-switch form-switch-md form-switch-danger" dir="ltr">
+                                <input type="checkbox" class="form-check-input" asp-for="IsHot" id="IsHot">
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-
-             
-            </form>
+</form>
 
 @section Scripts {
     <script>
@@ -149,23 +158,17 @@
         function extractThumbnail() {
             var ytId = document.getElementById('YoutubeId').value.trim();
             if (ytId) {
-                // Handle full url
                 if (ytId.includes('v=')) {
                     ytId = ytId.split('v=')[1];
                     var ampersandPosition = ytId.indexOf('&');
-                    if(ampersandPosition != -1) {
-                        ytId = ytId.substring(0, ampersandPosition);
-                    }
+                    if(ampersandPosition != -1) { ytId = ytId.substring(0, ampersandPosition); }
                     document.getElementById('YoutubeId').value = ytId;
                 } else if (ytId.includes('youtu.be/')) {
                     ytId = ytId.split('youtu.be/')[1];
                     var questionPosition = ytId.indexOf('?');
-                    if(questionPosition != -1) {
-                        ytId = ytId.substring(0, questionPosition);
-                    }
+                    if(questionPosition != -1) { ytId = ytId.substring(0, questionPosition); }
                     document.getElementById('YoutubeId').value = ytId;
                 }
-
                 var url = `https://img.youtube.com/vi/${ytId}/maxresdefault.jpg`;
                 document.getElementById('ThumbnailUrl').value = url;
                 showPreview(url);
@@ -185,7 +188,6 @@
             showPreview(this.value);
         });
 
-        // Initialize preview if data exists
         if(document.getElementById('ThumbnailUrl').value) {
             showPreview(document.getElementById('ThumbnailUrl').value);
         }

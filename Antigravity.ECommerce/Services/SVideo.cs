@@ -1,4 +1,4 @@
-﻿using Antigravity.ECommerce.Models;
+using Antigravity.ECommerce.Models;
 using System.Collections.Generic;
 using Microsoft.Data.SqlClient;
 
@@ -40,6 +40,7 @@ namespace Antigravity.ECommerce.Services
                 new SqlParameter("@CategoryId", model.CategoryId),
                 new SqlParameter("@SortOrder", model.SortOrder),
                 new SqlParameter("@Status", model.Status),
+                new SqlParameter("@IsHot", model.IsHot),
                 new SqlParameter("@SeoTitle", model.SeoTitle ?? ""),
                 new SqlParameter("@SeoDescription", model.SeoDescription ?? ""),
                 new SqlParameter("@SeoKeywords", model.SeoKeywords ?? ""),
@@ -62,6 +63,7 @@ namespace Antigravity.ECommerce.Services
                 new SqlParameter("@CategoryId", model.CategoryId),
                 new SqlParameter("@SortOrder", model.SortOrder),
                 new SqlParameter("@Status", model.Status),
+                new SqlParameter("@IsHot", model.IsHot),
                 new SqlParameter("@SeoTitle", model.SeoTitle ?? ""),
                 new SqlParameter("@SeoDescription", model.SeoDescription ?? ""),
                 new SqlParameter("@SeoKeywords", model.SeoKeywords ?? ""),
@@ -77,6 +79,19 @@ namespace Antigravity.ECommerce.Services
             var result = BaseConnectionSql.ExecuteNonQuery("SP_Videos_Delete", new SqlParameter("@Id", id));
             if (result > 0) SCache.Remove("AllVideos");
             return result;
+        }
+
+        /// <summary> Bật/tắt nhanh IsHot cho Video </summary>
+        public static bool ToggleIsHot(int id, bool isHot)
+        {
+            string sql = "UPDATE Videos SET IsHot = @IsHot WHERE VideoId = @Id";
+            var prm = new SqlParameter[] {
+                new SqlParameter("@IsHot", isHot),
+                new SqlParameter("@Id", id)
+            };
+            int result = BaseConnectionSql.ExecuteNonQuery(sql, prm);
+            if (result > 0) SCache.Remove("AllVideos");
+            return result > 0;
         }
 
         public static List<Video> Search(string kw, int? status, int? categoryId = null, string sort = "CreatedAt", string order = "DESC", int page = 1, int size = 20)

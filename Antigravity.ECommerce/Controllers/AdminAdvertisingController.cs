@@ -160,10 +160,10 @@ namespace Antigravity.ECommerce.Controllers
                 case "About_HeroStat":
                     var heroStatDefaults = new List<Advertising>
                     {
-                        new Advertising { Title = "Hơn 30 năm", Description = "Kinh nghiệm trong ngành", VideoUrl = "fa-solid fa-clock-rotate-left", Position = "About_HeroStat", SortOrder = 1, Status = 1 },
-                        new Advertising { Title = "Phân phối rộng rãi", Description = "Có mặt tại nhiều quốc gia", VideoUrl = "fa-solid fa-earth-americas", Position = "About_HeroStat", SortOrder = 2, Status = 1 },
+                        new Advertising { Title = "Hơn 30 năm", Description = "Kinh nghiệm trong ngành", VideoUrl = "fa-regular fa-circle-check", Position = "About_HeroStat", SortOrder = 1, Status = 1 },
+                        new Advertising { Title = "Phân phối rộng rãi", Description = "Có mặt tại nhiều quốc gia", VideoUrl = "fa-solid fa-globe", Position = "About_HeroStat", SortOrder = 2, Status = 1 },
                         new Advertising { Title = "Đa dạng sản phẩm", Description = "Hơn 100 sản phẩm chất lượng cao", VideoUrl = "fa-solid fa-cubes", Position = "About_HeroStat", SortOrder = 3, Status = 1 },
-                        new Advertising { Title = "Chất lượng đảm bảo", Description = "Kiểm định nghiêm ngặt trước khi đến tay khách", VideoUrl = "fa-solid fa-medal", Position = "About_HeroStat", SortOrder = 4, Status = 1 }
+                        new Advertising { Title = "Chất lượng đảm bảo", Description = "Kiểm định nghiêm ngặt trước khi đến tay khách", VideoUrl = "fa-solid fa-award", Position = "About_HeroStat", SortOrder = 4, Status = 1 }
                     };
                     foreach (var d in heroStatDefaults) { d.CreatedBy = createdBy; SAdvertising.Insert(d); }
                     break;

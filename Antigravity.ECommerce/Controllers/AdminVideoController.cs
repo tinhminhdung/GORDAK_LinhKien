@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Antigravity.ECommerce.Models;
 using Antigravity.ECommerce.Services;
@@ -111,6 +111,15 @@ namespace Antigravity.ECommerce.Controllers
             int result = SVideo.BulkUpdateStatus(model.Ids, model.Status);
             if (result > 0) SSeo.RefreshSitemapAndCache();
             return Json(new { success = result > 0 });
+        }
+
+        /// <summary> Bật/tắt nhanh IsHot cho Video ngay tại trang danh sách </summary>
+        [HttpPost]
+        [Permission("Video", ActionType.Edit)]
+        public IActionResult ToggleIsHot(int id, bool value)
+        {
+            bool ok = SVideo.ToggleIsHot(id, value);
+            return Json(new { success = ok });
         }
 
         public class BulkUpdateModel {

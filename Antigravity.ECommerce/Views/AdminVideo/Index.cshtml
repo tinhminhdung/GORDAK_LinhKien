@@ -98,6 +98,7 @@
                                 <th>Danh mục</th>
                                 <th>YouTube ID</th>
                                 <th>Thứ tự</th>
+                                <th class="text-center">Nổi bật (HOT)</th>
                                 <th>Trạng thái</th>
                                 <th style="width: 150px;" class="text-end">Thao tác</th>
                             </tr>
@@ -134,6 +135,11 @@
                                             <code class="bg-light text-primary px-2 py-1 rounded">@item.YoutubeId</code>
                                         </td>
                                         <td>@item.SortOrder</td>
+                                        <td class="text-center">
+                                            <div class="form-check form-switch form-switch-md form-switch-danger" dir="ltr" style="display: inline-block;">
+                                                <input type="checkbox" class="form-check-input" onchange="toggleIsHot(@item.VideoId, this.checked)" @(item.IsHot ? "checked" : "") title="Video nổi bật hiển thị ở sidebar">
+                                            </div>
+                                        </td>
                                         <td>
                                             @if (item.Status == 1)
                                             {
@@ -156,7 +162,7 @@
                             else
                             {
                                 <tr>
-                                    <td colspan="8" class="text-center py-5">
+                                    <td colspan="9" class="text-center py-5">
                                         <div class="text-center">
                                             <lord-icon src="https://cdn.lordicon.com/msoeawqm.json" trigger="loop" colors="primary:#405189,secondary:#0ab39c" style="width:75px;height:75px"></lord-icon>
                                             <h5 class="mt-2">Chưa có video nào</h5>
@@ -177,6 +183,22 @@
 
 @section Scripts {
     <script>
+        function toggleIsHot(id, value) {
+            $.post('/AdminVideo/ToggleIsHot', { id: id, value: value }, function(res) {
+                if(!res.success) {
+                    Swal.fire('Lỗi', 'Cập nhật thất bại', 'error');
+                } else {
+                    Toastify({
+                        text: value ? 'Đã bật nổi bật!' : 'Đã tắt nổi bật!',
+                        duration: 2500,
+                        gravity: 'bottom',
+                        position: 'right',
+                        backgroundColor: 'linear-gradient(to right, #00b09b, #96c93d)',
+                    }).showToast();
+                }
+            });
+        }
+
         function changeSort(col) {
             const form = document.querySelector('form');
             if(form.id === '') form.id = 'filterForm';

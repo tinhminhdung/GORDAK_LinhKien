@@ -52,7 +52,8 @@ namespace Antigravity.ECommerce.Controllers
 
             // Bổ sung dữ liệu cho Sidebar & Filter
             ViewBag.Categories = SCategory.GetAll().Where(x => x.Status == 1 && x.CategoryType == 2).OrderBy(x => x.SortOrder).ToList();
-            ViewBag.HotNews = SNews.GetAll().Where(x => x.Status == 1).OrderByDescending(x => x.Views).Take(5).ToList();
+            ViewBag.HotNews = SNews.GetAll().Where(x => x.Status == 1 && x.IsHot).OrderByDescending(x => x.SortOrder).ThenByDescending(x => x.CreatedAt).Take(5).ToList();
+            ViewBag.TotalNewsCount = SNews.GetAll().Count(x => x.Status == 1);
 
             // Cấu hình thẻ meta SEO
             ViewData["Title"] = string.IsNullOrEmpty(kw) ? "Tin tức - Bài viết mới nhất" : $"Tìm kiếm: {kw} - Tin tức";
@@ -84,7 +85,8 @@ namespace Antigravity.ECommerce.Controllers
 
             // Bổ sung dữ liệu cho Sidebar & Filter
             ViewBag.Categories = SCategory.GetAll().Where(x => x.Status == 1 && x.CategoryType == 2).OrderBy(x => x.SortOrder).ToList();
-            ViewBag.HotNews = SNews.GetAll().Where(x => x.Status == 1).OrderByDescending(x => x.Views).Take(5).ToList();
+            ViewBag.HotNews = SNews.GetAll().Where(x => x.Status == 1 && x.IsHot).OrderByDescending(x => x.SortOrder).ThenByDescending(x => x.CreatedAt).Take(5).ToList();
+            ViewBag.TotalNewsCount = SNews.GetAll().Count(x => x.Status == 1);
 
             // Cấu hình thẻ meta SEO
             ViewData["Title"] = !string.IsNullOrEmpty(category.SeoTitle) ? category.SeoTitle : category.Name;
@@ -114,7 +116,8 @@ namespace Antigravity.ECommerce.Controllers
 
             // Bổ sung dữ liệu cho Sidebar
             ViewBag.Categories = SCategory.GetAll().Where(x => x.Status == 1 && x.CategoryType == 2).OrderBy(x => x.SortOrder).ToList();
-            ViewBag.HotNews = SNews.GetAll().Where(x => x.Status == 1).OrderByDescending(x => x.Views).Take(5).ToList();
+            ViewBag.HotNews = SNews.GetAll().Where(x => x.Status == 1 && x.IsHot).OrderByDescending(x => x.SortOrder).ThenByDescending(x => x.CreatedAt).Take(5).ToList();
+            ViewBag.TotalNewsCount = SNews.GetAll().Count(x => x.Status == 1);
 
             // Cấu hình thẻ meta SEO
             ViewData["Title"] = !string.IsNullOrEmpty(item.SeoTitle) ? item.SeoTitle : item.Title;

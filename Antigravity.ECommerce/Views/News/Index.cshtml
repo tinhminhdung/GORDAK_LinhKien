@@ -143,15 +143,15 @@
             <div class="tt-sidebar-box mb-3">
                 <h4 class="tt-sidebar-title">DANH MỤC TIN TỨC</h4>
                 <ul class="tt-sidebar-list">
-                    <li><a href="/tin-tuc.html">Tất cả</a></li>
-                    @foreach(var cat in categories.Take(6)) {
+                    <li><a href="/tin-tuc.html">Tất cả <span>@ViewBag.TotalNewsCount</span></a></li>
+                    @foreach(var cat in categories.Take(10)) {
                         <li><a href="/tin-tuc/@(cat.Slug).html">@cat.Name <span>@cat.ItemCount</span></a></li>
                     }
                 </ul>
-                @if(categories.Count > 6) {
-                    <a href="javascript:void(0)" onclick="$('.tt-sidebar-list li.d-none').removeClass('d-none'); $(this).hide();" class="tt-sidebar-link">Xem thêm danh mục <i class="fa-solid fa-arrow-right"></i></a>
+                @if(categories.Count > 10) {
+                    <a href="javascript:void(0)" onclick="$('.tt-sidebar-list li.d-none').removeClass('d-none'); $(this).hide();" class="tt-sidebar-link">Xem tất cả danh mục <i class="fa-solid fa-arrow-right"></i></a>
                     <ul class="tt-sidebar-list">
-                         @foreach(var cat in categories.Skip(6)) {
+                         @foreach(var cat in categories.Skip(10)) {
                             <li class="d-none"><a href="/tin-tuc/@(cat.Slug).html">@cat.Name <span>@cat.ItemCount</span></a></li>
                         }
                     </ul>
@@ -164,7 +164,9 @@
                 <h4 class="tt-sidebar-title">TIN NỔI BẬT</h4>
                 @foreach(var hn in hotNews) {
                     <div class="tt-hot-item">
-                        <img src="@(string.IsNullOrEmpty(hn.Image) ? "/assets/images/placeholder.png" : hn.Image)" alt="@hn.Title">
+                        <a href="/tin-tuc/detail/@(hn.Slug).html">
+                            <img src="@(string.IsNullOrEmpty(hn.Image) ? "/assets/images/placeholder.png" : hn.Image)" alt="@hn.Title">
+                        </a>
                         <div>
                             <a href="/tin-tuc/detail/@(hn.Slug).html" class="tt-hot-title line-clamp-2">@hn.Title</a>
                             <div class="tt-hot-meta">
@@ -179,7 +181,7 @@
 
             <!-- CTA Box -->
             <div class="tt-cta-box text-center">
-                <img src="/tuvanvien.png" alt="Tư vấn viên" class="img-fluid rounded-circle mb-3" style="width: 100px; height: 100px; object-fit: cover; border: 3px solid #fff;">
+                <img src="/assets/images/tuvanvien.png" alt="Tư vấn viên" class="img-fluid rounded-circle mb-3" style="width: 100px; height: 100px; object-fit: cover; border: 3px solid #fff;">
                 <h4 class="text-start">CẦN TƯ VẤN MUA HÀNG?</h4>
                 <ul class="list-unstyled text-start">
                     <li><i class="fa-solid fa-check-circle"></i> Tư vấn chọn sản phẩm phù hợp</li>
@@ -187,7 +189,7 @@
                     <li><i class="fa-solid fa-check-circle"></i> Hỗ trợ kỹ thuật 24/7</li>
                     <li><i class="fa-solid fa-check-circle"></i> Chính sách bảo hành uy tín</li>
                 </ul>
-                <a href="https://zalo.me/@Antigravity.ECommerce.Services.SSetting.GetViewModel().Hotline" target="_blank" class="tt-cta-btn w-100">CHAT ZALO NGAY</a>
+                <a href="https://zalo.me/@Antigravity.ECommerce.Services.SSetting.GetViewModel().Hotline" target="_blank" class="tt-cta-btn w-100">TƯ VẤN NGAY</a>
             </div>
         </div>
     </div>

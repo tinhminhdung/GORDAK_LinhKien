@@ -152,15 +152,15 @@
             <div class="tt-sidebar-box mb-3">
                 <h4 class="tt-sidebar-title">DANH MỤC VIDEO</h4>
                 <ul class="tt-sidebar-list">
-                    <li><a href="/video.html">Tất cả</a></li>
-                    @foreach(var cat in categories.Take(6)) {
-                        <li><a href="/video/@(cat.Slug).html">@cat.Name <span>@cat.ItemCount</span></a></li>
+                    <li><a href="/video.html">Tất cả <span>@ViewBag.TotalVideoCount</span></a></li>
+                    @foreach(var cat in categories.Take(10)) {
+                        <li><a href="/video/@(cat.Slug).html" class="@(currentCat?.CategoryId == cat.CategoryId ? "active" : "")">@cat.Name <span>@cat.ItemCount</span></a></li>
                     }
                 </ul>
-                @if(categories.Count > 6) {
-                    <a href="javascript:void(0)" onclick="$('.tt-sidebar-list li.d-none').removeClass('d-none'); $(this).hide();" class="tt-sidebar-link">Xem thêm danh mục <i class="fa-solid fa-arrow-right"></i></a>
-                    <ul class="tt-sidebar-list">
-                         @foreach(var cat in categories.Skip(6)) {
+                @if(categories.Count > 10) {
+                    <a href="javascript:void(0)" onclick="$('#video-more-cats li').removeClass('d-none'); $(this).hide();" class="tt-sidebar-link">Xem tất cả danh mục <i class="fa-solid fa-arrow-right"></i></a>
+                    <ul class="tt-sidebar-list" id="video-more-cats">
+                         @foreach(var cat in categories.Skip(10)) {
                             <li class="d-none"><a href="/video/@(cat.Slug).html">@cat.Name <span>@cat.ItemCount</span></a></li>
                         }
                     </ul>
@@ -192,7 +192,7 @@
 
             <!-- CTA Box -->
             <div class="tt-cta-box text-center">
-                <img src="/tuvanvien.png" alt="Tư vấn viên" class="img-fluid rounded-circle mb-3" style="width: 100px; height: 100px; object-fit: cover; border: 3px solid #fff;">
+                <img src="/assets/images/tuvanvien.png" alt="Tư vấn viên" class="img-fluid rounded-circle mb-3" style="width: 100px; height: 100px; object-fit: cover; border: 3px solid #fff;">
                 <h4 class="text-start">CẦN TƯ VẤN CHỌN MÁY?</h4>
                 <ul class="list-unstyled text-start">
                     <li><i class="fa-solid fa-check-circle"></i> Đội ngũ kỹ thuật sẵn sàng hỗ trợ</li>
@@ -200,7 +200,7 @@
                     <li><i class="fa-solid fa-check-circle"></i> Hỗ trợ kỹ thuật 24/7</li>
                     <li><i class="fa-solid fa-check-circle"></i> Bảo hành chính hãng</li>
                 </ul>
-                <a href="https://zalo.me/@Antigravity.ECommerce.Services.SSetting.GetViewModel().Hotline" target="_blank" class="tt-cta-btn w-100">CHAT ZALO NGAY</a>
+                <a href="https://zalo.me/@Antigravity.ECommerce.Services.SSetting.GetViewModel().Hotline" target="_blank" class="tt-cta-btn w-100">TƯ VẤN NGAY</a>
             </div>
         </div>
     </div>

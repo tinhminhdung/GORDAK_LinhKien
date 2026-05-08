@@ -1176,6 +1176,15 @@
     </image:image>
   </url>
   <url>
+    <loc>https://localhost:7057/video/detail/nhac-nhe-nhang-thu-gian-giup-giam-cang-thang-ngung-suy-nghi-qua-muc-va-ho-tro-phuc-hoi</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://img.youtube.com/vi/bjZ5kIBnlZU/maxresdefault.jpg</image:loc>
+      <image:title>Nhạc nhẹ nhàng, thư giãn giúp giảm căng thẳng, ngừng suy nghĩ quá mức và hỗ trợ phục hồi.</image:title>
+    </image:image>
+  </url>
+  <url>
     <loc>https://localhost:7057/video/detail/review-dong-ho-van-nang</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>

@@ -21,6 +21,10 @@ namespace Antigravity.ECommerce.Controllers
             var categories = SCategory.Search(null, null, 1, "SortOrder", "ASC", 1, 100, 3);
             ViewBag.Categories = categories;
             
+            // Tổng số video để hiển thị cạnh "Tất cả"
+            var allActive = SVideo.GetAll().Where(x => x.Status == 1).ToList();
+            ViewBag.TotalVideoCount = allActive.Count;
+            
             // Nếu có tham số urlCategory, tìm danh mục tương ứng
             if (!string.IsNullOrEmpty(urlCategory))
             {
@@ -40,14 +44,14 @@ namespace Antigravity.ECommerce.Controllers
                 ViewData["Title"] = "Video - Clip nổi bật";
             }
 
-            var allVideosList = SVideo.GetAll().Where(x => x.Status == 1).ToList();
+            var allVideosList = allActive;
             if (categoryId.HasValue)
             {
                 var allCatIds = SCategory.GetDescendantIds(categoryId.Value);
                 allVideosList = allVideosList.Where(x => allCatIds.Contains(x.CategoryId)).ToList();
             }
 
-            var sortedVideos = allVideosList.OrderByDescending(x => x.CreatedAt).ToList();
+            var sortedVideos = allVideosList.OrderByDescending(x => x.SortOrder).ThenByDescending(x => x.CreatedAt).ToList();
             
             // Tách video đầu tiên (luôn hiện trên cùng) và phân trang phần còn lại
             Video? featuredVideo = sortedVideos.FirstOrDefault();
@@ -59,8 +63,8 @@ namespace Antigravity.ECommerce.Controllers
             ViewBag.PageSize = pageSize;
             ViewBag.TotalCount = totalCount;
             
-            // Bổ sung dữ liệu cho Sidebar
-            ViewBag.HotVideos = sortedVideos.Take(5).ToList();
+            // Video nổi bật cho Sidebar - chỉ lấy video có IsHot = true
+            ViewBag.HotVideos = allActive.Where(x => x.IsHot).OrderByDescending(x => x.SortOrder).ThenByDescending(x => x.CreatedAt).Take(5).ToList();
             
             // Phân trang chỉ áp dụng cho phần video nhỏ bên dưới
             var paginatedData = remainingVideos.Skip((page - 1) * pageSize).Take(pageSize).ToList();
@@ -83,8 +87,11 @@ namespace Antigravity.ECommerce.Controllers
                 .Where(v => v.VideoId != video.VideoId).ToList();
 
             // Bổ sung dữ liệu cho Sidebar
-            ViewBag.Categories = SCategory.Search(null, null, 1, "SortOrder", "ASC", 1, 100, 3);
-            ViewBag.HotVideos = SVideo.GetAll().Where(x => x.Status == 1).OrderByDescending(x => x.CreatedAt).Take(5).ToList();
+            var categories = SCategory.Search(null, null, 1, "SortOrder", "ASC", 1, 100, 3);
+            ViewBag.Categories = categories;
+            var allActive = SVideo.GetAll().Where(x => x.Status == 1).ToList();
+            ViewBag.TotalVideoCount = allActive.Count;
+            ViewBag.HotVideos = allActive.Where(x => x.IsHot).OrderByDescending(x => x.SortOrder).ThenByDescending(x => x.CreatedAt).Take(5).ToList();
 
             // Cấu hình thẻ meta SEO
             ViewData["Title"] = !string.IsNullOrEmpty(video.SeoTitle) ? video.SeoTitle : video.Title;
