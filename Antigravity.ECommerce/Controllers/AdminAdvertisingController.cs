@@ -251,6 +251,21 @@ namespace Antigravity.ECommerce.Controllers
                     });
                     break;
 
+                case "Sidebar_CTA":
+                    SAdvertising.Insert(new Advertising
+                    {
+                        Title = "CẦN TƯ VẤN MUA HÀNG?",
+                        Description = "<ul><li>Tư vấn chọn sản phẩm phù hợp</li><li>Báo giá nhanh chóng</li><li>Hỗ trợ kỹ thuật 24/7</li><li>Chính sách bảo hành uy tín</li></ul>",
+                        Image = "/assets/images/tuvanvien.png",
+                        Link = "https://zalo.me/", // To be replaced by generic logic in view
+                        VideoUrl = "TƯ VẤN NGAY", // Button text
+                        Position = "Sidebar_CTA",
+                        SortOrder = 1,
+                        Status = 1,
+                        CreatedBy = createdBy
+                    });
+                    break;
+
                 case "Contact_Connect":
                     var connectDefaults = new List<Advertising>
                     {

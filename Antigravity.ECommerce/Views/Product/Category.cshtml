@@ -132,29 +132,36 @@
   </div>
 
   <!-- Pagination -->
-  @if (ViewBag.PageCount > 1)
-  {
+  @{
       int pIndex = ViewBag.PageIndex ?? 1;
-      int pCount = ViewBag.PageCount;
+      int pCount = ViewBag.PageCount ?? 1;
       string qParams = $"&q={ViewBag.Keyword}&priceMin={Context.Request.Query["priceMin"]}&priceMax={Context.Request.Query["priceMax"]}&sort={Context.Request.Query["sort"]}";
-
-      <div class="vd-pagination mt-4 mb-5">
-          @if (pIndex > 1)
-          {
-              <a class="vd-page-btn" href="?page=@(pIndex - 1)@qParams"><i class="fa-solid fa-chevron-left" style="font-size:11px;"></i></a>
-          }
-
-          @for (int i = 1; i <= pCount; i++)
-          {
-              <a class="vd-page-btn @(i == pIndex ? "active" : "")" href="?page=@(i)@qParams">@i</a>
-          }
-
-          @if (pIndex < pCount)
-          {
-              <a class="vd-page-btn" href="?page=@(pIndex + 1)@qParams"><i class="fa-solid fa-chevron-right" style="font-size:11px;"></i></a>
-          }
-      </div>
   }
+
+  <div class="vd-pagination mt-4 mb-5">
+      @if (pIndex > 1)
+      {
+          <a class="vd-page-btn" href="?page=@(pIndex - 1)@qParams"><i class="fa-solid fa-chevron-left" style="font-size:11px;"></i></a>
+      }
+      else
+      {
+          <a class="vd-page-btn disabled" href="javascript:void(0);"><i class="fa-solid fa-chevron-left" style="font-size:11px;"></i></a>
+      }
+
+      @for (int i = 1; i <= Math.Max(1, pCount); i++)
+      {
+          <a class="vd-page-btn @(i == pIndex ? "active" : "")" href="?page=@(i)@qParams">@i</a>
+      }
+
+      @if (pIndex < pCount)
+      {
+          <a class="vd-page-btn" href="?page=@(pIndex + 1)@qParams"><i class="fa-solid fa-chevron-right" style="font-size:11px;"></i></a>
+      }
+      else
+      {
+          <a class="vd-page-btn disabled" href="javascript:void(0);"><i class="fa-solid fa-chevron-right" style="font-size:11px;"></i></a>
+      }
+  </div>
 </div>
 
 <!-- ======== SẢN PHẨM BÁN CHẠY ======== -->

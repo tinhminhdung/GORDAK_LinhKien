@@ -104,31 +104,32 @@
                 </div>
                 
                 <!-- Phân trang / Nút Xem tất cả -->
-                @if (ViewBag.TotalPages > 1)
-                {
-                    if (ViewBag.CurrentPage == 1 && string.IsNullOrEmpty(ViewBag.Keyword))
+
+                
+                <div class="vd-pagination mt-4 mb-5">
+                    @if (ViewBag.CurrentPage > 1)
                     {
-                        <div class="text-center mt-4 mb-5">
-                            <a href="?page=2" class="btn btn-outline-primary px-5 py-2 rounded-pill fw-bold">Xem tất cả tin tức <i class="fa-solid fa-arrow-right ms-2"></i></a>
-                        </div>
+                        <a class="vd-page-btn" href="?page=@(ViewBag.CurrentPage - 1)&kw=@ViewBag.Keyword"><i class="fa-solid fa-chevron-left" style="font-size:11px;"></i></a>
                     }
+                    else
                     {
-                        <div class="vd-pagination mt-4 mb-5">
-                            @if (ViewBag.CurrentPage > 1)
-                            {
-                                <a class="vd-page-btn" href="?page=@(ViewBag.CurrentPage - 1)&kw=@ViewBag.Keyword"><i class="fa-solid fa-chevron-left" style="font-size:11px;"></i></a>
-                            }
-                            @for (int i = 1; i <= ViewBag.TotalPages; i++)
-                            {
-                                <a class="vd-page-btn @(i == ViewBag.CurrentPage ? "active" : "")" href="?page=@i&kw=@ViewBag.Keyword">@i</a>
-                            }
-                            @if (ViewBag.CurrentPage < ViewBag.TotalPages)
-                            {
-                                <a class="vd-page-btn" href="?page=@(ViewBag.CurrentPage + 1)&kw=@ViewBag.Keyword"><i class="fa-solid fa-chevron-right" style="font-size:11px;"></i></a>
-                            }
-                        </div>
+                        <a class="vd-page-btn disabled" href="javascript:void(0);"><i class="fa-solid fa-chevron-left" style="font-size:11px;"></i></a>
                     }
-                }
+                    
+                    @for (int i = 1; i <= Math.Max(1, (int)ViewBag.TotalPages); i++)
+                    {
+                        <a class="vd-page-btn @(i == ViewBag.CurrentPage ? "active" : "")" href="?page=@i&kw=@ViewBag.Keyword">@i</a>
+                    }
+                    
+                    @if (ViewBag.CurrentPage < ViewBag.TotalPages)
+                    {
+                        <a class="vd-page-btn" href="?page=@(ViewBag.CurrentPage + 1)&kw=@ViewBag.Keyword"><i class="fa-solid fa-chevron-right" style="font-size:11px;"></i></a>
+                    }
+                    else
+                    {
+                        <a class="vd-page-btn disabled" href="javascript:void(0);"><i class="fa-solid fa-chevron-right" style="font-size:11px;"></i></a>
+                    }
+                </div>
             } else {
                 <div class="text-center py-5">
                     <i class="fa-regular fa-newspaper fa-3x text-muted mb-3"></i>
@@ -180,17 +181,7 @@
             }
 
             <!-- CTA Box -->
-            <div class="tt-cta-box text-center">
-                <img src="/assets/images/tuvanvien.png" alt="Tư vấn viên" class="img-fluid rounded-circle mb-3" style="width: 100px; height: 100px; object-fit: cover; border: 3px solid #fff;">
-                <h4 class="text-start">CẦN TƯ VẤN MUA HÀNG?</h4>
-                <ul class="list-unstyled text-start">
-                    <li><i class="fa-solid fa-check-circle"></i> Tư vấn chọn sản phẩm phù hợp</li>
-                    <li><i class="fa-solid fa-check-circle"></i> Báo giá nhanh chóng</li>
-                    <li><i class="fa-solid fa-check-circle"></i> Hỗ trợ kỹ thuật 24/7</li>
-                    <li><i class="fa-solid fa-check-circle"></i> Chính sách bảo hành uy tín</li>
-                </ul>
-                <a href="https://zalo.me/@Antigravity.ECommerce.Services.SSetting.GetViewModel().Hotline" target="_blank" class="tt-cta-btn w-100">TƯ VẤN NGAY</a>
-            </div>
+            <partial name="_SidebarCTA" />
         </div>
     </div>
 </main>

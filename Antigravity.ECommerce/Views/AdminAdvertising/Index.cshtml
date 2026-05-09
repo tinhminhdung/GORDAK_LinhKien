@@ -75,6 +75,8 @@
                                 <option disabled>── Trang Liên hệ ──</option>
                                 <option value="Contact_Connect" selected="@(position == "Contact_Connect")">Kết nối với Gordak</option>
                                 <option value="Contact_CTA" selected="@(position == "Contact_CTA")">Cần tư vấn thêm (Banner CTA)</option>
+                                <option disabled>── Sidebar Chung ──</option>
+                                <option value="Sidebar_CTA" selected="@(position == "Sidebar_CTA")">Cột bên - Banner tư vấn (TT, SP, FAQ...)</option>
                             </select>
                         </div>
                         <div class="col-xxl-2 col-sm-4">
@@ -556,15 +558,27 @@
                             <small class="text-muted">3 mục: Tư vấn (circle-check), Hỗ trợ (shield), Đồng hành (handshake)</small>
                         </div>
                     </button>
-                    <button type="button" class="btn btn-outline-warning text-start p-3 rounded-3 d-flex align-items-center" onclick="restoreSection('Contact_CTA', 'Banner Cần tư vấn thêm')">
+                    <button type="button" class="btn btn-outline-warning text-start p-3 rounded-3 d-flex align-items-center mt-3" onclick="restoreSection('Contact_CTA', 'Banner Cần tư vấn thêm')">
                         <div class="bg-warning bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center flex-shrink-0" style="width:40px;height:40px;">
-                            <i class="fa-solid fa-bullhorn text-warning"></i>
+                            <i class="fa-solid fa-headset text-warning"></i>
                         </div>
                         <div class="ms-3">
-                            <div class="fw-bold">Banner Cần tư vấn thêm?</div>
-                            <small class="text-muted">Tiêu đề, subtitle, 3 features, ảnh trái (tư vấn viên), ảnh phải (sản phẩm)</small>
+                            <div class="fw-bold">Banner Cần tư vấn thêm</div>
+                            <small class="text-muted">Cột bên phải trang Liên hệ</small>
                         </div>
                     </button>
+                    <hr class="my-2">
+                    <p class="text-muted fw-bold small mb-1"><i class="ri-layout-right-line me-1"></i> CỘT BÊN (SIDEBAR)</p>
+                    <button type="button" class="btn btn-outline-primary text-start p-3 rounded-3 d-flex align-items-center" onclick="restoreSection('Sidebar_CTA', 'Banner tư vấn (Cột bên)')">
+                        <div class="bg-primary bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center flex-shrink-0" style="width:40px;height:40px;">
+                            <i class="fa-solid fa-bullhorn text-primary"></i>
+                        </div>
+                        <div class="ms-3">
+                            <div class="fw-bold">Banner tư vấn chung (Cột bên)</div>
+                            <small class="text-muted">Hiển thị ở cột phải/trái các trang Tin tức, Video, FAQ...</small>
+                        </div>
+                    </button>
+
                 </div>
             </div>
         </div>

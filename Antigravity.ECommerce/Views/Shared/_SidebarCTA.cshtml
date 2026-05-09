@@ -1,0 +1,25 @@
+@using Antigravity.ECommerce.Services
+@{
+    var ctaList = SAdvertising.GetByPosition("Sidebar_CTA");
+    var cta = ctaList != null && ctaList.Count > 0 ? ctaList[0] : null;
+}
+
+@if (cta != null && cta.Status == 1)
+{
+    <div class="tt-cta-box text-center">
+        @if (!string.IsNullOrEmpty(cta.Image))
+        {
+            <img src="@cta.Image" alt="@cta.Title" class="img-fluid rounded-circle mb-3" style="width: 100px; height: 100px; object-fit: cover; border: 3px solid #fff;">
+        }
+        <h4 class="text-start">@cta.Title</h4>
+        
+        @if (!string.IsNullOrEmpty(cta.Description))
+        {
+            @Html.Raw(cta.Description)
+        }
+
+        <a href="@(!string.IsNullOrEmpty(cta.Link) ? cta.Link : "https://zalo.me/" + SSetting.GetViewModel().Hotline)" target="@cta.Target" class="tt-cta-btn w-100">
+            @(!string.IsNullOrEmpty(cta.VideoUrl) ? cta.VideoUrl : "TƯ VẤN NGAY")
+        </a>
+    </div>
+}

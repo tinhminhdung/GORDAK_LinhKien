@@ -99,43 +99,40 @@
                 </div>
 
                 <!-- Phan trang -->
-                @if (totalPages > 1)
-                {
-                    <div class="vd-pagination">
-                        @if (currentPage > 1) {
-                            <a href="?page=@(currentPage - 1)" class="vd-page-btn"><i class="fa-solid fa-chevron-left"></i></a>
-                        } else {
-                            <span class="vd-page-btn disabled"><i class="fa-solid fa-chevron-left"></i></span>
-                        }
+                <div class="vd-pagination">
+                    @if (currentPage > 1) {
+                        <a href="?page=@(currentPage - 1)" class="vd-page-btn"><i class="fa-solid fa-chevron-left"></i></a>
+                    } else {
+                        <span class="vd-page-btn disabled"><i class="fa-solid fa-chevron-left"></i></span>
+                    }
 
-                        @{
-                            int maxVisible = 3;
-                            int startP = Math.Max(1, currentPage - 1);
-                            int endP = Math.Min(totalPages, startP + maxVisible - 1);
-                            if (endP - startP < maxVisible - 1) { startP = Math.Max(1, endP - maxVisible + 1); }
-                        }
+                    @{
+                        int maxVisible = 3;
+                        int startP = Math.Max(1, currentPage - 1);
+                        int endP = Math.Min(Math.Max(1, totalPages), startP + maxVisible - 1);
+                        if (endP - startP < maxVisible - 1) { startP = Math.Max(1, endP - maxVisible + 1); }
+                    }
 
-                        @if (startP > 1) {
-                            <a href="?page=1" class="vd-page-btn">1</a>
-                            if (startP > 2) { <span class="vd-page-dots">...</span> }
-                        }
+                    @if (startP > 1) {
+                        <a href="?page=1" class="vd-page-btn">1</a>
+                        if (startP > 2) { <span class="vd-page-dots">...</span> }
+                    }
 
-                        @for (int i = startP; i <= endP; i++) {
-                            <a href="?page=@i" class="vd-page-btn @(i == currentPage ? "active" : "")">@i</a>
-                        }
+                    @for (int i = startP; i <= endP; i++) {
+                        <a href="?page=@i" class="vd-page-btn @(i == currentPage ? "active" : "")">@i</a>
+                    }
 
-                        @if (endP < totalPages) {
-                            if (endP < totalPages - 1) { <span class="vd-page-dots">...</span> }
-                            <a href="?page=@totalPages" class="vd-page-btn">@totalPages</a>
-                        }
+                    @if (endP < totalPages) {
+                        if (endP < totalPages - 1) { <span class="vd-page-dots">...</span> }
+                        <a href="?page=@totalPages" class="vd-page-btn">@totalPages</a>
+                    }
 
-                        @if (currentPage < totalPages) {
-                            <a href="?page=@(currentPage + 1)" class="vd-page-btn"><i class="fa-solid fa-chevron-right"></i></a>
-                        } else {
-                            <span class="vd-page-btn disabled"><i class="fa-solid fa-chevron-right"></i></span>
-                        }
-                    </div>
-                }
+                    @if (currentPage < totalPages) {
+                        <a href="?page=@(currentPage + 1)" class="vd-page-btn"><i class="fa-solid fa-chevron-right"></i></a>
+                    } else {
+                        <span class="vd-page-btn disabled"><i class="fa-solid fa-chevron-right"></i></span>
+                    }
+                </div>
             } @* end if Model.Any *@
             
             @if(featuredVideo == null && (Model == null || !Model.Any())) {
@@ -191,17 +188,7 @@
             }
 
             <!-- CTA Box -->
-            <div class="tt-cta-box text-center">
-                <img src="/assets/images/tuvanvien.png" alt="Tư vấn viên" class="img-fluid rounded-circle mb-3" style="width: 100px; height: 100px; object-fit: cover; border: 3px solid #fff;">
-                <h4 class="text-start">CẦN TƯ VẤN CHỌN MÁY?</h4>
-                <ul class="list-unstyled text-start">
-                    <li><i class="fa-solid fa-check-circle"></i> Đội ngũ kỹ thuật sẵn sàng hỗ trợ</li>
-                    <li><i class="fa-solid fa-check-circle"></i> Tư vấn miễn phí</li>
-                    <li><i class="fa-solid fa-check-circle"></i> Hỗ trợ kỹ thuật 24/7</li>
-                    <li><i class="fa-solid fa-check-circle"></i> Bảo hành chính hãng</li>
-                </ul>
-                <a href="https://zalo.me/@Antigravity.ECommerce.Services.SSetting.GetViewModel().Hotline" target="_blank" class="tt-cta-btn w-100">TƯ VẤN NGAY</a>
-            </div>
+            <partial name="_SidebarCTA" />
         </div>
     </div>
 </main>

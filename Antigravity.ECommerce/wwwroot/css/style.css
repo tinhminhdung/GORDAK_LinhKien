@@ -3476,15 +3476,33 @@ img {
         margin-bottom: 12px;
     }
 
-    .tt-cta-box li {
-        font-size: 12px;
-        margin-bottom: 6px;
+    .tt-cta-box ul {
+        list-style: none;
+        padding-left: 0;
+        text-align: left;
     }
 
-        .tt-cta-box li i {
-            color: #fff;
-            margin-right: 6px;
-        }
+    .tt-cta-box li {
+        font-size: 13px;
+        margin-bottom: 8px;
+        position: relative;
+        padding-left: 20px;
+        text-align: left;
+    }
+
+    .tt-cta-box li::before {
+        content: "\f058";
+        font-family: "Font Awesome 6 Free";
+        font-weight: 900;
+        position: absolute;
+        left: 0;
+        top: 2px;
+        color: #fff;
+    }
+
+    .tt-cta-box li i {
+        display: none;
+    }
 
 .tt-cta-btn {
     display: inline-block;
@@ -4412,4 +4430,13 @@ img {
 .desktop-nav li > ul > li > a .nav-arr {
     float: right;
     margin-top: 5px;
+}
+
+/* Disabled Pagination Button */
+.vd-page-btn.disabled {
+    color: #999 !important;
+    background: #f8f9fa;
+    cursor: not-allowed;
+    border-color: #eee;
+    pointer-events: none;
 }

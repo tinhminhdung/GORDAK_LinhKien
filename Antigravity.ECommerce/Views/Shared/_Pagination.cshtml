@@ -7,45 +7,50 @@
     string jsFunction = dict.ContainsKey("JsFunction") ? dict["JsFunction"].ToString() : "changePage";
 }
 
-@if (totalPages > 1)
-{
-    <div class="vd-pagination mt-4 mb-2">
-        @if (pageIndex > 1)
+<div class="vd-pagination mt-4 mb-2">
+    @if (pageIndex > 1)
+    {
+        <a class="vd-page-btn" href="javascript:void(0);" onclick="@(jsFunction + "(" + (pageIndex - 1) + ")")"><i class="fa-solid fa-chevron-left" style="font-size:11px;"></i></a>
+    }
+    else
+    {
+        <a class="vd-page-btn disabled" href="javascript:void(0);"><i class="fa-solid fa-chevron-left" style="font-size:11px;"></i></a>
+    }
+
+    @{
+        int range = 2; // Number of pages around current page
+        
+        // Always show 1
+        <a class="vd-page-btn @(pageIndex == 1 ? "active" : "")" href="javascript:void(0);" onclick="@(jsFunction + "(1)")">1</a>
+
+        if (pageIndex - range > 2)
         {
-            <a class="vd-page-btn" href="javascript:void(0);" onclick="@(jsFunction + "(" + (pageIndex - 1) + ")")"><i class="fa-solid fa-chevron-left" style="font-size:11px;"></i></a>
+            <span class="vd-page-dots">...</span>
         }
 
-        @{
-            int range = 2; // Number of pages around current page
-            
-            // Always show 1
-            <a class="vd-page-btn @(pageIndex == 1 ? "active" : "")" href="javascript:void(0);" onclick="@(jsFunction + "(1)")">1</a>
-
-            if (pageIndex - range > 2)
-            {
-                <span class="vd-page-dots">...</span>
-            }
-
-            for (int i = Math.Max(2, pageIndex - range); i <= Math.Min(totalPages - 1, pageIndex + range); i++)
-            {
-                <a class="vd-page-btn @(i == pageIndex ? "active" : "")" href="javascript:void(0);" onclick="@(jsFunction + "(" + i + ")")">@i</a>
-            }
-
-            if (pageIndex + range < totalPages - 1)
-            {
-                <span class="vd-page-dots">...</span>
-            }
-
-            // Always show last if > 1
-            if (totalPages > 1)
-            {
-                <a class="vd-page-btn @(pageIndex == totalPages ? "active" : "")" href="javascript:void(0);" onclick="@(jsFunction + "(" + totalPages + ")")">@totalPages</a>
-            }
-        }
-
-        @if (pageIndex < totalPages)
+        for (int i = Math.Max(2, pageIndex - range); i <= Math.Min(totalPages - 1, pageIndex + range); i++)
         {
-            <a class="vd-page-btn" href="javascript:void(0);" onclick="@(jsFunction + "(" + (pageIndex + 1) + ")")"><i class="fa-solid fa-chevron-right" style="font-size:11px;"></i></a>
+            <a class="vd-page-btn @(i == pageIndex ? "active" : "")" href="javascript:void(0);" onclick="@(jsFunction + "(" + i + ")")">@i</a>
         }
-    </div>
-}
+
+        if (pageIndex + range < totalPages - 1)
+        {
+            <span class="vd-page-dots">...</span>
+        }
+
+        // Always show last if > 1
+        if (totalPages > 1)
+        {
+            <a class="vd-page-btn @(pageIndex == totalPages ? "active" : "")" href="javascript:void(0);" onclick="@(jsFunction + "(" + totalPages + ")")">@totalPages</a>
+        }
+    }
+
+    @if (pageIndex < totalPages)
+    {
+        <a class="vd-page-btn" href="javascript:void(0);" onclick="@(jsFunction + "(" + (pageIndex + 1) + ")")"><i class="fa-solid fa-chevron-right" style="font-size:11px;"></i></a>
+    }
+    else
+    {
+        <a class="vd-page-btn disabled" href="javascript:void(0);"><i class="fa-solid fa-chevron-right" style="font-size:11px;"></i></a>
+    }
+</div>
