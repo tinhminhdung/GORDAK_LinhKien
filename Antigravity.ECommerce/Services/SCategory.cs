@@ -307,6 +307,7 @@ namespace Antigravity.ECommerce.Services
             SCache.Remove("Category_Hierarchical");
             SCache.Remove("Menu_Tree_Header");
             SCache.Remove("Menu_Tree_Footer");
+            SCache.Remove("Menu_Tree_FooterSupport");
             
             // Xóa cache cấu hình trang chủ
             SCache.Remove("HomeCategorySettings_All");

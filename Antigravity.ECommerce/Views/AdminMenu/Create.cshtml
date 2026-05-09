@@ -272,11 +272,21 @@
 							</div>
 							<div class="mb-3">
 								<label class="form-label">Vị trí Menu</label>
-								<select class="selectpicker w-100" multiple asp-for="MenuPosition">
-									<option value="Header" selected>Menu trên (Top)</option>
-									<option value="Footer">Menu dưới (Bottom)</option>
-									<option value="Sidebar">Cột trái (Sidebar)</option>
-								</select>
+								<input type="hidden" name="MenuPosition" id="MenuPositionHidden" value="Header" />
+								<div class="d-flex flex-column gap-2 mt-1" id="menu-position-group">
+									<div class="form-check">
+										<input class="form-check-input menu-pos-cb" type="checkbox" id="pos_header" value="Header" checked>
+										<label class="form-check-label" for="pos_header">Menu trên (Top)</label>
+									</div>
+									<div class="form-check">
+										<input class="form-check-input menu-pos-cb" type="checkbox" id="pos_footer" value="Footer">
+										<label class="form-check-label" for="pos_footer">Menu dưới (Bottom / Footer)</label>
+									</div>
+									<div class="form-check">
+										<input class="form-check-input menu-pos-cb" type="checkbox" id="pos_footersupport" value="FooterSupport">
+										<label class="form-check-label" for="pos_footersupport">Hỗ trợ KH (Footer cột 3)</label>
+									</div>
+								</div>
 							</div>
 							<div class="mb-3">
 								<label class="form-label">Thứ tự sắp xếp</label>
@@ -311,6 +321,15 @@
 					filebrowserImageUploadUrl: '/FileManager/UploadCK'
 				});
 			}
+
+			// Sync checkboxes to hidden field
+			function syncMenuPosition() {
+				var vals = [];
+				$('.menu-pos-cb:checked').each(function() { vals.push($(this).val()); });
+				$('#MenuPositionHidden').val(vals.join(','));
+			}
+			$('.menu-pos-cb').on('change', syncMenuPosition);
+			syncMenuPosition();
 
 			toggleFormAreas();
 			updateGooglePreview();

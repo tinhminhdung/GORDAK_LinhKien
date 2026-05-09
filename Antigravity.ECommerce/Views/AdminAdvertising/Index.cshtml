@@ -74,6 +74,7 @@
                                 <option value="About_Cert" selected="@(position == "About_Cert")">Giới thiệu - Chứng nhận</option>
                                 <option disabled>── Trang Liên hệ ──</option>
                                 <option value="Contact_Connect" selected="@(position == "Contact_Connect")">Kết nối với Gordak</option>
+                                <option value="Contact_CTA" selected="@(position == "Contact_CTA")">Cần tư vấn thêm (Banner CTA)</option>
                             </select>
                         </div>
                         <div class="col-xxl-2 col-sm-4">
@@ -393,7 +394,7 @@
                         data: { section: section },
                         success: function (res) {
                             if (res.success) {
-                                Swal.fire({ icon: 'success', title: 'Thành công!', text: 'Đã khôi phục "' + name + '" về mẫu gốc.', timer: 1500, showConfirmButton: false }).then(() => { location.reload(); });
+                                Swal.fire({ icon: 'success', title: 'Thành công!', text: 'Đã khôi phục "' + name + '" về mẫu gốc.', timer: 1500, showConfirmButton: false }).then(() => { window.location.href = '/AdminAdvertising?position=' + encodeURIComponent(section); });
                             } else {
                                 Swal.fire('Lỗi', res.message || 'Khôi phục thất bại', 'error');
                             }
@@ -553,6 +554,15 @@
                         <div class="ms-3">
                             <div class="fw-bold">Kết nối với Gordak</div>
                             <small class="text-muted">3 mục: Tư vấn (circle-check), Hỗ trợ (shield), Đồng hành (handshake)</small>
+                        </div>
+                    </button>
+                    <button type="button" class="btn btn-outline-warning text-start p-3 rounded-3 d-flex align-items-center" onclick="restoreSection('Contact_CTA', 'Banner Cần tư vấn thêm')">
+                        <div class="bg-warning bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center flex-shrink-0" style="width:40px;height:40px;">
+                            <i class="fa-solid fa-bullhorn text-warning"></i>
+                        </div>
+                        <div class="ms-3">
+                            <div class="fw-bold">Banner Cần tư vấn thêm?</div>
+                            <small class="text-muted">Tiêu đề, subtitle, 3 features, ảnh trái (tư vấn viên), ảnh phải (sản phẩm)</small>
                         </div>
                     </button>
                 </div>

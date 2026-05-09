@@ -181,28 +181,61 @@
     </div>
 
     <!-- ======== CTA: CẦN TƯ VẤN THÊM? ======== -->
+    @{
+        var contactCta = ViewBag.ContactCTA as List<Antigravity.ECommerce.Models.Advertising>;
+        // Lấy từng vị trí trong CTA: item[0]=Nội dung chính, item[1]=Ảnh trái, item[2]=Ảnh phải
+        var ctaMain    = contactCta?.FirstOrDefault(x => x.SortOrder == 1);
+        var ctaLeft    = contactCta?.FirstOrDefault(x => x.SortOrder == 2);
+        var ctaRight   = contactCta?.FirstOrDefault(x => x.SortOrder == 3);
+
+        string ctaTitle    = ctaMain?.Title       ?? "CẦN TƯ VẤN THÊM?";
+        string ctaSubtitle = ctaMain?.Description ?? "Đội ngũ chuyên viên của Gordak luôn sẵn sàng hỗ trợ bạn 24/7";
+        string ctaLeftImg  = ctaLeft?.Image       ?? "/assets/images/tuvanvien.png";
+        string ctaRightImg = ctaRight?.Image      ?? "/assets/images/cantuvanthem.png";
+
+        // Badge nút Zalo (dùng VideoUrl của ctaMain để lưu text badge)
+        string ctaBadge    = ctaMain?.VideoUrl    ?? "Zalo";
+        // Link button Zalo (dùng Link của ctaLeft)
+        string ctaZaloHref = ctaLeft?.Link        ?? $"https://zalo.me/{Model.Zalo}";
+        // Link button Gọi ngay (dùng Link của ctaRight)
+        string ctaCallHref = ctaRight?.Link       ?? $"tel:{Model.Hotline}";
+        string ctaCallText = ctaRight?.Title      ?? $"GỌI NGAY: {Model.Hotline}";
+
+        // Features: từ ctaLeft Description, ctaRight Description và ctaMain Link (3 mục)
+        var features = new List<string>();
+        if (!string.IsNullOrEmpty(ctaLeft?.Description))  features.Add(ctaLeft.Description);
+        if (!string.IsNullOrEmpty(ctaRight?.Description)) features.Add(ctaRight.Description);
+        if (!string.IsNullOrEmpty(ctaMain?.Link))         features.Add(ctaMain.Link);
+        if (features.Count == 0)
+        {
+            features.Add("Tư vấn sản phẩm phù hợp");
+            features.Add("Hỗ trợ kỹ thuật");
+            features.Add("Báo giá nhanh chóng");
+        }
+    }
     <div class="lh-cta-section">
         <div class="lh-cta-inner">
             <!-- Ảnh tư vấn viên bên trái -->
             <div class="lh-cta-person">
-                <img src="/assets/images/tuvanvien.png" alt="Tư vấn viên Gordak" />
+                <img src="@ctaLeftImg" alt="Tư vấn viên Gordak" />
             </div>
 
             <!-- Nội dung giữa -->
             <div class="lh-cta-body">
-                <h2 class="lh-cta-title">CẦN TƯ VẤN THÊM?</h2>
-                <p class="lh-cta-subtitle">Đội ngũ chuyên viên của Gordak luôn sẵn sàng hỗ trợ bạn 24/7</p>
+                <h2 class="lh-cta-title">@ctaTitle</h2>
+                <p class="lh-cta-subtitle">@Html.Raw(ctaSubtitle)</p>
                 <div class="lh-cta-features">
-                    <span class="lh-cta-feature"><i class="fa-solid fa-circle-check"></i> Tư vấn sản phẩm phù hợp</span>
-                    <span class="lh-cta-feature"><i class="fa-solid fa-circle-check"></i> Hỗ trợ kỹ thuật</span>
-                    <span class="lh-cta-feature"><i class="fa-solid fa-circle-check"></i> Báo giá nhanh chóng</span>
+                    @foreach (var feat in features)
+                    {
+                        <span class="lh-cta-feature"><i class="fa-solid fa-circle-check"></i> @feat</span>
+                    }
                 </div>
                 <div class="lh-cta-btns">
-                    <a href="tel:@Model.Hotline" class="lh-cta-btn-call">
-                        <i class="fa-solid fa-phone"></i> GỌI NGAY: @Model.Hotline
+                    <a href="@ctaCallHref" class="lh-cta-btn-call">
+                        <i class="fa-solid fa-phone"></i> @ctaCallText
                     </a>
-                    <a href="https://zalo.me/@Model.Zalo" target="_blank" class="lh-cta-btn-zalo">
-                        <span class="zalo-badge">Zalo</span>
+                    <a href="@ctaZaloHref" target="_blank" class="lh-cta-btn-zalo">
+                        <span class="zalo-badge">@ctaBadge</span>
                         CHAT ZALO NGAY
                     </a>
                 </div>
@@ -210,7 +243,7 @@
 
             <!-- Ảnh sản phẩm bên phải -->
             <div class="lh-cta-product">
-                <img src="/assets/images/cantuvanthem.png" alt="Sản phẩm Gordak" />
+                <img src="@ctaRightImg" alt="Sản phẩm Gordak" />
             </div>
         </div>
     </div>

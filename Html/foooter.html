@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gordak Footer</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Thêm Font Awesome để dùng icon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+	<style>
+	
+	* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background-color: #f4f4f4;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 15px;
+}
+
+.flex-between {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* --- Commitment Bar --- */
+.commitment-bar {
+    background-color: #001a4d; /* Xanh đậm */
+    color: white;
+    padding: 15px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.commitment-text {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.commitment-text i {
+    font-size: 30px;
+    color: #fff;
+}
+
+.commitment-text strong {
+    font-size: 14px;
+    letter-spacing: 0.5px;
+}
+
+.commitment-text p {
+    font-size: 12px;
+    opacity: 0.8;
+}
+
+.commitment-actions {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.btn-quote {
+    background: white;
+    color: #001a4d;
+    padding: 8px 20px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 13px;
+}
+
+.btn-call {
+    border: 1px solid white;
+    color: white;
+    padding: 8px 15px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 13px;
+}
+
+.btn-zalo {
+    background: white;
+    color: #001a4d;
+    padding: 5px 15px;
+    border-radius: 20px;
+    text-decoration: none;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.btn-zalo img {
+    width: 20px;
+}
+
+/* --- Main Footer --- */
+.main-footer {
+    background-color: #001a4d;
+    color: white;
+    padding: 40px 0;
+}
+
+.footer-grid {
+    display: grid;
+    grid-template-columns: 1.2fr 0.8fr 0.8fr 1.2fr;
+    gap: 30px;
+}
+
+.footer-col h4 {
+    font-size: 14px;
+    margin-bottom: 20px;
+    font-weight: bold;
+}
+
+.footer-col p {
+    font-size: 13px;
+    line-height: 1.6;
+    margin: 15px 0;
+}
+
+.footer-col ul {
+    list-style: none;
+}
+
+.footer-col ul li {
+    margin-bottom: 10px;
+}
+
+.footer-col ul li a {
+    color: #ccc;
+    text-decoration: none;
+    font-size: 13px;
+    transition: 0.3s;
+}
+
+.footer-col ul li a:hover {
+    color: white;
+}
+
+/* Social Icons */
+.social-icons {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.social-icons a {
+    width: 30px;
+    height: 30px;
+    background: #3b5998; /* Màu FB mẫu */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 4px;
+    color: white;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.social-icons a:nth-child(2) { background: #ff0000; } /* Youtube */
+.social-icons a:nth-child(3) { background: #0084ff; } /* Zalo/Chat */
+
+/* Contact Info Icons */
+.contact-info li {
+    display: flex;
+    gap: 10px;
+    font-size: 13px;
+    color: #ccc;
+    line-height: 1.4;
+}
+
+.contact-info i {
+    margin-top: 3px;
+    font-size: 14px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .footer-grid {
+        grid-template-columns: 1fr;
+    }
+    .flex-between {
+        flex-direction: column;
+        gap: 20px;
+        text-align: center;
+    }
+    .commitment-actions {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+}
+
+</style>
+</head>
+<body>
+
+<footer class="footer-container">
+    <!-- Thanh Cam Kết (Top Bar) -->
+    <div class="commitment-bar">
+        <div class="container flex-between">
+            <div class="commitment-text">
+                <i class="fas fa-shield-alt"></i>
+                <div>
+                    <strong>CAM KẾT MANG ĐẾN SẢN PHẨM CHÍNH HÃNG, CHẤT LƯỢNG</strong>
+                    <p>Đồng hành cùng bạn trong mọi công việc</p>
+                </div>
+            </div>
+            <div class="commitment-actions">
+                <a href="#" class="btn-quote">NHẬN BÁO GIÁ NGAY</a>
+                <a href="tel:0963344888" class="btn-call"><i class="fas fa-phone-alt"></i> GỌI TƯ VẤN: 0963 344 888</a>
+                <a href="#" class="btn-zalo"><img src="https://upload.wikimedia.org/wikipedia/commons/9/91/Icon_Zalo.svg" alt="zalo"> Chat Zalo</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Nội dung chính Footer -->
+    <div class="main-footer">
+        <div class="container footer-grid">
+            <!-- Cột 1: Logo & Social -->
+            <div class="footer-col">
+                <div class="logo">
+                    <img src="https://via.placeholder.com/150x40?text=GORDAK" alt="Gordak Logo"> 
+                    <!-- Thay bằng link ảnh logo thật của bạn -->
+                </div>
+                <p>Nhà phân phối chính thức các sản phẩm của Gordak tại Việt Nam.</p>
+                <div class="social-icons">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-youtube"></i></a>
+                    <a href="#"><i class="fas fa-comment"></i></a>
+                </div>
+            </div>
+
+            <!-- Cột 2: Danh mục -->
+            <div class="footer-col">
+                <h4>DANH MỤC SẢN PHẨM</h4>
+                <ul>
+                    <li><a href="#">Trạm hàn</a></li>
+                    <li><a href="#">Trạm khò</a></li>
+                    <li><a href="#">Hàn khò kết hợp</a></li>
+                    <li><a href="#">Máy hấp chip</a></li>
+                    <li><a href="#">Phụ kiện</a></li>
+                </ul>
+            </div>
+
+            <!-- Cột 3: Hỗ trợ -->
+            <div class="footer-col">
+                <h4>HỖ TRỢ KHÁCH HÀNG</h4>
+                <ul>
+                    <li><a href="#">Chính sách bảo hành</a></li>
+                    <li><a href="#">Chính sách giao hàng</a></li>
+                    <li><a href="#">Hướng dẫn thanh toán</a></li>
+                    <li><a href="#">Đổi trả - Hoàn tiền</a></li>
+                </ul>
+            </div>
+
+            <!-- Cột 4: Thông tin liên hệ -->
+            <div class="footer-col">
+                <h4>CÔNG TY TNHH NHẬT MINH ESC</h4>
+                <ul class="contact-info">
+                    <li><i class="fas fa-map-marker-alt"></i> Số 50, ngõ 127/2, Đường Mỹ Đình, P. Mỹ Đình 2, Q. Nam Từ Liêm, Hà Nội</li>
+                    <li><i class="fas fa-phone-alt"></i> 0963 344 888</li>
+                    <li><i class="fas fa-envelope"></i> info@nhatminhecsc.com</li>
+                    <li><i class="fas fa-globe"></i> www.gordak.vn</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</footer>
+
+</body>
+</html>

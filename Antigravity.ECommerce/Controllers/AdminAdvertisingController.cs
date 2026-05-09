@@ -261,6 +261,46 @@ namespace Antigravity.ECommerce.Controllers
                     foreach (var d in connectDefaults) { d.CreatedBy = createdBy; SAdvertising.Insert(d); }
                     break;
 
+                case "Contact_CTA":
+                    var ctaDefaults = new List<Advertising>
+                    {
+                        // SortOrder=1: Nội dung chính (Tiêu đề, mô tả subtitle, 3 features qua Link, badge Zalo qua VideoUrl)
+                        new Advertising
+                        {
+                            Title = "CẦN TƯ VẤN THÊM?",
+                            Description = "Đội ngũ chuyên viên của Gordak luôn sẵn sàng hỗ trợ bạn 24/7",
+                            VideoUrl = "Zalo",
+                            Link = "Tư vấn sản phẩm phù hợp",
+                            Position = "Contact_CTA",
+                            SortOrder = 1,
+                            Status = 1
+                        },
+                        // SortOrder=2: Ảnh trái (tư vấn viên) + Feature 1 + 2 qua Description + Link Zalo qua Link
+                        new Advertising
+                        {
+                            Title = "Ảnh tư vấn viên",
+                            Description = "Hỗ trợ kỹ thuật",
+                            Image = "/assets/images/tuvanvien.png",
+                            Link = "",
+                            Position = "Contact_CTA",
+                            SortOrder = 2,
+                            Status = 1
+                        },
+                        // SortOrder=3: Ảnh phải (sản phẩm) + Feature 3 qua Description + số điện thoại qua Link
+                        new Advertising
+                        {
+                            Title = "GỌI NGAY",
+                            Description = "Báo giá nhanh chóng",
+                            Image = "/assets/images/cantuvanthem.png",
+                            Link = "",
+                            Position = "Contact_CTA",
+                            SortOrder = 3,
+                            Status = 1
+                        }
+                    };
+                    foreach (var d in ctaDefaults) { d.CreatedBy = createdBy; SAdvertising.Insert(d); }
+                    break;
+
                 default:
                     return Json(new { success = false, message = "Phần không hợp lệ" });
             }

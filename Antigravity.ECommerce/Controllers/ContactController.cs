@@ -20,8 +20,12 @@ namespace Antigravity.ECommerce.Controllers
             var contactConnect = Antigravity.ECommerce.Services.SCache.GetOrSet("Contact_Connect", () =>
                 Antigravity.ECommerce.Services.SAdvertising.GetByPosition("Contact_Connect"), 60);
 
+            var contactCta = Antigravity.ECommerce.Services.SCache.GetOrSet("Contact_CTA", () =>
+                Antigravity.ECommerce.Services.SAdvertising.GetByPosition("Contact_CTA"), 60);
+
             ViewBag.FAQs = faqs;
             ViewBag.ContactConnect = contactConnect;
+            ViewBag.ContactCTA = contactCta;
 
             return View(settings);
         }

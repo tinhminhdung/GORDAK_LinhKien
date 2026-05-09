@@ -100,6 +100,7 @@
                             <option value="About_Cert">Giới thiệu - Chứng nhận</option>
                             <option disabled>── Trang Liên hệ ──</option>
                             <option value="Contact_Connect">Liên hệ - Kết nối với Gordak</option>
+                            <option value="Contact_CTA">Liên hệ - Banner Cần tư vấn thêm</option>
                         </select>
                     </div>
 
@@ -293,6 +294,14 @@
                 videoUrl: { show: true, label: 'Icon FontAwesome <small class="text-muted">VD: fa-solid fa-user-tie</small>', col: 'col-md-6' },
                 description: { show: true, label: 'Mô tả ngắn <span class="text-danger">*</span>', rows: 3, useCK: true },
                 link: { show: false },
+                target: false, schedule: false
+            },
+            'Contact_CTA': {
+                title: 'Nội dung theo thứ tự (SortOrder=1: Tiêu đề+Subtitle | SortOrder=2: Ảnh trái+Feature | SortOrder=3: Ảnh phải+Feature) <span class="text-danger">*</span>',
+                image: { show: true, label: 'Ảnh banner (SortOrder 2=Ảnh trái tư vấn viên | SortOrder 3=Ảnh phải sản phẩm)', col: 'col-md-12' },
+                videoUrl: { show: true, label: 'Badge / Text phụ <small class="text-muted">(SortOrder 1: Badge nút Zalo, VD: Zalo)</small>', col: 'col-md-12' },
+                description: { show: true, label: 'Nội dung: (SortOrder 1=Subtitle | SortOrder 2=Feature 2 | SortOrder 3=Feature 3)', rows: 3, useCK: false },
+                link: { show: true, label: 'Liên kết: (SortOrder 1=Feature 1 | SortOrder 2=URL Zalo | SortOrder 3=tel:sốđiệnthoại)', placeholder: '' },
                 target: false, schedule: false
             },
             'Product_DealerCert': {
