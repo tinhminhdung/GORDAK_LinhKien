@@ -42,14 +42,9 @@
 
         <!-- Cột 1: Logo & Social (cố định từ cấu hình) -->
         <div class="footer-col">
-            <div class="footer-logo-wrap">
-                @if (!string.IsNullOrEmpty(settings.Logo)) {
-                    <img src="@settings.Logo" alt="@settings.SiteTitle" class="footer-logo-img">
-                } else {
-                    <span class="footer-logo-text">GORDAK</span>
-                }
+            <div class="footer-col-desc">
+                @Html.Raw(!string.IsNullOrEmpty(settings.FooterInfo) ? settings.FooterInfo : settings.SiteDescription)
             </div>
-            <p class="footer-col-desc">@Html.Raw(settings.FooterInfo ?? settings.SiteDescription)</p>
             <div class="footer-social">
                 @if (!string.IsNullOrEmpty(settings.Facebook)) {
                     <a href="@settings.Facebook" target="_blank" class="fsoc-fb"><i class="fab fa-facebook-f"></i></a>

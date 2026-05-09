@@ -11,8 +11,10 @@
 }
 
 <script type="application/ld+json">
-{ "@@context":"https://schema.org","@@type":"WebSite","name":"Gordak Việt Nam","url":"@(Context.Request.Scheme+"://"+Context.Request.Host)","potentialAction":{"@@type":"SearchAction","target":"@(Context.Request.Scheme+"://"+Context.Request.Host)/Product/Search?q={search_term_string}","query-input":"required name=search_term_string"}}
+{ "@@context":"https://schema.org","@@type":"WebSite","name":"@(Antigravity.ECommerce.Services.SSetting.GetValue("SiteTitle"))","url":"@(Context.Request.Scheme+"://"+Context.Request.Host)","potentialAction":{"@@type":"SearchAction","target":"@(Context.Request.Scheme+"://"+Context.Request.Host)/Product/Search?q={search_term_string}","query-input":"required name=search_term_string"}}
 </script>
+
+<h1 class="visually-hidden">@(Antigravity.ECommerce.Services.SSetting.GetValue("SiteTitle"))</h1>
 
 <!-- ======== HERO SLIDER ======== -->
 <section class="hero-section position-relative overflow-hidden">
@@ -26,6 +28,12 @@
                   <a href="@b.Link"><img src="@b.Image" class="banner-img" alt="@b.Title"></a>
               </div>
           }
+      }
+      else
+      {
+          <div class="hero-slide">
+              <img src="/assets/images/placeholder.png" class="banner-img" alt="Gordak Banner">
+          </div>
       }
   
     </div>
@@ -62,7 +70,7 @@
         <div class="col cat-col">
           <div class="cat-item text-center">
             <a href="/san-pham/@(hc.Slug).html" class="text-decoration-none text-dark d-block">
-                <img src="@(string.IsNullOrEmpty(hc.Image) ? "/assets/images/placeholder.png" : hc.Image)" class="cat-img" alt="@hc.Name">
+                <img src="@(string.IsNullOrEmpty(hc.Image) ? "/assets/images/placeholder.png" : hc.Image)" class="cat-img" alt="@hc.Name" loading="lazy">
                 <b>@hc.Name</b><small class="d-none d-lg-block">@totalCount sản phẩm</small>
             </a>
           </div>
@@ -73,13 +81,13 @@
 }
 
 <!-- ======== FEATURED PRODUCTS ======== -->
-@if (hotProducts != null && hotProducts.Any())
-{
 <section class="container section-products">
   <div class="d-flex justify-content-between align-items-center section-head">
     <h2 class="section-title">SẢN PHẨM NỔI BẬT</h2>
     <a href="/san-pham.html" class="view-all">Xem tất cả <i class="fa-solid fa-chevron-right"></i></a>
   </div>
+  @if (hotProducts != null && hotProducts.Any())
+  {
   <div class="row g-3">
     @foreach(var p in hotProducts)
     {
@@ -88,7 +96,7 @@
             @if(p.IsHot){<span class="badge-hot">HOT</span>}
             <span class="badge-heart" onclick="toggleWishlist(@p.ProductId)" style="cursor:pointer"><i class="fa-regular fa-heart"></i></span>
             <a href="/san-pham/detail/@(p.Slug).html" class="d-block text-center mb-2" style="height: 180px;">
-                <img src="@(string.IsNullOrEmpty(p.MainImage) ? "/assets/images/placeholder.png" : p.MainImage)" class="product-img h-100 w-100 object-fit-contain" alt="@p.Name">
+                <img src="@(string.IsNullOrEmpty(p.MainImage) ? "/assets/images/placeholder.png" : p.MainImage)" class="product-img h-100 w-100 object-fit-contain" alt="@p.Name" loading="lazy">
             </a>
             <h3 class="product-name"><a href="/san-pham/detail/@(p.Slug).html" class="text-decoration-none text-dark">@p.Name</a></h3>
             <p class="product-desc line-clamp-2" style="font-size:12px; color:#666;">@(string.IsNullOrEmpty(p.ShortDescription) ? p.Name : p.ShortDescription)</p>
@@ -105,8 +113,12 @@
         </div>
     }
   </div>
+  }
+  else
+  {
+      <p class="text-muted text-center py-4">Đang cập nhật sản phẩm nổi bật.</p>
+  }
 </section>
-}
 
 <!-- ======== WHY CHOOSE ======== -->
 @{
@@ -165,7 +177,7 @@
   <div class="row g-4 align-items-center brand-card">
     <div class="col-lg-5">
       <div class="brand-img-wrap">
-        <img src="@brandIntro?.Image" alt="@brandIntro?.Title" class="factory-img w-100">
+        <img src="@brandIntro?.Image" alt="@brandIntro?.Title" class="factory-img w-100" loading="lazy">
       </div>
     </div>
     <div class="col-lg-7">
@@ -227,10 +239,10 @@
       </div>
     </div>
     <!-- News -->
-    <div class="col-lg-5 d-none d-lg-block">
+    <div class="col-lg-5 mt-4 mt-lg-0">
       <div class="d-flex justify-content-between align-items-center section-head">
         <h2 class="section-title">TIN TỨC - HƯỚNG DẪN</h2>
-        <a href="/tin-tuc.html" class="view-all">Xem tất cả bài viết <i class="fa-solid fa-arrow-right"></i></a>
+        <a href="/tin-tuc.html" class="view-all">Xem tất cả <i class="fa-solid fa-arrow-right"></i></a>
       </div>
       <div class="d-flex flex-column gap-3">
           @if(news.Count > 0)
@@ -238,13 +250,17 @@
               foreach(var n in news.Take(3))
               {
                   <a href="/tin-tuc/detail/@(n.Slug).html" class="news-item d-flex gap-3 align-items-start text-decoration-none text-dark">
-                    <img src="@n.Image" class="news-thumb" style="width:80px;height:60px;object-fit:cover;border-radius:4px;" alt="@n.Title">
+                    <img src="@n.Image" class="news-thumb" style="width:80px;height:60px;object-fit:cover;border-radius:4px;" alt="@n.Title" loading="lazy">
                     <div>
                         <small class="text-muted">@n.CreatedAt.ToString("dd/MM/yyyy")</small><br>
                         <b class="line-clamp-2" style="font-size:14px;">@n.Title</b>
                     </div>
                   </a>
               }
+          }
+          else
+          {
+              <p class="text-muted">Đang cập nhật tin tức.</p>
           }
       </div>
     </div>

@@ -68,75 +68,82 @@
     </nav>
 </div>
 
-<div class="faq-hero shadow-sm mt-3">
-    <h1 class="fw-bold mb-3 display-5">Bạn có câu hỏi? Chúng tôi có câu trả lời</h1>
-    <p class="text-muted fs-5 mb-0 max-w-2xl mx-auto">Tìm kiếm thông tin bạn cần từ cơ sở dữ liệu các câu hỏi thường gặp nhất của chúng tôi.</p>
-</div>
-
-@if (categories != null && categories.Count > 0)
-{
-    <div class="row">
-        <div class="col-12">
-            <div class="cat-nav d-flex gap-2 justify-content-center">
-                <a href="/hoi-dap.html" class="cat-nav-item @(ViewBag.CurrentCategory == null ? "active" : "")">Tất cả</a>
-                @foreach (var cat in categories)
-                {
-                    <a href="/hoi-dap/@(cat.Slug).html" class="cat-nav-item @(ViewBag.CurrentCategory != null && ViewBag.CurrentCategory.CategoryId == cat.CategoryId ? "active" : "")">@cat.Name</a>
-                }
-            </div>
-        </div>
+<div class="container">
+    <div class="faq-hero shadow-sm mt-3">
+        <h1 class="fw-bold mb-3 display-5">Bạn có câu hỏi? Chúng tôi có câu trả lời</h1>
+        <p class="text-muted fs-5 mb-0 max-w-2xl mx-auto">Tìm kiếm thông tin bạn cần từ cơ sở dữ liệu các câu hỏi thường gặp nhất của chúng tôi.</p>
     </div>
-}
 
-<div class="row justify-content-center">
-    <div class="col-lg-9">
-        @if (Model != null && Model.Count > 0)
-        {
-            <div class="accordion shadow-sm" id="accordionFAQ" style="border-radius: 10px; overflow:hidden;">
-                @for (int i = 0; i < Model.Count; i++)
-                {
-                    var item = Model[i];
-                    <div class="accordion-item">
-                        <h2 class="accordion-header" id="heading_@item.FAQId">
-                            <button class="accordion-button @(i != 0 ? "collapsed" : "")" type="button" data-bs-toggle="collapse" data-bs-target="#collapse_@item.FAQId" aria-expanded="@(i == 0 ? "true" : "false")" aria-controls="collapse_@item.FAQId">
-                                @item.Question
-                            </button>
-                        </h2>
-                        <div id="collapse_@item.FAQId" class="accordion-collapse collapse @(i == 0 ? "show" : "")" aria-labelledby="heading_@item.FAQId" data-bs-parent="#accordionFAQ">
-                            <div class="accordion-body">
-                                @Html.Raw(item.Answer)
-                            </div>
-                        </div>
-                    </div>
-                }
-            </div>
-
-            if (totalPages > 1)
-            {
-                <div class="vd-pagination mt-4 mb-5">
-                    @if (currentPage > 1)
+    @if (categories != null && categories.Count > 0)
+    {
+        <div class="row">
+            <div class="col-12">
+                <div class="cat-nav d-flex gap-2 justify-content-center">
+                    <a href="/hoi-dap.html" class="cat-nav-item @(ViewBag.CurrentCategory == null ? "active" : "")">Tất cả</a>
+                    @foreach (var cat in categories)
                     {
-                        <a class="vd-page-btn" href="?page=@(currentPage - 1)"><i class="fa-solid fa-chevron-left" style="font-size:11px;"></i></a>
-                    }
-                    @for (int i = 1; i <= totalPages; i++)
-                    {
-                        <a class="vd-page-btn @(i == currentPage ? "active" : "")" href="?page=@i">@i</a>
-                    }
-                    @if (currentPage < totalPages)
-                    {
-                        <a class="vd-page-btn" href="?page=@(currentPage + 1)"><i class="fa-solid fa-chevron-right" style="font-size:11px;"></i></a>
+                        <a href="/hoi-dap/@(cat.Slug).html" class="cat-nav-item @(ViewBag.CurrentCategory != null && ViewBag.CurrentCategory.CategoryId == cat.CategoryId ? "active" : "")">@cat.Name</a>
                     }
                 </div>
-            }
-        }
-        else
-        {
-            <div class="text-center py-5">
-                <lord-icon src="https://cdn.lordicon.com/msoeawqm.json" trigger="loop" style="width:100px;height:100px"></lord-icon>
-                <h4 class="text-muted mt-3">Chưa có câu hỏi nào trong chuyên mục này.</h4>
             </div>
-            <!-- Load lordicon script if needed -->
-            <script src="https://cdn.lordicon.com/bhenfmcm.js"></script>
-        }
+        </div>
+    }
+
+    <div class="row justify-content-center">
+        <div class="col-lg-9">
+            @if (Model != null && Model.Count > 0)
+            {
+                <div class="accordion shadow-sm" id="accordionFAQ" style="border-radius: 10px; overflow:hidden;">
+                    @for (int i = 0; i < Model.Count; i++)
+                    {
+                        var item = Model[i];
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="heading_@item.FAQId">
+                                <button class="accordion-button @(i != 0 ? "collapsed" : "")" type="button" data-bs-toggle="collapse" data-bs-target="#collapse_@item.FAQId" aria-expanded="@(i == 0 ? "true" : "false")" aria-controls="collapse_@item.FAQId">
+                                    @item.Question
+                                </button>
+                            </h2>
+                            <div id="collapse_@item.FAQId" class="accordion-collapse collapse @(i == 0 ? "show" : "")" aria-labelledby="heading_@item.FAQId" data-bs-parent="#accordionFAQ">
+                                <div class="accordion-body">
+                                    @Html.Raw(item.Answer)
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+
+                if (totalPages > 1)
+                {
+                    <div class="vd-pagination mt-4 mb-5">
+                        @if (currentPage > 1)
+                        {
+                            <a class="vd-page-btn" href="?page=@(currentPage - 1)"><i class="fa-solid fa-chevron-left" style="font-size:11px;"></i></a>
+                        }
+                        @for (int i = 1; i <= totalPages; i++)
+                        {
+                            <a class="vd-page-btn @(i == currentPage ? "active" : "")" href="?page=@i">@i</a>
+                        }
+                        @if (currentPage < totalPages)
+                        {
+                            <a class="vd-page-btn" href="?page=@(currentPage + 1)"><i class="fa-solid fa-chevron-right" style="font-size:11px;"></i></a>
+                        }
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="text-center py-5">
+                    <lord-icon src="https://cdn.lordicon.com/msoeawqm.json" trigger="loop" style="width:100px;height:100px"></lord-icon>
+                    <h4 class="text-muted mt-3">Chưa có câu hỏi nào trong chuyên mục này.</h4>
+                </div>
+                <!-- Load lordicon script if needed -->
+                <script src="https://cdn.lordicon.com/bhenfmcm.js"></script>
+            }
+        </div>
     </div>
 </div>
+
+
+<br />
+<br />
+<br />

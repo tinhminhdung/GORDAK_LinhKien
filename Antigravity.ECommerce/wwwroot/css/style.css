@@ -4407,3 +4407,9 @@ img {
 .view-all-btn i {
     font-size: 11px;
 }
+
+/* Fix Level 2 Menu Icon Alignment */
+.desktop-nav li > ul > li > a .nav-arr {
+    float: right;
+    margin-top: 5px;
+}
