@@ -300,6 +300,16 @@ namespace Antigravity.ECommerce.Controllers
             return View(items);
         }
 
+        [HttpGet]
+        public IActionResult GetWishlistIds()
+        {
+            var session = GetCurrentSession();
+            if (session == null) return Json(new int[0]);
+
+            var items = SWishlist.GetByCustomerId(session.CustomerId);
+            return Json(items.Select(x => x.ProductId).ToList());
+        }
+
         [HttpPost]
         public IActionResult ToggleWishlist(int productId)
         {

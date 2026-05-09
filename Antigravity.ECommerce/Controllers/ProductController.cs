@@ -70,6 +70,37 @@ namespace Antigravity.ECommerce.Controllers
 
             return View(products);
         }
+
+        /// <summary>
+        /// Trang tìm kiếm sản phẩm (Hỗ trợ tìm kiếm không dấu, gần đúng)
+        /// </summary>
+        public IActionResult Search(string q = "", decimal? priceMin = null, decimal? priceMax = null, string sort = "newest", int page = 1)
+        {
+            if (string.IsNullOrWhiteSpace(q))
+                return RedirectToAction("Index");
+
+            // Ánh xạ tham số sắp xếp từ URL sang cột trong DB
+            string sortColumn = sort == "price_desc" || sort == "price_asc" ? "Price" : "CreatedAt";
+            string sortOrder = sort == "price_asc" ? "ASC" : "DESC";
+
+            int pageSize = int.TryParse(SSetting.GetValue("Product_PageSize"), out int pps) ? pps : 12;
+
+            // Xử lý key cache linh hoạt
+            string cacheKey = $"Product_Search_{q}_{priceMin}_{priceMax}_{sort}_{page}_{pageSize}";
+            
+            int cacheMinutes = (priceMin.HasValue || priceMax.HasValue || sort != "newest") ? 5 : 60;
+            var products = SCache.GetOrSet(cacheKey, () => FProduct.Search(q, null, 1, null, priceMin, priceMax, sortColumn, sortOrder, page, pageSize), cacheMinutes);
+            
+            ViewBag.Keyword = q;
+            ViewBag.PageCount = products.Count > 0 ? (int)System.Math.Ceiling((double)products[0].TotalCount / pageSize) : 0;
+            ViewBag.PageIndex = page;
+            
+            ViewData["Title"] = "Tìm kiếm: " + q;
+            ViewData["Description"] = "Kết quả tìm kiếm cho từ khóa: " + q;
+
+            // Dùng chung View "Category" để hiển thị
+            return View("Category", products);
+        }
         #endregion
 
         #region 2. Chi tiết sản phẩm

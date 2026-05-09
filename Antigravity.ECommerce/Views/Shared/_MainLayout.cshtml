@@ -62,6 +62,19 @@
 
     <!-- Standard App Functions -->
     <script>
+        $(document).ready(function() {
+            // Load initial wishlist state if logged in
+            $.get('/Member/GetWishlistIds', function(ids) {
+                if (ids && ids.length > 0) {
+                    ids.forEach(function(id) {
+                        $('[onclick="toggleWishlist(' + id + ')"] i')
+                            .removeClass('fa-regular')
+                            .addClass('fa-solid text-danger');
+                    });
+                }
+            });
+        });
+
         function addToCart(productId, qty = 1) {
             $.post('/Cart/AddToCart', { productId: productId, quantity: qty }, function(res) {
                 if(res.success) {
@@ -83,8 +96,15 @@
         function toggleWishlist(productId) {
             $.post('/Member/ToggleWishlist', { productId: productId }, function(res) {
                 if(res.success) {
-                    let msg = res.action === 'added' ? 'Đã thêm vào danh sách yêu thích!' : 'Đã xóa khỏi danh sách yêu thích!';
-                    let icon = res.action === 'added' ? 'success' : 'info';
+                    let isAdded = res.action === 'added';
+                    let msg = isAdded ? 'Đã thêm vào danh sách yêu thích!' : 'Đã xóa khỏi danh sách yêu thích!';
+                    let icon = isAdded ? 'success' : 'info';
+                    
+                    // Update all hearts for this product in the UI
+                    $('[onclick="toggleWishlist(' + productId + ')"] i')
+                        .removeClass(isAdded ? 'fa-regular' : 'fa-solid text-danger')
+                        .addClass(isAdded ? 'fa-solid text-danger' : 'fa-regular');
+
                     Swal.fire({
                         title: 'Thành công!',
                         text: msg,
