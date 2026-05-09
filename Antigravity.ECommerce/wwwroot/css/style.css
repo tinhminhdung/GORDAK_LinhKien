@@ -2775,7 +2775,7 @@ img {
     display: flex;
     align-items: flex-start;
     gap: 12px;
-    padding: 19px 52px;
+    padding: 19px 19px;
 }
 
     .lh-val-card:last-child {

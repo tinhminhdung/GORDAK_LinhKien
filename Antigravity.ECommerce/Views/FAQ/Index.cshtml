@@ -56,7 +56,19 @@
     </style>
 }
 
-<div class="faq-hero shadow-sm">
+<div class="container mt-3 mb-2">
+    <nav class="sp-breadcrumb">
+        <a href="/">Trang chủ</a> 
+        <i class="fa-solid fa-chevron-right"></i> 
+        @if(ViewBag.CurrentCategory == null) {
+            <span>Hỏi đáp</span>
+        } else {
+            <a href="/hoi-dap.html">Hỏi đáp</a> <i class="fa-solid fa-chevron-right"></i> <span>@ViewBag.CurrentCategory.Name</span>
+        }
+    </nav>
+</div>
+
+<div class="faq-hero shadow-sm mt-3">
     <h1 class="fw-bold mb-3 display-5">Bạn có câu hỏi? Chúng tôi có câu trả lời</h1>
     <p class="text-muted fs-5 mb-0 max-w-2xl mx-auto">Tìm kiếm thông tin bạn cần từ cơ sở dữ liệu các câu hỏi thường gặp nhất của chúng tôi.</p>
 </div>
@@ -69,7 +81,7 @@
                 <a href="/hoi-dap.html" class="cat-nav-item @(ViewBag.CurrentCategory == null ? "active" : "")">Tất cả</a>
                 @foreach (var cat in categories)
                 {
-                    <a href="/hoi-dap/@cat.Slug" class="cat-nav-item @(ViewBag.CurrentCategory != null && ViewBag.CurrentCategory.CategoryId == cat.CategoryId ? "active" : "")">@cat.Name</a>
+                    <a href="/hoi-dap/@(cat.Slug).html" class="cat-nav-item @(ViewBag.CurrentCategory != null && ViewBag.CurrentCategory.CategoryId == cat.CategoryId ? "active" : "")">@cat.Name</a>
                 }
             </div>
         </div>

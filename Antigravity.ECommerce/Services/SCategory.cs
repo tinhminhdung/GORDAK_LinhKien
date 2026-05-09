@@ -156,7 +156,7 @@ namespace Antigravity.ECommerce.Services
             if (sortFunc != null)
                 children = sortFunc(children);
             else
-                children = children.OrderBy(x => x.SortOrder);
+                children = children.OrderBy(x => x.SortOrder).ThenBy(x => x.CategoryId);
 
             return children.Select(x => new Category
             {
@@ -307,7 +307,6 @@ namespace Antigravity.ECommerce.Services
             SCache.Remove("Category_Hierarchical");
             SCache.Remove("Menu_Tree_Header");
             SCache.Remove("Menu_Tree_Footer");
-            SCache.Remove("Menu_Tree_FooterSupport");
             
             // Xóa cache cấu hình trang chủ
             SCache.Remove("HomeCategorySettings_All");

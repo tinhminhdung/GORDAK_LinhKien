@@ -1,10 +1,18 @@
 @model List<Antigravity.ECommerce.Models.Gallery>
+@using Antigravity.ECommerce.Services
 @{
     Layout = "~/Views/Shared/_MainLayout.cshtml";
     ViewData["Title"] = ViewBag.CurrentCategory != null ? ViewBag.CurrentCategory.Name : "Thư viện Ảnh";
-    var categories = ViewBag.Categories as List<Antigravity.ECommerce.Models.Category>;
+    var categories = ViewBag.Categories as List<Antigravity.ECommerce.Models.Category> ?? new List<Antigravity.ECommerce.Models.Category>();
+    var currentCat = ViewBag.CurrentCategory as Antigravity.ECommerce.Models.Category;
     int currentPage = ViewBag.CurrentPage;
     int totalPages = (int)Math.Ceiling((double)ViewBag.TotalCount / ViewBag.PageSize);
+    
+    var settings = SSetting.GetViewModel();
+
+    // Lấy danh sách hot galleries trực tiếp trong View
+    var hotGalleries = SGallery.GetAll().Where(x => x.Status == 1).OrderByDescending(x => x.CreatedAt).Take(5).ToList();
+    var totalGalleryCount = SGallery.GetAll().Count(x => x.Status == 1);
 }
 
 @section Styles {
@@ -51,89 +59,141 @@
             backdrop-filter: blur(4px);
             font-size: 13px;
         }
-        .cat-nav {
-            overflow-x: auto;
-            white-space: nowrap;
-            -webkit-overflow-scrolling: touch;
-            padding-bottom: 5px;
-        }
-        .cat-nav::-webkit-scrollbar { height: 4px; }
-        .cat-nav::-webkit-scrollbar-thumb { background: #ccc; border-radius: 4px; }
     </style>
 }
 
-<div class="row mb-5">
-    <div class="col-12 text-center">
-        <h1 class="fw-bold mb-3">@(ViewBag.CurrentCategory != null ? ViewBag.CurrentCategory.Name : "Khám phá Thư viện Ảnh")</h1>
-        @if (ViewBag.CurrentCategory != null)
-        {
-            <p class="text-muted max-w-2xl mx-auto">@ViewBag.CurrentCategory.Description</p>
+<div class="container mt-3 mb-4">
+    <nav class="sp-breadcrumb">
+        <a href="/">Trang chủ</a> 
+        <i class="fa-solid fa-chevron-right"></i> 
+        @if(currentCat == null) {
+            <span>Thư viện ảnh</span>
+        } else {
+            <a href="/thu-vien-anh.html">Thư viện ảnh</a> <i class="fa-solid fa-chevron-right"></i> <span>@currentCat.Name</span>
         }
-        else
-        {
-            <p class="text-muted max-w-2xl mx-auto">Khám phá những khoảnh khắc và dự án tuyệt vời qua các lăng kính đa chiều của chúng tôi.</p>
-        }
-    </div>
+    </nav>
 </div>
 
-@if (categories != null && categories.Count > 0)
-{
-    <div class="row mb-4">
-        <div class="col-12">
-            <div class="cat-nav d-flex gap-2 justify-content-center">
-                <a href="/thu-vien-anh.html" class="btn rounded-pill px-4 @(ViewBag.CurrentCategory == null ? "btn-primary" : "btn-light")">Tất cả</a>
-                @foreach (var cat in categories)
+<main class="container mb-5">
+    <h1 class="lh-page-title mb-3 text-uppercase">@(currentCat?.Name ?? "THƯ VIỆN ẢNH")</h1>
+
+    <!-- Filter tabs -->
+    @if(categories.Any()) {
+    <div class="tt-filter-tabs mb-4">
+        <a href="/thu-vien-anh.html" class="tt-filter-btn @(currentCat == null ? "active" : "")">Tất cả</a>
+        @foreach(var cat in categories) {
+            <a href="/thu-vien-anh/@(cat.Slug).html" class="tt-filter-btn @(currentCat?.CategoryId == cat.CategoryId ? "active" : "")">@cat.Name</a>
+        }
+    </div>
+    }
+
+    <div class="row g-4">
+        <!-- NỘI DUNG CHÍNH -->
+        <div class="col-lg-9">
+            
+            <div class="row g-4">
+                @if (Model != null && Model.Count > 0)
                 {
-                    <a href="/thu-vien-anh/@cat.Slug" class="btn rounded-pill px-4 @(ViewBag.CurrentCategory != null && ViewBag.CurrentCategory.CategoryId == cat.CategoryId ? "btn-primary" : "btn-light")">@cat.Name</a>
+                    foreach (var gallery in Model)
+                    {
+                        <div class="col-md-6 col-lg-4">
+                            <a href="/album/@(gallery.Slug).html" class="text-decoration-none">
+                                <div class="card gallery-card h-100">
+                                    <div class="gallery-img-wrap">
+                                        <img src="@(string.IsNullOrEmpty(gallery.CoverImage) ? "/assets/images/placeholder.png" : gallery.CoverImage)" alt="@gallery.AlbumName">
+                                        <span class="album-count"><i class="mdi mdi-image-multiple-outline me-1"></i>Album</span>
+                                        <div class="gallery-overlay">
+                                            <h5 class="mb-1 text-white">@gallery.AlbumName</h5>
+                                            <span class="small text-white-50"><i class="mdi mdi-calendar ms-1"></i> @gallery.CreatedAt.ToString("dd/MM/yyyy")</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div class="col-12 text-center py-5">
+                        <i class="fa-regular fa-images fa-3x text-muted mb-3"></i>
+                        <h4 class="text-muted">Không tìm thấy album nào.</h4>
+                    </div>
                 }
             </div>
-        </div>
-    </div>
-}
 
-<div class="row g-4 pt-3">
-    @if (Model != null && Model.Count > 0)
-    {
-        foreach (var gallery in Model)
-        {
-            <div class="col-md-6 col-lg-4">
-                <a href="/album/@(gallery.Slug).html" class="text-decoration-none">
-                    <div class="card gallery-card h-100">
-                        <div class="gallery-img-wrap">
-                            <img src="@(string.IsNullOrEmpty(gallery.CoverImage) ? "/assets/images/placeholder.png" : gallery.CoverImage)" class="lazy" alt="@gallery.AlbumName">
-                            <span class="album-count"><i class="mdi mdi-image-multiple-outline me-1"></i>Album</span>
-                            <div class="gallery-overlay">
-                                <h5 class="mb-1 text-white">@gallery.AlbumName</h5>
-                                <span class="small text-white-50"><i class="mdi mdi-calendar ms-1"></i> @gallery.CreatedAt.ToString("dd/MM/yyyy")</span>
+            @if (totalPages > 1)
+            {
+                <div class="vd-pagination mt-4 mb-5">
+                    @if (currentPage > 1)
+                    {
+                        <a class="vd-page-btn" href="?page=@(currentPage - 1)"><i class="fa-solid fa-chevron-left" style="font-size:11px;"></i></a>
+                    }
+                    @for (int i = 1; i <= totalPages; i++)
+                    {
+                        <a class="vd-page-btn @(i == currentPage ? "active" : "")" href="?page=@i">@i</a>
+                    }
+                    @if (currentPage < totalPages)
+                    {
+                        <a class="vd-page-btn" href="?page=@(currentPage + 1)"><i class="fa-solid fa-chevron-right" style="font-size:11px;"></i></a>
+                    }
+                </div>
+            }
+
+        </div>
+
+        <!-- SIDEBAR -->
+        <div class="col-lg-3">
+            <!-- Danh mục -->
+            <div class="tt-sidebar-box mb-3">
+                <h4 class="tt-sidebar-title">DANH MỤC ẢNH</h4>
+                <ul class="tt-sidebar-list">
+                    <li><a href="/thu-vien-anh.html">Tất cả <span>@totalGalleryCount</span></a></li>
+                    @foreach(var cat in categories.Take(10)) {
+                        <li><a href="/thu-vien-anh/@(cat.Slug).html">@cat.Name <span>@cat.ItemCount</span></a></li>
+                    }
+                </ul>
+                @if(categories.Count > 10) {
+                    <a href="javascript:void(0)" onclick="$('.tt-sidebar-list li.d-none').removeClass('d-none'); $(this).hide();" class="tt-sidebar-link">Xem tất cả danh mục <i class="fa-solid fa-arrow-right"></i></a>
+                    <ul class="tt-sidebar-list">
+                         @foreach(var cat in categories.Skip(10)) {
+                            <li class="d-none"><a href="/thu-vien-anh/@(cat.Slug).html">@cat.Name <span>@cat.ItemCount</span></a></li>
+                        }
+                    </ul>
+                }
+            </div>
+
+            <!-- Album mới nhất -->
+            @if(hotGalleries.Any()) {
+            <div class="tt-sidebar-box mb-3">
+                <h4 class="tt-sidebar-title">ALBUM MỚI NHẤT</h4>
+                @foreach(var hg in hotGalleries) {
+                    <div class="tt-hot-item">
+                        <a href="/album/@(hg.Slug).html">
+                            <img src="@(string.IsNullOrEmpty(hg.CoverImage) ? "/assets/images/placeholder.png" : hg.CoverImage)" alt="@hg.AlbumName">
+                        </a>
+                        <div>
+                            <a href="/album/@(hg.Slug).html" class="tt-hot-title line-clamp-2">@hg.AlbumName</a>
+                            <div class="tt-hot-meta">
+                                <i class="fa-regular fa-calendar"></i> @hg.CreatedAt.ToString("dd/MM/yyyy")
                             </div>
                         </div>
                     </div>
-                </a>
+                }
             </div>
-        }
-    }
-    else
-    {
-        <div class="col-12 text-center py-5">
-            <h4 class="text-muted">Không tìm thấy album nào.</h4>
-        </div>
-    }
-</div>
+            }
 
-@if (totalPages > 1)
-{
-    <div class="vd-pagination mt-4 mb-5">
-        @if (currentPage > 1)
-        {
-            <a class="vd-page-btn" href="?page=@(currentPage - 1)"><i class="fa-solid fa-chevron-left" style="font-size:11px;"></i></a>
-        }
-        @for (int i = 1; i <= totalPages; i++)
-        {
-            <a class="vd-page-btn @(i == currentPage ? "active" : "")" href="?page=@i">@i</a>
-        }
-        @if (currentPage < totalPages)
-        {
-            <a class="vd-page-btn" href="?page=@(currentPage + 1)"><i class="fa-solid fa-chevron-right" style="font-size:11px;"></i></a>
-        }
+            <!-- CTA Box -->
+            <div class="tt-cta-box text-center">
+                <img src="/assets/images/tuvanvien.png" alt="Tư vấn viên" class="img-fluid rounded-circle mb-3" style="width: 100px; height: 100px; object-fit: cover; border: 3px solid #fff;">
+                <h4 class="text-start">CẦN TƯ VẤN MUA HÀNG?</h4>
+                <ul class="list-unstyled text-start">
+                    <li><i class="fa-solid fa-check-circle"></i> Tư vấn chọn sản phẩm phù hợp</li>
+                    <li><i class="fa-solid fa-check-circle"></i> Báo giá nhanh chóng</li>
+                    <li><i class="fa-solid fa-check-circle"></i> Hỗ trợ kỹ thuật 24/7</li>
+                    <li><i class="fa-solid fa-check-circle"></i> Chính sách bảo hành uy tín</li>
+                </ul>
+                <a href="https://zalo.me/@settings.Hotline" target="_blank" class="tt-cta-btn w-100">TƯ VẤN NGAY</a>
+            </div>
+        </div>
     </div>
-}
+</main>

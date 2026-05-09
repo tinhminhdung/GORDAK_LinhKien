@@ -6,7 +6,7 @@
 
     // Lấy danh sách danh mục gốc để hiển thị
     var allProductCats = Antigravity.ECommerce.Services.SCategory.GetAll().Where(x => x.CategoryType == 1 || x.CategoryType == null).ToList();
-    var parentCategories = Antigravity.ECommerce.Services.SCache.GetOrSet("Home_Categories", () => allProductCats.Where(x => x.ParentId == 0).OrderBy(x => x.SortOrder).ToList(), 60);
+    var parentCategories = Antigravity.ECommerce.Services.SCache.GetOrSet("Home_Categories", () => allProductCats.Where(x => x.ParentId == 0).OrderBy(x => x.SortOrder).ThenBy(x => x.CategoryId).ToList(), 60);
     
     // Đếm số lượng sản phẩm thực tế theo CategoryId từ DB
     var productCounts = Antigravity.ECommerce.Services.SCache.GetOrSet("Product_CountByCategory", () => Antigravity.ECommerce.Services.SProduct.CountByCategory(), 10);

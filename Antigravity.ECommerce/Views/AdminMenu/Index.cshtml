@@ -238,8 +238,7 @@
                         <label class="form-label">2. Vị trí Menu</label>
                         <select class="form-select" id="importPosition">
                             <option value="Header">Menu trên (Header)</option>
-                            <option value="Footer">Menu dưới (Footer)</option>
-                            <option value="Sidebar">Cột trái (Sidebar)</option>
+                            <option value="Footer">Footer (cột menu chân trang)</option>
                         </select>
                     </div>
                 </div>
@@ -247,16 +246,16 @@
                     <div class="col-md-12">
                         <label class="form-label">3. Gắn vào Menu cha</label>
                         <select class="form-select" id="importParentId">
-                            <option value="0">-- Là Menu cấp gốc --</option>
+                            <option value="0">-- Là Menu cấp gốc (không gắn vào đâu) --</option>
                             @if (ViewBag.Categories != null)
                             {
                                 foreach (var cat in ViewBag.Categories as List<Antigravity.ECommerce.Models.Category>)
                                 {
-                                    <option value="@cat.CategoryId">@cat.Name</option>
+                                    <option value="@cat.CategoryId">@cat.Name (@cat.MenuPosition)</option>
                                 }
                             }
                         </select>
-                        <small class="text-muted">Lưu ý: Cấu trúc cha-con của danh mục nguồn sẽ được tự động giữ nguyên.</small>
+                        <small class="text-muted">Lưu ý: Cấu trúc cha-con của danh mục nguồn sẽ được tự động giữ nguyên. Chọn "Menu cấp gốc" nếu muốn gắn trực tiếp theo Vị trí đã chọn.</small>
                     </div>
                 </div>
                 <div class="row mb-3">
@@ -414,13 +413,12 @@
                 let html = '';
                 data.forEach(item => {
                     const indent = '&nbsp;&nbsp;&nbsp;&nbsp;'.repeat(item.level);
-                    const disabledStr = item.exists ? 'disabled' : '';
                     const badgeStr = item.exists ? '<span class="badge bg-success ms-2">Đã có</span>' : '';
                     
                     html += `
                         <div class="form-check mb-2">
                             ${indent}
-                            <input class="form-check-input import-check-item" type="checkbox" value="${item.id}" id="importCat_${item.id}" ${disabledStr} onchange="updateImportBtnState()">
+                            <input class="form-check-input import-check-item" type="checkbox" value="${item.id}" id="importCat_${item.id}" onchange="updateImportBtnState()">
                             <label class="form-check-label ${item.exists ? 'text-muted' : ''}" for="importCat_${item.id}">
                                 ${item.name} ${badgeStr}
                             </label>
@@ -438,7 +436,7 @@
         }
 
         function toggleSelectAllImport(cb) {
-            $('.import-check-item:not(:disabled)').prop('checked', cb.checked);
+            $('.import-check-item').prop('checked', cb.checked);
             updateImportBtnState();
         }
 

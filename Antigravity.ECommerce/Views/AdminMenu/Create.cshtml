@@ -272,19 +272,18 @@
 							</div>
 							<div class="mb-3">
 								<label class="form-label">Vị trí Menu</label>
-								<input type="hidden" name="MenuPosition" id="MenuPositionHidden" value="Header" />
+								<input type="hidden" name="MenuPosition" id="MenuPositionHidden" value="" />
+								@{
+									var createPositions = (Model.MenuPosition ?? "").Split(',').Select(x => x.Trim()).ToList();
+								}
 								<div class="d-flex flex-column gap-2 mt-1" id="menu-position-group">
 									<div class="form-check">
-										<input class="form-check-input menu-pos-cb" type="checkbox" id="pos_header" value="Header" checked>
+										<input class="form-check-input menu-pos-cb" type="checkbox" id="pos_header" value="Header" @(createPositions.Contains("Header") ? "checked" : "")>
 										<label class="form-check-label" for="pos_header">Menu trên (Top)</label>
 									</div>
 									<div class="form-check">
-										<input class="form-check-input menu-pos-cb" type="checkbox" id="pos_footer" value="Footer">
-										<label class="form-check-label" for="pos_footer">Menu dưới (Bottom / Footer)</label>
-									</div>
-									<div class="form-check">
-										<input class="form-check-input menu-pos-cb" type="checkbox" id="pos_footersupport" value="FooterSupport">
-										<label class="form-check-label" for="pos_footersupport">Hỗ trợ KH (Footer cột 3)</label>
+										<input class="form-check-input menu-pos-cb" type="checkbox" id="pos_footer" value="Footer" @(createPositions.Contains("Footer") ? "checked" : "")>
+										<label class="form-check-label" for="pos_footer">Footer (cột menu chân trang)</label>
 									</div>
 								</div>
 							</div>

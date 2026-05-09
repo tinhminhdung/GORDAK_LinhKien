@@ -1,8 +1,22 @@
 @using Antigravity.ECommerce.Services
+@using Antigravity.ECommerce.Models
 @{
     var settings = SSetting.GetViewModel();
-    var footerMenu = SCategory.GetMenuTree("Footer", 0);
-    var footerSupportMenu = SCategory.GetMenuTree("FooterSupport");
+    var footerGroups = SCategory.GetMenuTree("Footer");
+
+    // Helper: tạo URL đúng cho mọi loại menu item
+    Func<Category, string> GetMenuUrl = (item) => {
+        if (!string.IsNullOrEmpty(item.Url)) return item.Url;
+        if (!string.IsNullOrEmpty(item.Slug)) {
+            return item.CategoryType switch {
+                1 => "/san-pham/" + item.Slug + ".html",
+                2 => "/tin-tuc/" + item.Slug + ".html",
+                4 => "/bai-viet/" + item.Slug + ".html",
+                _ => "/" + item.Slug
+            };
+        }
+        return "#";
+    };
 }
 
 <!-- ======== COMMITMENT BAR ======== -->
@@ -25,7 +39,8 @@
 <!-- ======== MAIN FOOTER ======== -->
 <footer class="main-footer">
     <div class="container footer-grid">
-        <!-- Cột 1: Logo & Social -->
+
+        <!-- Cột 1: Logo & Social (cố định từ cấu hình) -->
         <div class="footer-col">
             <div class="footer-logo-wrap">
                 @if (!string.IsNullOrEmpty(settings.Logo)) {
@@ -34,7 +49,7 @@
                     <span class="footer-logo-text">GORDAK</span>
                 }
             </div>
-            <p class="footer-col-desc">@Html.Raw(settings.FooterInfo ?? settings.SiteDescription ?? "Nhà phân phối chính thức các sản phẩm của Gordak tại Việt Nam.")</p>
+            <p class="footer-col-desc">@Html.Raw(settings.FooterInfo ?? settings.SiteDescription)</p>
             <div class="footer-social">
                 @if (!string.IsNullOrEmpty(settings.Facebook)) {
                     <a href="@settings.Facebook" target="_blank" class="fsoc-fb"><i class="fab fa-facebook-f"></i></a>
@@ -48,53 +63,24 @@
             </div>
         </div>
 
-        <!-- Cột 2: Danh mục sản phẩm (từ CMS) -->
-        <div class="footer-col">
-            <h4>DANH MỤC SẢN PHẨM</h4>
-            <ul>
-                @foreach (var item in footerMenu) {
-                    string fUrl = "/";
-                    if (item.LinkType == 2 && !string.IsNullOrEmpty(item.Url)) {
-                        fUrl = item.Url;
-                    } else if (!string.IsNullOrEmpty(item.Slug)) {
-                        switch (item.CategoryType) {
-                            case 1: fUrl = "/san-pham/" + item.Slug + ".html"; break;
-                            case 2: fUrl = "/tin-tuc/" + item.Slug + ".html"; break;
-                            case 4: fUrl = "/bai-viet/" + item.Slug + ".html"; break;
-                            default: fUrl = "/" + item.Slug; break;
+        <!-- Cột 2..N: Dynamic từ AdminMenu (position: Footer) -->
+        <!-- Mỗi item cha = 1 cột | Mỗi item con = 1 link trong cột đó -->
+        @foreach (var group in footerGroups) {
+            <div class="footer-col">
+                <h4>@group.Name</h4>
+                @if (group.Children != null && group.Children.Any()) {
+                    <ul>
+                        @foreach (var item in group.Children) {
+                            <li><a href="@GetMenuUrl(item)" target="@(item.Target ?? "_self")">@item.Name</a></li>
                         }
-                    }
-                    <li><a href="@fUrl">@item.Name</a></li>
+                    </ul>
                 }
-            </ul>
-        </div>
+            </div>
+        }
 
-        <!-- Cột 3: Hỗ trợ khách hàng (từ AdminMenu / position: FooterSupport) -->
+        <!-- Cột cuối: Thông tin liên hệ (cố định từ cấu hình) -->
         <div class="footer-col">
-            <h4>HỖ TRỢ KHÁCH HÀNG</h4>
-            <ul>
-                @if (footerSupportMenu.Any()) {
-                    @foreach (var item in footerSupportMenu) {
-                        string sUrl = "/";
-                        if (!string.IsNullOrEmpty(item.Url)) {
-                            sUrl = item.Url;
-                        } else if (!string.IsNullOrEmpty(item.Slug)) {
-                            sUrl = "/" + item.Slug;
-                        }
-                        <li><a href="@sUrl" target="@(item.Target ?? "_self")">@item.Name</a></li>
-                    }
-                } else {
-                    <li><a href="#">Chính sách bảo hành</a></li>
-                    <li><a href="#">Chính sách giao hàng</a></li>
-                    <li><a href="#">Hướng dẫn thanh toán</a></li>
-                    <li><a href="#">Đổi trả - Hoàn tiền</a></li>
-                }
-            </ul>
-        </div>
-
-        <!-- Cột 4: Thông tin liên hệ -->
-        <div class="footer-col">
-            <h4>@(settings.SiteTitle ?? "CÔNG TY TNHH NHẬT MINH ESC")</h4>
+            <h4>@settings.SiteTitle</h4>
             <ul class="footer-contact-info">
                 @if (!string.IsNullOrEmpty(settings.Address)) {
                     <li><i class="fas fa-map-marker-alt"></i> @settings.Address</li>
@@ -108,11 +94,12 @@
                 <li><i class="fas fa-globe"></i> @Context.Request.Host.Value</li>
             </ul>
         </div>
+
     </div>
 
     <div class="footer-bottom-bar">
         <div class="container">
-            @(settings.Copyright ?? "© 2024 Gordak Việt Nam. All rights reserved.")
+            @settings.Copyright
         </div>
     </div>
 </footer>

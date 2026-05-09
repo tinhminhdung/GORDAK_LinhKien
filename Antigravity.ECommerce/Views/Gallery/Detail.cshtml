@@ -1,14 +1,16 @@
 @model Antigravity.ECommerce.Models.Gallery
+@using Antigravity.ECommerce.Services
 @{
     Layout = "~/Views/Shared/_MainLayout.cshtml";
     ViewData["Title"] = Model.AlbumName;
     var related = ViewBag.Related as List<Antigravity.ECommerce.Models.Gallery>;
     if (!string.IsNullOrEmpty(Model.CoverImage)) { ViewData["Image"] = Model.CoverImage; }
-    ViewData["SchemaBreadcrumbs"] = new List<Antigravity.ECommerce.Models.BreadcrumbItem> {
-        new Antigravity.ECommerce.Models.BreadcrumbItem { Name = "Trang chủ", Url = "/" },
-        new Antigravity.ECommerce.Models.BreadcrumbItem { Name = "Thư viện Ảnh", Url = "/thu-vien-anh.html" },
-        new Antigravity.ECommerce.Models.BreadcrumbItem { Name = Model.AlbumName, Url = Context.Request.Path }
-    };
+    
+    var settings = SSetting.GetViewModel();
+
+    // Lấy dữ liệu cho Sidebar trực tiếp trong View
+    var categories = SCategory.GetAll().Where(x => x.Status == 1 && x.CategoryType == 6).OrderBy(x => x.SortOrder).ToList();
+    var totalGalleryCount = SGallery.GetAll().Count(x => x.Status == 1);
 }
 
 @section Styles {
@@ -18,7 +20,7 @@
         .album-header {
             background:#f8f9fa;
             border-radius:15px;
-            padding:40px;
+            padding:30px;
             margin-bottom:30px;
         }
         .masonry-grid {
@@ -37,6 +39,7 @@
             overflow: hidden;
             box-shadow: 0 4px 6px rgba(0,0,0,0.05);
             transition: transform 0.3s ease;
+            display: block;
         }
         .masonry-item img {
             width: 100%;
@@ -56,75 +59,127 @@
             font-size: 14px;
         }
         .masonry-item:hover .masonry-caption { bottom: 0; }
+        .social-circle {
+            display: inline-flex; align-items: center; justify-content: center;
+            width: 36px; height: 36px; border-radius: 50%; color: #fff;
+            font-size: 14px; transition: opacity .2s;
+        }
+        .social-circle:hover { opacity: .8; color: #fff; }
     </style>
 }
 
-<nav aria-label="breadcrumb">
-  <ol class="breadcrumb mt-3">
-    <li class="breadcrumb-item"><a href="/">Trang chủ</a></li>
-    <li class="breadcrumb-item"><a href="/thu-vien-anh.html">Thư viện Ảnh</a></li>
-    <li class="breadcrumb-item active" aria-current="page">@Model.AlbumName</li>
-  </ol>
-</nav>
-
-<div class="row">
-    <div class="col-12">
-        <div class="album-header text-center">
-            <h1 class="fw-bold">@Model.AlbumName</h1>
-            <p class="text-muted mt-2 mb-0"><i class="mdi mdi-calendar-blank"></i> @Model.CreatedAt.ToString("dd MMMM, yyyy") | <i class="mdi mdi-folder-image"></i> @Model.CategoryName</p>
-            @if (!string.IsNullOrEmpty(Model.Description))
-            {
-                <p class="mt-3 mx-auto" style="max-width:800px; font-size:16px;">@Model.Description</p>
-            }
-        </div>
-    </div>
+<div class="container mt-3 mb-2">
+    <nav class="sp-breadcrumb">
+        <a href="/">Trang chủ</a> 
+        <i class="fa-solid fa-chevron-right"></i> 
+        <a href="/thu-vien-anh.html">Thư viện Ảnh</a>
+        <i class="fa-solid fa-chevron-right"></i> 
+        <span>@Model.AlbumName</span>
+    </nav>
 </div>
 
-<div class="row">
-    <div class="col-12">
-        <div class="masonry-grid">
-            @if (Model.ImageList != null && Model.ImageList.Count > 0)
-            {
-                foreach (var img in Model.ImageList)
+<main class="container mb-5">
+    <div class="row g-4">
+        <!-- NỘI DUNG CHÍNH -->
+        <div class="col-lg-9">
+            
+            <div class="album-header">
+                <h1 class="fw-bold fs-2" style="color: #212d45; line-height: 1.3;">@Model.AlbumName</h1>
+                <p class="text-muted mt-2 mb-0"><i class="mdi mdi-calendar-blank"></i> @Model.CreatedAt.ToString("dd/MM/yyyy") &nbsp;|&nbsp; <i class="mdi mdi-folder-image"></i> @Model.CategoryName</p>
+                @if (!string.IsNullOrEmpty(Model.Description))
                 {
-                    <a href="@img.ImagePath" class="glightbox masonry-item" data-gallery="album_@Model.GalleryId" data-title="@img.Caption" data-description="@img.Caption">
-                        <img src="@img.ImagePath" alt="@img.Caption" loading="lazy">
-                        @if (!string.IsNullOrEmpty(img.Caption))
-                        {
-                            <div class="masonry-caption">@img.Caption</div>
-                        }
-                    </a>
+                    <p class="mt-3 mb-0" style="font-size:16px;">@Model.Description</p>
                 }
-            }
-            else
-            {
-                <p class="text-center text-muted w-100 py-5">Album này chưa có ảnh nào.</p>
-            }
-        </div>
-    </div>
-</div>
+            </div>
 
-@if (related != null && related.Count > 0)
-{
-    <div class="row mt-5 pt-4 border-top">
-        <div class="col-12 mb-4">
-            <h3 class="fw-bold">Album liên quan</h3>
+            <div class="masonry-grid mt-4">
+                @if (Model.ImageList != null && Model.ImageList.Count > 0)
+                {
+                    foreach (var img in Model.ImageList)
+                    {
+                        <a href="@img.ImagePath" class="glightbox masonry-item" data-gallery="album_@Model.GalleryId" data-title="@img.Caption" data-description="@img.Caption">
+                            <img src="@img.ImagePath" alt="@img.Caption" loading="lazy">
+                            @if (!string.IsNullOrEmpty(img.Caption))
+                            {
+                                <div class="masonry-caption">@img.Caption</div>
+                            }
+                        </a>
+                    }
+                }
+                else
+                {
+                    <p class="text-center text-muted w-100 py-5">Album này chưa có ảnh nào.</p>
+                }
+            </div>
+
+            <!-- Social Share -->
+            <div class="d-flex align-items-center gap-3 mt-5 p-3 bg-light rounded-3">
+                <span class="fw-bold">Chia sẻ album: </span>
+                <div class="d-flex gap-2">
+                    <a href="https://www.facebook.com/sharer/sharer.php?u=@(Context.Request.Scheme + "://" + Context.Request.Host + Context.Request.Path)" target="_blank" class="social-circle" style="background:#3b5998;"><i class="fa-brands fa-facebook-f"></i></a>
+                    <a href="https://twitter.com/intent/tweet?url=@(Context.Request.Scheme + "://" + Context.Request.Host + Context.Request.Path)" target="_blank" class="social-circle" style="background:#1da1f2;"><i class="fa-brands fa-twitter"></i></a>
+                    <a href="https://www.linkedin.com/shareArticle?mini=true&url=@(Context.Request.Scheme + "://" + Context.Request.Host + Context.Request.Path)" target="_blank" class="social-circle" style="background:#0a66c2;"><i class="fa-brands fa-linkedin-in"></i></a>
+                </div>
+            </div>
+
         </div>
-        @foreach (var r in related)
-        {
-            <div class="col-md-4 col-sm-6 mb-4">
-                <a href="/album/@(r.Slug).html" class="text-decoration-none">
-                    <div class="card border-0 shadow-sm rounded-4 overflow-hidden h-100">
-                        <img src="@r.CoverImage" class="card-img-top" alt="@r.AlbumName" style="height:180px; object-fit:cover;">
-                        <div class="card-body">
-                            <h6 class="card-title text-dark fw-bold mb-1">@r.AlbumName</h6>
+
+        <!-- SIDEBAR -->
+        <div class="col-lg-3">
+            <!-- Danh mục -->
+            <div class="tt-sidebar-box mb-3">
+                <h4 class="tt-sidebar-title">DANH MỤC ẢNH</h4>
+                <ul class="tt-sidebar-list">
+                    <li><a href="/thu-vien-anh.html">Tất cả <span>@totalGalleryCount</span></a></li>
+                    @foreach(var cat in categories.Take(10)) {
+                        <li><a href="/thu-vien-anh/@(cat.Slug).html">@cat.Name <span>@cat.ItemCount</span></a></li>
+                    }
+                </ul>
+                @if(categories.Count > 10) {
+                    <a href="javascript:void(0)" onclick="$('.tt-sidebar-list li.d-none').removeClass('d-none'); $(this).hide();" class="tt-sidebar-link">Xem tất cả danh mục <i class="fa-solid fa-arrow-right"></i></a>
+                    <ul class="tt-sidebar-list">
+                         @foreach(var cat in categories.Skip(10)) {
+                            <li class="d-none"><a href="/thu-vien-anh/@(cat.Slug).html">@cat.Name <span>@cat.ItemCount</span></a></li>
+                        }
+                    </ul>
+                }
+            </div>
+
+            <!-- Album liên quan -->
+            @if(related != null && related.Any()) {
+            <div class="tt-sidebar-box mb-3">
+                <h4 class="tt-sidebar-title">ALBUM LIÊN QUAN</h4>
+                @foreach(var r in related.Take(5)) {
+                    <div class="tt-hot-item">
+                        <a href="/album/@(r.Slug).html">
+                            <img src="@(string.IsNullOrEmpty(r.CoverImage) ? "/assets/images/placeholder.png" : r.CoverImage)" alt="@r.AlbumName">
+                        </a>
+                        <div>
+                            <a href="/album/@(r.Slug).html" class="tt-hot-title line-clamp-2">@r.AlbumName</a>
+                            <div class="tt-hot-meta">
+                                <i class="fa-regular fa-calendar"></i> @r.CreatedAt.ToString("dd/MM/yyyy")
+                            </div>
                         </div>
                     </div>
-                </a>
+                }
             </div>
-        }
+            }
+
+            <!-- CTA Box -->
+            <div class="tt-cta-box text-center">
+                <img src="/assets/images/tuvanvien.png" alt="Tư vấn viên" class="img-fluid rounded-circle mb-3" style="width: 100px; height: 100px; object-fit: cover; border: 3px solid #fff;">
+                <h4 class="text-start">CẦN TƯ VẤN MUA HÀNG?</h4>
+                <ul class="list-unstyled text-start">
+                    <li><i class="fa-solid fa-check-circle"></i> Tư vấn chọn sản phẩm phù hợp</li>
+                    <li><i class="fa-solid fa-check-circle"></i> Báo giá nhanh chóng</li>
+                    <li><i class="fa-solid fa-check-circle"></i> Hỗ trợ kỹ thuật 24/7</li>
+                    <li><i class="fa-solid fa-check-circle"></i> Chính sách bảo hành uy tín</li>
+                </ul>
+                <a href="https://zalo.me/@settings.Hotline" target="_blank" class="tt-cta-btn w-100">TƯ VẤN NGAY</a>
+            </div>
+        </div>
     </div>
-}
+</main>
 
 @section Scripts {
     <script src="https://cdn.jsdelivr.net/npm/glightbox/dist/js/glightbox.min.js"></script>

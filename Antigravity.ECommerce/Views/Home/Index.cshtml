@@ -165,13 +165,13 @@
   <div class="row g-4 align-items-center brand-card">
     <div class="col-lg-5">
       <div class="brand-img-wrap">
-        <img src="@brandIntro?.Image" alt="@(brandIntro?.Title ?? "VỀ THƯƠNG HIỆU GORDAK")" class="factory-img w-100">
+        <img src="@brandIntro?.Image" alt="@brandIntro?.Title" class="factory-img w-100">
       </div>
     </div>
     <div class="col-lg-7">
-      <h2 class="brand-title">@(brandIntro?.Title ?? "VỀ THƯƠNG HIỆU GORDAK")</h2>
-      <p class="brand-desc">@(brandIntro?.Description ?? "Gordak là thương hiệu nổi tiếng trong lĩnh vực thiết bị hàn và sửa chữa điện tử, được thành lập từ năm 1999. Với hơn 20 năm phát triển, Gordak không ngừng nghiên cứu và cải tiến công nghệ để mang đến những sản phẩm chất lượng cao, độ bền vượt trội và hiệu suất ổn định.")</p>
-      <p class="brand-desc">@(brandIntro?.VideoUrl ?? "Các sản phẩm của Gordak được tin dùng rộng rãi trong lĩnh vực sửa chữa điện tử, sản xuất công nghiệp, phòng thí nghiệm và đào tạo nghề tại hơn 50 quốc gia trên thế giới.")</p>
+      <h2 class="brand-title">@brandIntro?.Title</h2>
+      <p class="brand-desc">@brandIntro?.Description</p>
+      <p class="brand-desc">@brandIntro?.VideoUrl</p>
       
       @if(brandStats.Count > 0)
       {
@@ -192,7 +192,7 @@
         }
       </div>
       }
-      <a href="@(brandIntro?.Link ?? "/gioi-thieu.html")" class="btn-gd d-inline-flex align-items-center gap-2 px-4 py-2">Tìm hiểu thêm về Gordak <i class="fa-solid fa-arrow-right"></i></a>
+      <a href="@brandIntro?.Link" class="btn-gd d-inline-flex align-items-center gap-2 px-4 py-2">Tìm hiểu thêm về Gordak <i class="fa-solid fa-arrow-right"></i></a>
     </div>
   </div>
 </section>

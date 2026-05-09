@@ -1,10 +1,18 @@
 @model List<Antigravity.ECommerce.Models.Document>
+@using Antigravity.ECommerce.Services
 @{
     Layout = "~/Views/Shared/_MainLayout.cshtml";
     ViewData["Title"] = ViewBag.CurrentCategory != null ? ViewBag.CurrentCategory.Name : "Tài liệu & Ấn phẩm";
-    var categories = ViewBag.Categories as List<Antigravity.ECommerce.Models.Category>;
+    var categories = ViewBag.Categories as List<Antigravity.ECommerce.Models.Category> ?? new List<Antigravity.ECommerce.Models.Category>();
+    var currentCat = ViewBag.CurrentCategory as Antigravity.ECommerce.Models.Category;
     int currentPage = ViewBag.CurrentPage;
     int totalPages = (int)Math.Ceiling((double)ViewBag.TotalCount / ViewBag.PageSize);
+    
+    var settings = SSetting.GetViewModel();
+
+    // Lấy danh sách hot document trực tiếp trong View
+    var recentDocs = SDocument.GetAll().Where(x => x.Status == 1).OrderByDescending(x => x.CreatedAt).Take(5).ToList();
+    var totalDocCount = SDocument.GetAll().Count(x => x.Status == 1);
 }
 
 @section Styles {
@@ -36,120 +44,150 @@
         .doc-card[data-ext="pdf"] .doc-icon { color: #f40f02; background: rgba(244,15,2,0.1); }
         .doc-card[data-ext="doc"] .doc-icon, .doc-card[data-ext="docx"] .doc-icon { color: #2b579a; background: rgba(43,87,154,0.1); }
         .doc-card[data-ext="xls"] .doc-icon, .doc-card[data-ext="xlsx"] .doc-icon { color: #217346; background: rgba(33,115,70,0.1); }
-        
-        .cat-sidebar {
-            background: #f8f9fa;
-            border-radius: 12px;
-            padding: 20px;
-        }
-        .cat-link {
-            display: block;
-            padding: 10px 15px;
-            color: #495057;
-            text-decoration: none;
-            border-radius: 6px;
-            margin-bottom: 5px;
-            font-weight: 500;
-            transition: all 0.2s;
-        }
-        .cat-link:hover, .cat-link.active {
-            background: #25a0e2;
-            color: #fff;
-        }
     </style>
 }
 
-<div class="row mb-5">
-    <div class="col-12 text-center">
-        <h1 class="fw-bold mb-3">Tài liệu & Ấn phẩm</h1>
-        <p class="text-muted max-w-2xl mx-auto">Kho lưu trữ các tài liệu chính thức, báo cáo, biểu mẫu và cẩm nang hướng dẫn.</p>
-    </div>
+<div class="container mt-3 mb-4">
+    <nav class="sp-breadcrumb">
+        <a href="/">Trang chủ</a> 
+        <i class="fa-solid fa-chevron-right"></i> 
+        @if(currentCat == null) {
+            <span>Tài liệu</span>
+        } else {
+            <a href="/tai-lieu.html">Tài liệu</a> <i class="fa-solid fa-chevron-right"></i> <span>@currentCat.Name</span>
+        }
+    </nav>
 </div>
 
-<div class="row">
-    <div class="col-lg-3 mb-4">
-        <div class="cat-sidebar">
-            <h5 class="fw-bold mb-3 pb-2 border-bottom">Danh mục Tài liệu</h5>
-            <a href="/tai-lieu.html" class="cat-link @(ViewBag.CurrentCategory == null ? "active" : "")"><i class="mdi mdi-folder-multiple-outline me-2"></i>Tất cả tài liệu</a>
-            @if (categories != null)
+<main class="container mb-5">
+    <h1 class="lh-page-title mb-3 text-uppercase">@(currentCat?.Name ?? "TÀI LIỆU & ẤN PHẨM")</h1>
+
+    <!-- Filter tabs -->
+    @if(categories.Any()) {
+    <div class="tt-filter-tabs mb-4">
+        <a href="/tai-lieu.html" class="tt-filter-btn @(currentCat == null ? "active" : "")">Tất cả</a>
+        @foreach(var cat in categories) {
+            <a href="/tai-lieu/@(cat.Slug).html" class="tt-filter-btn @(currentCat?.CategoryId == cat.CategoryId ? "active" : "")">@cat.Name</a>
+        }
+    </div>
+    }
+
+    <div class="row g-4">
+        <!-- NỘI DUNG CHÍNH -->
+        <div class="col-lg-9">
+            
+            @if (Model != null && Model.Count > 0)
             {
-                foreach (var cat in categories)
+                foreach (var doc in Model)
                 {
-                    <a href="/tai-lieu/@cat.Slug" class="cat-link @(ViewBag.CurrentCategory != null && ViewBag.CurrentCategory.CategoryId == cat.CategoryId ? "active" : "")">
-                        <i class="mdi mdi-folder-outline me-2"></i>@cat.Name
-                    </a>
+                    string ext = "";
+                    if(!string.IsNullOrEmpty(doc.FilePath) && doc.FilePath.Contains(".")){
+                        ext = doc.FilePath.Substring(doc.FilePath.LastIndexOf(".") + 1).ToLower();
+                    }
+
+                    <div class="doc-card d-flex align-items-center" data-ext="@ext">
+                        <div class="flex-shrink-0 me-4">
+                            <div class="doc-icon">
+                                @if(ext == "pdf") { <i class="mdi mdi-file-pdf-box"></i> }
+                                else if(ext == "doc" || ext == "docx") { <i class="mdi mdi-file-word-box"></i> }
+                                else if(ext == "xls" || ext == "xlsx") { <i class="mdi mdi-file-excel-box"></i> }
+                                else { <i class="mdi mdi-file-document-outline"></i> }
+                            </div>
+                        </div>
+                        <div class="flex-grow-1">
+                            <h5 class="fw-bold mb-1"><a href="@doc.FilePath" target="_blank" class="text-dark text-decoration-none">@doc.Title</a></h5>
+                            <div class="text-muted small d-flex gap-3">
+                                <span><i class="mdi mdi-calendar"></i> @doc.CreatedAt.ToString("dd/MM/yyyy")</span>
+                                <span><i class="mdi mdi-folder"></i> @doc.CategoryName</span>
+                                @if(!string.IsNullOrEmpty(doc.FileSize)){
+                                    <span><i class="mdi mdi-weight"></i> @doc.FileSize</span>
+                                }
+                            </div>
+                        </div>
+                        <div class="flex-shrink-0 ms-3">
+                            <a href="@doc.FilePath" class="btn btn-primary" target="_blank" download><i class="mdi mdi-download me-1"></i> Tải về</a>
+                        </div>
+                    </div>
+                }
+
+                if (totalPages > 1)
+                {
+                    <div class="vd-pagination mt-4 mb-5">
+                        @if (currentPage > 1)
+                        {
+                            <a class="vd-page-btn" href="?page=@(currentPage - 1)"><i class="fa-solid fa-chevron-left" style="font-size:11px;"></i></a>
+                        }
+                        @for (int i = 1; i <= totalPages; i++)
+                        {
+                            <a class="vd-page-btn @(i == currentPage ? "active" : "")" href="?page=@i">@i</a>
+                        }
+                        @if (currentPage < totalPages)
+                        {
+                            <a class="vd-page-btn" href="?page=@(currentPage + 1)"><i class="fa-solid fa-chevron-right" style="font-size:11px;"></i></a>
+                        }
+                    </div>
                 }
             }
+            else
+            {
+                <div class="text-center py-5 border rounded bg-light">
+                    <i class="mdi mdi-folder-open-outline fs-1 text-muted"></i>
+                    <h5 class="text-muted mt-3">Danh mục này hiện chưa có tài liệu nào.</h5>
+                </div>
+            }
+
+        </div>
+
+        <!-- SIDEBAR -->
+        <div class="col-lg-3">
+            <!-- Danh mục -->
+            <div class="tt-sidebar-box mb-3">
+                <h4 class="tt-sidebar-title">DANH MỤC TÀI LIỆU</h4>
+                <ul class="tt-sidebar-list">
+                    <li><a href="/tai-lieu.html">Tất cả <span>@totalDocCount</span></a></li>
+                    @foreach(var cat in categories.Take(10)) {
+                        <li><a href="/tai-lieu/@(cat.Slug).html">@cat.Name <span>@cat.ItemCount</span></a></li>
+                    }
+                </ul>
+                @if(categories.Count > 10) {
+                    <a href="javascript:void(0)" onclick="$('.tt-sidebar-list li.d-none').removeClass('d-none'); $(this).hide();" class="tt-sidebar-link">Xem tất cả danh mục <i class="fa-solid fa-arrow-right"></i></a>
+                    <ul class="tt-sidebar-list">
+                         @foreach(var cat in categories.Skip(10)) {
+                            <li class="d-none"><a href="/tai-lieu/@(cat.Slug).html">@cat.Name <span>@cat.ItemCount</span></a></li>
+                        }
+                    </ul>
+                }
+            </div>
+
+            <!-- Tài liệu mới nhất -->
+            @if(recentDocs.Any()) {
+            <div class="tt-sidebar-box mb-3">
+                <h4 class="tt-sidebar-title">TÀI LIỆU MỚI NHẤT</h4>
+                <ul class="tt-sidebar-list border-0">
+                    @foreach(var doc in recentDocs) {
+                        <li class="border-bottom py-2">
+                            <a href="@doc.FilePath" target="_blank" download class="d-block w-100 text-dark fw-medium lh-sm" style="font-size: 14px;">
+                                <i class="mdi mdi-file-document-outline text-primary me-1"></i> @doc.Title
+                            </a>
+                            <div class="text-muted small mt-1"><i class="mdi mdi-calendar"></i> @doc.CreatedAt.ToString("dd/MM/yyyy")</div>
+                        </li>
+                    }
+                </ul>
+            </div>
+            }
+
+            <!-- CTA Box -->
+            <div class="tt-cta-box text-center">
+                <img src="/assets/images/tuvanvien.png" alt="Tư vấn viên" class="img-fluid rounded-circle mb-3" style="width: 100px; height: 100px; object-fit: cover; border: 3px solid #fff;">
+                <h4 class="text-start">CẦN TƯ VẤN MUA HÀNG?</h4>
+                <ul class="list-unstyled text-start">
+                    <li><i class="fa-solid fa-check-circle"></i> Tư vấn chọn sản phẩm phù hợp</li>
+                    <li><i class="fa-solid fa-check-circle"></i> Báo giá nhanh chóng</li>
+                    <li><i class="fa-solid fa-check-circle"></i> Hỗ trợ kỹ thuật 24/7</li>
+                    <li><i class="fa-solid fa-check-circle"></i> Chính sách bảo hành uy tín</li>
+                </ul>
+                <a href="https://zalo.me/@settings.Hotline" target="_blank" class="tt-cta-btn w-100">TƯ VẤN NGAY</a>
+            </div>
         </div>
     </div>
-
-    <div class="col-lg-9">
-        @if (ViewBag.CurrentCategory != null)
-        {
-            <div class="mb-4">
-                <h4 class="fw-bold">@ViewBag.CurrentCategory.Name</h4>
-                <p class="text-muted mb-0">@ViewBag.CurrentCategory.Description</p>
-            </div>
-        }
-
-        @if (Model != null && Model.Count > 0)
-        {
-            foreach (var doc in Model)
-            {
-                string ext = "";
-                if(!string.IsNullOrEmpty(doc.FilePath) && doc.FilePath.Contains(".")){
-                    ext = doc.FilePath.Substring(doc.FilePath.LastIndexOf(".") + 1).ToLower();
-                }
-
-                <div class="doc-card d-flex align-items-center" data-ext="@ext">
-                    <div class="flex-shrink-0 me-4">
-                        <div class="doc-icon">
-                            @if(ext == "pdf") { <i class="mdi mdi-file-pdf-box"></i> }
-                            else if(ext == "doc" || ext == "docx") { <i class="mdi mdi-file-word-box"></i> }
-                            else if(ext == "xls" || ext == "xlsx") { <i class="mdi mdi-file-excel-box"></i> }
-                            else { <i class="mdi mdi-file-document-outline"></i> }
-                        </div>
-                    </div>
-                    <div class="flex-grow-1">
-                        <h5 class="fw-bold mb-1"><a href="@doc.FilePath" target="_blank" class="text-dark text-decoration-none">@doc.Title</a></h5>
-                        <div class="text-muted small d-flex gap-3">
-                            <span><i class="mdi mdi-calendar"></i> @doc.CreatedAt.ToString("dd/MM/yyyy")</span>
-                            <span><i class="mdi mdi-folder"></i> @doc.CategoryName</span>
-                            @if(!string.IsNullOrEmpty(doc.FileSize)){
-                                <span><i class="mdi mdi-weight"></i> @doc.FileSize</span>
-                            }
-                        </div>
-                    </div>
-                    <div class="flex-shrink-0 ms-3">
-                        <a href="@doc.FilePath" class="btn btn-primary" target="_blank" download><i class="mdi mdi-download me-1"></i> Tải về</a>
-                    </div>
-                </div>
-            }
-
-            if (totalPages > 1)
-            {
-                <div class="vd-pagination mt-4 mb-5">
-                    @if (currentPage > 1)
-                    {
-                        <a class="vd-page-btn" href="?page=@(currentPage - 1)"><i class="fa-solid fa-chevron-left" style="font-size:11px;"></i></a>
-                    }
-                    @for (int i = 1; i <= totalPages; i++)
-                    {
-                        <a class="vd-page-btn @(i == currentPage ? "active" : "")" href="?page=@i">@i</a>
-                    }
-                    @if (currentPage < totalPages)
-                    {
-                        <a class="vd-page-btn" href="?page=@(currentPage + 1)"><i class="fa-solid fa-chevron-right" style="font-size:11px;"></i></a>
-                    }
-                </div>
-            }
-        }
-        else
-        {
-            <div class="text-center py-5 border rounded bg-light">
-                <i class="mdi mdi-folder-open-outline fs-1 text-muted"></i>
-                <h5 class="text-muted mt-3">Danh mục này hiện chưa có tài liệu nào.</h5>
-            </div>
-        }
-    </div>
-</div>
+</main>

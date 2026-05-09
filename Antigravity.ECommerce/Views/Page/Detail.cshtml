@@ -1,62 +1,86 @@
 @model Antigravity.ECommerce.Models.Category
+@using Antigravity.ECommerce.Services
 @{
-    Layout = "_MainLayout";
+    Layout = "~/Views/Shared/_MainLayout.cshtml";
+    ViewBag.Title = Model.SeoTitle ?? Model.Name;
+    var settings = SSetting.GetViewModel();
 }
 
-@if (!string.IsNullOrEmpty(Model.Banner))
-{
-    <section class="py-5 text-white position-relative" style="background: url('@Model.Banner') center/cover; min-height: 250px;">
-        <div class="position-absolute top-0 start-0 w-100 h-100 bg-dark opacity-50"></div>
-        <div class="container position-relative py-4">
-            <h1 class="display-4 fw-bold">@Model.Name</h1>
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb mb-0">
-                    <li class="breadcrumb-item"><a href="/" class="text-white-50 text-decoration-none">Trang chủ</a></li>
-                    <li class="breadcrumb-item active text-white" aria-current="page">@Model.Name</li>
-                </ol>
-            </nav>
-        </div>
-    </section>
-}
-else
-{
-    <section class="bg-primary py-4 text-white">
-        <div class="container">
-            <h1 class="fw-bold mb-1">@Model.Name</h1>
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb mb-0">
-                    <li class="breadcrumb-item"><a href="/" class="text-white-50 text-decoration-none">Trang chủ</a></li>
-                    <li class="breadcrumb-item active text-white" aria-current="page">@Model.Name</li>
-                </ol>
-            </nav>
-        </div>
-    </section>
-}
+<!-- ======== BREADCRUMB ======== -->
+<div class="container mt-3 mb-2">
+    <nav class="sp-breadcrumb">
+        <a href="/">Trang chủ</a>
+        <i class="fa-solid fa-chevron-right"></i>
+        <span>@Model.Name</span>
+    </nav>
+</div>
 
-<section class="py-5 bg-white">
-    <div class="container py-3">
-        <div class="row justify-content-center">
-            <div class="col-lg-10">
-                <article class="cms-content fs-5" style="line-height: 1.8; color: #333;">
-                    @if (!string.IsNullOrEmpty(Model.Description))
-                    {
-                        <div class="lead fw-bold mb-4 p-3 bg-light border-start border-4 border-primary">
-                            @Model.Description
-                        </div>
-                    }
+<main class="container mb-5">
+    <div class="row g-4">
 
-                    <div class="mt-4">
-                        @Html.Raw(Model.Content)
-                    </div>
-                </article>
+        <!-- ======== NỘI DUNG CHÍNH ======== -->
+        <div class="col-lg-12">
+            <h1 class="fw-bold fs-2 mb-3" style="color: #212d45; line-height: 1.3;">@Model.Name</h1>
+
+            <!-- Banner ảnh đầu trang nếu có -->
+            @if (!string.IsNullOrEmpty(Model.Banner))
+            {
+                <div class="mb-4">
+                    <img src="@Model.Banner" class="img-fluid rounded shadow-sm w-100"
+                         style="max-height:420px; object-fit:cover;" alt="@Model.Name" />
+                </div>
+            }
+
+            <div class="content-body mb-5" style="font-size:16px; line-height:1.8; color: #333;">
+
+                <!-- Mô tả ngắn (nếu có) -->
+                @if (!string.IsNullOrEmpty(Model.Description))
+                {
+                    <p class="fw-bold mb-4" style="font-size: 18px; color: #555; font-style: italic;">
+                        @Model.Description
+                    </p>
+                }
+
+                <!-- Nội dung chính -->
+                <div class="main-detail-content">@Html.Raw(Model.Content)</div>
+            </div>
+
+            <!-- Share bar -->
+            <div class="d-flex align-items-center gap-3 mt-5 p-3 bg-light rounded-3">
+                <span class="fw-bold">Chia sẻ trang: </span>
+                <div class="d-flex gap-2">
+                    <a href="https://www.facebook.com/sharer/sharer.php?u=@(Context.Request.Scheme + "://" + Context.Request.Host + Context.Request.Path)"
+                       target="_blank" class="social-circle" style="background:#3b5998;">
+                        <i class="fa-brands fa-facebook-f"></i>
+                    </a>
+                    <a href="https://twitter.com/intent/tweet?url=@(Context.Request.Scheme + "://" + Context.Request.Host + Context.Request.Path)"
+                       target="_blank" class="social-circle" style="background:#1da1f2;">
+                        <i class="fa-brands fa-twitter"></i>
+                    </a>
+                    <a href="https://www.linkedin.com/shareArticle?mini=true&url=@(Context.Request.Scheme + "://" + Context.Request.Host + Context.Request.Path)"
+                       target="_blank" class="social-circle" style="background:#0a66c2;">
+                        <i class="fa-brands fa-linkedin-in"></i>
+                    </a>
+                </div>
             </div>
         </div>
+
+
     </div>
-</section>
+</main>
 
 @section Styles {
     <style>
-        .cms-content img { max-width: 100%; height: auto; border-radius: 8px; margin: 15px 0; }
-        .cms-content h2, .cms-content h3 { margin-top: 30px; font-weight: bold; }
+        .main-detail-content img { max-width: 100%; height: auto; border-radius: 8px; margin: 15px 0; }
+        .main-detail-content h2, .main-detail-content h3 { margin-top: 30px; font-weight: bold; }
+        .main-detail-content table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        .main-detail-content table td, .main-detail-content table th { border: 1px solid #dee2e6; padding: 8px 12px; }
+        .main-detail-content table th { background: #f8f9fa; font-weight: 600; }
+        .social-circle {
+            display: inline-flex; align-items: center; justify-content: center;
+            width: 36px; height: 36px; border-radius: 50%; color: #fff;
+            font-size: 14px; transition: opacity .2s;
+        }
+        .social-circle:hover { opacity: .8; color: #fff; }
     </style>
 }

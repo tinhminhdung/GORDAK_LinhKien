@@ -38,7 +38,13 @@ namespace Antigravity.ECommerce.Controllers
             ViewBag.PageSize = size;
             ViewBag.TotalPages = (int)Math.Ceiling((double)totalRoots / size);
             
-            ViewBag.Categories = SCategory.GetHierarchical().Where(x => x.CategoryType == 0).ToList();
+            // Flat list cho dropdown "Gắn vào Menu cha" trong modal Import
+            // Lấy tất cả menu (không filter position) để admin chọn tự do
+            ViewBag.Categories = SCategory.GetAll()
+                .Where(x => x.CategoryType == 0 && x.Status == 1)
+                .OrderBy(x => x.ParentId)
+                .ThenBy(x => x.SortOrder)
+                .ToList();
 
             return View(pagedRoots);
         }
@@ -59,7 +65,25 @@ namespace Antigravity.ECommerce.Controllers
         public IActionResult Create(int? parentId = null)
         {
             PrepareMenuBag();
-            return View(new Category { SortOrder = 0, Status = 1, CategoryType = 0, ParentId = parentId ?? 0, LinkType = 1 }); 
+
+            // Kế thừa MenuPosition từ cha — tránh admin phải chọn lại vị trí
+            string inheritedPosition = "Header"; // default
+            if (parentId.HasValue && parentId.Value > 0)
+            {
+                var parent = SCategory.GetById(parentId.Value);
+                if (parent != null && !string.IsNullOrEmpty(parent.MenuPosition))
+                    inheritedPosition = parent.MenuPosition;
+            }
+
+            return View(new Category
+            {
+                SortOrder = 0,
+                Status = 1,
+                CategoryType = 0,
+                ParentId = parentId ?? 0,
+                LinkType = 1,
+                MenuPosition = inheritedPosition
+            });
         }
 
         [HttpPost]
@@ -271,22 +295,21 @@ namespace Antigravity.ECommerce.Controllers
             foreach (var src in selectedCats)
             {
                 string expectedUrl = GenerateUrl(src.Slug ?? "", model.ModuleType);
-                if (menuUrls.Contains(expectedUrl))
-                {
-                    // Đã tồn tại, tìm menu ID của nó để nếu con nó được import thì biết gắn vào đâu
-                    var existingMenu = allMenus.FirstOrDefault(x => x.Url == expectedUrl);
-                    if (existingMenu != null)
-                    {
-                        idMapping[src.CategoryId] = existingMenu.CategoryId;
-                    }
-                    continue;
-                }
 
                 // Xác định ParentId mới
                 int newParentId = model.ParentId;
                 if (idMapping.ContainsKey(src.ParentId))
                 {
                     newParentId = idMapping[src.ParentId];
+                }
+
+                // Chỉ bỏ qua nếu ĐÃ TỒN TẠI ở CÙNG VỊ TRÍ và CÙNG MENU CHA
+                var existingMenu = allMenus.FirstOrDefault(x => x.Url == expectedUrl && x.ParentId == newParentId && x.MenuPosition == model.Position);
+                if (existingMenu != null)
+                {
+                    // Đã tồn tại đúng chỗ này -> map ID để menu con gắn vào, không tạo thêm
+                    idMapping[src.CategoryId] = existingMenu.CategoryId;
+                    continue;
                 }
 
                 var newMenu = new Category
