@@ -32,6 +32,9 @@ namespace Antigravity.ECommerce.Models
         /// <summary> Video nổi bật (Hiển thị sidebar/trang chủ) </summary>
         public bool IsHot { get; set; }
 
+        /// <summary> Lượt xem </summary>
+        public int Views { get; set; }
+
         /// <summary> Tiêu đề SEO Meta Title </summary>
         public string? SeoTitle { get; set; }
 

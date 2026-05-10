@@ -109,7 +109,7 @@ namespace Antigravity.ECommerce.Controllers
             if (item == null) return Redirect("/");
             
             // Cập nhật lượt xem trực tiếp vào Database (không chờ Cache)
-            Antigravity.ECommerce.Services.BaseConnectionSql.ExecuteNonQuery("UPDATE News SET Views = Views + 1 WHERE NewsId = " + item.NewsId);
+            SSeo.IncrementViewCount("News", "NewsId", item.NewsId);
             item.Views += 1;
             
             // Lấy ngẫu nhiên 5 bài viết liên quan (cùng trạng thái)

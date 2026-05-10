@@ -9,6 +9,22 @@
     </image:image>
   </url>
   <url>
+    <loc>https://localhost:7057/gioi-thieu.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://localhost:7057/uploads/logo/logo_dak.png</image:loc>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://localhost:7057/lien-he.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://localhost:7057/uploads/logo/logo_dak.png</image:loc>
+    </image:image>
+  </url>
+  <url>
     <loc>https://localhost:7057/san-pham.html</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
@@ -165,24 +181,60 @@
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/san-pham/detail/demo-0dong-sua-urggggg-666.html</loc>
+    <loc>https://localhost:7057/san-pham/detail/demo-san-pham-data-666.html</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/Banner/636330481955160405.jpg</image:loc>
-      <image:title>demo 0đồng sửa urggggg</image:title>
+      <image:loc>https://localhost:7057/uploads/SanPham/--Ampe-kim--Kep-dong/638728181679620913.jpg</image:loc>
+      <image:title>demo sản phẩm data</image:title>
     </image:image>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/Banner/636330482126038319.jpg</image:loc>
-      <image:title>demo 0đồng sửa urggggg</image:title>
+      <image:loc>https://localhost:7057/uploads/SanPham/--Ampe-kim--Kep-dong/638730496932671913.jpg</image:loc>
+      <image:title>demo sản phẩm data</image:title>
     </image:image>
     <image:image>
       <image:loc>https://localhost:7057/uploads/Banner/636330478278386928.png</image:loc>
-      <image:title>demo 0đồng sửa urggggg</image:title>
+      <image:title>demo sản phẩm data</image:title>
     </image:image>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/Banner/636330482030729306.jpg</image:loc>
-      <image:title>demo 0đồng sửa urggggg</image:title>
+      <image:loc>https://localhost:7057/uploads/SanPham/--But-thu-dien-dien-tu/638728126895920153.jpg</image:loc>
+      <image:title>demo sản phẩm data</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://localhost:7057/uploads/SanPham/--But-thu-dien-dien-tu/638731491531483349.jpg</image:loc>
+      <image:title>demo sản phẩm data</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://localhost:7057/uploads/SanPham/--But-thu-dien-dien-tu/638731504104572013.jpg</image:loc>
+      <image:title>demo sản phẩm data</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://localhost:7057/uploads/SanPham/--Ampe-kim--Kep-dong/638442817927911194.jpg</image:loc>
+      <image:title>demo sản phẩm data</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://localhost:7057/uploads/SanPham/--Ampe-kim--Kep-dong/638442919436758328.jpg</image:loc>
+      <image:title>demo sản phẩm data</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://localhost:7057/uploads/SanPham/--Ampe-kim--Kep-dong/638731534184276425.jpg</image:loc>
+      <image:title>demo sản phẩm data</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://localhost:7057/uploads/SanPham/--Ampe-kim--Kep-dong/638730499293122636.jpg</image:loc>
+      <image:title>demo sản phẩm data</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://localhost:7057/uploads/SanPham/--Ampe-kim--Kep-dong/638729789101186679.jpg</image:loc>
+      <image:title>demo sản phẩm data</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://localhost:7057/uploads/SanPham/--Ampe-kim--Kep-dong/638729797805074015.jpg</image:loc>
+      <image:title>demo sản phẩm data</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://localhost:7057/uploads/SanPham/--Ampe-kim--Kep-dong/638731534823821497.jpg</image:loc>
+      <image:title>demo sản phẩm data</image:title>
     </image:image>
   </url>
   <url>
@@ -200,6 +252,18 @@
     <priority>0.9</priority>
     <image:image>
       <image:loc>https://localhost:7057/uploads/SanPham/--Ampe-kim--Kep-dong/638728181679620913.jpg</image:loc>
+      <image:title>Thiết bị đo Ampe Kìm Hioki Model -- demo 2</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://localhost:7057/uploads/SanPham/--But-thu-dien-dien-tu/638731491531483349.jpg</image:loc>
+      <image:title>Thiết bị đo Ampe Kìm Hioki Model -- demo 2</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://localhost:7057/uploads/SanPham/--But-thu-dien-dien-tu/638728126895920153.jpg</image:loc>
+      <image:title>Thiết bị đo Ampe Kìm Hioki Model -- demo 2</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://localhost:7057/uploads/SanPham/--But-thu-dien-dien-tu/638731504104572013.jpg</image:loc>
       <image:title>Thiết bị đo Ampe Kìm Hioki Model -- demo 2</image:title>
     </image:image>
   </url>

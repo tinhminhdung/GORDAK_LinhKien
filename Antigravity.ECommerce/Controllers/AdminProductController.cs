@@ -222,12 +222,53 @@ namespace Antigravity.ECommerce.Controllers
             string? catIds = categories != null && categories.Length > 0 ? string.Join(",", categories) : null;
             var products = SProduct.Search(kw, catIds, status, hot, priceMin, priceMax, "CreatedAt", "DESC", 1, 1000000, dateMin, dateMax);
 
+            string EscapeCsv(string? value)
+            {
+                if (string.IsNullOrEmpty(value)) return "";
+                return "\"" + value.Replace("\"", "\"\"") + "\"";
+            }
+
             var builder = new System.Text.StringBuilder();
-            builder.AppendLine("ProductId,SKU,Name,Price,Stock,Status,CreatedAt");
+            builder.AppendLine("ProductId,CategoryIds,SKU,Name,Slug,ShortDescription,DetailDescription,Price,OldPrice,PurchasePrice,Stock,Unit,Weight,MainImage,ImageGallery,YoutubeVideo,Tags,RelatedProducts,Accessories,IsHot,IsNew,IsBestSeller,Views,Sales,Rating,Status,SeoTitle,SeoDescription,SeoKeywords,ShopeeLink,LazadaLink,TechnicalSpecs,CreatedAt,CreatedBy,UpdatedAt,UpdatedBy");
 
             foreach (var item in products)
             {
-                builder.AppendLine($"{item.ProductId},{item.SKU},{item.Name.Replace(",", " ")},{item.Price},{item.Stock},{item.Status},{item.CreatedAt:yyyy-MM-dd}");
+                builder.Append($"{item.ProductId},");
+                builder.Append($"{EscapeCsv(item.CategoryIds)},");
+                builder.Append($"{EscapeCsv(item.SKU)},");
+                builder.Append($"{EscapeCsv(item.Name)},");
+                builder.Append($"{EscapeCsv(item.Slug)},");
+                builder.Append($"{EscapeCsv(item.ShortDescription)},");
+                builder.Append($"{EscapeCsv(item.DetailDescription)},");
+                builder.Append($"{item.Price},");
+                builder.Append($"{item.OldPrice},");
+                builder.Append($"{item.PurchasePrice},");
+                builder.Append($"{item.Stock},");
+                builder.Append($"{EscapeCsv(item.Unit)},");
+                builder.Append($"{item.Weight},");
+                builder.Append($"{EscapeCsv(item.MainImage)},");
+                builder.Append($"{EscapeCsv(item.ImageGallery)},");
+                builder.Append($"{EscapeCsv(item.YoutubeVideo)},");
+                builder.Append($"{EscapeCsv(item.Tags)},");
+                builder.Append($"{EscapeCsv(item.RelatedProducts)},");
+                builder.Append($"{EscapeCsv(item.Accessories)},");
+                builder.Append($"{(item.IsHot ? 1 : 0)},");
+                builder.Append($"{(item.IsNew ? 1 : 0)},");
+                builder.Append($"{(item.IsBestSeller ? 1 : 0)},");
+                builder.Append($"{item.Views},");
+                builder.Append($"{item.Sales},");
+                builder.Append($"{item.Rating},");
+                builder.Append($"{item.Status},");
+                builder.Append($"{EscapeCsv(item.SeoTitle)},");
+                builder.Append($"{EscapeCsv(item.SeoDescription)},");
+                builder.Append($"{EscapeCsv(item.SeoKeywords)},");
+                builder.Append($"{EscapeCsv(item.ShopeeLink)},");
+                builder.Append($"{EscapeCsv(item.LazadaLink)},");
+                builder.Append($"{EscapeCsv(item.TechnicalSpecs)},");
+                builder.Append($"{item.CreatedAt:yyyy-MM-dd HH:mm:ss},");
+                builder.Append($"{EscapeCsv(item.CreatedBy)},");
+                builder.Append($"{(item.UpdatedAt.HasValue ? item.UpdatedAt.Value.ToString("yyyy-MM-dd HH:mm:ss") : "")},");
+                builder.AppendLine($"{EscapeCsv(item.UpdatedBy)}");
             }
 
             return File(System.Text.Encoding.UTF8.GetPreamble().Concat(System.Text.Encoding.UTF8.GetBytes(builder.ToString())).ToArray(), "text/csv", $"Products_{DateTime.Now:yyyyMMddHHmm}.csv");

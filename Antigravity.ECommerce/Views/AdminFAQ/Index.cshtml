@@ -96,6 +96,7 @@
                                 <th style="width: 60px;">ID</th>
                                 <th onclick="changeSort('Question')" class="sort cursor-pointer">Câu hỏi <i class="ri-arrow-up-down-line sort-icon @(ViewBag.SortColumn == "Question" ? "active" : "")"></i></th>
                                 <th>Danh mục</th>
+                                <th onclick="changeSort('Views')" class="sort cursor-pointer text-center">Xem <i class="ri-arrow-up-down-line sort-icon @(ViewBag.SortColumn == "Views" ? "active" : "")"></i></th>
                                 <th style="width: 100px;">Thứ tự</th>
                                 <th style="width: 120px;">Trạng thái</th>
                                 <th style="width: 150px;" class="text-end">Thao tác</th>
@@ -120,6 +121,9 @@
                                         </td>
                                         <td>
                                             <span class="badge bg-light text-dark">@(string.IsNullOrEmpty(item.CategoryName) ? "Chưa có danh mục" : item.CategoryName)</span>
+                                        </td>
+                                        <td class="text-center">
+                                            <span class="text-muted"><i class="ri-eye-line align-middle text-primary me-1"></i>@item.Views</span>
                                         </td>
                                         <td><span class="badge bg-light text-dark">@item.SortOrder</span></td>
                                         <td>

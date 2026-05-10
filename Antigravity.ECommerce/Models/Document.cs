@@ -36,6 +36,9 @@ namespace Antigravity.ECommerce.Models
         /// <summary> Trạng thái (1: Hiện, 0: Ẩn) </summary>
         public int Status { get; set; } = 1;
 
+        /// <summary> Lượt xem </summary>
+        public int Views { get; set; }
+
         /// <summary> Tiêu đề SEO Meta Title </summary>
         public string? SeoTitle { get; set; }
 

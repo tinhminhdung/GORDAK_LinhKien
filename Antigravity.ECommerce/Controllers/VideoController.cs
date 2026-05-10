@@ -82,6 +82,10 @@ namespace Antigravity.ECommerce.Controllers
             var video = SVideo.GetBySlug(slug);
             if (video == null || video.Status == 0) return NotFound();
 
+            // Tăng lượt xem
+            SSeo.IncrementViewCount("Videos", "VideoId", video.VideoId);
+            video.Views += 1;
+
             // Lấy ngẫu nhiên 6 video liên quan cùng danh mục
             ViewBag.Related = SVideo.Search(null, 1, video.CategoryId, "CreatedAt", "DESC", 1, 6)
                 .Where(v => v.VideoId != video.VideoId).ToList();

@@ -299,15 +299,89 @@ namespace Antigravity.ECommerce.Controllers
         {
             var orders = SOrder.Search(kw, status, paymentStatus, provinceId, wardId, requiresVat, dateMin, dateMax, "CreatedAt", "DESC", 1, 100000);
 
+            string EscapeCsv(string? value)
+            {
+                if (string.IsNullOrEmpty(value)) return "";
+                return "\"" + value.Replace("\"", "\"\"") + "\"";
+            }
+
             var builder = new System.Text.StringBuilder();
-            builder.AppendLine("OrderId,OrderCode,CustomerName,CustomerPhone,TotalAmount,OrderStatus,PaymentMethod,CreatedAt");
+            builder.AppendLine("OrderId,OrderCode,CustomerName,CustomerPhone,CustomerEmail,ShippingAddress,ProvinceName,WardName,SubTotal,ShippingFee,Discount,TotalAmount,OrderStatus,PaymentMethod,PaymentStatus,ShippingMethod,TrackingCode,CustomerNote,AdminNote,RequiresVAT,VATCompanyName,VATTaxCode,VATCompanyAddress,VATInvoiceEmail,CreatedAt,Item_ProductId,Item_ProductName,Item_Quantity,Item_Price,Item_Total");
 
             foreach (var item in orders)
             {
                 string statusName = item.OrderStatus switch {
                     0 => "Mới", 1 => "Xác nhận", 2 => "Đang giao", 3 => "Hoàn tất", 4 => "Đã hủy", 5 => "Trả hàng", _ => ""
                 };
-                builder.AppendLine($"{item.OrderId},{item.OrderCode},{item.CustomerName.Replace(",", " ")},{item.CustomerPhone},{item.TotalAmount},{statusName},{item.PaymentMethod},{item.CreatedAt:yyyy-MM-dd HH:mm}");
+                string paymentStatusName = item.PaymentStatus == 1 ? "Đã thanh toán" : "Chưa thanh toán";
+
+                var orderItems = SOrder.GetItemsByOrderId(item.OrderId);
+                
+                if (orderItems == null || orderItems.Count == 0)
+                {
+                    builder.Append($"{item.OrderId},");
+                    builder.Append($"{EscapeCsv(item.OrderCode)},");
+                    builder.Append($"{EscapeCsv(item.CustomerName)},");
+                    builder.Append($"{EscapeCsv(item.CustomerPhone)},");
+                    builder.Append($"{EscapeCsv(item.CustomerEmail)},");
+                    builder.Append($"{EscapeCsv(item.ShippingAddress)},");
+                    builder.Append($"{EscapeCsv(item.ProvinceName)},");
+                    builder.Append($"{EscapeCsv(item.WardName)},");
+                    builder.Append($"{item.SubTotal},");
+                    builder.Append($"{item.ShippingFee},");
+                    builder.Append($"{item.Discount},");
+                    builder.Append($"{item.TotalAmount},");
+                    builder.Append($"{EscapeCsv(statusName)},");
+                    builder.Append($"{EscapeCsv(item.PaymentMethod)},");
+                    builder.Append($"{EscapeCsv(paymentStatusName)},");
+                    builder.Append($"{EscapeCsv(item.ShippingMethod)},");
+                    builder.Append($"{EscapeCsv(item.TrackingCode)},");
+                    builder.Append($"{EscapeCsv(item.CustomerNote)},");
+                    builder.Append($"{EscapeCsv(item.AdminNote)},");
+                    builder.Append($"{(item.RequiresVAT ? 1 : 0)},");
+                    builder.Append($"{EscapeCsv(item.VATCompanyName)},");
+                    builder.Append($"{EscapeCsv(item.VATTaxCode)},");
+                    builder.Append($"{EscapeCsv(item.VATCompanyAddress)},");
+                    builder.Append($"{EscapeCsv(item.VATInvoiceEmail)},");
+                    builder.Append($"{item.CreatedAt:yyyy-MM-dd HH:mm:ss},");
+                    builder.AppendLine(",,,,"); // Empty item info
+                }
+                else
+                {
+                    foreach (var prod in orderItems)
+                    {
+                        builder.Append($"{item.OrderId},");
+                        builder.Append($"{EscapeCsv(item.OrderCode)},");
+                        builder.Append($"{EscapeCsv(item.CustomerName)},");
+                        builder.Append($"{EscapeCsv(item.CustomerPhone)},");
+                        builder.Append($"{EscapeCsv(item.CustomerEmail)},");
+                        builder.Append($"{EscapeCsv(item.ShippingAddress)},");
+                        builder.Append($"{EscapeCsv(item.ProvinceName)},");
+                        builder.Append($"{EscapeCsv(item.WardName)},");
+                        builder.Append($"{item.SubTotal},");
+                        builder.Append($"{item.ShippingFee},");
+                        builder.Append($"{item.Discount},");
+                        builder.Append($"{item.TotalAmount},");
+                        builder.Append($"{EscapeCsv(statusName)},");
+                        builder.Append($"{EscapeCsv(item.PaymentMethod)},");
+                        builder.Append($"{EscapeCsv(paymentStatusName)},");
+                        builder.Append($"{EscapeCsv(item.ShippingMethod)},");
+                        builder.Append($"{EscapeCsv(item.TrackingCode)},");
+                        builder.Append($"{EscapeCsv(item.CustomerNote)},");
+                        builder.Append($"{EscapeCsv(item.AdminNote)},");
+                        builder.Append($"{(item.RequiresVAT ? 1 : 0)},");
+                        builder.Append($"{EscapeCsv(item.VATCompanyName)},");
+                        builder.Append($"{EscapeCsv(item.VATTaxCode)},");
+                        builder.Append($"{EscapeCsv(item.VATCompanyAddress)},");
+                        builder.Append($"{EscapeCsv(item.VATInvoiceEmail)},");
+                        builder.Append($"{item.CreatedAt:yyyy-MM-dd HH:mm:ss},");
+                        builder.Append($"{prod.ProductId},");
+                        builder.Append($"{EscapeCsv(prod.ProductName)},");
+                        builder.Append($"{prod.Quantity},");
+                        builder.Append($"{prod.Price},");
+                        builder.AppendLine($"{prod.TotalPrice}");
+                    }
+                }
             }
 
             return File(System.Text.Encoding.UTF8.GetPreamble().Concat(System.Text.Encoding.UTF8.GetBytes(builder.ToString())).ToArray(), "text/csv", $"Orders_{DateTime.Now:yyyyMMddHHmm}.csv");

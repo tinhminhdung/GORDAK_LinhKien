@@ -23,6 +23,8 @@ namespace Antigravity.ECommerce.Controllers
             AddUrl(sb, baseUrl, "1.0", "daily", null, null);
 
             // 2. FIXED MODULE ROOTS
+            AddUrl(sb, $"{baseUrl}/gioi-thieu.html", "0.9", "monthly", "Giới thiệu", null);
+            AddUrl(sb, $"{baseUrl}/lien-he.html", "0.9", "monthly", "Liên hệ", null);
             AddUrl(sb, $"{baseUrl}/san-pham.html", "0.9", "daily", "Sản phẩm", null);
             AddUrl(sb, $"{baseUrl}/tin-tuc.html", "0.9", "daily", "Tin tức", null);
             AddUrl(sb, $"{baseUrl}/video.html", "0.8", "weekly", "Video", null);

@@ -113,6 +113,9 @@ namespace Antigravity.ECommerce.Controllers
             var product = SCache.GetOrSet($"Product_Detail_Id_{id}", () => FProduct.GetById(id), 60);
             if (product == null) return NotFound();
 
+            // Tăng lượt xem
+            SSeo.IncrementViewCount("Products", "ProductId", id);
+
             // 301 Redirect nếu slug trong URL không khớp slug thực (SEO-friendly)
             if (!string.IsNullOrEmpty(product.Slug) && product.Slug != slug)
             {

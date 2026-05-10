@@ -96,6 +96,7 @@
                                 <th onclick="changeSort('Title')" class="sort cursor-pointer">Tiêu đề tài liệu <i class="ri-arrow-up-down-line sort-icon @(ViewBag.SortColumn == "Title" ? "active" : "")"></i></th>
                                 <th>Danh mục</th>
                                 <th>Dung lượng</th>
+                                <th onclick="changeSort('Views')" class="sort cursor-pointer text-center">Tải/Xem <i class="ri-arrow-up-down-line sort-icon @(ViewBag.SortColumn == "Views" ? "active" : "")"></i></th>
                                 <th>Thứ tự</th>
                                 <th onclick="changeSort('CreatedAt')" class="sort cursor-pointer">Ngày tạo <i class="ri-arrow-up-down-line sort-icon @(ViewBag.SortColumn == "CreatedAt" ? "active" : "")"></i></th>
                                 <th>Trạng thái</th>
@@ -131,7 +132,12 @@
                                         <td>
                                             <span class="badge bg-light text-dark">@(string.IsNullOrEmpty(item.CategoryName) ? "Chưa có danh mục" : item.CategoryName)</span>
                                         </td>
-                                        <td><span class="badge badge-soft-info">@item.FileSize</span></td>
+                                        <td>
+                                            <span class="badge badge-soft-info">@item.FileSize</span>
+                                        </td>
+                                        <td class="text-center">
+                                            <span class="text-muted"><i class="ri-download-cloud-2-line align-middle text-primary me-1"></i>@item.Views</span>
+                                        </td>
                                         <td>@item.SortOrder</td>
                                         <td>@item.CreatedAt.ToString("dd/MM/yyyy HH:mm")</td>
                                         <td>

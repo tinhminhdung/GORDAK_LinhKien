@@ -98,15 +98,17 @@
               </div>
               @if(allImages.Count > 1)
               {
-              <div class="pd2-thumbs">
-                <i class="fa-solid fa-chevron-left pd2-thumb-nav" id="thumbPrev"></i>
-                @for(int i = 0; i < allImages.Count; i++)
-                {
-                    <div class="pd2-thumb-item @(i == 0 ? "active" : "")" onclick="changeImg(this, '@allImages[i]')">
-                      <img src="@allImages[i]" alt="Thumb @(i+1)">
-                    </div>
-                }
-                <i class="fa-solid fa-chevron-right pd2-thumb-nav" id="thumbNext"></i>
+              <div class="pd2-thumbs-wrapper position-relative mt-3" style="padding: 0 25px;">
+                <i class="fa-solid fa-chevron-left pd2-thumb-nav position-absolute top-50 translate-middle-y" id="thumbPrev" style="left: 0; z-index: 2; cursor: pointer; font-size: 20px; padding: 10px; color: #333;"></i>
+                <div class="pd2-thumbs w-100" id="thumbScroll">
+                  @for(int i = 0; i < allImages.Count; i++)
+                  {
+                      <div class="pd2-thumb-item @(i == 0 ? "active" : "")" onclick="changeImg(this, '@allImages[i]')">
+                        <img src="@allImages[i]" alt="Thumb @(i+1)">
+                      </div>
+                  }
+                </div>
+                <i class="fa-solid fa-chevron-right pd2-thumb-nav position-absolute top-50 translate-middle-y" id="thumbNext" style="right: 0; z-index: 2; cursor: pointer; font-size: 20px; padding: 10px; color: #333;"></i>
               </div>
               }
             </div>
@@ -531,6 +533,8 @@
             if (t === el) currentThumbIndex = idx;
         });
         el.classList.add('active');
+        // Scroll the thumbnail container to make the active thumb visible
+        el.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
     }
 
     // Auto Slide

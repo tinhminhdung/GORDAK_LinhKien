@@ -1,4 +1,4 @@
-﻿@model List<Antigravity.ECommerce.Models.Video>
+@model List<Antigravity.ECommerce.Models.Video>
 @{
     Layout = "_AdminLayout";
     ViewBag.Title = "Quản lý Video YouTube";
@@ -97,6 +97,7 @@
                                 <th onclick="changeSort('Title')" class="sort cursor-pointer">Tiêu đề <i class="ri-arrow-up-down-line sort-icon @(ViewBag.SortColumn == "Title" ? "active" : "")"></i></th>
                                 <th>Danh mục</th>
                                 <th>YouTube ID</th>
+                                <th onclick="changeSort('Views')" class="sort cursor-pointer text-center">Xem <i class="ri-arrow-up-down-line sort-icon @(ViewBag.SortColumn == "Views" ? "active" : "")"></i></th>
                                 <th>Thứ tự</th>
                                 <th class="text-center">Nổi bật (HOT)</th>
                                 <th>Trạng thái</th>
@@ -133,6 +134,9 @@
                                         </td>
                                         <td>
                                             <code class="bg-light text-primary px-2 py-1 rounded">@item.YoutubeId</code>
+                                        </td>
+                                        <td class="text-center">
+                                            <span class="text-muted"><i class="ri-eye-line align-middle text-primary me-1"></i>@item.Views</span>
                                         </td>
                                         <td>@item.SortOrder</td>
                                         <td class="text-center">

@@ -74,6 +74,10 @@ namespace Antigravity.ECommerce.Controllers
             var gallery = SGallery.GetBySlug(slug);
             if (gallery == null || gallery.Status == 0) return NotFound();
 
+            // Tăng lượt xem
+            SSeo.IncrementViewCount("Galleries", "GalleryId", gallery.GalleryId);
+            gallery.Views += 1;
+
             // Lấy ngẫu nhiên 6 Album liên quan cùng danh mục
             ViewBag.Related = SGallery.Search(null, 1, gallery.CategoryId, "CreatedAt", "DESC", 1, 6)
                 .Where(g => g.GalleryId != gallery.GalleryId).ToList();

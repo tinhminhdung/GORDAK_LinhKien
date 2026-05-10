@@ -43,7 +43,7 @@
         "image": ["@(string.IsNullOrEmpty(product.MainImage) ? baseUrl + "/assets/images/placeholder.png" : (product.MainImage.StartsWith("http") ? product.MainImage : baseUrl + product.MainImage))"],
         "description": "@(product.SeoDescription ?? product.ShortDescription ?? "")",
         "sku": "@(product.SKU ?? product.ProductId.ToString())",
-        "brand": { "@@type": "Brand", "name": "Elite Store" },
+        "brand": { "@@type": "Brand", "name": "@(Antigravity.ECommerce.Services.SSetting.GetViewModel().SiteTitle)" },
         "offers": {
             "@@type": "Offer",
             "url": "@(baseUrl + Context.Request.Path)",
@@ -120,7 +120,7 @@
     {
       "@@context": "https://schema.org",
       "@@type": "WebSite",
-      "name": "Elite Store",
+      "name": "@(Antigravity.ECommerce.Services.SSetting.GetViewModel().SiteTitle)",
       "url": "@baseUrl",
       "potentialAction": {
         "@@type": "SearchAction",

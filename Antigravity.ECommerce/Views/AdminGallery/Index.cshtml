@@ -1,4 +1,4 @@
-﻿@model List<Antigravity.ECommerce.Models.Gallery>
+@model List<Antigravity.ECommerce.Models.Gallery>
 @{
     Layout = "_AdminLayout";
     ViewBag.Title = "Quản lý Thư viện ảnh";
@@ -96,6 +96,7 @@
                                 <th style="width: 100px;">Ảnh bìa</th>
                                 <th onclick="changeSort('Name')" class="sort cursor-pointer">Tên Album <i class="ri-arrow-up-down-line sort-icon @(ViewBag.SortColumn == "Name" ? "active" : "")"></i></th>
                                 <th>Danh mục</th>
+                                <th onclick="changeSort('Views')" class="sort cursor-pointer text-center">Xem <i class="ri-arrow-up-down-line sort-icon @(ViewBag.SortColumn == "Views" ? "active" : "")"></i></th>
                                 <th style="width: 100px;">Thứ tự</th>
                                 <th style="width: 120px;">Trạng thái</th>
                                 <th style="width: 150px;" class="text-end">Thao tác</th>
@@ -115,9 +116,18 @@
                                         <td>
                                             <div class="position-relative">
                                                 <img src="@item.CoverImage" alt="" class="rounded shadow-sm" style="width: 80px; height: 50px; object-fit: cover;">
-                                                <div class="position-absolute bottom-0 end-0 bg-dark text-white rounded px-1" style="font-size: 10px; opacity: 0.7;">
-                                                    <i class="ri-image-2-line"></i> @item.ImageCount
-                                                </div>
+                                                @{
+                                                    int imgCount = item.ImageCount;
+                                                    if (imgCount == 0 && !string.IsNullOrEmpty(item.Images)) {
+                                                        imgCount = item.Images.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Length;
+                                                    }
+                                                }
+                                                @if (imgCount > 0)
+                                                {
+                                                    <div class="position-absolute bottom-0 end-0 bg-dark text-white rounded px-1" style="font-size: 10px; opacity: 0.7;">
+                                                        <i class="ri-image-2-line"></i> @imgCount
+                                                    </div>
+                                                }
                                             </div>
                                         </td>
                                         <td>
@@ -128,6 +138,9 @@
                                         </td>
                                         <td>
                                             <span class="badge bg-light text-dark">@(string.IsNullOrEmpty(item.CategoryName) ? "Chưa có danh mục" : item.CategoryName)</span>
+                                        </td>
+                                        <td class="text-center">
+                                            <span class="text-muted"><i class="ri-eye-line align-middle text-primary me-1"></i>@item.Views</span>
                                         </td>
                                         <td><span class="badge bg-light text-dark">@item.SortOrder</span></td>
                                         <td>

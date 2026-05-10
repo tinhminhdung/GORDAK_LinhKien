@@ -8,6 +8,20 @@ namespace Antigravity.ECommerce.Services
 {
     public static class SSeo
     {
+        /// <summary>
+        /// Hàm tăng lượt xem một cách bất đồng bộ để không làm chậm việc tải trang
+        /// </summary>
+        public static void IncrementViewCount(string tableName, string idColumn, int id)
+        {
+            Task.Run(() => {
+                try {
+                    // Cập nhật lượt xem trực tiếp vào DB
+                    string sql = $"UPDATE {tableName} SET Views = ISNULL(Views, 0) + 1 WHERE {idColumn} = @Id";
+                    BaseConnectionSql.ExecuteNonQuery(sql, new Microsoft.Data.SqlClient.SqlParameter("@Id", id));
+                } catch { }
+            });
+        }
+
         public static void RefreshSitemapAndCache()
         {
             // Clear Cache immediately
@@ -95,6 +109,8 @@ namespace Antigravity.ECommerce.Services
 
                 // 1. Home & Module Roots
                 AddUrl("/", "1.0", "daily");
+                AddUrl("/gioi-thieu.html", "0.9", "monthly");
+                AddUrl("/lien-he.html", "0.9", "monthly");
                 AddUrl("/san-pham.html", "0.9", "daily");
                 AddUrl("/tin-tuc.html", "0.9", "daily");
                 AddUrl("/video.html", "0.8", "weekly");
