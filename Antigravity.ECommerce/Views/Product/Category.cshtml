@@ -104,7 +104,7 @@
                   @if(p.IsHot){<span class="badge-hot">HOT</span>}
                   <span class="badge-heart" onclick="toggleWishlist(@p.ProductId)" style="cursor:pointer"><i class="fa-regular fa-heart"></i></span>
                   <a href="/san-pham/detail/@(p.Slug)-@(p.ProductId).html" class="d-block text-center mb-2" style="height: 180px;">
-                      <img src="@(string.IsNullOrEmpty(p.MainImage) ? "/assets/images/placeholder.png" : p.MainImage)" class="product-img h-100 w-100 object-fit-contain" alt="@p.Name">
+                      <img src="@(string.IsNullOrEmpty(p.MainImage) ? "/assets/images/placeholder.png" : p.MainImage)" class="product-img h-100 w-100 object-fit-contain" alt="@p.Name" loading="lazy">
                   </a>
                   <h3 class="product-name"><a href="/san-pham/detail/@(p.Slug)-@(p.ProductId).html" class="text-decoration-none text-dark">@p.Name</a></h3>
                   <p class="product-desc line-clamp-2" style="font-size:12px; color:#666;">@(string.IsNullOrEmpty(p.ShortDescription) ? p.Name : p.ShortDescription)</p>
@@ -123,11 +123,7 @@
     }
     else
     {
-        <div class="col-12 text-center py-5">
-            <i class="fa-solid fa-box-open fa-3x text-muted mb-3"></i>
-            <p class="fs-5 text-muted">Không tìm thấy sản phẩm nào phù hợp.</p>
-            <a href="/san-pham.html" class="btn btn-primary mt-2">Xem tất cả sản phẩm</a>
-        </div>
+        <partial name="_EmptyState" model="@("Không tìm thấy sản phẩm nào phù hợp.")" />
     }
   </div>
 
@@ -135,33 +131,19 @@
   @{
       int pIndex = ViewBag.PageIndex ?? 1;
       int pCount = ViewBag.PageCount ?? 1;
-      string qParams = $"&q={ViewBag.Keyword}&priceMin={Context.Request.Query["priceMin"]}&priceMax={Context.Request.Query["priceMax"]}&sort={Context.Request.Query["sort"]}";
+      var qList = new List<string>();
+      if (!string.IsNullOrEmpty(ViewBag.Keyword)) qList.Add($"q={ViewBag.Keyword}");
+      if (!string.IsNullOrEmpty(Context.Request.Query["priceMin"])) qList.Add($"priceMin={Context.Request.Query["priceMin"]}");
+      if (!string.IsNullOrEmpty(Context.Request.Query["priceMax"])) qList.Add($"priceMax={Context.Request.Query["priceMax"]}");
+      if (!string.IsNullOrEmpty(Context.Request.Query["sort"])) qList.Add($"sort={Context.Request.Query["sort"]}");
+      string qParams = qList.Count > 0 ? "&" + string.Join("&", qList) : "";
+      
+      ViewData["PageIndex"] = pIndex;
+      ViewData["PageCount"] = pCount;
+      ViewData["QueryParams"] = qParams;
   }
 
-  <div class="vd-pagination mt-4 mb-5">
-      @if (pIndex > 1)
-      {
-          <a class="vd-page-btn" href="?page=@(pIndex - 1)@qParams"><i class="fa-solid fa-chevron-left" style="font-size:11px;"></i></a>
-      }
-      else
-      {
-          <a class="vd-page-btn disabled" href="javascript:void(0);"><i class="fa-solid fa-chevron-left" style="font-size:11px;"></i></a>
-      }
-
-      @for (int i = 1; i <= Math.Max(1, pCount); i++)
-      {
-          <a class="vd-page-btn @(i == pIndex ? "active" : "")" href="?page=@(i)@qParams">@i</a>
-      }
-
-      @if (pIndex < pCount)
-      {
-          <a class="vd-page-btn" href="?page=@(pIndex + 1)@qParams"><i class="fa-solid fa-chevron-right" style="font-size:11px;"></i></a>
-      }
-      else
-      {
-          <a class="vd-page-btn disabled" href="javascript:void(0);"><i class="fa-solid fa-chevron-right" style="font-size:11px;"></i></a>
-      }
-  </div>
+  <partial name="_FrontPagination" />
 </div>
 
 <!-- ======== SẢN PHẨM BÁN CHẠY ======== -->

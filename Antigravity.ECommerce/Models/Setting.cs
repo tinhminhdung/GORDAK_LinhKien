@@ -107,7 +107,8 @@ namespace Antigravity.ECommerce.Models
         public string? OrderSuccessMessage { get; set; } // Nội dung trang Đặt hàng thành công
         
         // Tin tức / Giao diện
-        public int NewsPageSize { get; set; } = 12; // Số lượng bài viết nhỏ/trang
+        public int NewsPageSize { get; set; } = 12; // Số lượng bài viết nhỏ/trang (Trang chủ tin tức)
+        public int NewsCategoryPageSize { get; set; } = 12; // Số lượng bài viết/trang (Trang danh mục tin tức)
         public int NewsBigCount { get; set; } = 2; // Số lượng bài viết lớn (Nổi bật)
 
         // Cấu hình hiển thị Sản phẩm

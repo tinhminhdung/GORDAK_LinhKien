@@ -7,17 +7,28 @@
     ViewData["Description"] = !string.IsNullOrEmpty(Model.SeoDescription) ? Model.SeoDescription : Model.ShortDescription;
     
     var related = ViewBag.RelatedProducts as List<Product> ?? new List<Product>();
-    var gallery = !string.IsNullOrEmpty(Model.ImageGallery) ? Model.ImageGallery.Split(',').ToList() : new List<string>();
+    var gallery = !string.IsNullOrEmpty(Model.ImageGallery) ? Model.ImageGallery.Split(',', StringSplitOptions.RemoveEmptyEntries).ToList() : new List<string>();
     var tags = !string.IsNullOrEmpty(Model.Tags) ? Model.Tags.Split(',').ToList() : new List<string>();
     var commitments = ViewBag.Commitments as List<Advertising> ?? new List<Advertising>();
     var dealerCerts = ViewBag.DealerCert as List<Advertising> ?? new List<Advertising>();
     var settings = ViewBag.Settings as GlobalSettingsViewModel;
     var videos = !string.IsNullOrEmpty(Model.YoutubeVideo) ? Model.YoutubeVideo.Split(',', StringSplitOptions.RemoveEmptyEntries).ToList() : new List<string>();
 
-    // Tạo danh sách tất cả ảnh (ảnh chính + gallery)
+    // Tạo danh sách tất cả ảnh (hiển thị theo thứ tự sắp xếp của Admin trong Gallery)
     var allImages = new List<string>();
-    if (!string.IsNullOrEmpty(Model.MainImage)) allImages.Add(Model.MainImage);
-    allImages.AddRange(gallery);
+    if (gallery.Count > 0)
+    {
+        allImages.AddRange(gallery);
+        // Nếu MainImage chưa có trong gallery, chèn vào đầu để không bị sót
+        if (!string.IsNullOrEmpty(Model.MainImage) && !allImages.Contains(Model.MainImage))
+        {
+            allImages.Insert(0, Model.MainImage);
+        }
+    }
+    else
+    {
+        if (!string.IsNullOrEmpty(Model.MainImage)) allImages.Add(Model.MainImage);
+    }
 
     // Tìm danh mục chính của sản phẩm để hiển thị trên Breadcrumb
     Category mainCat = null;

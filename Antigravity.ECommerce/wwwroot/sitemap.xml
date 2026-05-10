@@ -165,24 +165,24 @@
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/san-pham/detail/demo-0dong-666.html</loc>
+    <loc>https://localhost:7057/san-pham/detail/demo-0dong-sua-urggggg-666.html</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
     <image:image>
       <image:loc>https://localhost:7057/uploads/Banner/636330481955160405.jpg</image:loc>
-      <image:title>demo 0đồng</image:title>
-    </image:image>
-    <image:image>
-      <image:loc>https://localhost:7057/uploads/Banner/636330478278386928.png</image:loc>
-      <image:title>demo 0đồng</image:title>
-    </image:image>
-    <image:image>
-      <image:loc>https://localhost:7057/uploads/Banner/636330482030729306.jpg</image:loc>
-      <image:title>demo 0đồng</image:title>
+      <image:title>demo 0đồng sửa urggggg</image:title>
     </image:image>
     <image:image>
       <image:loc>https://localhost:7057/uploads/Banner/636330482126038319.jpg</image:loc>
-      <image:title>demo 0đồng</image:title>
+      <image:title>demo 0đồng sửa urggggg</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://localhost:7057/uploads/Banner/636330478278386928.png</image:loc>
+      <image:title>demo 0đồng sửa urggggg</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://localhost:7057/uploads/Banner/636330482030729306.jpg</image:loc>
+      <image:title>demo 0đồng sửa urggggg</image:title>
     </image:image>
   </url>
   <url>
@@ -1464,12 +1464,93 @@
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/tai-lieu/eeeeeeeeeeeeethiep-hong-sai-ten-remix1ss44444</loc>
+    <loc>https://localhost:7057/tai-lieu/bang-bao-gia-may-han-gordak-2026</loc>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
     <image:image>
       <image:loc>https://localhost:7057/uploads/logo/logo_dak.png</image:loc>
-      <image:title>eeeeeeeeeeeeeThiệp Hồng Sai Tên Remix1ss44444</image:title>
+      <image:title>Bảng báo giá máy hàn GORDAK 2026</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://localhost:7057/tai-lieu/huong-dan-su-dung-gordak-952</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+    <image:image>
+      <image:loc>https://localhost:7057/uploads/logo/logo_dak.png</image:loc>
+      <image:title>Hướng dẫn sử dụng trạm hàn GORDAK 952</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://localhost:7057/tai-lieu/tai-lieu-sua-chua-nguon-xung</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+    <image:image>
+      <image:loc>https://localhost:7057/uploads/logo/logo_dak.png</image:loc>
+      <image:title>Tài liệu sửa chữa nguồn xung</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://localhost:7057/tai-lieu/catalog-thiet-bi-do-hioki</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+    <image:image>
+      <image:loc>https://localhost:7057/uploads/logo/logo_dak.png</image:loc>
+      <image:title>Catalog thiết bị đo Hioki</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://localhost:7057/tai-lieu/tai-lieu-ky-thuat-may-kho-quick</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+    <image:image>
+      <image:loc>https://localhost:7057/uploads/logo/logo_dak.png</image:loc>
+      <image:title>Tài liệu kỹ thuật máy khò Quick</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://localhost:7057/tai-lieu/file-driver-may-in-nhiet</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+    <image:image>
+      <image:loc>https://localhost:7057/uploads/logo/logo_dak.png</image:loc>
+      <image:title>File driver máy in nhiệt</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://localhost:7057/tai-lieu/tai-lieu-arduino-co-ban</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+    <image:image>
+      <image:loc>https://localhost:7057/uploads/logo/logo_dak.png</image:loc>
+      <image:title>Tài liệu hướng dẫn Arduino cơ bản</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://localhost:7057/tai-lieu/bang-gia-linh-kien-dien-tu</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+    <image:image>
+      <image:loc>https://localhost:7057/uploads/logo/logo_dak.png</image:loc>
+      <image:title>Bảng giá linh kiện điện tử</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://localhost:7057/tai-lieu/video-huong-dan-sua-mainboard</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+    <image:image>
+      <image:loc>https://localhost:7057/uploads/logo/logo_dak.png</image:loc>
+      <image:title>Video hướng dẫn sửa mainboard - demo</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://localhost:7057/tai-lieu/tai-lieu-lap-trinh-stm32</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+    <image:image>
+      <image:loc>https://localhost:7057/uploads/logo/logo_dak.png</image:loc>
+      <image:title>Tài liệu lập trình STM32</image:title>
     </image:image>
   </url>
 </urlset>

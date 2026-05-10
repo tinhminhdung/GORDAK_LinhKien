@@ -1,0 +1,33 @@
+@{
+    int pageIndex = ViewData["PageIndex"] != null ? (int)ViewData["PageIndex"] : 1;
+    int pageCount = ViewData["PageCount"] != null ? (int)ViewData["PageCount"] : 1;
+    string queryParams = ViewData["QueryParams"]?.ToString() ?? "";
+}
+
+@if (pageCount > 1)
+{
+    <div class="vd-pagination mt-4 mb-5">
+        @if (pageIndex > 1)
+        {
+            <a class="vd-page-btn" href="?page=@(pageIndex - 1)@queryParams"><i class="fa-solid fa-chevron-left" style="font-size:11px;"></i></a>
+        }
+        else
+        {
+            <a class="vd-page-btn disabled" href="javascript:void(0);"><i class="fa-solid fa-chevron-left" style="font-size:11px;"></i></a>
+        }
+        
+        @for (int i = 1; i <= Math.Max(1, pageCount); i++)
+        {
+            <a class="vd-page-btn @(i == pageIndex ? "active" : "")" href="?page=@i@queryParams">@i</a>
+        }
+        
+        @if (pageIndex < pageCount)
+        {
+            <a class="vd-page-btn" href="?page=@(pageIndex + 1)@queryParams"><i class="fa-solid fa-chevron-right" style="font-size:11px;"></i></a>
+        }
+        else
+        {
+            <a class="vd-page-btn disabled" href="javascript:void(0);"><i class="fa-solid fa-chevron-right" style="font-size:11px;"></i></a>
+        }
+    </div>
+}

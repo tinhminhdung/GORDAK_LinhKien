@@ -12,6 +12,11 @@
     };
     if(currentCat != null) {
         ((List<Antigravity.ECommerce.Models.BreadcrumbItem>)ViewData["SchemaBreadcrumbs"]).Add(new Antigravity.ECommerce.Models.BreadcrumbItem { Name = currentCat.Name, Url = "/tin-tuc/" + currentCat.Slug + ".html" });
+        ViewData["Title"] = currentCat.Name;
+        if(!string.IsNullOrEmpty(currentCat.SeoTitle)) ViewData["Title"] = currentCat.SeoTitle;
+        if(!string.IsNullOrEmpty(currentCat.SeoDescription)) ViewData["Description"] = currentCat.SeoDescription;
+    } else {
+        ViewData["Title"] = "Tin tức cập nhật";
     }
 }
 
@@ -52,11 +57,11 @@
                     @foreach(var item in bigNews) {
                         var newsUrl = $"/tin-tuc/detail/{item.Slug}.html";
                         <!-- Bài viết lớn (Nổi bật) -->
-                        <div class="col-md-6">
+                        <div class="col-12 col-md-6">
                             <div class="tt-card-big">
                                 <div class="tt-card-img-wrap">
                                     <a href="@newsUrl">
-                                        <img src="@(string.IsNullOrEmpty(item.Image) ? "/assets/images/placeholder.png" : item.Image)" alt="@item.Title">
+                                        <img src="@(string.IsNullOrEmpty(item.Image) ? "/assets/images/placeholder.png" : item.Image)" alt="@item.Title" loading="lazy">
                                     </a>
                                     <span class="tt-badge tt-badge-teal">@item.CategoryName</span>
                                 </div>
@@ -81,11 +86,11 @@
                         @foreach(var item in Model) {
                             var newsUrl = $"/tin-tuc/detail/{item.Slug}.html";
                             <!-- bài viết nhỏ -->
-                            <div class="col-md-4">
+                            <div class="col-12 col-md-4">
                                 <div class="tt-card-small">
                                     <div class="tt-card-img-wrap">
                                         <a href="@newsUrl">
-                                            <img src="@(string.IsNullOrEmpty(item.Image) ? "/assets/images/placeholder.png" : item.Image)" alt="@item.Title">
+                                            <img src="@(string.IsNullOrEmpty(item.Image) ? "/assets/images/placeholder.png" : item.Image)" alt="@item.Title" loading="lazy">
                                         </a>
                                         <span class="tt-badge tt-badge-orange">@item.CategoryName</span>
                                     </div>
@@ -103,38 +108,15 @@
                     }
                 </div>
                 
-                <!-- Phân trang / Nút Xem tất cả -->
-
-                
-                <div class="vd-pagination mt-4 mb-5">
-                    @if (ViewBag.CurrentPage > 1)
-                    {
-                        <a class="vd-page-btn" href="?page=@(ViewBag.CurrentPage - 1)&kw=@ViewBag.Keyword"><i class="fa-solid fa-chevron-left" style="font-size:11px;"></i></a>
-                    }
-                    else
-                    {
-                        <a class="vd-page-btn disabled" href="javascript:void(0);"><i class="fa-solid fa-chevron-left" style="font-size:11px;"></i></a>
-                    }
-                    
-                    @for (int i = 1; i <= Math.Max(1, (int)ViewBag.TotalPages); i++)
-                    {
-                        <a class="vd-page-btn @(i == ViewBag.CurrentPage ? "active" : "")" href="?page=@i&kw=@ViewBag.Keyword">@i</a>
-                    }
-                    
-                    @if (ViewBag.CurrentPage < ViewBag.TotalPages)
-                    {
-                        <a class="vd-page-btn" href="?page=@(ViewBag.CurrentPage + 1)&kw=@ViewBag.Keyword"><i class="fa-solid fa-chevron-right" style="font-size:11px;"></i></a>
-                    }
-                    else
-                    {
-                        <a class="vd-page-btn disabled" href="javascript:void(0);"><i class="fa-solid fa-chevron-right" style="font-size:11px;"></i></a>
-                    }
-                </div>
+                    int pIndex = ViewBag.CurrentPage ?? 1;
+                    int pCount = ViewBag.TotalPages ?? 1;
+                    string qParams = !string.IsNullOrEmpty((string)ViewBag.Keyword) ? $"&kw={ViewBag.Keyword}" : "";
+                    ViewData["PageIndex"] = pIndex;
+                    ViewData["PageCount"] = pCount;
+                    ViewData["QueryParams"] = qParams;
+                <partial name="_FrontPagination" />
             } else {
-                <div class="text-center py-5">
-                    <i class="fa-regular fa-newspaper fa-3x text-muted mb-3"></i>
-                    <p class="text-muted">Không có bài viết nào trong mục này.</p>
-                </div>
+                <partial name="_EmptyState" model="@("Không có bài viết nào trong mục này.")" />
             }
         </div>
 
@@ -166,7 +148,7 @@
                 @foreach(var hn in hotNews) {
                     <div class="tt-hot-item">
                         <a href="/tin-tuc/detail/@(hn.Slug).html">
-                            <img src="@(string.IsNullOrEmpty(hn.Image) ? "/assets/images/placeholder.png" : hn.Image)" alt="@hn.Title">
+                            <img src="@(string.IsNullOrEmpty(hn.Image) ? "/assets/images/placeholder.png" : hn.Image)" alt="@hn.Title" loading="lazy">
                         </a>
                         <div>
                             <a href="/tin-tuc/detail/@(hn.Slug).html" class="tt-hot-title line-clamp-2">@hn.Title</a>

@@ -75,7 +75,8 @@ namespace Antigravity.ECommerce.Controllers
             var allCatIds = SCategory.GetDescendantIds(category.CategoryId);
             var query = SNews.GetAll().Where(x => x.Status == 1 && allCatIds.Contains(x.CategoryId)).OrderByDescending(x => x.CreatedAt);
             
-            int pageSize = 12;
+            var settings = SSetting.GetViewModel();
+            int pageSize = settings.NewsCategoryPageSize > 0 ? settings.NewsCategoryPageSize : 12;
             int total = query.Count();
             var paginatedData = query.Skip((page - 1) * pageSize).Take(pageSize).ToList();
             

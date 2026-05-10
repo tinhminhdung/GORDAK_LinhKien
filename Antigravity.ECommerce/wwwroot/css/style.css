@@ -708,7 +708,7 @@ img {
 }
 
 .product-price {
-    font-size: 18px;
+    font-size: 15px;
     color: #e30000;
     font-weight: 900;
     margin: 10px 0
@@ -2806,14 +2806,16 @@ img {
     flex-wrap: nowrap;
     align-items: center;
 }
-
 .lh-val-card {
     flex: 1;
     min-width: 0;
     display: flex;
     align-items: flex-start;
     gap: 12px;
-    padding: 19px 19px;
+    padding: 0px 19px;
+}
+.lh-contact-val .Email {
+    color: #1a3c8a;
 }
 
     .lh-val-card:last-child {

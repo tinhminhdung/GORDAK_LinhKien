@@ -187,10 +187,10 @@
             </div>
             <p class="text-muted mb-3" style="font-size:13px; padding-left: 30px;">Đội ngũ kỹ thuật của chúng tôi luôn sẵn sàng hỗ trợ bạn!</p>
             
-            <div class="d-flex flex-wrap align-items-center justify-content-between px-1 px-md-3 gap-3">
+            <div class="d-flex flex-column gap-3 px-1 px-md-3 mt-2">
               <!-- Hotline -->
-              <div class="d-flex align-items-center gap-2">
-                <i class="fa-solid fa-phone fs-4" style="color: #3b82f6;"></i>
+              <div class="d-flex align-items-center gap-3">
+                <i class="fa-solid fa-phone fs-4" style="color: #3b82f6; width: 30px; text-align: center;"></i>
                 <div class="text-nowrap">
                     <div style="font-size: 13px; color: #1a2b4c; font-weight: 500;">Hotline</div>
                     <div class="fw-bold" style="color: #1a3c8a; font-size: 14px;">@(string.IsNullOrEmpty(settings.Hotline) ? "0963 344 888" : settings.Hotline)</div>
@@ -198,7 +198,7 @@
               </div>
 
               <!-- Zalo -->
-              <div class="d-flex align-items-center gap-2">
+              <div class="d-flex align-items-center gap-3">
                 <div class="d-flex align-items-center justify-content-center text-primary bg-white fw-bold" style="width:30px; height:30px; font-size:10px; border: 1.5px solid #3b82f6; border-radius: 50% 50% 50% 0px;">Zalo</div>
                 <div class="text-nowrap">
                     <div style="font-size: 13px; color: #1a2b4c; font-weight: 500;">Chat Zalo</div>
@@ -206,12 +206,9 @@
                 </div>
               </div>
 
-              <!-- Line (Hidden on small screens if wrapped, but kept for desktop) -->
-              <div class="d-none d-lg-block" style="width: 1px; height: 35px; background-color: #e5e5e5; margin-right: 10px; margin-left: 10px;"></div>
-
               <!-- Email -->
-              <div class="d-flex align-items-center gap-2">
-                <i class="fa-regular fa-envelope fs-4" style="color: #3b82f6;"></i>
+              <div class="d-flex align-items-center gap-3">
+                <i class="fa-regular fa-envelope fs-4" style="color: #3b82f6; width: 30px; text-align: center;"></i>
                 <div class="text-nowrap">
                     <div style="font-size: 13px; color: #1a2b4c; font-weight: 500;">Email</div>
                     <div class="fw-bold" style="color: #1a3c8a; font-size: 14px;">@(string.IsNullOrEmpty(settings.Email) ? "info@nhatminhesc.com" : settings.Email)</div>

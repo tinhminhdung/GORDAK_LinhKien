@@ -100,6 +100,7 @@ namespace Antigravity.ECommerce.Services
                 OrderSuccessMessage = dict.GetValueOrDefault("OrderSuccessMessage", "<ul><li>Nhân viên sẽ gọi điện xác nhận đơn hàng trong vòng 15-30 phút.</li><li>Bạn có thể kiểm tra email để xem chi tiết hóa đơn.</li><li>Sản phẩm sẽ được giao đến bạn trong vòng 2-3 ngày làm việc.</li></ul>"),
 
                 NewsPageSize = int.TryParse(dict.GetValueOrDefault("NewsPageSize", "12"), out int nps) ? nps : 12,
+                NewsCategoryPageSize = int.TryParse(dict.GetValueOrDefault("NewsCategoryPageSize", "12"), out int ncps) ? ncps : 12,
                 NewsBigCount = int.TryParse(dict.GetValueOrDefault("NewsBigCount", "2"), out int nbc) ? nbc : 2,
 
                 Home_HotProductCount = int.TryParse(dict.GetValueOrDefault("Home_HotProductCount", "8"), out int hpc) ? hpc : 8,
@@ -180,6 +181,7 @@ namespace Antigravity.ECommerce.Services
             FSetting.UpdateValue("OrderSuccessMessage", model.OrderSuccessMessage ?? "", updatedBy);
 
             FSetting.UpdateValue("NewsPageSize", model.NewsPageSize.ToString(), updatedBy);
+            FSetting.UpdateValue("NewsCategoryPageSize", model.NewsCategoryPageSize.ToString(), updatedBy);
             FSetting.UpdateValue("NewsBigCount", model.NewsBigCount.ToString(), updatedBy);
             
             FSetting.UpdateValue("Home_HotProductCount", model.Home_HotProductCount.ToString(), updatedBy);
