@@ -85,10 +85,16 @@
         {
             <div class="dropdown">
                 <a class="d-flex align-items-center text-decoration-none text-dark" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    @{
-                        var avatarUrlHeader = !string.IsNullOrEmpty(customer.Avatar) ? customer.Avatar : $"https://ui-avatars.com/api/?name={System.Net.WebUtility.UrlEncode(customer.FullName ?? "User")}&background=random&size=40";
+                    @if (!string.IsNullOrEmpty(customer.Avatar))
+                    {
+                        <img src="@customer.Avatar" alt="Avatar" class="rounded-circle me-2" style="width: 35px; height: 35px; object-fit: cover;">
                     }
-                    <img src="@avatarUrlHeader" alt="Avatar" class="rounded-circle me-2" style="width: 35px; height: 35px; object-fit: cover;">
+                    else
+                    {
+                        <div class="rounded-circle me-2 d-flex align-items-center justify-content-center text-white" style="width: 35px; height: 35px; background-color: #1a3c8a; font-size: 16px;">
+                            <i class="fa-solid fa-user"></i>
+                        </div>
+                    }
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-2">
                     <li><a class="dropdown-item" href="@Url.Action("Dashboard", "Member")"><i class="fa-solid fa-user me-2"></i>Tài khoản</a></li>
@@ -130,10 +136,16 @@
         {
             <div class="dropdown">
                 <a class="d-flex align-items-center text-decoration-none text-dark" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    @{
-                        var avatarUrlMobile = !string.IsNullOrEmpty(customer.Avatar) ? customer.Avatar : $"https://ui-avatars.com/api/?name={System.Net.WebUtility.UrlEncode(customer.FullName ?? "User")}&background=random&size=26";
+                    @if (!string.IsNullOrEmpty(customer.Avatar))
+                    {
+                        <img src="@customer.Avatar" alt="Avatar" class="rounded-circle" style="width: 26px; height: 26px; object-fit: cover;">
                     }
-                    <img src="@avatarUrlMobile" alt="Avatar" class="rounded-circle" style="width: 26px; height: 26px; object-fit: cover;">
+                    else
+                    {
+                        <div class="rounded-circle d-flex align-items-center justify-content-center text-white" style="width: 26px; height: 26px; background-color: #1a3c8a; font-size: 12px;">
+                            <i class="fa-solid fa-user"></i>
+                        </div>
+                    }
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-2" style="position: absolute; z-index: 1050;">
                     <li><a class="dropdown-item" href="@Url.Action("Dashboard", "Member")"><i class="fa-solid fa-user me-2"></i>Tài khoản</a></li>
@@ -149,7 +161,7 @@
         }
         <a href="/gio-hang.html" class="position-relative text-dark fs-5">
             <i class="fa-solid fa-cart-shopping"></i>
-            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.6rem;">@cartCount</span>
+            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger cart-badge" style="font-size: 0.6rem;">@cartCount</span>
         </a>
     </div>
   </div>

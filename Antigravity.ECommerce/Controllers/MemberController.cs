@@ -166,12 +166,16 @@ namespace Antigravity.ECommerce.Controllers
         /// Lịch sử mua hàng của Thành viên
         /// </summary>
         [HttpGet]
-        public IActionResult Orders()
+        public IActionResult Orders(int page = 1)
         {
             var session = GetCurrentSession();
             if (session == null) return RedirectToAction("Login", "Account");
 
-            var orders = SCustomer.GetOrderHistory(session.CustomerId, page: 1, size: 50); // Mặc định hiển thị 50 đơn
+            int pageSize = 10;
+            var orders = SCustomer.GetOrderHistory(session.CustomerId, page: page, size: pageSize);
+            ViewBag.PageIndex = page;
+            ViewBag.TotalCount = orders.Count > 0 ? orders[0].TotalCount : 0;
+            ViewBag.TotalPages = (int)Math.Ceiling((double)ViewBag.TotalCount / pageSize);
             return View(orders);
         }
 

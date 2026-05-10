@@ -2,6 +2,8 @@
 @{
     Layout = "_MemberLayout";
     ViewData["Title"] = "Lịch sử đơn hàng";
+    int pageIndex = ViewBag.PageIndex ?? 1;
+    int totalPages = ViewBag.TotalPages ?? 1;
 }
 
 @section MemberStyles {
@@ -117,7 +119,7 @@
                 @foreach (var order in Model)
                 {
                     <tr data-status="@order.OrderStatus">
-                        <td><strong>@order.OrderCode</strong> @if(order.RequiresVAT){<span class="badge bg-info-subtle text-info" title="Yêu cầu xuất hóa đơn VAT"><i class="fa-solid fa-file-invoice"></i> VAT</span>}</td>
+                        <td><a href="@Url.Action("OrderDetail", "Member", new { id = order.OrderId })" class="fw-bold text-decoration-none" style="color:#1a3c8a;">@order.OrderCode</a> @if(order.RequiresVAT){<span class="badge bg-info-subtle text-info" title="Yêu cầu xuất hóa đơn VAT"><i class="fa-solid fa-file-invoice"></i> VAT</span>}</td>
                         <td>@order.CreatedAt.ToString("dd/MM/yyyy HH:mm")</td>
                         <td><strong class="text-danger">@order.TotalAmount.ToString("N0")đ</strong></td>
                         <td>
@@ -163,7 +165,7 @@
         {
             <div class="order-card" data-status="@order.OrderStatus">
                 <div class="order-card-header">
-                    <span class="order-card-code">@order.OrderCode @if(order.RequiresVAT){<span class="badge bg-info-subtle text-info" style="font-size:0.65rem;"><i class="fa-solid fa-file-invoice"></i> VAT</span>}</span>
+                    <span class="order-card-code"><a href="@Url.Action("OrderDetail", "Member", new { id = order.OrderId })" class="text-decoration-none" style="color:#1a3c8a;">@order.OrderCode</a> @if(order.RequiresVAT){<span class="badge bg-info-subtle text-info" style="font-size:0.65rem;"><i class="fa-solid fa-file-invoice"></i> VAT</span>}</span>
                     <span class="order-card-date">@order.CreatedAt.ToString("dd/MM/yyyy HH:mm")</span>
                 </div>
                 <div class="order-card-body">
@@ -202,7 +204,33 @@
         }
     </div>
 }
-else
+
+@if (totalPages > 1)
+{
+    <style>
+        .pagination .page-item.active .page-link { background-color: #1a3c8a; border-color: #1a3c8a; color: #fff; }
+        .pagination .page-link { color: #1a3c8a; }
+        .pagination .page-link:hover { color: #122b63; background-color: #e8ecf4; }
+    </style>
+    <nav aria-label="Phân trang đơn hàng" class="mt-3">
+        <ul class="pagination pagination-sm justify-content-center mb-0">
+            <li class="page-item @(pageIndex <= 1 ? "disabled" : "")">
+                <a class="page-link" href="@Url.Action("Orders", "Member", new { page = pageIndex - 1 })"><i class="fa-solid fa-chevron-left"></i></a>
+            </li>
+            @for (int i = 1; i <= totalPages; i++)
+            {
+                <li class="page-item @(i == pageIndex ? "active" : "")">
+                    <a class="page-link" href="@Url.Action("Orders", "Member", new { page = i })">@i</a>
+                </li>
+            }
+            <li class="page-item @(pageIndex >= totalPages ? "disabled" : "")">
+                <a class="page-link" href="@Url.Action("Orders", "Member", new { page = pageIndex + 1 })"><i class="fa-solid fa-chevron-right"></i></a>
+            </li>
+        </ul>
+    </nav>
+}
+
+@if (Model == null || !Model.Any())
 {
     <div class="text-center py-5">
         <i class="fa-solid fa-box-open text-muted mb-3 d-block" style="font-size: 4rem; opacity: 0.4;"></i>

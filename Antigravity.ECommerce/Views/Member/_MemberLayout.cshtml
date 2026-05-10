@@ -149,6 +149,22 @@
                 font-size: 0.85rem;
                 margin-right: 5px;
             }
+            /* Breadcrumb & spacing */
+            .sp-breadcrumb {
+                margin-bottom: 0.5rem !important;
+                font-size: 0.78rem;
+            }
+            .col-lg-3.mb-4 {
+                margin-bottom: 0.5rem !important;
+            }
+            .member-content h4 {
+                font-size: 1rem;
+                margin-bottom: 0.5rem !important;
+                padding-bottom: 0.4rem !important;
+            }
+            .row.g-3, .row.g-4 {
+                --bs-gutter-y: 0.5rem;
+            }
         }
         
         /* Ghi đè màu chủ đạo cho các trang thành viên */
@@ -193,10 +209,16 @@
             <div class="col-lg-3 mb-4 mb-lg-0">
                 <div class="member-sidebar">
                     <div class="member-avatar-box">
-                        @{
-                            var avatarUrl = !string.IsNullOrEmpty(customer?.Avatar) ? customer.Avatar : $"https://ui-avatars.com/api/?name={System.Net.WebUtility.UrlEncode(customer?.FullName ?? "User")}&background=random&size=100";
+                        @if (!string.IsNullOrEmpty(customer?.Avatar))
+                        {
+                            <img src="@customer.Avatar" alt="Avatar" class="member-avatar">
                         }
-                        <img src="@avatarUrl" alt="Avatar" class="member-avatar">
+                        else
+                        {
+                            <div class="member-avatar d-flex align-items-center justify-content-center text-white mx-auto" style="background-color: #1a3c8a; font-size: 36px; border: 3px solid #fff; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+                                <i class="fa-solid fa-user"></i>
+                            </div>
+                        }
                         <div class="member-name">@(customer?.FullName ?? "Thành viên")</div>
                         <div class="member-rank">@(customer?.MemberRankName ?? "Hạng thường")</div>
                     </div>

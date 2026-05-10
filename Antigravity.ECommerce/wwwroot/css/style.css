@@ -745,10 +745,13 @@ img {
     border-radius: 5px;
     padding: 7px 4px;
     text-align: center;
-    font-size: 16px;
+    font-size: 13px;
     transition: all .15s;
     cursor: pointer;
     white-space: nowrap;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
     .btn-gd:hover {
@@ -1399,8 +1402,14 @@ img {
     }
 
     .btn-outline-gd, .btn-gd {
-        font-size: 9px;
-        padding: 4px 2px
+        font-size: 11px;
+        padding: 5px 6px;
+        border-radius: 6px;
+        gap: 3px;
+    }
+
+    .btn-gd i {
+        font-size: 11px;
     }
 
     .section-why {
