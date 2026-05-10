@@ -110,6 +110,8 @@
                     </div>
                 }
 
+                @if (totalPages > 1)
+                {
                 <div class="vd-pagination mt-4 mb-5">
                     @if (currentPage > 1)
                     {
@@ -132,6 +134,7 @@
                         <a class="vd-page-btn disabled" href="javascript:void(0);"><i class="fa-solid fa-chevron-right" style="font-size:11px;"></i></a>
                     }
                 </div>
+                }
             }
             else
             {

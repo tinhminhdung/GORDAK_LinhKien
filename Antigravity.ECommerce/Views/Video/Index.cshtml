@@ -99,6 +99,7 @@
                 </div>
 
                 <!-- Phan trang -->
+                @if (totalPages > 1) {
                 <div class="vd-pagination">
                     @if (currentPage > 1) {
                         <a href="?page=@(currentPage - 1)" class="vd-page-btn"><i class="fa-solid fa-chevron-left"></i></a>
@@ -133,6 +134,7 @@
                         <span class="vd-page-btn disabled"><i class="fa-solid fa-chevron-right"></i></span>
                     }
                 </div>
+                }
             } @* end if Model.Any *@
             
             @if(featuredVideo == null && (Model == null || !Model.Any())) {

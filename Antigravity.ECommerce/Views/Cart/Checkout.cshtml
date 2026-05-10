@@ -17,6 +17,95 @@
 
 <!-- ======== MAIN CONTENT ======== -->
 <main class="container mb-5">
+    
+    <!-- Checkout Steps Indicator -->
+    <style>
+        .checkout-steps {
+            display: flex;
+            justify-content: space-between;
+            max-width: 400px;
+            margin: 0 auto 30px auto;
+            position: relative;
+            padding: 0 15px;
+        }
+        .checkout-steps::before {
+            content: '';
+            position: absolute;
+            top: 15px;
+            left: 50px;
+            right: 50px;
+            height: 1px;
+            background: #e5e5e5;
+            z-index: 1;
+        }
+        .checkout-steps::after {
+            content: '';
+            position: absolute;
+            top: 15px;
+            left: 50px;
+            width: calc(50% - 50px);
+            height: 1px;
+            background: #1a3c8a;
+            z-index: 1;
+        }
+        .checkout-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            z-index: 2;
+            background: transparent;
+        }
+        .checkout-step-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: 1px solid #ccc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            color: #777;
+            margin-bottom: 8px;
+            background: #fff; /* Ensure it covers the line */
+            text-decoration: none;
+        }
+        .checkout-step-text {
+            font-size: 13px;
+            color: #777;
+            font-weight: 500;
+        }
+        /* Completed */
+        .checkout-step.completed .checkout-step-icon {
+            border-color: #1a3c8a;
+            color: #1a3c8a;
+        }
+        /* Active */
+        .checkout-step.active .checkout-step-icon {
+            background: #1a3c8a;
+            border-color: #1a3c8a;
+            color: #fff;
+        }
+        .checkout-step.active .checkout-step-text {
+            color: #1a3c8a;
+            font-weight: 600;
+        }
+    </style>
+    
+    <div class="checkout-steps d-flex d-md-none">
+        <div class="checkout-step completed">
+            <a href="/gio-hang.html" class="checkout-step-icon"><i class="fa-solid fa-cart-shopping"></i></a>
+            <span class="checkout-step-text">Giỏ hàng</span>
+        </div>
+        <div class="checkout-step active">
+            <div class="checkout-step-icon">2</div>
+            <span class="checkout-step-text">Đặt hàng</span>
+        </div>
+        <div class="checkout-step">
+            <div class="checkout-step-icon"><i class="fa-solid fa-check"></i></div>
+            <span class="checkout-step-text">Hoàn tất</span>
+        </div>
+    </div>
     @if (TempData["ErrorMessage"] != null)
     {
         <div class="alert alert-danger alert-dismissible fade show mb-4" role="alert">
