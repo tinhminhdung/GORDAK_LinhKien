@@ -1,4 +1,4 @@
-@model List<Antigravity.ECommerce.Models.News>
+﻿@model List<Antigravity.ECommerce.Models.News>
 @{
     ViewBag.Title = "Quản lý Tin tức & Bài viết";
     Layout = "_AdminLayout";
@@ -117,7 +117,7 @@
                                                     <span><i class="ri-calendar-line me-1 text-primary"></i>@item.CreatedAt.ToString("dd/MM/yyyy HH:mm")</span>
                                                     <span><i class="ri-user-3-line me-1 text-success"></i>@item.CreatedBy</span>
                                                     @if (!string.IsNullOrEmpty(item.Slug)) {
-                                                        <a href="/tin-tuc/detail/@(item.Slug).html" target="_blank" class="text-muted text-decoration-none" title="Xem trên web"><i class="ri-link me-1"></i>/tin-tuc/detail/@(item.Slug).html</a>
+                                                        <a href="/tin-tuc/detail/@(item.Slug).html" target="_blank" class="text-muted text-decoration-none d-inline-block text-truncate" style="max-width: 200px; vertical-align: bottom;" title="Xem trên web"><i class="ri-link me-1"></i>/tin-tuc/detail/@(item.Slug).html</a>
                                                     }
                                                 </div>
                                             </div>

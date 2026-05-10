@@ -187,7 +187,7 @@ app.MapControllerRoute(
 
 app.MapControllerRoute(
     name: "product",
-    pattern: "san-pham/detail/{slug}.html",
+    pattern: "san-pham/detail/{slug}-{id:int}.html",
     defaults: new { controller = "Product", action = "Detail" });
 
 app.MapControllerRoute(

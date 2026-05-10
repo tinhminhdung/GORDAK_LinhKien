@@ -194,6 +194,16 @@ namespace Antigravity.ECommerce.Controllers
             }
             return Json(new { success = true });
         }
+
+        /// <summary>
+        /// API trả về số lượng sản phẩm trong giỏ hàng (dùng cho badge header)
+        /// </summary>
+        [HttpGet]
+        public IActionResult GetCartCount()
+        {
+            var cart = GetCartFromSession();
+            return Json(cart.Sum(x => x.Quantity));
+        }
         #endregion
 
         #region 3. Thanh toán (Checkout)

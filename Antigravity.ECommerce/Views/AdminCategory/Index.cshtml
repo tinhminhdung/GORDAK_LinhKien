@@ -1,4 +1,4 @@
-@model List<Antigravity.ECommerce.Models.Category>
+﻿@model List<Antigravity.ECommerce.Models.Category>
 @{
     ViewData["Title"] = "Quản lý Danh mục Sản phẩm";
     Layout = "_AdminLayout";
@@ -124,7 +124,7 @@
                                                 </div>
                                                 @if (!string.IsNullOrEmpty(item.Slug)) {
                                                     <div style="padding-left: @(level * 16 + 28)px;">
-                                                        <a href="/san-pham/@(item.Slug).html" target="_blank" class="text-muted fs-11 text-decoration-none" title="Xem trên web"><i class="ri-link me-1"></i>/san-pham/@(item.Slug).html</a>
+                                                        <a href="/san-pham/@(item.Slug).html" target="_blank" class="text-muted fs-11 text-decoration-none d-inline-block text-truncate" style="max-width: 200px; vertical-align: bottom;" title="Xem trên web"><i class="ri-link me-1"></i>/san-pham/@(item.Slug).html</a>
                                                     </div>
                                                 }
                                             </td>

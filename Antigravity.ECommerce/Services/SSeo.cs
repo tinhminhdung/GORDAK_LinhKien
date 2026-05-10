@@ -131,7 +131,7 @@ namespace Antigravity.ECommerce.Services
                         var extraImgs = p.ImageGallery.Split(',', StringSplitOptions.RemoveEmptyEntries);
                         imgList.AddRange(extraImgs);
                     }
-                    AddUrl($"/san-pham/detail/{p.Slug}.html", "0.9", "daily", p.Name, imgList);
+                    AddUrl($"/san-pham/detail/{p.Slug}-{p.ProductId}.html", "0.9", "daily", p.Name, imgList);
                 }
 
                 // 4. News (Detail) - Fetch all active news

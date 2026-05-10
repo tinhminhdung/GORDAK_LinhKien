@@ -1,4 +1,4 @@
-@model List<Antigravity.ECommerce.Models.Gallery>
+﻿@model List<Antigravity.ECommerce.Models.Gallery>
 @{
     Layout = "_AdminLayout";
     ViewBag.Title = "Quản lý Thư viện ảnh";
@@ -123,7 +123,7 @@
                                         <td>
                                             <h6 class="fs-14 mb-1"><a href="/AdminGallery/Edit/@item.GalleryId" class="text-body fw-bold">@item.AlbumName</a></h6>
                                             @if (!string.IsNullOrEmpty(item.Slug)) {
-                                                <a href="/album/@(item.Slug).html" target="_blank" class="text-muted fs-12 text-decoration-none" title="Xem trên web"><i class="ri-link me-1"></i>/album/@(item.Slug).html</a>
+                                                <a href="/album/@(item.Slug).html" target="_blank" class="text-muted fs-12 text-decoration-none d-inline-block text-truncate" style="max-width: 200px; vertical-align: bottom;" title="Xem trên web"><i class="ri-link me-1"></i>/album/@(item.Slug).html</a>
                                             }
                                         </td>
                                         <td>

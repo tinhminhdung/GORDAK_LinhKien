@@ -1,4 +1,4 @@
-@model List<Antigravity.ECommerce.Models.Video>
+﻿@model List<Antigravity.ECommerce.Models.Video>
 @{
     Layout = "_AdminLayout";
     ViewBag.Title = "Quản lý Video YouTube";
@@ -125,7 +125,7 @@
                                         <td>
                                             <h6 class="fs-14 mb-1"><a href="/AdminVideo/Edit/@item.VideoId" class="text-body fw-bold">@item.Title</a></h6>
                                             @if (!string.IsNullOrEmpty(item.Slug)) {
-                                                <a href="/video/detail/@(item.Slug).html" target="_blank" class="text-muted fs-12 text-decoration-none" title="Xem trên web"><i class="ri-link me-1"></i>/video/detail/@(item.Slug).html</a>
+                                                <a href="/video/detail/@(item.Slug).html" target="_blank" class="text-muted fs-12 text-decoration-none d-inline-block text-truncate" style="max-width: 200px; vertical-align: bottom;" title="Xem trên web"><i class="ri-link me-1"></i>/video/detail/@(item.Slug).html</a>
                                             }
                                         </td>
                                         <td>

@@ -180,7 +180,7 @@
                                                     <div class="d-flex gap-2 align-items-center mt-1">
                                                         <span class="text-muted fs-12">SKU: @item.SKU</span>
                                                         @if (!string.IsNullOrEmpty(item.Slug)) {
-                                                            <a href="/san-pham/detail/@(item.Slug).html" target="_blank" class="text-muted fs-12 text-decoration-none" title="Xem trên web"><i class="ri-link me-1"></i>/san-pham/detail/@(item.Slug).html</a>
+                                                            <a href="/san-pham/detail/@(item.Slug)-@(item.ProductId).html" target="_blank" class="text-muted fs-12 text-decoration-none d-inline-block text-truncate" style="max-width: 200px; vertical-align: bottom;" title="/san-pham/detail/@(item.Slug)-@(item.ProductId).html"><i class="ri-link me-1"></i>/san-pham/detail/@(item.Slug)-@(item.ProductId).html</a>
                                                         }
                                                         @if (!string.IsNullOrEmpty(item.YoutubeVideo))
                                                         {
@@ -205,10 +205,10 @@
                                         </td>
                                         <td class="text-center">
                                             <div class="d-flex flex-column align-items-center">
-                                                <span class="text-success fw-bold">@item.Price.ToString("N0")</span>
-                                                @if (item.OldPrice > 0 && item.OldPrice > item.Price)
+                                                <span class="text-success fw-bold" title="Giá bán (VAT 8%)">@item.Price.ToString("N0")</span>
+                                                @if (item.OldPrice > 0)
                                                 {
-                                                    <span class="text-muted text-decoration-line-through fs-11">@item.OldPrice.ToString("N0")</span>
+                                                    <span class="text-muted fs-11" title="Giá (Chưa VAT)">@item.OldPrice.ToString("N0")</span>
                                                 }
                                             </div>
                                         </td>
@@ -233,7 +233,7 @@
                                         </td>
                                         <td class="text-center">
                                             <div class="d-flex justify-content-center gap-1">
-                                                <a href="/Product/Detail/@item.Slug" target="_blank" class="btn btn-sm btn-soft-secondary" title="Xem trên web">
+                                                <a href="/san-pham/detail/@(item.Slug)-@(item.ProductId).html" target="_blank" class="btn btn-sm btn-soft-secondary" title="Xem trên web">
                                                     <i class="ri-eye-line"></i>
                                                 </a>
                                                 <a href="javascript:void(0);" onclick="duplicateItem(@item.ProductId)" class="btn btn-sm btn-soft-success" title="Nhân bản">

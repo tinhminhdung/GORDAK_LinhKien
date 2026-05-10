@@ -143,12 +143,12 @@
                             <input type="hidden" asp-for="PurchasePrice" id="PurchasePrice">
                         </div>
                         <div class="col-md-4">
-                            <label class="form-label">Giá niêm yết (Cũ) <i class="mdi mdi-information text-primary" data-bs-toggle="tooltip" title="Giá bị gạch ngang trên giao diện để thể hiện khuyến mãi"></i></label>
-                            <input type="text" class="form-control text-decoration-line-through fs-14" id="display_OldPrice" placeholder="0">
+                            <label class="form-label">Giá (Chưa VAT)</label>
+                            <input type="text" class="form-control fs-14" id="display_OldPrice" placeholder="0">
                             <input type="hidden" asp-for="OldPrice" id="OldPrice">
                         </div>
                         <div class="col-md-4">
-                            <label class="form-label">Giá bán lẻ (VNĐ) <span class="text-danger">*</span> <i class="mdi mdi-information text-primary" data-bs-toggle="tooltip" title="Số tiền thực tế khách hàng phải trả khi mua"></i></label>
+                            <label class="form-label">Giá bán (VAT 8%) <span class="text-danger">*</span> <i class="mdi mdi-information text-primary" data-bs-toggle="tooltip" title="Số tiền thực tế khách hàng phải trả khi mua"></i></label>
                             <input type="text" class="form-control fw-bold text-success fs-16" id="display_Price" placeholder="0">
                             <input type="hidden" asp-for="Price" id="Price">
                         </div>

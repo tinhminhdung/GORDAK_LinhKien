@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Antigravity.ECommerce.Services;
 using Antigravity.ECommerce.Models;
 using System.Text;
@@ -57,7 +57,7 @@ namespace Antigravity.ECommerce.Controllers
                 var products = SProduct.Search(null, null, 1, null, null, null, "ProductId", "DESC", 1, 10000);
                 foreach (var p in products)
                 {
-                    AddUrl(sb, $"{baseUrl}/san-pham/detail/{p.Slug}.html", "0.9", "daily", p.Name, p.MainImage);
+                    AddUrl(sb, $"{baseUrl}/san-pham/detail/{p.Slug}-{p.ProductId}.html", "0.9", "daily", p.Name, p.MainImage);
                 }
             } catch { }
 

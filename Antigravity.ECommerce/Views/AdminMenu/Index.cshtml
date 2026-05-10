@@ -1,4 +1,4 @@
-@model List<Antigravity.ECommerce.Models.Category>
+﻿@model List<Antigravity.ECommerce.Models.Category>
 @{
     ViewData["Title"] = "Quản lý Menu";
     Layout = "_AdminLayout";
@@ -161,7 +161,7 @@
                                                     }
                                                 }
                                                 @if (!string.IsNullOrEmpty(menuLink)) {
-                                                    <a href="@menuLink" target="_blank" class="text-muted small text-decoration-none" title="Xem trên web"><i class="ri-link me-1"></i>@menuLink</a>
+                                                    <a href="@menuLink" target="_blank" class="text-muted small text-decoration-none d-inline-block text-truncate" style="max-width: 200px; vertical-align: bottom;" title="Xem trên web"><i class="ri-link me-1"></i>@menuLink</a>
                                                 } else {
                                                     <span class="text-muted small fst-italic">—</span>
                                                 }

@@ -106,12 +106,18 @@ namespace Antigravity.ECommerce.Controllers
         #region 2. Chi tiết sản phẩm
         /// <summary>
         /// Trang xem chi tiết một sản phẩm
-        /// </summary>        // Trigger restart for cache update
-        public IActionResult Detail(string slug)
+        /// </summary>
+        public IActionResult Detail(string slug, int id)
         {
-            // Load thông tin sản phẩm có cache
-            var product = SCache.GetOrSet($"Product_Detail_{slug}", () => FProduct.GetBySlug(slug), 60);
+            // Load thông tin sản phẩm có cache theo ID (ưu tiên ID để tránh lỗi khi đổi slug)
+            var product = SCache.GetOrSet($"Product_Detail_Id_{id}", () => FProduct.GetById(id), 60);
             if (product == null) return NotFound();
+
+            // 301 Redirect nếu slug trong URL không khớp slug thực (SEO-friendly)
+            if (!string.IsNullOrEmpty(product.Slug) && product.Slug != slug)
+            {
+                return RedirectPermanent($"/san-pham/detail/{product.Slug}-{id}.html");
+            }
 
             // Xử lý lấy danh sách Sản phẩm liên quan (Hiển thị ở dưới cùng trang chi tiết)
             List<Product> relatedList = new List<Product>();
@@ -261,7 +267,7 @@ namespace Antigravity.ECommerce.Controllers
             FReview.Insert(review);
             
             // Cực kỳ quan trọng: Phải xóa Cache của sản phẩm này để UI cập nhật số sao ngay lập tức
-            SCache.Remove("Product_Detail_" + product.Slug);
+            SCache.Remove("Product_Detail_Id_" + product.ProductId);
             
             return Json(new { success = true, message = "Đánh giá của bạn đã được gửi!" });
         }

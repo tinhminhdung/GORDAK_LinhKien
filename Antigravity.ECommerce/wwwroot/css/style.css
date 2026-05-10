@@ -601,9 +601,8 @@ img {
 
 /* ---- Section Common ---- */
 .section-head {
-    border-bottom: 2px solid #e0e8f2;
-    padding-bottom: 8px;
-    margin-bottom: 18px
+    padding-bottom: 15px;
+    margin-bottom: 15px
 }
 
 .section-title {
@@ -747,7 +746,6 @@ img {
     padding: 7px 4px;
     text-align: center;
     font-size: 16px;
-    font-weight: 800;
     transition: all .15s;
     cursor: pointer;
     white-space: nowrap;
@@ -3869,7 +3867,7 @@ img {
     }
 
     .gt-stat strong {
-        font-size: 13px;
+        font-size: 12px;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -4517,4 +4515,156 @@ img {
 
 .d-flex.justify-content-between.align-items-center.mt-3.border-top.pt-3.d-lg-none {
     display: none !important;
+}
+
+/* ========================================================
+   MOBILE: Trang Giới thiệu + Footer - khoảng cách chuẩn
+   ======================================================== */
+@media (max-width: 767px) {
+    /* --- About: Khoảng cách 2 bên mép --- */
+    section.container.gt-journey-sec,
+    section.container.gt-about-sec {
+        padding-left: 20px !important;
+        padding-right: 20px !important;
+    }
+    .gt-core-sec .container,
+    .gt-cert-sec .container,
+    .gt-featured-sec .container {
+        padding-left: 20px !important;
+        padding-right: 20px !important;
+    }
+    .gt-hero .container {
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+
+    /* --- About: Checklist tighter --- */
+    .gt-about-sec .col-lg-7 ul li {
+        padding: 4px 0 4px 28px;
+        font-size: 13px;
+    }
+    .gt-about-sec .col-lg-7 ul li::before {
+        font-size: 14px;
+        top: 5px;
+    }
+    .gt-about-sec .gt-about-desc,
+    .gt-about-sec .col-lg-7 p {
+        font-size: 13px;
+        margin-bottom: 10px;
+    }
+    .gt-about-sec .gt-about-btn {
+        font-size: 14px;
+        padding: 10px 20px;
+    }
+
+    /* --- About: Giá trị cốt lõi tighter --- */
+    .gt-core-sec {
+        padding: 25px 0;
+    }
+    .gt-core-card {
+        padding: 15px;
+    }
+
+    /* --- About: Timeline tighter --- */
+    .gt-journey-sec {
+        padding: 25px 0;
+    }
+    .gt-tl-item {
+        margin-bottom: 16px;
+        gap: 10px;
+    }
+    .gt-tl-item strong {
+        font-size: 13px;
+    }
+    .gt-tl-item p {
+        font-size: 12px;
+    }
+    .gt-tl-dot {
+        width: 20px;
+        height: 20px;
+        font-size: 9px;
+        margin-left: -26px;
+    }
+    .gt-timeline {
+        padding-left: 26px;
+    }
+    .gt-timeline::before {
+        left: 9px;
+    }
+
+    /* --- About: Chứng nhận tighter --- */
+    .gt-cert-sec {
+        padding: 25px 0;
+    }
+    .gt-cert-card img {
+        height: 100px;
+        margin-bottom: 8px;
+    }
+    .gt-cert-card small {
+        font-size: 11px;
+    }
+    .gt-cert-text-box {
+        padding: 18px;
+        margin-top: 15px;
+    }
+    .gt-cert-text-box p {
+        font-size: 13px;
+        margin-bottom: 15px;
+    }
+
+    /* --- About: Section title --- */
+    .gt-section-title {
+        font-size: 20px;
+        margin-bottom: 16px;
+    }
+
+    /* --- Footer: 2 cột gọn gàng trên mobile --- */
+    .footer-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 20px 16px;
+        padding-bottom: 20px;
+    }
+    .footer-col h4 {
+        font-size: 12px;
+        margin-bottom: 12px;
+    }
+    .footer-col ul li {
+        margin-bottom: 6px;
+    }
+    .footer-col ul li a {
+        font-size: 12px;
+    }
+    .footer-col-desc {
+        font-size: 12px;
+        margin-bottom: 10px;
+    }
+    .footer-logo-img {
+        height: 34px;
+    }
+    .footer-contact-info li {
+        font-size: 12px;
+        gap: 6px;
+    }
+    .main-footer {
+        padding: 25px 0 0;
+    }
+
+    /* Commitment bar mobile */
+    .commitment-text strong {
+        font-size: 12px;
+    }
+    .commitment-text p {
+        font-size: 11px;
+    }
+    .commitment-text i {
+        font-size: 24px;
+    }
+}
+
+@media (max-width: 575px) {
+    /* Footer stack 1 column on very small screens */
+    .footer-grid {
+        grid-template-columns: 1fr;
+        gap: 18px;
+    }
 }

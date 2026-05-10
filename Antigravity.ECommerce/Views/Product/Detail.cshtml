@@ -142,27 +142,16 @@
               </table>
 
               <div class="pd2-price-wrap">
-                @{
-                  decimal vatRate = 0.08m;
-                  decimal priceNoVat = Math.Round(Model.Price / (1 + vatRate));
-                }
-                @if(Model.Price > 0){
+                @if(Model.OldPrice > 0){
                 <div class="pd2-price-row">
                   <span style="color:#666;"><b style="color:#e30000;">Giá</b> (Chưa VAT):</span>
-                  <span class="pd2-price-red">@priceNoVat.ToString("N0")đ</span>
+                  <span class="pd2-price-red">@Model.OldPrice.ToString("N0")đ</span>
                 </div>
                 }
                 <div class="pd2-price-row">
                   <span style="color:#666;"><b style="color:#e30000;">Giá bán</b>@(Model.Price > 0 ? " (VAT 8 %)" : ""):</span>
                   <span class="pd2-price-main">@Model.Price.ToString("N0")đ</span>
                 </div>
-                @if(Model.OldPrice > Model.Price){
-                // <div class="pd2-price-row">
-                //   <span style="color:#666;">Giá thị trường:</span>
-                //   <span style="text-decoration: line-through; color:#999;">@Model.OldPrice.ToString("N0")đ</span>
-                //   <span class="badge bg-danger ms-2">-@((int)((Model.OldPrice - Model.Price) / Model.OldPrice * 100))%</span>
-                // </div>
-                }
               </div>
 
               <!-- Action Buttons -->
@@ -339,13 +328,13 @@
               if(i < 3)
               {
                 <div class="pd2-acc-item">
-                  <a href="/san-pham/detail/@(item.Slug).html" class="d-block flex-shrink-0">
+                  <a href="/san-pham/detail/@(item.Slug)-@(item.ProductId).html" class="d-block flex-shrink-0">
                     <img src="@(string.IsNullOrEmpty(item.MainImage) ? "/assets/images/placeholder.png" : item.MainImage)" class="pd2-acc-img" alt="@item.Name">
                   </a>
                   <div class="pd2-acc-info">
-                    <a href="/san-pham/detail/@(item.Slug).html" class="text-decoration-none text-dark"><div class="pd2-acc-name">@item.Name</div></a>
+                    <a href="/san-pham/detail/@(item.Slug)-@(item.ProductId).html" class="text-decoration-none text-dark"><div class="pd2-acc-name">@item.Name</div></a>
                     <div class="pd2-acc-price">@item.Price.ToString("N0")đ</div>
-                    <a href="/san-pham/detail/@(item.Slug).html" class="pd2-acc-btn">Xem chi tiết</a>
+                    <a href="/san-pham/detail/@(item.Slug)-@(item.ProductId).html" class="pd2-acc-btn">Xem chi tiết</a>
                   </div>
                 </div>
               }
@@ -358,13 +347,13 @@
                 {
                   var item = accessories[i];
                   <div class="pd2-acc-item mt-3">
-                    <a href="/san-pham/detail/@(item.Slug).html" class="d-block flex-shrink-0">
+                    <a href="/san-pham/detail/@(item.Slug)-@(item.ProductId).html" class="d-block flex-shrink-0">
                       <img src="@(string.IsNullOrEmpty(item.MainImage) ? "/assets/images/placeholder.png" : item.MainImage)" class="pd2-acc-img" alt="@item.Name">
                     </a>
                     <div class="pd2-acc-info">
-                      <a href="/san-pham/detail/@(item.Slug).html" class="text-decoration-none text-dark"><div class="pd2-acc-name">@item.Name</div></a>
+                      <a href="/san-pham/detail/@(item.Slug)-@(item.ProductId).html" class="text-decoration-none text-dark"><div class="pd2-acc-name">@item.Name</div></a>
                       <div class="pd2-acc-price">@item.Price.ToString("N0")đ</div>
-                      <a href="/san-pham/detail/@(item.Slug).html" class="pd2-acc-btn">Xem chi tiết</a>
+                      <a href="/san-pham/detail/@(item.Slug)-@(item.ProductId).html" class="pd2-acc-btn">Xem chi tiết</a>
                     </div>
                   </div>
                 }
@@ -390,13 +379,13 @@
               if(i < 3)
               {
                 <div class="pd2-acc-item">
-                  <a href="/san-pham/detail/@(item.Slug).html" class="d-block flex-shrink-0">
+                  <a href="/san-pham/detail/@(item.Slug)-@(item.ProductId).html" class="d-block flex-shrink-0">
                     <img src="@(string.IsNullOrEmpty(item.MainImage) ? "/assets/images/placeholder.png" : item.MainImage)" class="pd2-acc-img" alt="@item.Name">
                   </a>
                   <div class="pd2-acc-info">
-                    <a href="/san-pham/detail/@(item.Slug).html" class="text-decoration-none text-dark"><div class="pd2-acc-name">@item.Name</div></a>
+                    <a href="/san-pham/detail/@(item.Slug)-@(item.ProductId).html" class="text-decoration-none text-dark"><div class="pd2-acc-name">@item.Name</div></a>
                     <div class="pd2-acc-price">@item.Price.ToString("N0")đ</div>
-                    <a href="/san-pham/detail/@(item.Slug).html" class="pd2-acc-btn">Xem chi tiết</a>
+                    <a href="/san-pham/detail/@(item.Slug)-@(item.ProductId).html" class="pd2-acc-btn">Xem chi tiết</a>
                   </div>
                 </div>
               }
@@ -409,13 +398,13 @@
                 {
                   var item = viewedProducts[i];
                   <div class="pd2-acc-item mt-3">
-                    <a href="/san-pham/detail/@(item.Slug).html" class="d-block flex-shrink-0">
+                    <a href="/san-pham/detail/@(item.Slug)-@(item.ProductId).html" class="d-block flex-shrink-0">
                       <img src="@(string.IsNullOrEmpty(item.MainImage) ? "/assets/images/placeholder.png" : item.MainImage)" class="pd2-acc-img" alt="@item.Name">
                     </a>
                     <div class="pd2-acc-info">
-                      <a href="/san-pham/detail/@(item.Slug).html" class="text-decoration-none text-dark"><div class="pd2-acc-name">@item.Name</div></a>
+                      <a href="/san-pham/detail/@(item.Slug)-@(item.ProductId).html" class="text-decoration-none text-dark"><div class="pd2-acc-name">@item.Name</div></a>
                       <div class="pd2-acc-price">@item.Price.ToString("N0")đ</div>
-                      <a href="/san-pham/detail/@(item.Slug).html" class="pd2-acc-btn">Xem chi tiết</a>
+                      <a href="/san-pham/detail/@(item.Slug)-@(item.ProductId).html" class="pd2-acc-btn">Xem chi tiết</a>
                     </div>
                   </div>
                 }
@@ -458,15 +447,15 @@
                                 <span class="badge-hot">HOT</span>
                             }
                             <span class="badge-heart" onclick="toggleWishlist(@p.ProductId)" style="cursor:pointer"><i class="fa-regular fa-heart"></i></span>
-                            <a href="/san-pham/detail/@(p.Slug).html" class="d-block text-center mb-2" style="height: 180px;">
+                            <a href="/san-pham/detail/@(p.Slug)-@(p.ProductId).html" class="d-block text-center mb-2" style="height: 180px;">
                                 <img src="@(string.IsNullOrEmpty(p.MainImage) ? "/assets/images/placeholder.png" : p.MainImage)" class="product-img h-100 w-100 object-fit-contain" alt="@p.Name" loading="lazy">
                             </a>
-                            <h3 class="product-name"><a href="/san-pham/detail/@(p.Slug).html" class="text-decoration-none text-dark">@p.Name</a></h3>
+                            <h3 class="product-name"><a href="/san-pham/detail/@(p.Slug)-@(p.ProductId).html" class="text-decoration-none text-dark">@p.Name</a></h3>
                             <p class="product-desc line-clamp-2" style="font-size:12px; color:#666;">@(string.IsNullOrEmpty(p.ShortDescription) ? p.Name : p.ShortDescription)</p>
                             <div class="mt-auto">
                                 <div class="product-price">@p.Price.ToString("N0")đ</div>
                                 <div class="product-actions d-flex gap-2 mt-2">
-                                    <a href="/san-pham/detail/@(p.Slug).html" class="btn-outline-gd flex-fill text-center px-0 py-1" style="font-size:13px;">Xem chi tiết</a>
+                                    <a href="/san-pham/detail/@(p.Slug)-@(p.ProductId).html" class="btn-outline-gd flex-fill text-center px-0 py-1" style="font-size:13px;">Xem chi tiết</a>
                                     <a href="javascript:void(0)" onclick="addToCart(@p.ProductId,1)" class="btn-gd flex-fill d-flex align-items-center justify-content-center gap-1 py-1" style="font-size:13px;">
                                         <i class="fa-solid fa-cart-shopping"></i> Mua
                                     </a>

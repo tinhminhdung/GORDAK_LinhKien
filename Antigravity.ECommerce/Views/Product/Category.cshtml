@@ -103,15 +103,15 @@
                 <div class="product-card position-relative h-100 d-flex flex-column">
                   @if(p.IsHot){<span class="badge-hot">HOT</span>}
                   <span class="badge-heart" onclick="toggleWishlist(@p.ProductId)" style="cursor:pointer"><i class="fa-regular fa-heart"></i></span>
-                  <a href="/san-pham/detail/@(p.Slug).html" class="d-block text-center mb-2" style="height: 180px;">
+                  <a href="/san-pham/detail/@(p.Slug)-@(p.ProductId).html" class="d-block text-center mb-2" style="height: 180px;">
                       <img src="@(string.IsNullOrEmpty(p.MainImage) ? "/assets/images/placeholder.png" : p.MainImage)" class="product-img h-100 w-100 object-fit-contain" alt="@p.Name">
                   </a>
-                  <h3 class="product-name"><a href="/san-pham/detail/@(p.Slug).html" class="text-decoration-none text-dark">@p.Name</a></h3>
+                  <h3 class="product-name"><a href="/san-pham/detail/@(p.Slug)-@(p.ProductId).html" class="text-decoration-none text-dark">@p.Name</a></h3>
                   <p class="product-desc line-clamp-2" style="font-size:12px; color:#666;">@(string.IsNullOrEmpty(p.ShortDescription) ? p.Name : p.ShortDescription)</p>
                   <div class="mt-auto">
                       <div class="product-price">@p.Price.ToString("N0")đ</div>
                       <div class="product-actions d-flex gap-2 mt-2">
-                        <a href="/san-pham/detail/@(p.Slug).html" class="btn-outline-gd flex-fill text-center px-0 py-1" style="font-size:13px;">Xem chi tiết</a>
+                        <a href="/san-pham/detail/@(p.Slug)-@(p.ProductId).html" class="btn-outline-gd flex-fill text-center px-0 py-1" style="font-size:13px;">Xem chi tiết</a>
                         <a href="javascript:void(0)" onclick="addToCart(@p.ProductId,1)" class="btn-gd flex-fill d-flex align-items-center justify-content-center gap-1 py-1" style="font-size:13px;">
                           <i class="fa-solid fa-cart-shopping"></i> Mua
                         </a>
@@ -179,15 +179,15 @@
         <div class="product-card position-relative h-100 d-flex flex-column bg-white">
             @if(p.IsHot){<span class="badge-hot">HOT</span>}
             <span class="badge-heart" onclick="toggleWishlist(@p.ProductId)" style="cursor:pointer"><i class="fa-regular fa-heart"></i></span>
-            <a href="/san-pham/detail/@(p.Slug).html" class="d-block text-center mb-2" style="height: 180px;">
+            <a href="/san-pham/detail/@(p.Slug)-@(p.ProductId).html" class="d-block text-center mb-2" style="height: 180px;">
                 <img src="@(string.IsNullOrEmpty(p.MainImage) ? "/assets/images/placeholder.png" : p.MainImage)" class="product-img h-100 w-100 object-fit-contain" alt="@p.Name">
             </a>
-            <h3 class="product-name"><a href="/san-pham/detail/@(p.Slug).html" class="text-decoration-none text-dark">@p.Name</a></h3>
+            <h3 class="product-name"><a href="/san-pham/detail/@(p.Slug)-@(p.ProductId).html" class="text-decoration-none text-dark">@p.Name</a></h3>
             <p class="product-desc line-clamp-2" style="font-size:12px; color:#666;">@(string.IsNullOrEmpty(p.ShortDescription) ? p.Name : p.ShortDescription)</p>
             <div class="mt-auto">
                 <div class="product-price">@p.Price.ToString("N0")đ</div>
                 <div class="product-actions d-flex gap-2 mt-2">
-                  <a href="/san-pham/detail/@(p.Slug).html" class="btn-outline-gd flex-fill text-center px-0 py-1" style="font-size:13px;">Xem chi tiết</a>
+                  <a href="/san-pham/detail/@(p.Slug)-@(p.ProductId).html" class="btn-outline-gd flex-fill text-center px-0 py-1" style="font-size:13px;">Xem chi tiết</a>
                   <a href="javascript:void(0)" onclick="addToCart(@p.ProductId,1)" class="btn-gd flex-fill d-flex align-items-center justify-content-center gap-1 py-1" style="font-size:13px;">
                     <i class="fa-solid fa-cart-shopping"></i> Mua
                   </a>
