@@ -46,6 +46,7 @@ namespace Antigravity.ECommerce.Services
                 TaxCode = dict.GetValueOrDefault("TaxCode", ""),
                 Copyright = dict.GetValueOrDefault("Copyright", ""),
                 FooterInfo = dict.GetValueOrDefault("FooterInfo", ""),
+                FooterContactInfo = dict.GetValueOrDefault("FooterContactInfo", ""),
                 Facebook = dict.GetValueOrDefault("Facebook", ""),
                 Zalo = dict.GetValueOrDefault("Zalo", ""),
                 YouTube = dict.GetValueOrDefault("YouTube", ""),
@@ -95,6 +96,7 @@ namespace Antigravity.ECommerce.Services
                 Image_WatermarkExcludePaths = dict.GetValueOrDefault("Image_WatermarkExcludePaths", ""),
                 
                 DefaultShippingFee = decimal.TryParse(dict.GetValueOrDefault("DefaultShippingFee", "0"), out decimal dsf) ? dsf : 0,
+                OrderSuccessMessage = dict.GetValueOrDefault("OrderSuccessMessage", "<ul><li>Nhân viên sẽ gọi điện xác nhận đơn hàng trong vòng 15-30 phút.</li><li>Bạn có thể kiểm tra email để xem chi tiết hóa đơn.</li><li>Sản phẩm sẽ được giao đến bạn trong vòng 2-3 ngày làm việc.</li></ul>"),
 
                 NewsPageSize = int.TryParse(dict.GetValueOrDefault("NewsPageSize", "12"), out int nps) ? nps : 12,
                 NewsBigCount = int.TryParse(dict.GetValueOrDefault("NewsBigCount", "2"), out int nbc) ? nbc : 2,
@@ -122,6 +124,7 @@ namespace Antigravity.ECommerce.Services
             FSetting.UpdateValue("TaxCode", model.TaxCode ?? "", updatedBy);
             FSetting.UpdateValue("Copyright", model.Copyright ?? "", updatedBy);
             FSetting.UpdateValue("FooterInfo", model.FooterInfo ?? "", updatedBy);
+            FSetting.UpdateValue("FooterContactInfo", model.FooterContactInfo ?? "", updatedBy);
             FSetting.UpdateValue("InvoiceHeader", model.InvoiceHeader ?? "", updatedBy);
             FSetting.UpdateValue("InvoiceFooter", model.InvoiceFooter ?? "", updatedBy);
             FSetting.UpdateValue("Facebook", model.Facebook ?? "", updatedBy);
@@ -172,6 +175,7 @@ namespace Antigravity.ECommerce.Services
             FSetting.UpdateValue("Image_WatermarkExcludePaths", model.Image_WatermarkExcludePaths ?? "", updatedBy);
             
             FSetting.UpdateValue("DefaultShippingFee", model.DefaultShippingFee.ToString(), updatedBy);
+            FSetting.UpdateValue("OrderSuccessMessage", model.OrderSuccessMessage ?? "", updatedBy);
 
             FSetting.UpdateValue("NewsPageSize", model.NewsPageSize.ToString(), updatedBy);
             FSetting.UpdateValue("NewsBigCount", model.NewsBigCount.ToString(), updatedBy);

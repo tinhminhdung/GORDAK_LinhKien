@@ -13,17 +13,18 @@ namespace Antigravity.ECommerce.Controllers
     public class AdminOrderController : Controller
     {
         public IActionResult Index(string kw = "", int? status = null, int? paymentStatus = null, 
-            int? provinceId = null, int? wardId = null,
+            int? provinceId = null, int? wardId = null, bool? requiresVat = null,
             DateTime? dateMin = null, DateTime? dateMax = null,
             string sort = "CreatedAt", string order = "DESC", int page = 1, int size = 20)
         {
-            var data = SOrder.Search(kw, status, paymentStatus, provinceId, wardId, dateMin, dateMax, sort, order, page, size);
+            var data = SOrder.Search(kw, status, paymentStatus, provinceId, wardId, requiresVat, dateMin, dateMax, sort, order, page, size);
             
             ViewBag.Keyword = kw;
             ViewBag.Status = status;
             ViewBag.PaymentStatus = paymentStatus;
             ViewBag.ProvinceId = provinceId;
             ViewBag.WardId = wardId;
+            ViewBag.RequiresVat = requiresVat;
             ViewBag.DateMin = dateMin?.ToString("yyyy-MM-dd");
             ViewBag.DateMax = dateMax?.ToString("yyyy-MM-dd");
             ViewBag.SortColumn = sort;
@@ -233,12 +234,6 @@ namespace Antigravity.ECommerce.Controllers
                 var order = SOrder.GetById(id);
                 if (order == null) return Json(new { success = false, message = "Không tìm thấy đơn hàng" });
 
-                // Business Rule: Chỉ cho phép xóa đơn hàng Mới (0) hoặc Đã hủy (4)
-                if (order.OrderStatus != 0 && order.OrderStatus != 4)
-                {
-                    return Json(new { success = false, message = "Chỉ có thể xóa đơn hàng ở trạng thái 'Mới' hoặc 'Đã hủy'." });
-                }
-
                 SOrder.Delete(id);
                 return Json(new { success = true });
             }
@@ -262,7 +257,7 @@ namespace Antigravity.ECommerce.Controllers
                 foreach (var id in ids)
                 {
                     var order = SOrder.GetById(id);
-                    if (order != null && (order.OrderStatus == 0 || order.OrderStatus == 4))
+                    if (order != null)
                     {
                         SOrder.Delete(id);
                         successCount++;
@@ -275,7 +270,7 @@ namespace Antigravity.ECommerce.Controllers
 
                 if (failCount > 0)
                 {
-                    return Json(new { success = true, message = $"Đã xóa {successCount} đơn hàng. {failCount} đơn không thể xóa do không ở trạng thái 'Mới' hoặc 'Đã hủy'." });
+                    return Json(new { success = true, message = $"Đã xóa {successCount} đơn hàng. {failCount} đơn không tìm thấy hoặc đã bị xóa trước đó." });
                 }
 
                 return Json(new { success = true });
@@ -299,10 +294,10 @@ namespace Antigravity.ECommerce.Controllers
 
         [Permission("Orders", ActionType.Export)]
         public IActionResult ExportCSV(string kw = "", int? status = null, int? paymentStatus = null, 
-            int? provinceId = null, int? wardId = null,
+            int? provinceId = null, int? wardId = null, bool? requiresVat = null,
             DateTime? dateMin = null, DateTime? dateMax = null)
         {
-            var orders = SOrder.Search(kw, status, paymentStatus, provinceId, wardId, dateMin, dateMax, "CreatedAt", "DESC", 1, 100000);
+            var orders = SOrder.Search(kw, status, paymentStatus, provinceId, wardId, requiresVat, dateMin, dateMax, "CreatedAt", "DESC", 1, 100000);
 
             var builder = new System.Text.StringBuilder();
             builder.AppendLine("OrderId,OrderCode,CustomerName,CustomerPhone,TotalAmount,OrderStatus,PaymentMethod,CreatedAt");

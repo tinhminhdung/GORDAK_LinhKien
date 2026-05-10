@@ -76,9 +76,9 @@
             <input type="hidden" name="status" value="@ViewBag.Status" />
             <input type="hidden" name="page" id="pageIndex" value="@ViewBag.PageIndex" />
             <div class="row g-3 mb-3">
-                <div class="col-xxl-3 col-sm-6">
+                <div class="col-xxl-2 col-sm-6">
                     <div class="search-box">
-                        <input type="text" name="kw" class="form-control" value="@ViewBag.Keyword" placeholder="Mã ĐH, tên khách, SĐT...">
+                        <input type="text" name="kw" class="form-control" value="@ViewBag.Keyword" placeholder="Mã ĐH, SĐT...">
                         <i class="ri-search-line search-icon"></i>
                     </div>
                 </div>
@@ -107,12 +107,19 @@
                     </select>
                 </div>
                 <div class="col-xxl-2 col-sm-6">
+                    <select class="selectpicker form-control" name="requiresVat" id="RequiresVat">
+                        <option value="">-- Yêu cầu VAT --</option>
+                        <option value="true" selected="@(ViewBag.RequiresVat == true ? "selected" : null)">Cần xuất VAT</option>
+                        <option value="false" selected="@(ViewBag.RequiresVat == false ? "selected" : null)">Không yêu cầu</option>
+                    </select>
+                </div>
+                <div class="col-xxl-2 col-sm-6">
                     <div class="input-group">
                         <input type="date" name="dateMin" class="form-control" value="@ViewBag.DateMin" title="Từ ngày">
                         <input type="date" name="dateMax" class="form-control" value="@ViewBag.DateMax" title="Đến ngày">
                     </div>
                 </div>
-                <div class="col-xxl-3 col-sm-6 d-flex gap-1">
+                <div class="col-xxl-2 col-sm-6 d-flex gap-1">
                     <button type="submit" class="btn btn-primary flex-grow-1"><i class="mdi mdi-filter-variant"></i> Lọc</button>
                     <a href="/AdminOrder" class="btn btn-light"><i class="mdi mdi-refresh"></i></a>
                     <a href="/AdminOrder/ExportCSV?kw=@ViewBag.Keyword&status=@ViewBag.Status&provinceId=@ViewBag.ProvinceId&wardId=@ViewBag.WardId&dateMin=@ViewBag.DateMin&dateMax=@ViewBag.DateMax" class="btn btn-success"><i class="mdi mdi-download"></i></a>
@@ -149,7 +156,10 @@
                                 </div>
                             </td>
                             <td>
-                                <a href="/AdminOrder/Detail/@item.OrderId" class="text-body fw-bold">@item.OrderCode</a>
+                                <a href="/AdminOrder/Detail/@item.OrderId" class="text-body fw-bold d-block">@item.OrderCode</a>
+                                @if (item.RequiresVAT) {
+                                    <span class="badge bg-soft-info text-info mt-1"><i class="ri-file-list-3-line"></i> Y/C Hóa đơn VAT</span>
+                                }
                             </td>
                             <td>
                                 @item.CustomerName <br/>
@@ -186,12 +196,9 @@
                                     <a href="/AdminOrder/Print/@item.OrderId" target="_blank" class="btn btn-sm btn-soft-info" title="In Hóa Đơn">
                                         <i class="ri-printer-line"></i>
                                     </a>
-                                    @if (item.OrderStatus == 0 || item.OrderStatus == 4)
-                                    {
-                                        <button onclick="deleteOrder(@item.OrderId)" class="btn btn-sm btn-soft-danger" title="Xóa">
-                                            <i class="ri-delete-bin-line"></i>
-                                        </button>
-                                    }
+                                    <button onclick="deleteOrder(@item.OrderId)" class="btn btn-sm btn-soft-danger" title="Xóa">
+                                        <i class="ri-delete-bin-line"></i>
+                                    </button>
                                 </div>
                             </td>
                         </tr>
@@ -306,7 +313,13 @@
                         data: JSON.stringify(ids),
                         success: function(res) {
                             if (res.success) {
-                                location.reload();
+                                if (res.message) {
+                                    Swal.fire('Thông báo', res.message, 'info').then(() => {
+                                        location.reload();
+                                    });
+                                } else {
+                                    location.reload();
+                                }
                             } else {
                                 Swal.fire('Lỗi', res.message, 'error');
                             }

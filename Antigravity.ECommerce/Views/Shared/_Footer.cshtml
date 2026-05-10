@@ -75,19 +75,25 @@
 
         <!-- Cột cuối: Thông tin liên hệ (cố định từ cấu hình) -->
         <div class="footer-col">
-            <h4>@settings.SiteTitle</h4>
-            <ul class="footer-contact-info">
-                @if (!string.IsNullOrEmpty(settings.Address)) {
-                    <li><i class="fas fa-map-marker-alt"></i> @settings.Address</li>
-                }
-                @if (!string.IsNullOrEmpty(settings.Hotline)) {
-                    <li><i class="fas fa-phone-alt"></i> <a href="tel:@settings.Hotline">@settings.Hotline</a></li>
-                }
-                @if (!string.IsNullOrEmpty(settings.Email)) {
-                    <li><i class="fas fa-envelope"></i> <a href="mailto:@settings.Email">@settings.Email</a></li>
-                }
-                <li><i class="fas fa-globe"></i> @Context.Request.Host.Value</li>
-            </ul>
+            @if (!string.IsNullOrEmpty(settings.FooterContactInfo)) {
+                @Html.Raw(settings.FooterContactInfo)
+            } else {
+                <h4>@settings.SiteTitle</h4>
+                <div class="footer-contact-info-custom mt-3">
+                    <ul class="footer-contact-info">
+                        @if (!string.IsNullOrEmpty(settings.Address)) {
+                            <li><i class="fas fa-map-marker-alt"></i> @settings.Address</li>
+                        }
+                        @if (!string.IsNullOrEmpty(settings.Hotline)) {
+                            <li><i class="fas fa-phone-alt"></i> <a href="tel:@settings.Hotline">@settings.Hotline</a></li>
+                        }
+                        @if (!string.IsNullOrEmpty(settings.Email)) {
+                            <li><i class="fas fa-envelope"></i> <a href="mailto:@settings.Email">@settings.Email</a></li>
+                        }
+                        <li><i class="fas fa-globe"></i> @Context.Request.Host.Value</li>
+                    </ul>
+                </div>
+            }
         </div>
 
     </div>
@@ -112,7 +118,7 @@
 <!-- ======== FLOATING CHAT ======== -->
 @if (!string.IsNullOrEmpty(settings.Zalo)) {
     <a href="https://zalo.me/@settings.Zalo" target="_blank" class="chat-float d-none d-lg-flex text-decoration-none">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/a/a1/Zalo_Logo.svg" alt="Zalo" width="24" height="24">
+        <img src="/assets/images/zalo_logo.png" alt="Zalo" width="24" height="24" style="border-radius: 5px;">
         <span class="text-dark">Chat Zalo</span>
     </a>
 }

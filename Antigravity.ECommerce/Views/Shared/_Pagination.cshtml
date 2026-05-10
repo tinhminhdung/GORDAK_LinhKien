@@ -5,52 +5,83 @@
     int pageIndex = dict.ContainsKey("PageIndex") ? Convert.ToInt32(dict["PageIndex"]) : 1;
     int totalPages = dict.ContainsKey("TotalPages") ? Convert.ToInt32(dict["TotalPages"]) : 1;
     string jsFunction = dict.ContainsKey("JsFunction") ? dict["JsFunction"].ToString() : "changePage";
+    int totalCount = dict.ContainsKey("TotalCount") ? Convert.ToInt32(dict["TotalCount"]) : 0;
+    int displayCount = dict.ContainsKey("DisplayCount") ? Convert.ToInt32(dict["DisplayCount"]) : 0;
 }
 
-<div class="vd-pagination mt-4 mb-2">
-    @if (pageIndex > 1)
-    {
-        <a class="vd-page-btn" href="javascript:void(0);" onclick="@(jsFunction + "(" + (pageIndex - 1) + ")")"><i class="fa-solid fa-chevron-left" style="font-size:11px;"></i></a>
-    }
-    else
-    {
-        <a class="vd-page-btn disabled" href="javascript:void(0);"><i class="fa-solid fa-chevron-left" style="font-size:11px;"></i></a>
-    }
+@if (totalPages > 1 || totalCount > 0)
+{
+    <div class="row align-items-center mt-4 pt-3 border-top">
+        <div class="col-sm">
+            @if (totalCount > 0)
+            {
+                <div class="text-muted text-center text-sm-start mb-3 mb-sm-0">
+                    Hiển thị <span class="fw-semibold">@displayCount</span> trên tổng số <span class="fw-semibold">@totalCount</span> kết quả
+                </div>
+            }
+        </div>
+        <div class="col-sm-auto">
+            <ul class="pagination pagination-separated justify-content-center justify-content-sm-end mb-0">
+                @if (pageIndex > 1)
+                {
+                    <li class="page-item">
+                        <a class="page-link" href="javascript:void(0);" onclick="@(jsFunction + "(" + (pageIndex - 1) + ")")"><i class="mdi mdi-chevron-left"></i></a>
+                    </li>
+                }
+                else
+                {
+                    <li class="page-item disabled">
+                        <a class="page-link" href="javascript:void(0);"><i class="mdi mdi-chevron-left"></i></a>
+                    </li>
+                }
 
-    @{
-        int range = 2; // Number of pages around current page
-        
-        // Always show 1
-        <a class="vd-page-btn @(pageIndex == 1 ? "active" : "")" href="javascript:void(0);" onclick="@(jsFunction + "(1)")">1</a>
+                @{
+                    int range = 2; // Number of pages around current page
+                    
+                    // Always show 1
+                    <li class="page-item @(pageIndex == 1 ? "active" : "")">
+                        <a class="page-link" href="javascript:void(0);" onclick="@(jsFunction + "(1)")">1</a>
+                    </li>
 
-        if (pageIndex - range > 2)
-        {
-            <span class="vd-page-dots">...</span>
-        }
+                    if (pageIndex - range > 2)
+                    {
+                        <li class="page-item disabled"><span class="page-link">...</span></li>
+                    }
 
-        for (int i = Math.Max(2, pageIndex - range); i <= Math.Min(totalPages - 1, pageIndex + range); i++)
-        {
-            <a class="vd-page-btn @(i == pageIndex ? "active" : "")" href="javascript:void(0);" onclick="@(jsFunction + "(" + i + ")")">@i</a>
-        }
+                    for (int i = Math.Max(2, pageIndex - range); i <= Math.Min(totalPages - 1, pageIndex + range); i++)
+                    {
+                        <li class="page-item @(i == pageIndex ? "active" : "")">
+                            <a class="page-link" href="javascript:void(0);" onclick="@(jsFunction + "(" + i + ")")">@i</a>
+                        </li>
+                    }
 
-        if (pageIndex + range < totalPages - 1)
-        {
-            <span class="vd-page-dots">...</span>
-        }
+                    if (pageIndex + range < totalPages - 1)
+                    {
+                        <li class="page-item disabled"><span class="page-link">...</span></li>
+                    }
 
-        // Always show last if > 1
-        if (totalPages > 1)
-        {
-            <a class="vd-page-btn @(pageIndex == totalPages ? "active" : "")" href="javascript:void(0);" onclick="@(jsFunction + "(" + totalPages + ")")">@totalPages</a>
-        }
-    }
+                    // Always show last if > 1
+                    if (totalPages > 1)
+                    {
+                        <li class="page-item @(pageIndex == totalPages ? "active" : "")">
+                            <a class="page-link" href="javascript:void(0);" onclick="@(jsFunction + "(" + totalPages + ")")">@totalPages</a>
+                        </li>
+                    }
+                }
 
-    @if (pageIndex < totalPages)
-    {
-        <a class="vd-page-btn" href="javascript:void(0);" onclick="@(jsFunction + "(" + (pageIndex + 1) + ")")"><i class="fa-solid fa-chevron-right" style="font-size:11px;"></i></a>
-    }
-    else
-    {
-        <a class="vd-page-btn disabled" href="javascript:void(0);"><i class="fa-solid fa-chevron-right" style="font-size:11px;"></i></a>
-    }
-</div>
+                @if (pageIndex < totalPages)
+                {
+                    <li class="page-item">
+                        <a class="page-link" href="javascript:void(0);" onclick="@(jsFunction + "(" + (pageIndex + 1) + ")")"><i class="mdi mdi-chevron-right"></i></a>
+                    </li>
+                }
+                else
+                {
+                    <li class="page-item disabled">
+                        <a class="page-link" href="javascript:void(0);"><i class="mdi mdi-chevron-right"></i></a>
+                    </li>
+                }
+            </ul>
+        </div>
+    </div>
+}

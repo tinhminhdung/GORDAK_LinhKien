@@ -274,13 +274,20 @@ namespace Antigravity.ECommerce.Controllers
                 CustomerPhone = postModel.Phone,
                 CustomerEmail = postModel.Email,
                 ShippingAddress = !string.IsNullOrEmpty(postModel.FullAddress) ? postModel.FullAddress : postModel.Address,
+                ProvinceId = postModel.ProvinceId,
+                WardId = postModel.WardId,
                 SubTotal = cart.Sum(x => x.TotalPrice),
                 ShippingFee = shippingFee,
                 TotalAmount = cart.Sum(x => x.TotalPrice) + shippingFee,
                 OrderStatus = 0,
                 PaymentMethod = "COD",
                 PaymentStatus = 0,
-                CustomerNote = postModel.Note
+                CustomerNote = postModel.Note,
+                RequiresVAT = postModel.RequiresVAT,
+                VATCompanyName = postModel.VATCompanyName,
+                VATTaxCode = postModel.VATTaxCode,
+                VATCompanyAddress = postModel.VATCompanyAddress,
+                VATInvoiceEmail = postModel.VATInvoiceEmail
             };
 
             int orderId = FOrder.Insert(order);

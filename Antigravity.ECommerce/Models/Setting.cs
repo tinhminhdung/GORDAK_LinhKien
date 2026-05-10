@@ -36,6 +36,7 @@ namespace Antigravity.ECommerce.Models
         public string? TaxCode { get; set; } // Mã số thuế
         public string Copyright { get; set; } = string.Empty;
         public string FooterInfo { get; set; } = string.Empty;
+        public string FooterContactInfo { get; set; } = string.Empty;
         
         // Invoice
         public string InvoiceHeader { get; set; } = string.Empty;
@@ -102,6 +103,7 @@ namespace Antigravity.ECommerce.Models
 
         // Đơn hàng / Vận chuyển
         public decimal DefaultShippingFee { get; set; } = 0; // Phí vận chuyển mặc định (0 = Miễn phí)
+        public string? OrderSuccessMessage { get; set; } // Nội dung trang Đặt hàng thành công
         
         // Tin tức / Giao diện
         public int NewsPageSize { get; set; } = 12; // Số lượng bài viết nhỏ/trang

@@ -1,186 +1,159 @@
 @model Antigravity.ECommerce.Models.CartViewModel
 @{
     Layout = "_MainLayout";
-    ViewData["Title"] = "Thanh toán đơn hàng";
-}
-@section Styles {
-    <style>
-        .checkout-section { background: linear-gradient(135deg, #f8f9fc 0%, #eef1f6 100%); min-height: 100vh; }
-        .checkout-card { background: #fff; border-radius: 16px; box-shadow: 0 4px 24px rgba(0,0,0,0.06); padding: 2rem; }
-        .checkout-card h5 { font-size: 1.1rem; }
-        .form-label { font-size: 0.8rem; letter-spacing: 0.3px; margin-bottom: 0.4rem; }
-        .form-control, .form-select { font-size: 0.9rem; padding: 0.6rem 0.85rem; border-radius: 10px; border: 1px solid #dee2e6; transition: border-color 0.2s, box-shadow 0.2s; }
-        .form-control:focus, .form-select:focus { border-color: #405189; box-shadow: 0 0 0 3px rgba(64,81,137,0.1); }
-        .order-summary-header { background: linear-gradient(135deg, #405189 0%, #3a4a7a 100%); border-radius: 16px 16px 0 0; padding: 1.25rem 1.5rem; }
-        .order-item-row { padding: 0.75rem 0; border-bottom: 1px solid #f1f3f5; }
-        .order-item-row:last-child { border-bottom: none; }
-        .payment-option { cursor: pointer; transition: all 0.2s; border: 2px solid transparent !important; }
-        .payment-option:hover, .payment-option.active { border-color: #405189 !important; background: #f0f3ff !important; }
-        .btn-checkout { background: linear-gradient(135deg, #405189 0%, #0ab39c 100%); border: none; font-size: 1rem; padding: 0.9rem; border-radius: 12px; transition: transform 0.2s, box-shadow 0.2s; }
-        .btn-checkout:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(64,81,137,0.3); }
-        .secure-badge { font-size: 0.75rem; color: #878a99; }
-        .breadcrumb-checkout { font-size: 0.85rem; }
-        .breadcrumb-checkout a { color: #405189; text-decoration: none; }
-    </style>
+    ViewData["Title"] = "Thanh toán đơn hàng - GORDAK Việt Nam";
 }
 
-<section class="checkout-section py-4">
-    <div class="container">
-        <!-- Breadcrumb -->
-        <nav class="breadcrumb-checkout mb-3">
-            <a href="/"><i class="ri-home-4-line"></i> Trang chủ</a>
-            <span class="mx-2 text-muted">/</span>
-            <a href="/gio-hang.html">Giỏ hàng</a>
-            <span class="mx-2 text-muted">/</span>
-            <span class="text-dark fw-semibold">Thanh toán</span>
-        </nav>
+<!-- ======== BREADCRUMB ======== -->
+<div class="container mt-3 mb-3">
+  <nav class="sp-breadcrumb">
+      <a href="/"><i class="fa-solid fa-house" style="font-size:12px"></i> Trang chủ</a> 
+      <i class="fa-solid fa-chevron-right"></i> 
+      <a href="/gio-hang.html">Giỏ hàng</a> 
+      <i class="fa-solid fa-chevron-right"></i> 
+      <span>Đặt hàng</span>
+  </nav>
+</div>
 
-        <h4 class="fw-bold mb-4 d-flex align-items-center gap-2">
-            <i class="ri-shield-check-line text-primary"></i> Hoàn tất đơn hàng
-        </h4>
+<!-- ======== MAIN CONTENT ======== -->
+<main class="container mb-5">
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show mb-4" role="alert">
+            <i class="fa-solid fa-triangle-exclamation me-2"></i> @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
 
-        @if (TempData["ErrorMessage"] != null)
-        {
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                <i class="ri-error-warning-line me-2"></i> @TempData["ErrorMessage"]
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        }
-        
-        <form asp-action="ProcessCheckout" method="post" id="checkoutForm">
-            <div class="row g-4">
-                <div class="col-lg-7">
-                    <!-- Shipping Info -->
-                    <div class="checkout-card mb-4">
-                        <h5 class="fw-bold mb-3 d-flex align-items-center">
-                            <i class="ri-map-pin-line me-2 text-primary"></i> Thông tin giao hàng
-                        </h5>
-                        <div class="row g-3">
-                            <div class="col-12">
-                                <label class="form-label fw-semibold text-uppercase">Họ và tên nhận hàng <span class="text-danger">*</span></label>
-                                <input type="text" asp-for="FullName" class="form-control" placeholder="Ví dụ: Nguyễn Văn A" required>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label fw-semibold text-uppercase">Số điện thoại <span class="text-danger">*</span></label>
-                                <input type="tel" asp-for="Phone" class="form-control" placeholder="0xxx xxx xxx" pattern="^(0[3|5|7|8|9])+([0-9]{8})$" title="Số điện thoại phải có 10 chữ số và bắt đầu bằng 03, 05, 07, 08 hoặc 09" required>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label fw-semibold text-uppercase">Địa chỉ Email</label>
-                                <input type="email" asp-for="Email" class="form-control" placeholder="email@gmail.com" pattern="^[a-zA-Z0-9._%+\-]+@@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$" title="Vui lòng nhập email đúng định dạng (VD: example@gmail.com)">
-                            </div>
-                            
-                            <div class="col-md-6">
-                                <label class="form-label fw-semibold text-uppercase">Tỉnh / Thành phố <span class="text-danger">*</span></label>
-                                <select id="ProvinceId" name="ProvinceId" class="form-select" required>
-                                    <option value="">- Chọn Tỉnh/Thành -</option>
-                                </select>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label fw-semibold text-uppercase">Phường / Xã <span class="text-danger">*</span></label>
-                                <select id="WardId" name="WardId" class="form-select" required>
-                                    <option value="">- Chọn Phường/Xã -</option>
-                                </select>
-                            </div>
-
-                            <div class="col-12">
-                                <label class="form-label fw-semibold text-uppercase">Địa chỉ chi tiết <span class="text-danger">*</span></label>
-                                <input type="text" asp-for="Address" id="DetailAddress" class="form-control" placeholder="Số nhà, tên đường, tòa nhà..." required>
-                            </div>
-                            
-                            <input type="hidden" name="FullAddress" id="FullAddress" />
-
-                            <div class="col-12">
-                                <label class="form-label fw-semibold text-uppercase">Ghi chú cho shipper</label>
-                                <textarea asp-for="Note" class="form-control" rows="2" placeholder="Ví dụ: Giao vào giờ hành chính, để ở bảo vệ..."></textarea>
-                            </div>
-                        </div>
+  <form asp-action="ProcessCheckout" method="post" id="checkoutForm">
+      <div class="row g-4">
+        <!-- CỘT TRÁI: Form -->
+        <div class="col-lg-7">
+          <div class="gh-form-box">
+            <h2 class="gh-section-title"><i class="fa-solid fa-user-circle" style="color:#1a3c8a"></i> THÔNG TIN NGƯỜI NHẬN HÀNG</h2>
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <label class="lh-label">Họ và tên <span class="text-danger">*</span></label>
+                  <div class="gh-input-wrap"><i class="fa-regular fa-user"></i><input type="text" asp-for="FullName" class="form-control lh-input" placeholder="Nhập họ và tên" required></div>
+                </div>
+                <div class="col-md-6">
+                  <label class="lh-label">Số điện thoại <span class="text-danger">*</span></label>
+                  <div class="gh-input-wrap"><i class="fa-solid fa-phone"></i><input type="tel" asp-for="Phone" class="form-control lh-input" placeholder="Nhập số điện thoại" required></div>
+                </div>
+                
+                <!-- Province and Ward logic kept from previous codebase -->
+                <div class="col-md-6">
+                    <label class="lh-label">Tỉnh / Thành phố <span class="text-danger">*</span></label>
+                    <div class="gh-input-wrap"><i class="fa-solid fa-map"></i>
+                        <select id="ProvinceId" name="ProvinceId" class="form-select lh-input" required>
+                            <option value="">- Chọn Tỉnh/Thành -</option>
+                        </select>
                     </div>
-
-                    <!-- Payment -->
-                    <div class="checkout-card">
-                        <h5 class="fw-bold mb-3 d-flex align-items-center">
-                            <i class="ri-bank-card-line me-2 text-primary"></i> Phương thức thanh toán
-                        </h5>
-                        <div class="payment-option p-3 border rounded-3 mb-3 active" onclick="document.getElementById('cod').checked = true; document.querySelectorAll('.payment-option').forEach(e=>e.classList.remove('active')); this.classList.add('active');">
-                            <div class="d-flex align-items-center">
-                                <input class="form-check-input me-3 mt-0" type="radio" name="PaymentMethod" id="cod" value="COD" checked>
-                                <div class="bg-success-subtle p-2 rounded-3 me-3 text-success"><i class="ri-money-dollar-circle-line fs-4"></i></div>
-                                <div>
-                                    <div class="fw-bold" style="font-size:0.95rem;">Thanh toán khi nhận hàng (COD)</div>
-                                    <div class="text-muted" style="font-size:0.8rem;">Thanh toán tiền mặt cho shipper khi nhận được hàng.</div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="payment-option p-3 border rounded-3 opacity-50">
-                            <div class="d-flex align-items-center">
-                                <input class="form-check-input me-3 mt-0" type="radio" name="PaymentMethod" disabled>
-                                <div class="bg-primary-subtle p-2 rounded-3 me-3 text-primary"><i class="ri-bank-line fs-4"></i></div>
-                                <div>
-                                    <div class="fw-bold" style="font-size:0.95rem;">Chuyển khoản / Ví điện tử</div>
-                                    <div class="text-muted" style="font-size:0.8rem;">Tính năng đang được phát triển.</div>
-                                </div>
-                            </div>
-                        </div>
+                </div>
+                <div class="col-md-6">
+                    <label class="lh-label">Phường / Xã <span class="text-danger">*</span></label>
+                    <div class="gh-input-wrap"><i class="fa-solid fa-map-pin"></i>
+                        <select id="WardId" name="WardId" class="form-select lh-input" required>
+                            <option value="">- Chọn Phường/Xã -</option>
+                        </select>
                     </div>
                 </div>
 
-                <!-- Order Summary -->
-                <div class="col-lg-5">
-                    <div class="bg-white rounded-4 overflow-hidden shadow-sm sticky-top" style="top: 90px;">
-                        <div class="order-summary-header text-white">
-                            <h5 class="fw-bold mb-0" style="font-size:1rem;"><i class="ri-shopping-bag-3-line me-2"></i> Tóm tắt đơn hàng (@Model.Items.Count sản phẩm)</h5>
-                        </div>
-                        <div class="p-3">
-                            <div style="max-height: 280px; overflow-y: auto;">
-                                @foreach(var item in Model.Items) {
-                                    <div class="order-item-row d-flex align-items-center">
-                                        <div class="position-relative flex-shrink-0">
-                                            <img src="@item.ProductImage" class="rounded-3 border" style="width: 50px; height: 50px; object-fit: cover;">
-                                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-dark" style="font-size:0.65rem;">@item.Quantity</span>
-                                        </div>
-                                        <div class="flex-grow-1 ms-3 pe-2">
-                                            <div class="fw-semibold text-truncate" style="font-size:0.85rem; max-width: 180px;">@item.ProductName</div>
-                                        </div>
-                                        <div class="flex-shrink-0 fw-bold text-dark" style="font-size:0.85rem;">@item.TotalPrice.ToString("N0")₫</div>
-                                    </div>
-                                }
-                            </div>
-
-                            <hr class="my-3">
-                            <div class="d-flex justify-content-between mb-2" style="font-size:0.85rem;">
-                                <span class="text-muted">Tạm tính</span>
-                                <span class="fw-medium">@Model.SubTotal.ToString("N0") ₫</span>
-                            </div>
-                            <div class="d-flex justify-content-between mb-3" style="font-size:0.85rem;">
-                                <span class="text-muted">Phí vận chuyển</span>
-                                @if (Model.ShippingFee > 0) {
-                                    <span class="fw-medium">@Model.ShippingFee.ToString("N0") ₫</span>
-                                } else {
-                                    <span class="fw-medium text-success">Miễn phí</span>
-                                }
-                            </div>
-                            <hr>
-                            <div class="d-flex justify-content-between align-items-center mb-3">
-                                <span class="fw-bold">Tổng cộng</span>
-                                <div class="text-end">
-                                    <div class="text-danger fw-bold" style="font-size:1.3rem;">@Model.TotalAmount.ToString("N0") ₫</div>
-                                    <small class="text-muted" style="font-size:0.7rem;">(Đã bao gồm VAT nếu có)</small>
-                                </div>
-                            </div>
-                            
-                            <button type="submit" class="btn btn-checkout btn-primary w-100 fw-bold text-white">
-                                <i class="ri-check-double-line me-1"></i> XÁC NHẬN ĐẶT HÀNG
-                            </button>
-                            <div class="text-center mt-2 secure-badge">
-                                <i class="ri-shield-check-line me-1"></i> Cam kết bảo mật thông tin 100%
-                            </div>
-                        </div>
-                    </div>
+                <div class="col-12">
+                  <label class="lh-label">Địa chỉ nhận hàng (Số nhà, tên đường) <span class="text-danger">*</span></label>
+                  <div class="gh-input-wrap"><i class="fa-solid fa-location-dot"></i><input type="text" id="DetailAddress" asp-for="Address" class="form-control lh-input" placeholder="Số nhà, tên đường, khu vực..." required></div>
                 </div>
+                <input type="hidden" name="FullAddress" id="FullAddress" />
+
+                <div class="col-12">
+                  <label class="lh-label">Email</label>
+                  <div class="gh-input-wrap"><i class="fa-solid fa-envelope"></i><input type="email" asp-for="Email" class="form-control lh-input" placeholder="Nhập email để nhận thông tin đơn hàng"></div>
+                </div>
+                <div class="col-12">
+                  <label class="lh-label">Ghi chú đơn hàng</label>
+                  <div class="gh-input-wrap"><i class="fa-regular fa-comment"></i><input type="text" asp-for="Note" class="form-control lh-input" placeholder="Ví dụ: giao giờ hành chính, gọi trước khi giao..."></div>
+                </div>
+              </div>
+
+              <!-- Checkbox VAT -->
+              <div class="gh-vat-check mt-3">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="vatCheck" name="RequiresVAT" value="true" data-bs-toggle="collapse" data-bs-target="#vatForm">
+                  <label class="form-check-label" for="vatCheck">
+                    <strong>Tôi cần xuất hóa đơn VAT</strong>
+                    <small class="d-block text-muted">Tích vào đây nếu bạn cần xuất hóa đơn VAT cho đơn hàng này.</small>
+                  </label>
+                </div>
+              </div>
+
+              <!-- VAT Form (collapsible) -->
+              <div class="collapse" id="vatForm">
+                <div class="gh-vat-form mt-3">
+                  <h4 class="gh-vat-title"><i class="fa-solid fa-file-invoice"></i> THÔNG TIN XUẤT HÓA ĐƠN <i class="fa-solid fa-chevron-down float-end"></i></h4>
+                  <div class="row g-3 mt-1">
+                    <div class="col-md-6"><label class="lh-label">Tên công ty <span class="text-danger">*</span></label><input type="text" asp-for="VATCompanyName" class="form-control lh-input" placeholder="Nhập tên công ty"></div>
+                    <div class="col-md-6"><label class="lh-label">Mã số thuế <span class="text-danger">*</span></label><input type="text" asp-for="VATTaxCode" class="form-control lh-input" placeholder="Nhập mã số thuế"></div>
+                    <div class="col-12"><label class="lh-label">Địa chỉ công ty <span class="text-danger">*</span></label><input type="text" asp-for="VATCompanyAddress" class="form-control lh-input" placeholder="Nhập địa chỉ công ty"></div>
+                    <div class="col-12"><label class="lh-label">Email nhận hóa đơn</label><input type="email" asp-for="VATInvoiceEmail" class="form-control lh-input" placeholder="Nhập email nhận hóa đơn"></div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Submit Button -->
+              <button type="submit" class="gh-btn-submit mt-4"><i class="fa-solid fa-cart-shopping"></i> XÁC NHẬN ĐẶT HÀNG</button>
+          </div>
+        </div>
+
+        <!-- CỘT PHẢI: Đơn hàng -->
+        <div class="col-lg-5">
+          <div class="gh-order-box">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <h3 class="gh-order-title"><i class="fa-solid fa-cart-shopping"></i> ĐƠN HÀNG CỦA BẠN</h3>
+              <a href="/gio-hang.html" class="gh-edit-link">Chỉnh sửa giỏ hàng</a>
             </div>
-        </form>
-    </div>
-</section>
+
+            <!-- Product item -->
+            @foreach(var item in Model.Items) {
+                <div class="gh-order-item">
+                  <img src="@item.ProductImage" alt="@item.ProductName" class="gh-order-img">
+                  <div class="gh-order-info">
+                    <strong>@item.ProductName</strong>
+                    <small>Số lượng: @item.Quantity</small>
+                  </div>
+                  <div class="gh-order-price-wrap">
+                    <span class="gh-order-price">@item.Price.ToString("N0")đ</span>
+                    <span class="text-muted">x @item.Quantity</span>
+                  </div>
+                </div>
+            }
+
+            <hr style="border-color:#e5e5e5">
+            <div class="d-flex justify-content-between mb-2"><span>Tạm tính</span><span>@Model.SubTotal.ToString("N0")đ</span></div>
+            <div class="d-flex justify-content-between mb-3"><span>Phí vận chuyển</span><span class="text-muted">@((Model.ShippingFee > 0) ? Model.ShippingFee.ToString("N0") + "đ" : "Miễn phí")</span></div>
+            <hr style="border-color:#e5e5e5">
+            <div class="d-flex justify-content-between align-items-center">
+              <strong style="font-size:15px">Tổng thanh toán</strong>
+              <div class="text-end">
+                <span class="gh-total-price">@Model.TotalAmount.ToString("N0")đ</span>
+                <small class="d-block text-muted">(Đã bao gồm VAT)</small>
+              </div>
+            </div>
+          </div>
+
+          <!-- Hỗ trợ -->
+          <div class="gh-support-box mt-3">
+            <h4><i class="fa-solid fa-headset" style="color:#1a3c8a"></i> CẦN HỖ TRỢ?</h4>
+            <p class="text-muted" style="font-size:13px">Đội ngũ kỹ thuật của chúng tôi luôn sẵn sàng hỗ trợ bạn!</p>
+            <div class="d-flex flex-wrap gap-3 mt-2">
+              <div class="d-flex align-items-center gap-2"><i class="fa-solid fa-phone" style="color:#1a3c8a"></i><div><small class="text-muted">Hotline</small><br><strong>0963 344 888</strong></div></div>
+              <div class="d-flex align-items-center gap-2"><div class="zalo-circle" style="width:28px;height:28px;font-size:9px">Zalo</div><div><small class="text-muted">Chat Zalo</small><br><strong>Tư vấn 24/7</strong></div></div>
+              <div class="d-flex align-items-center gap-2"><i class="fa-solid fa-envelope" style="color:#1a3c8a"></i><div><small class="text-muted">Email</small><br><strong>info@nhatminhesc.com</strong></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+  </form>
+</main>
 
 @section Scripts {
     <script>
@@ -235,8 +208,8 @@
             var tinh = $('#ProvinceId option:selected').text();
             
             var full = detail;
-            if ($('#WardId').val()) full += ', ' + xa;
-            if ($('#ProvinceId').val()) full += ', ' + tinh;
+            if ($('#WardId').val() && $('#WardId').val() != '') full += ', ' + xa;
+            if ($('#ProvinceId').val() && $('#ProvinceId').val() != '') full += ', ' + tinh;
             
             $('#FullAddress').val(full);
         }
@@ -245,6 +218,16 @@
             if (!$('#ProvinceId').val() || !$('#WardId').val()) {
                 e.preventDefault();
                 Swal.fire('Chú ý', 'Vui lòng chọn đầy đủ Tỉnh/Thành và Phường/Xã', 'warning');
+                return false;
+            }
+            
+            var reqVat = $('#vatCheck').is(':checked');
+            if (reqVat) {
+                if (!$('input[name="VATCompanyName"]').val() || !$('input[name="VATTaxCode"]').val() || !$('input[name="VATCompanyAddress"]').val()) {
+                    e.preventDefault();
+                    Swal.fire('Chú ý', 'Vui lòng nhập đầy đủ Tên công ty, Mã số thuế và Địa chỉ công ty để xuất hóa đơn VAT', 'warning');
+                    return false;
+                }
             }
         });
     </script>

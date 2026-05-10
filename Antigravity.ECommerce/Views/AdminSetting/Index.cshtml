@@ -116,8 +116,12 @@
                                         <div class="small text-muted mt-1">Lấy từ Google Maps > Chia sẻ > Nhúng bản đồ</div>
                                     </div>
                                     <div class="col-md-12">
-                                        <label class="form-label fw-semibold">Thông tin chân trang (Footer Info)</label>
+                                        <label class="form-label fw-semibold">Thông tin công ty (Footer Cột 1)</label>
                                         <textarea asp-for="FooterInfo" id="editorFooter" class="form-control rounded-3" rows="4"></textarea>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <label class="form-label fw-semibold">Thông tin liên hệ (Footer Cột 4)</label>
+                                        <textarea asp-for="FooterContactInfo" id="editorFooterContact" class="form-control rounded-3" rows="4"></textarea>
                                     </div>
                                 </div>
                             </div>
@@ -146,6 +150,11 @@
                                                 <small class="text-muted mt-1 d-block"><i class="fas fa-info-circle me-1"></i>Nhập <strong>0</strong> nếu muốn <strong>Miễn phí vận chuyển</strong>. Giá trị này sẽ áp dụng cho tất cả đơn hàng.</small>
                                             </div>
                                         </div>
+                                    </div>
+                                    <div class="col-md-12 mt-4">
+                                        <label class="form-label fw-semibold">Nội dung thông báo Đặt Hàng Thành Công</label>
+                                        <textarea asp-for="OrderSuccessMessage" id="editorOrderSuccess" class="form-control rounded-3" rows="4"></textarea>
+                                        <small class="text-muted d-block mt-1">Thông báo này sẽ được hiển thị ngay sau khi khách hàng đặt hàng thành công.</small>
                                     </div>
                                 </div>
                             </div>
@@ -989,11 +998,13 @@
                 filebrowserUploadUrl: '/FileManager/Upload?type=Files',
                 filebrowserImageUploadUrl: '/FileManager/Upload?type=Images',
                 height: 250,
-                removeButtons: 'Print,NewPage,Preview,ExportPdf,Save'
+                removeButtons: 'Print,NewPage,Preview,ExportPdf,Save',
+                allowedContent: true
             };
 
             if (document.getElementById('editorMaintenance')) CKEDITOR.replace('editorMaintenance', editorConfig);
             if (document.getElementById('editorFooter')) CKEDITOR.replace('editorFooter', editorConfig);
+            if (document.getElementById('editorFooterContact')) CKEDITOR.replace('editorFooterContact', editorConfig);
             if (document.getElementById('editorInvoiceHeader')) CKEDITOR.replace('editorInvoiceHeader', editorConfig);
             if (document.getElementById('editorInvoiceFooter')) CKEDITOR.replace('editorInvoiceFooter', editorConfig);
             if (document.getElementById('editor404')) CKEDITOR.replace('editor404', editorConfig);
@@ -1002,6 +1013,7 @@
             if (document.getElementById('editorEmailOrderConfirm')) CKEDITOR.replace('editorEmailOrderConfirm', editorConfig);
             if (document.getElementById('editorEmailOrderStatus')) CKEDITOR.replace('editorEmailOrderStatus', editorConfig);
             if (document.getElementById('editorEmailPasswordReset')) CKEDITOR.replace('editorEmailPasswordReset', editorConfig);
+            if (document.getElementById('editorOrderSuccess')) CKEDITOR.replace('editorOrderSuccess', editorConfig);
 
             $('#formSettings').on('submit', function(e) {
                 e.preventDefault();

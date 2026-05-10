@@ -48,5 +48,20 @@ namespace Antigravity.ECommerce.Models
         public int? WardId { get; set; }
         /// <summary> Ghi chú đơn hàng </summary>
         public string? Note { get; set; }
+        
+        /// <summary> Có yêu cầu xuất hóa đơn VAT không </summary>
+        public bool RequiresVAT { get; set; }
+        
+        /// <summary> Tên công ty (VAT) </summary>
+        public string? VATCompanyName { get; set; }
+        
+        /// <summary> Mã số thuế (VAT) </summary>
+        public string? VATTaxCode { get; set; }
+        
+        /// <summary> Địa chỉ công ty (VAT) </summary>
+        public string? VATCompanyAddress { get; set; }
+        
+        /// <summary> Email nhận hóa đơn (VAT) </summary>
+        public string? VATInvoiceEmail { get; set; }
     }
 }

@@ -65,6 +65,21 @@ namespace Antigravity.ECommerce.Models
         /// <summary> Ghi chú nội bộ admin </summary>
         public string? AdminNote { get; set; }
         
+        /// <summary> Có yêu cầu xuất hóa đơn VAT không </summary>
+        public bool RequiresVAT { get; set; }
+        
+        /// <summary> Tên công ty (VAT) </summary>
+        public string? VATCompanyName { get; set; }
+        
+        /// <summary> Mã số thuế (VAT) </summary>
+        public string? VATTaxCode { get; set; }
+        
+        /// <summary> Địa chỉ công ty (VAT) </summary>
+        public string? VATCompanyAddress { get; set; }
+        
+        /// <summary> Email nhận hóa đơn (VAT) </summary>
+        public string? VATInvoiceEmail { get; set; }
+
         /// <summary> Ngày đặt hàng </summary>
         public DateTime CreatedAt { get; set; }
         

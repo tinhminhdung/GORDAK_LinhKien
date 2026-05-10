@@ -85,10 +85,9 @@ namespace Antigravity.ECommerce.Services
             return result;
         }
 
-        public static List<Order> Search(string? kw, int? status, int? paymentStatus, int? provinceId, int? wardId, DateTime? dateMin, DateTime? dateMax, 
-            string sort = "CreatedAt", string order = "DESC", int page = 1, int size = 20)
+        public static List<Order> Search(string kw, int? status, int? paymentStatus, int? provinceId, int? wardId, bool? requiresVat, DateTime? dateMin, DateTime? dateMax, string sort, string order, int page, int size)
         {
-            return FOrder.Search(kw, status, paymentStatus, provinceId, wardId, dateMin, dateMax, sort, order, page, size);
+            return FOrder.Search(kw, status, paymentStatus, provinceId, wardId, requiresVat, dateMin, dateMax, sort, order, page, size);
         }
 
         public static Order? GetById(int orderId)

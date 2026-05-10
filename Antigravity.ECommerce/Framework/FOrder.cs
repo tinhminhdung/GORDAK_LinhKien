@@ -12,6 +12,7 @@ namespace Antigravity.ECommerce.Framework
         {
             var prms = new SqlParameter[]
             {
+                new SqlParameter("@OrderCode", model.OrderCode ?? string.Empty),
                 new SqlParameter("@CustomerId", (object?)model.CustomerId ?? DBNull.Value),
                 new SqlParameter("@CustomerName", model.CustomerName ?? string.Empty),
                 new SqlParameter("@CustomerPhone", model.CustomerPhone ?? string.Empty),
@@ -27,7 +28,12 @@ namespace Antigravity.ECommerce.Framework
                 new SqlParameter("@PaymentMethod", model.PaymentMethod ?? "COD"),
                 new SqlParameter("@PaymentStatus", model.PaymentStatus),
                 new SqlParameter("@CustomerNote", (object?)model.CustomerNote ?? DBNull.Value),
-                new SqlParameter("@CreatedBy", (object?)model.UpdatedBy ?? DBNull.Value)
+                new SqlParameter("@CreatedBy", (object?)model.UpdatedBy ?? DBNull.Value),
+                new SqlParameter("@RequiresVAT", model.RequiresVAT),
+                new SqlParameter("@VATCompanyName", (object?)model.VATCompanyName ?? DBNull.Value),
+                new SqlParameter("@VATTaxCode", (object?)model.VATTaxCode ?? DBNull.Value),
+                new SqlParameter("@VATCompanyAddress", (object?)model.VATCompanyAddress ?? DBNull.Value),
+                new SqlParameter("@VATInvoiceEmail", (object?)model.VATInvoiceEmail ?? DBNull.Value)
             };
             return Convert.ToInt32(BaseConnectionSql.ExecuteScalar("SP_Orders_Insert", prms));
         }
@@ -64,20 +70,20 @@ namespace Antigravity.ECommerce.Framework
             return BaseConnectionSql.ExecuteNonQuery("SP_Orders_UpdateStatus", prms);
         }
 
-        public static List<Order> Search(string? kw, int? status, int? paymentStatus, int? provinceId, int? wardId, DateTime? dateMin, DateTime? dateMax, 
-            string sort, string order, int page, int size)
+        public static List<Order> Search(string? kw, int? status, int? paymentStatus, int? provinceId, int? wardId, bool? requiresVat, DateTime? dateMin, DateTime? dateMax, string sort, string order, int page, int size)
         {
             var prms = new SqlParameter[]
             {
-                new SqlParameter("@Keyword", (object?)kw ?? DBNull.Value),
-                new SqlParameter("@OrderStatus", (object?)status ?? DBNull.Value),
-                new SqlParameter("@PaymentStatus", (object?)paymentStatus ?? DBNull.Value),
-                new SqlParameter("@ProvinceId", (object?)provinceId ?? DBNull.Value),
-                new SqlParameter("@WardId", (object?)wardId ?? DBNull.Value),
-                new SqlParameter("@Ngay_Min", (object?)dateMin ?? DBNull.Value),
-                new SqlParameter("@Ngay_Max", (object?)dateMax ?? DBNull.Value),
-                new SqlParameter("@SortColumn", sort ?? "CreatedAt"),
-                new SqlParameter("@SortOrder", order ?? "DESC"),
+                new SqlParameter("@Keyword", kw ?? (object)DBNull.Value),
+                new SqlParameter("@OrderStatus", status ?? (object)DBNull.Value),
+                new SqlParameter("@PaymentStatus", paymentStatus ?? (object)DBNull.Value),
+                new SqlParameter("@ProvinceId", provinceId ?? (object)DBNull.Value),
+                new SqlParameter("@WardId", wardId ?? (object)DBNull.Value),
+                new SqlParameter("@RequiresVAT", requiresVat ?? (object)DBNull.Value),
+                new SqlParameter("@Ngay_Min", dateMin ?? (object)DBNull.Value),
+                new SqlParameter("@Ngay_Max", dateMax ?? (object)DBNull.Value),
+                new SqlParameter("@SortColumn", sort),
+                new SqlParameter("@SortOrder", order),
                 new SqlParameter("@PageIndex", page),
                 new SqlParameter("@PageSize", size)
             };

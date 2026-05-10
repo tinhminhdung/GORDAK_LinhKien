@@ -82,8 +82,8 @@ img {
 }
 
     .top-header .py-3 {
-        padding-top: .75rem !important;
-        padding-bottom: .75rem !important
+        padding-top: .15rem !important;
+        padding-bottom: .15rem !important
     }
 
 .search-box {
@@ -132,7 +132,8 @@ img {
 
 .quick-item .text-muted {
     font-size: 12px !important;
-    color: #7a8aa3 !important
+    color: #2145A4 !important;
+    font-weight: 700;
 }
 
 .zalo-circle {
@@ -4440,3 +4441,37 @@ img {
     border-color: #eee;
     pointer-events: none;
 }
+/* ========================================================
+   TRANG GIO HANG (prefix: .gh-)
+   ======================================================== */
+.gh-form-box { background: #fff; border: 1px solid #e5e5e5; border-radius: 8px; padding: 30px; }
+.gh-section-title { font-size: 18px; font-weight: 700; color: #212d45; margin-bottom: 20px; text-transform: uppercase; font-style: italic; }
+.gh-section-title i { margin-right: 8px; }
+.gh-input-wrap { position: relative; }
+.gh-input-wrap i { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: #999; font-size: 14px; }
+.gh-input-wrap input, .gh-input-wrap textarea, .gh-input-wrap select { padding-left: 40px; }
+
+.gh-vat-check { padding: 15px; border: 1px solid #e5e5e5; border-radius: 6px; }
+.gh-vat-form { border: 1px solid #e5e5e5; border-radius: 6px; padding: 20px; background: #f8f9fa; }
+.gh-vat-title { font-size: 14px; font-weight: 700; color: #1a3c8a; text-transform: uppercase; }
+
+.gh-btn-submit { width: 100%; padding: 16px; background: #1a3c8a; color: #fff; border: none; border-radius: 6px; font-size: 16px; font-weight: 700; cursor: pointer; transition: 0.2s; text-transform: uppercase; }
+.gh-btn-submit:hover { background: #142e6b; }
+.gh-btn-submit i { margin-right: 8px; }
+
+.gh-order-box { background: #fff; border: 1px solid #e5e5e5; border-radius: 8px; padding: 25px; }
+.gh-order-title { font-size: 16px; font-weight: 700; color: #212d45; text-transform: uppercase; font-style: italic; margin: 0; }
+.gh-order-title i { margin-right: 8px; color: #1a3c8a; }
+.gh-edit-link { font-size: 12px; color: #1a3c8a; text-decoration: underline; }
+
+.gh-order-item { display: flex; gap: 12px; align-items: flex-start; padding: 15px; border: 1px solid #e5e5e5; border-radius: 6px; margin-bottom: 15px;}
+.gh-order-img { width: 80px; height: 80px; object-fit: contain; flex-shrink: 0; }
+.gh-order-info { flex: 1; }
+.gh-order-info strong { font-size: 14px; color: #333; display: block; margin-bottom: 4px; }
+.gh-order-info small { font-size: 11px; color: #888; display: block; }
+.gh-order-price-wrap { text-align: right; }
+.gh-order-price { font-size: 16px; font-weight: 700; color: #e30000; display: block; }
+.gh-total-price { font-size: 22px; font-weight: 900; color: #e30000; }
+
+.gh-support-box { background: #f8f9fa; border: 1px solid #e5e5e5; border-radius: 8px; padding: 20px; }
+.gh-support-box h4 { font-size: 15px; font-weight: 700; color: #212d45; margin-bottom: 5px; }

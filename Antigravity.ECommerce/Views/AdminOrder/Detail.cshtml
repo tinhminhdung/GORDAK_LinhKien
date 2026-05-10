@@ -279,8 +279,17 @@
                     <button type="button" class="btn btn-sm btn-soft-primary" data-bs-toggle="modal" data-bs-target="#editAddressModal">Sửa</button>
                 </p>
                 <p class="mb-0 fs-14">
-                    @Model.ShippingAddress<br />
-                    @Model.WardName, @Model.ProvinceName
+                    @Model.ShippingAddress
+                    @if (!string.IsNullOrEmpty(Model.WardName) || !string.IsNullOrEmpty(Model.ProvinceName))
+                    {
+                        var parts = new List<string>();
+                        if (!string.IsNullOrEmpty(Model.WardName) && !(Model.ShippingAddress ?? "").Contains(Model.WardName)) parts.Add(Model.WardName);
+                        if (!string.IsNullOrEmpty(Model.ProvinceName) && !(Model.ShippingAddress ?? "").Contains(Model.ProvinceName)) parts.Add(Model.ProvinceName);
+                        if (parts.Count > 0)
+                        {
+                            <br />@string.Join(", ", parts)
+                        }
+                    }
                 </p>
                 @if(!string.IsNullOrEmpty(Model.CustomerNote)){
                     <div class="alert alert-soft-warning mb-0 pb-1 pt-1 mt-2 border-0">
@@ -289,6 +298,25 @@
                 }
             </div>
         </div>
+
+        <!-- Thông tin Hóa đơn VAT -->
+        @if (Model.RequiresVAT)
+        {
+            <div class="card border-primary mb-4">
+                <div class="card-header bg-primary-subtle text-primary border-primary">
+                    <h4 class="header-title mb-0"><i class="ri-file-text-line me-1"></i> Yêu cầu Xuất Hóa Đơn VAT</h4>
+                </div>
+                <div class="card-body">
+                    <p class="mb-2"><strong>Tên công ty:</strong> <span class="fw-bold">@Model.VATCompanyName</span></p>
+                    <p class="mb-2"><strong>Mã số thuế:</strong> <span class="badge bg-warning text-dark fs-6">@Model.VATTaxCode</span></p>
+                    <p class="mb-2"><strong>Địa chỉ công ty:</strong> @Model.VATCompanyAddress</p>
+                    @if (!string.IsNullOrEmpty(Model.VATInvoiceEmail))
+                    {
+                        <p class="mb-0"><strong>Email nhận HĐ:</strong> <a href="mailto:@Model.VATInvoiceEmail">@Model.VATInvoiceEmail</a></p>
+                    }
+                </div>
+            </div>
+        }
 
         <!-- Modal Sửa Địa Chỉ -->
         <div class="modal fade" id="editAddressModal" tabindex="-1" aria-hidden="true">
