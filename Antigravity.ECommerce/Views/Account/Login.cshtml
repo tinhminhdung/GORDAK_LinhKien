@@ -7,10 +7,11 @@
         .auth-page {
             min-height: 100vh;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
             background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
-            padding: 2rem 0;
+            padding: 2rem 15px;
         }
         .auth-card {
             background: rgba(255, 255, 255, 0.85);
@@ -19,8 +20,18 @@
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
             border-radius: 20px;
             padding: 2.5rem;
-            width: 100%;
+            width: calc(100% - 30px);
             max-width: 550px;
+            margin: 0 15px;
+        }
+        @@media (max-width: 767px) {
+            .auth-page {
+                padding: 1.5rem 0;
+            }
+            .auth-card {
+                padding: 1.5rem;
+                border-radius: 12px;
+            }
         }
         .auth-title {
             font-size: 1.75rem;
@@ -72,6 +83,12 @@
 }
 
 <div class="auth-page">
+    <div class="container" style="max-width: 550px; padding: 0 15px;">
+        <nav class="sp-breadcrumb mb-2" style="background: transparent; padding: 0;">
+            <a href="/">Trang chủ</a> <i class="fa-solid fa-chevron-right mx-2 text-muted" style="font-size:10px;"></i>
+            <span>Đăng nhập</span>
+        </nav>
+    </div>
     <div class="auth-card">
         <h1 class="auth-title">Đăng nhập</h1>
         

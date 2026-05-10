@@ -125,10 +125,33 @@
           <div class="logo-text logo-text-sm">GORDAK<small>TOOLS FOR LIFE</small></div>
       }
     </a>
-    <a href="/gio-hang.html" class="position-relative text-dark fs-5">
-        <i class="fa-solid fa-cart-shopping"></i>
-        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.6rem;">@cartCount</span>
-    </a>
+    <div class="d-flex align-items-center gap-3">
+        @if(customer != null)
+        {
+            <div class="dropdown">
+                <a class="d-flex align-items-center text-decoration-none text-dark" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    @{
+                        var avatarUrlMobile = !string.IsNullOrEmpty(customer.Avatar) ? customer.Avatar : $"https://ui-avatars.com/api/?name={System.Net.WebUtility.UrlEncode(customer.FullName ?? "User")}&background=random&size=26";
+                    }
+                    <img src="@avatarUrlMobile" alt="Avatar" class="rounded-circle" style="width: 26px; height: 26px; object-fit: cover;">
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-2" style="position: absolute; z-index: 1050;">
+                    <li><a class="dropdown-item" href="@Url.Action("Dashboard", "Member")"><i class="fa-solid fa-user me-2"></i>Tài khoản</a></li>
+                    <li><a class="dropdown-item" href="@Url.Action("Orders", "Member")"><i class="fa-solid fa-box me-2"></i>Đơn hàng</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item text-danger" href="@Url.Action("Logout", "Account")"><i class="fa-solid fa-right-from-bracket me-2"></i>Đăng xuất</a></li>
+                </ul>
+            </div>
+        }
+        else
+        {
+            <a href="/dang-nhap.html" class="text-dark fs-5" title="Đăng nhập"><i class="fa-regular fa-circle-user"></i></a>
+        }
+        <a href="/gio-hang.html" class="position-relative text-dark fs-5">
+            <i class="fa-solid fa-cart-shopping"></i>
+            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.6rem;">@cartCount</span>
+        </a>
+    </div>
   </div>
   
   <div class="collapse" id="mobileNavCollapse">

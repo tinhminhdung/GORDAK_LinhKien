@@ -6,7 +6,7 @@
 @section Styles {
     <style>
         .member-layout {
-            padding: 3rem 0;
+            padding: 3rem 15px;
             background: #f8f9fa;
             min-height: calc(100vh - 200px);
         }
@@ -80,12 +80,28 @@
             box-shadow: 0 4px 20px rgba(0,0,0,0.05);
             padding: 2rem;
         }
+        @@media (max-width: 767px) {
+            .member-layout {
+                padding: 1.5rem 0;
+            }
+            .member-sidebar, .member-content {
+                padding: 1.5rem;
+                margin: 0 15px;
+                border-radius: 12px;
+                width: calc(100% - 30px);
+            }
+        }
     </style>
     @RenderSection("MemberStyles", required: false)
 }
 
 <div class="member-layout">
-    <div class="container">
+    <div class="container px-3 px-md-0">
+        <nav class="sp-breadcrumb mb-4" style="background: transparent; padding: 0;">
+            <a href="/">Trang chủ</a> <i class="fa-solid fa-chevron-right mx-2 text-muted" style="font-size:10px;"></i>
+            <a href="@Url.Action("Dashboard", "Member")">Thành viên</a> <i class="fa-solid fa-chevron-right mx-2 text-muted" style="font-size:10px;"></i>
+            <span>@ViewData["Title"]</span>
+        </nav>
         <div class="row">
             <div class="col-lg-3 mb-4 mb-lg-0">
                 <div class="member-sidebar">

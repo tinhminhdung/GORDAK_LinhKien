@@ -4104,13 +4104,22 @@ img {
     }
 
 .gt-featured-sec {
-    padding: 50px 0;
+    padding: 0 0 50px;
     background: #fff;
 }
 
+.gt-featured-sec > .container {
+    padding-top: 50px;
+    border-top: 1px solid #e5e5e5;
+}
+
 .gt-cert-sec {
-    padding: 60px 0;
+    padding: 0 0 60px;
     background: #fff;
+}
+
+.gt-cert-sec > .container {
+    padding-top: 60px;
     border-top: 1px solid #e5e5e5;
 }
 
@@ -4437,10 +4446,7 @@ img {
     font-style: italic;
 }
 
-/* Featured section - border trên đầu */
-.gt-featured-sec {
-    border-top: 1px solid #e5e5e5;
-}
+/* Featured section - border trên đầu (moved to container) */
 
 /* Nút "Xem tất cả sản phẩm" - giống mẫu */
 .view-all-btn {
