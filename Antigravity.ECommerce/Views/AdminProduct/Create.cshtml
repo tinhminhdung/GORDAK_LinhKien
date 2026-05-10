@@ -1,4 +1,4 @@
-@model Antigravity.ECommerce.Models.Product
+﻿@model Antigravity.ECommerce.Models.Product
 @{
     ViewData["Title"] = "Thêm mới Sản phẩm";
     Layout = "_AdminLayout";
@@ -35,7 +35,7 @@
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">Danh mục <span class="text-danger">*</span> <i class="mdi mdi-information text-primary" data-bs-toggle="tooltip" title="Nơi sản phẩm này sẽ thuộc về để dễ dàng duyệt web"></i></label>
-                            <select class="form-control selectpicker" data-live-search="true" multiple data-selected-text-format="count > 3" id="multi_categories_select" data-actions-box="true" title="Chọn danh mục...">
+                            <select class="form-control selectpicker" data-live-search="true" multiple data-selected-text-format="count> 3" id="multi_categories_select" data-actions-box="true" title="Chọn danh mục...">
                                 @if(ViewBag.Categories != null)
                                 {
                                     foreach(var item in ViewBag.Categories as List<Antigravity.ECommerce.Models.Category>)
@@ -52,7 +52,7 @@
                     <div class="row mb-3">
                         <div class="col-md-4">
                             <label class="form-label">Thương hiệu</label>
-                            <select class="form-select" asp-for="BrandId">
+                            <select class="form-control selectpicker" data-live-search="true" asp-for="BrandId">
                                 <option value="">-- Chọn thương hiệu --</option>
                                 @if(ViewBag.Brands != null)
                                 {
@@ -65,7 +65,7 @@
                         </div>
                         <div class="col-md-4">
                             <label class="form-label">Tình trạng</label>
-                            <select class="form-select" asp-for="ConditionId">
+                            <select class="form-control selectpicker" data-live-search="true" asp-for="ConditionId">
                                 <option value="">-- Tình trạng (Mới, Cũ...) --</option>
                                 @if(ViewBag.Conditions != null)
                                 {
@@ -78,7 +78,7 @@
                         </div>
                         <div class="col-md-4">
                             <label class="form-label">Bảo hành</label>
-                            <select class="form-select" asp-for="WarrantyId">
+                            <select class="form-control selectpicker" data-live-search="true" asp-for="WarrantyId">
                                 <option value="">-- Chọn thời gian bảo hành --</option>
                                 @if(ViewBag.Warranties != null)
                                 {
@@ -204,7 +204,7 @@
                 <div class="card-body">
                     <div class="mb-3">
                         <label class="form-label">Trạng thái hiển thị</label>
-                        <select class="form-control" asp-for="Status">
+                        <select class="form-control selectpicker" data-live-search="true" asp-for="Status">
                             <option value="1">Kích hoạt / Đang bán</option>
                             <option value="0">Tạm ẩn</option>
                             <option value="2">Hết hàng</option>
@@ -234,7 +234,7 @@
                         <img id="imgPreview" src="/assets/images/no-image.png" class="img-thumbnail" style="height: 200px; width: 100%; object-fit: contain;" />
                     </div>
                     <div class="input-group">
-                        <input type="text" class="form-control" asp-for="MainImage" id="MainImage" readonly>
+                        <input type="text" class="form-control" asp-for="MainImage" id="MainImage">
                         <button class="btn btn-primary" type="button" onclick="openFileManager('MainImage')">Chọn ảnh</button>
                     </div>
                 </div>
@@ -258,7 +258,7 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Sản phẩm liên quan (Hiển thị như Tags)</label>
-                        <select class="form-control selectpicker" data-live-search="true" multiple data-selected-text-format="count > 3" id="related_products_select" title="Tìm & chọn SP..." data-actions-box="true">
+                        <select class="form-control selectpicker" data-live-search="true" multiple data-selected-text-format="count> 3" id="related_products_select" title="Tìm & chọn SP..." data-actions-box="true">
                             @if(ViewBag.AllProducts != null)
                             {
                                 foreach(var item in ViewBag.AllProducts as List<Antigravity.ECommerce.Models.Product>)
@@ -271,7 +271,7 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Phụ kiện liên quan (Hiển thị ở cột bên phải)</label>
-                        <select class="form-control selectpicker" data-live-search="true" multiple data-selected-text-format="count > 3" id="accessories_select" title="Tìm & chọn phụ kiện..." data-actions-box="true">
+                        <select class="form-control selectpicker" data-live-search="true" multiple data-selected-text-format="count> 3" id="accessories_select" title="Tìm & chọn phụ kiện..." data-actions-box="true">
                             @if(ViewBag.AllProducts != null)
                             {
                                 foreach(var item in ViewBag.AllProducts as List<Antigravity.ECommerce.Models.Product>)

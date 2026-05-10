@@ -24,7 +24,7 @@
  </div>
  <div class="col-md-2">
  <label class="form-label small">Số sao</label>
- <select name="rating" class="form-select">
+ <select class="form-control selectpicker" data-live-search="true" name="rating">
  <option value="">Tất cả</option>
  @for(int s=5;s>=1;s--){
  <option value="@s" selected="@(ViewBag.Rating != null && (int)ViewBag.Rating == s)">@s ★</option>
@@ -33,7 +33,7 @@
  </div>
  <div class="col-md-2">
  <label class="form-label small">Trạng thái</label>
- <select name="status" class="form-select">
+ <select class="form-control selectpicker" data-live-search="true" name="status">
  <option value="">Tất cả</option>
  <option value="1" selected="@(ViewBag.Status != null && (int)ViewBag.Status == 1)">Hiển thị</option>
  <option value="0" selected="@(ViewBag.Status != null && (int)ViewBag.Status == 0)">Đã ẩn</option>

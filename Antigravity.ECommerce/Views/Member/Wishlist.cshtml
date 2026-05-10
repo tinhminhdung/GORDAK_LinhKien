@@ -1,4 +1,4 @@
-@model List<Antigravity.ECommerce.Models.Wishlist>
+﻿@model List<Antigravity.ECommerce.Models.Wishlist>
 @{
     Layout = "_MemberLayout";
     ViewData["Title"] = "Sản phẩm yêu thích";
@@ -23,7 +23,7 @@
                         <i class="fa-solid fa-xmark text-danger" style="font-size: 12px;"></i>
                     </button>
                     <a href="/san-pham/detail/@(item.Slug)-@(item.ProductId).html">
-                        <img src="@(string.IsNullOrEmpty(item.ProductImage) ? "/assets/images/placeholder.png" : item.ProductImage)"
+                        <img src="@(string.IsNullOrEmpty(item.ProductImage) ? "/assets/images/no-image.png" : item.ProductImage)"
                              class="card-img-top rounded-top-3" alt="@item.ProductName"
                              style="height: 140px; object-fit: contain; padding: 10px; background: #f8f9fa;">
                     </a>

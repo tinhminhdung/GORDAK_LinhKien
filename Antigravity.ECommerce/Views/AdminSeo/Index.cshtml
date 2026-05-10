@@ -1,4 +1,4 @@
-@using Antigravity.ECommerce.Controllers
+﻿@using Antigravity.ECommerce.Controllers
 @model SeoAuditReport
 @{
     Layout = "_AdminLayout";
@@ -65,10 +65,10 @@
             <h4 class="mb-sm-0">🔍 SEO Audit Dashboard</h4>
             <div class="d-flex gap-2 align-items-center">
                 <span class="text-muted small">Quét lúc: @DateTime.Now.ToString("HH:mm dd/MM/yyyy")</span>
-                <button type="button" class="btn btn-soft-danger btn-sm" onclick="clearSystemCache()">
+                <button type="button" class="btn btn-soft-info" onclick="clearSystemCache()">
                     <i class="bx bx-trash me-1"></i>Xóa Cache
                 </button>
-                <a href="/AdminSeo" class="btn btn-soft-primary btn-sm"><i class="bx bx-refresh me-1"></i>Quét lại</a>
+                <a href="/AdminSeo" class="btn btn-soft-info"><i class="bx bx-refresh me-1"></i>Quét lại</a>
             </div>
         </div>
     </div>
@@ -233,7 +233,7 @@
                                             @if (!item.Issues.Any()) { <span class="issue-badge issue-good"><i class="bx bx-check-circle me-1"></i>Hoàn hảo!</span> }
                                         </div>
                                     </td>
-                                    <td class="text-center"><a href="@item.EditUrl" class="btn btn-sm btn-soft-primary" onclick="event.stopPropagation()"><i class="bx bx-edit-alt"></i></a></td>
+                                    <td class="text-center"><a href="@item.EditUrl" class="btn btn-soft-info" onclick="event.stopPropagation()"><i class="bx bx-edit-alt"></i></a></td>
                                 </tr>
                                 <!-- Fix Panel (hidden, toggles on click) -->
                                 <tr class="fix-row" id="@rowId" style="display:none;" data-module="@item.Module" data-score="@item.Score">
@@ -262,7 +262,7 @@
                                                                         }
                                                                         @if (!string.IsNullOrEmpty(issue.FixUrl))
                                                                         {
-                                                                            <a href="@issue.FixUrl" class="btn btn-sm btn-outline-primary mt-2" style="font-size:11px;" onclick="event.stopPropagation()">
+                                                                            <a href="@issue.FixUrl" class="btn btn-soft-info" style="font-size:11px;" onclick="event.stopPropagation()">
                                                                                 <i class="bx bx-link-external me-1"></i>Đi đến trang sửa
                                                                             </a>
                                                                         }

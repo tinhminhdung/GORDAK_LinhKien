@@ -1,4 +1,4 @@
-@model Antigravity.ECommerce.Models.ProductOption
+﻿@model Antigravity.ECommerce.Models.ProductOption
 @{
     ViewData["Title"] = "Sửa " + ViewBag.PageTitle;
     Layout = "_AdminLayout";
@@ -30,7 +30,7 @@
                         </div>
                         <div class="col-md-6 mb-3">
                             <label class="form-label">Trạng thái</label>
-                            <select class="form-control" asp-for="Status">
+                            <select class="form-control selectpicker" data-live-search="true" asp-for="Status">
                                 <option value="1">Hiển thị</option>
                                 <option value="0">Đang ẩn</option>
                             </select>

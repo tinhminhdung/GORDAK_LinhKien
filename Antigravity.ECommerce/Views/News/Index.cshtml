@@ -1,4 +1,4 @@
-@model List<Antigravity.ECommerce.Models.News>
+﻿@model List<Antigravity.ECommerce.Models.News>
 @{
     Layout = "~/Views/Shared/_MainLayout.cshtml";
     var categories = ViewBag.Categories as List<Antigravity.ECommerce.Models.Category> ?? new List<Antigravity.ECommerce.Models.Category>();
@@ -61,7 +61,7 @@
                             <div class="tt-card-big">
                                 <div class="tt-card-img-wrap">
                                     <a href="@newsUrl">
-                                        <img src="@(string.IsNullOrEmpty(item.Image) ? "/assets/images/placeholder.png" : item.Image)" alt="@item.Title" loading="lazy">
+                                        <img src="@(string.IsNullOrEmpty(item.Image) ? "/assets/images/no-image.png" : item.Image)" alt="@item.Title" loading="lazy">
                                     </a>
                                     <span class="tt-badge tt-badge-teal">@item.CategoryName</span>
                                 </div>
@@ -90,7 +90,7 @@
                                 <div class="tt-card-small">
                                     <div class="tt-card-img-wrap">
                                         <a href="@newsUrl">
-                                            <img src="@(string.IsNullOrEmpty(item.Image) ? "/assets/images/placeholder.png" : item.Image)" alt="@item.Title" loading="lazy">
+                                            <img src="@(string.IsNullOrEmpty(item.Image) ? "/assets/images/no-image.png" : item.Image)" alt="@item.Title" loading="lazy">
                                         </a>
                                         <span class="tt-badge tt-badge-orange">@item.CategoryName</span>
                                     </div>
@@ -148,7 +148,7 @@
                 @foreach(var hn in hotNews) {
                     <div class="tt-hot-item">
                         <a href="/tin-tuc/detail/@(hn.Slug).html">
-                            <img src="@(string.IsNullOrEmpty(hn.Image) ? "/assets/images/placeholder.png" : hn.Image)" alt="@hn.Title" loading="lazy">
+                            <img src="@(string.IsNullOrEmpty(hn.Image) ? "/assets/images/no-image.png" : hn.Image)" alt="@hn.Title" loading="lazy">
                         </a>
                         <div>
                             <a href="/tin-tuc/detail/@(hn.Slug).html" class="tt-hot-title line-clamp-2">@hn.Title</a>

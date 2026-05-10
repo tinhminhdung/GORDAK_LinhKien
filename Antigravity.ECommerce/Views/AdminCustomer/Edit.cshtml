@@ -39,7 +39,7 @@
                         </div>
                         <div class="col-md-6 mb-3">
                             <label class="form-label">Giới tính</label>
-                            <select asp-for="Gender" class="form-select">
+                            <select class="form-control selectpicker" data-live-search="true" asp-for="Gender">
                                 <option value="0">Chưa xác định</option>
                                 <option value="1">Nam</option>
                                 <option value="2">Nữ</option>
@@ -54,7 +54,7 @@
                         </div>
                         <div class="col-md-6 mb-3">
                             <label class="form-label">Trạng thái <i class="mdi mdi-information text-primary" data-bs-toggle="tooltip" title="Khách hàng bị khóa sẽ không thể đăng nhập"></i></label>
-                            <select asp-for="Status" class="form-select">
+                            <select class="form-control selectpicker" data-live-search="true" asp-for="Status">
                                 <option value="1">Hoạt động</option>
                                 <option value="0">Bị khóa</option>
                             </select>

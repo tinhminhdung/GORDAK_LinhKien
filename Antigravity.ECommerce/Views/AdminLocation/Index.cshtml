@@ -47,7 +47,7 @@
                         <div class="col-md-4">
                             <form method="get" action="/AdminLocation" id="filterForm">
  <input type="hidden" name="type" value="ward" />
- <select name="provinceId" class="form-select" onchange="document.getElementById('filterForm').submit();">
+ <select class="form-control selectpicker" data-live-search="true" name="provinceId" onchange="document.getElementById('filterForm').submit();">
  <option value="">-- Tất cả Tỉnh/Thành phố --</option>
  @foreach (var p in ViewBag.AllProvinces)
  {

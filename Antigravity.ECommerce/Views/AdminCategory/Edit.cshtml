@@ -74,7 +74,7 @@
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">Trạng thái</label>
-                            <select class="form-control" asp-for="Status">
+                            <select class="form-control selectpicker" data-live-search="true" asp-for="Status">
                                 <option value="1">Hiển thị</option>
                                 <option value="0">Ẩn</option>
                             </select>
@@ -125,7 +125,7 @@
             <div class="card-header"><h5 class="card-title mb-0">Hình ảnh danh mục</h5></div>
             <div class="card-body">
                 <div class="input-group mb-3">
-                    <input type="text" class="form-control" asp-for="Image" id="Image" form="categoryForm" readonly>
+                    <input type="text" class="form-control" asp-for="Image" id="Image" form="categoryForm">
                     <button class="btn btn-primary" type="button" onclick="openFileManager('Image')">Chọn ảnh</button>
                 </div>
                 <img id="imgPreview" src="@Model.Image" style="max-width: 100%; @(string.IsNullOrEmpty(Model.Image) ? "display: none;" : "") border-radius: 4px;" />
@@ -140,7 +140,7 @@
             <div class="card-header"><h5 class="card-title mb-0">Banner danh mục</h5></div>
             <div class="card-body">
                 <div class="input-group mb-3">
-                    <input type="text" class="form-control" asp-for="Banner" id="Banner" form="categoryForm" readonly>
+                    <input type="text" class="form-control" asp-for="Banner" id="Banner" form="categoryForm">
                     <button class="btn btn-info" type="button" onclick="openFileManager('Banner')">Chọn Banner</button>
                 </div>
                 <img id="bannerPreview" src="@Model.Banner" style="max-width: 100%; @(string.IsNullOrEmpty(Model.Banner) ? "display: none;" : "") border-radius: 4px; max-height: 150px; object-fit: cover;" />

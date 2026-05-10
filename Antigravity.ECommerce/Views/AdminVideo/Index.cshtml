@@ -51,7 +51,7 @@
  </div>
  </div>
  <div class="col-xxl-3 col-sm-3">
- <select name="categoryId" class="form-select border-light">
+ <select class="form-control selectpicker" data-live-search="true" name="categoryId">
  <option value="">-- Tất cả danh mục --</option>
  @if (ViewBag.Categories != null)
  {
@@ -63,7 +63,7 @@
  </select>
  </div>
  <div class="col-xxl-2 col-sm-3">
- <select name="status" class="form-select border-light">
+ <select class="form-control selectpicker" data-live-search="true" name="status">
  <option value="">-- Trạng thái --</option>
  <option value="1" selected="@(status == 1)">Đang hiện</option>
  <option value="0" selected="@(status == 0)">Đang ẩn</option>

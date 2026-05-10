@@ -1,4 +1,4 @@
-@model Antigravity.ECommerce.Models.GlobalSettingsViewModel
+﻿@model Antigravity.ECommerce.Models.GlobalSettingsViewModel
 @{
     Layout = "_AdminLayout";
     ViewData["Title"] = "Cấu hình hệ thống";
@@ -66,7 +66,7 @@
                                         <div class="input-group shadow-sm">
                                             <span class="input-group-text bg-light border-end-0"><i class="fas fa-image text-primary"></i></span>
                                             <input type="text" asp-for="Logo" id="txtLogo" class="form-control border-start-0" placeholder="/img/logo.png">
-                                            <button type="button" class="btn btn-primary px-3" onclick="openFileManager('txtLogo')">
+                                            <button type="button" class="btn btn-soft-info" onclick="openFileManager('txtLogo')">
                                                 <i class="fas fa-folder-open me-1"></i> Chọn ảnh
                                             </button>
                                         </div>
@@ -79,7 +79,7 @@
                                         <div class="input-group shadow-sm">
                                             <span class="input-group-text bg-light border-end-0"><i class="fas fa-icons text-warning"></i></span>
                                             <input type="text" asp-for="Favicon" id="txtFavicon" class="form-control border-start-0" placeholder="/favicon.ico">
-                                            <button type="button" class="btn btn-primary px-3" onclick="openFileManager('txtFavicon')">
+                                            <button type="button" class="btn btn-soft-info" onclick="openFileManager('txtFavicon')">
                                                 <i class="fas fa-folder-open me-1"></i> Chọn ảnh
                                             </button>
                                         </div>
@@ -230,7 +230,7 @@
                                                 <div class="small text-muted mt-1"><i class="fas fa-info-circle me-1"></i> Nhập <strong class="text-danger">0</strong> để luôn lấy dữ liệu mới từ Database.</div>
                                             </div>
                                             <div class="col-md-6">
-                                                <button type="button" class="btn btn-danger w-100 fw-bold" onclick="clearCache()">
+                                                <button type="button" class="btn btn-soft-info" onclick="clearCache()">
                                                     <i class="fas fa-trash-alt me-2"></i> XÓA CACHE THỦ CÔNG NGAY
                                                 </button>
                                             </div>
@@ -253,7 +253,7 @@
                                             <h6 class="fw-bold text-success mb-1">Cập nhật Sitemap.xml tự động</h6>
                                             <p class="small text-muted mb-0">Hệ thống sẽ quét lại toàn bộ bài viết, tin tức, DM để sinh và ping Sitemap cho Google Webmaster.</p>
                                         </div>
-                                        <button type="button" class="btn btn-success fw-bold px-4" onclick="generateSitemap()">
+                                        <button type="button" class="btn btn-soft-info" onclick="generateSitemap()">
                                             <i class="fas fa-sitemap me-2"></i> TẠO AUTO SITEMAP
                                         </button>
                                     </div>
@@ -294,7 +294,7 @@
                                         <label class="form-label fw-semibold">Mật khẩu (App Password)</label>
                                         <div class="input-group">
                                             <input type="password" asp-for="SmtpPassword" id="SmtpPassword" class="form-control rounded-3 rounded-end-0" placeholder="Mật khẩu ứng dụng">
-                                            <button class="btn btn-outline-secondary px-3" type="button" onclick="togglePassword('SmtpPassword')">
+                                            <button class="btn btn-soft-info" type="button" onclick="togglePassword('SmtpPassword')">
                                                 <i class="fas fa-eye" id="eye-SmtpPassword"></i> Hiện
                                             </button>
                                         </div>
@@ -331,7 +331,7 @@
                             <div class="tab-pane fade" id="nav-seo" role="tabpanel">
                                 <div class="d-flex align-items-center mb-4">
                                      <h5 class="fw-bold mb-0">Cấu hình SEO & Analytics</h5>
-                                     <a href="https://search.google.com/search-console" target="_blank" class="btn btn-sm btn-outline-primary ms-auto">
+                                     <a href="https://search.google.com/search-console" target="_blank" class="btn btn-soft-info">
                                          <i class="fab fa-google me-1"></i> Google Search Console
                                      </a>
                                  </div>
@@ -367,7 +367,7 @@
                                          <div class="input-group">
                                              <span class="input-group-text bg-light border-end-0"><i class="fab fa-google text-danger"></i></span>
                                              <input type="text" asp-for="GoogleAnalyticsId" class="form-control border-start-0 py-2" placeholder="G-XXXXXXXXXX">
-                                             <a href="https://analytics.google.com/" target="_blank" class="btn btn-outline-secondary">Lấy mã ngay</a>
+                                             <a href="https://analytics.google.com/" target="_blank" class="btn btn-soft-info">Lấy mã ngay</a>
                                          </div>
                                          <div class="small text-muted mt-1">Hệ thống sẽ tự động chèn mã script GA4 vào toàn bộ các trang giao diện người dùng.</div>
                                      </div>
@@ -399,14 +399,14 @@
                                                      <div class="col-lg-8">
                                                          <div class="d-flex justify-content-between align-items-center mb-2">
                                                              <label class="form-label fw-semibold mb-0">Google Gemini API Key (Miễn phí)</label>
-                                                             <button type="button" class="btn btn-link btn-sm p-0 text-primary fw-bold text-decoration-none" data-bs-toggle="modal" data-bs-target="#geminiHelpModal">
+                                                             <button type="button" class="btn btn-soft-info" data-bs-toggle="modal" data-bs-target="#geminiHelpModal">
                                                                  <i class="fas fa-question-circle me-1"></i> Cách lấy mã?
                                                              </button>
                                                          </div>
                                                          <div class="input-group shadow-sm">
                                                              <span class="input-group-text bg-white border-end-0"><i class="fas fa-key text-warning"></i></span>
                                                              <input type="password" id="GeminiApiKey" name="GeminiApiKey" value="@Model.GeminiApiKey" class="form-control border-start-0" placeholder="Nhập mã API Gemini tại đây...">
-                                                             <button class="btn btn-outline-secondary px-3" type="button" onclick="togglePassword('GeminiApiKey')">
+                                                             <button class="btn btn-soft-info" type="button" onclick="togglePassword('GeminiApiKey')">
                                                                  <i class="fas fa-eye" id="eye-GeminiApiKey"></i> Hiện
                                                              </button>
                                                          </div>
@@ -432,7 +432,7 @@
                                              <div class="card-body p-4">
                                                  <h6 class="fw-bold mb-3"><i class="fas fa-tools me-2 text-secondary"></i> Công cụ kiểm tra (Debug)</h6>
                                                  <div class="d-flex flex-wrap gap-2">
-                                                     <a href="https://developers.facebook.com/tools/debug/" target="_blank" class="btn btn-sm btn-white border shadow-sm rounded-pill px-3">
+                                                     <a href="https://developers.facebook.com/tools/debug/" target="_blank" class="btn btn-soft-info">
                                                          <i class="fab fa-facebook me-1 text-primary"></i> Facebook Debugger (Open Graph)
                                                      </a>
                                                      <a href="https://cards-dev.twitter.com/validator" target="_blank" class="btn btn-sm btn-white border shadow-sm rounded-pill px-3">
@@ -609,7 +609,7 @@
                                             
                                             <div class="col-md-4">
                                                 <label class="form-label fw-bold">Vị trí đóng dấu</label>
-                                                <select asp-for="Image_WatermarkPosition" class="form-select" onchange="updateWatermarkPreview()">
+                                                <select class="form-control selectpicker" data-live-search="true" asp-for="Image_WatermarkPosition" onchange="updateWatermarkPreview()">
                                                     <option value="BottomRight">Góc dưới, Phải (Mặc định)</option>
                                                     <option value="BottomLeft">Góc dưới, Trái</option>
                                                     <option value="TopRight">Góc trên, Phải</option>

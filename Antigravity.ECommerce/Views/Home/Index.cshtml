@@ -1,4 +1,4 @@
-@using Antigravity.ECommerce.Models
+﻿@using Antigravity.ECommerce.Models
 
 @{
     Layout = "_MainLayout";
@@ -32,7 +32,7 @@
       else
       {
           <div class="hero-slide">
-              <img src="/assets/images/placeholder.png" class="banner-img" alt="Gordak Banner">
+              <img src="/assets/images/no-image.png" class="banner-img" alt="Gordak Banner">
           </div>
       }
   
@@ -74,7 +74,7 @@
         <div class="col cat-col">
           <div class="cat-item text-center">
             <a href="/san-pham/@(hc.Slug).html" class="text-decoration-none text-dark d-block">
-                <img src="@(string.IsNullOrEmpty(hc.Image) ? "/assets/images/placeholder.png" : hc.Image)" class="cat-img" alt="@hc.Name" loading="lazy">
+                <img src="@(string.IsNullOrEmpty(hc.Image) ? "/assets/images/no-image.png" : hc.Image)" class="cat-img" alt="@hc.Name" loading="lazy">
                 <b>@hc.Name</b><small class="d-none d-lg-block">@totalCount sản phẩm</small>
             </a>
           </div>
@@ -100,7 +100,7 @@
             @if(p.IsHot){<span class="badge-hot">HOT</span>}
             <span class="badge-heart" onclick="toggleWishlist(@p.ProductId)" style="cursor:pointer"><i class="fa-regular fa-heart"></i></span>
             <a href="/san-pham/detail/@(p.Slug)-@(p.ProductId).html" class="d-block text-center mb-2" style="height: 180px;">
-                <img src="@(string.IsNullOrEmpty(p.MainImage) ? "/assets/images/placeholder.png" : p.MainImage)" class="product-img h-100 w-100 object-fit-contain" alt="@p.Name" loading="lazy">
+                <img src="@(string.IsNullOrEmpty(p.MainImage) ? "/assets/images/no-image.png" : p.MainImage)" class="product-img h-100 w-100 object-fit-contain" alt="@p.Name" loading="lazy">
             </a>
             <h3 class="product-name"><a href="/san-pham/detail/@(p.Slug)-@(p.ProductId).html" class="text-decoration-none text-dark">@p.Name</a></h3>
             <p class="product-desc line-clamp-2" style="font-size:12px; color:#666;">@(string.IsNullOrEmpty(p.ShortDescription) ? p.Name : p.ShortDescription)</p>

@@ -50,8 +50,8 @@
                                 <li><a class="dropdown-item text-danger" href="javascript:void(0);" onclick="bulkDelete()"><i class="ri-delete-bin-line me-1"></i> Xóa đã chọn</a></li>
                             </ul>
                         </div>
-                        <a href="/AdminCategory/Create" class="btn btn-success btn-sm">
-                            <i class="ri-add-line me-1"></i> Thêm mới
+                        <a href="/AdminCategory/Create" class="btn btn-primary">
+                            <i class="ri-add-line align-bottom me-1"></i> Thêm mới
                         </a>
                     </div>
                 </div>
@@ -69,7 +69,7 @@
             </div>
           </div>
           <div class="col-sm-3">
-            <select class="form-select" name="status">
+            <select class="form-control selectpicker" data-live-search="true" name="status">
               <option value="">--- Trạng thái ---</option>
               <option value="1" selected="@(ViewBag.Status != null && ViewBag.Status.ToString() =="1" ?"selected" : null)">Hiển thị</option>
               <option value="0" selected="@(ViewBag.Status != null && ViewBag.Status.ToString() =="0" ?"selected" : null)">Đang ẩn</option>

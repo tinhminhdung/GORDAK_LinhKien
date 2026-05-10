@@ -26,14 +26,14 @@
                 <div class="row mb-3">
                     <div class="col-sm-4 d-flex gap-2 align-items-start">
                         <div class="dropdown" id="bulkOptions" style="display:none;">
-                            <button class="btn btn-soft-info dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <button class="btn btn-soft-success" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 <i class="ri-settings-3-line align-bottom me-1"></i> Thao tác (<span id="selectedCount">0</span>)
                             </button>
                             <ul class="dropdown-menu">
                                 <li><a class="dropdown-item text-danger" href="javascript:void(0);" onclick="bulkDelete()"><i class="ri-delete-bin-line me-1"></i> Xóa đã chọn</a></li>
                             </ul>
                         </div>
-                        <a href="/AdminCustomer/Create" class="btn btn-danger mb-2"><i class="mdi mdi-plus-circle me-1"></i> Thêm Khách hàng</a>
+                        <a href="/AdminCustomer/Create" class="btn btn-soft-success"><i class="mdi mdi-plus-circle me-1"></i> Thêm Khách hàng</a>
                     </div>
                     <div class="col-sm-8">
                         <form method="get" class="row gy-2 gx-2 align-items-center justify-content-sm-end" id="filterForm">
@@ -44,7 +44,7 @@
  <input type="search" name="kw" class="form-control" placeholder="Tìm tên, SĐT..." value="@ViewBag.Keyword">
  </div>
  <div class="col-auto">
- <select name="rank" class="form-select">
+ <select class="form-control selectpicker" data-live-search="true" name="rank">
  <option value="">-- Hạng --</option>
  <option value="0" selected="@(ViewBag.Rank == 0 ?"selected" : null)">Thường</option>
  <option value="1" selected="@(ViewBag.Rank == 1 ?"selected" : null)">Bạc</option>
@@ -53,8 +53,8 @@
  </select>
  </div>
  <div class="col-auto">
- <button type="submit" class="btn btn-primary">Lọc</button>
- <a href="/AdminCustomer/ExportCSV?kw=@ViewBag.Keyword&rank=@ViewBag.Rank" class="btn btn-success ms-1"><i class="mdi mdi-download"></i> Xuất CSV</a>
+ <button type="submit" class="btn btn-soft-success">Lọc</button>
+ <a href="/AdminCustomer/ExportCSV?kw=@ViewBag.Keyword&rank=@ViewBag.Rank" class="btn btn-soft-success"><i class="mdi mdi-download"></i> Xuất CSV</a>
  </div>
  </form>
                     </div>
@@ -127,13 +127,13 @@
                                     <td>@item.CreatedAt.ToString("dd/MM/yyyy")</td>
                                     <td class="text-center">
                                         <div class="d-flex justify-content-center gap-1">
-                                            <a href="/AdminCustomer/Detail/@item.CustomerId" class="btn btn-sm btn-soft-secondary" title="Chi tiết">
+                                            <a href="/AdminCustomer/Detail/@item.CustomerId" class="btn btn-soft-success" title="Chi tiết">
                                                 <i class="ri-eye-line"></i>
                                             </a>
-                                            <a href="/AdminCustomer/Edit/@item.CustomerId" class="btn btn-sm btn-soft-info" title="Chỉnh sửa">
+                                            <a href="/AdminCustomer/Edit/@item.CustomerId" class="btn btn-soft-success" title="Chỉnh sửa">
                                                 <i class="ri-pencil-line"></i>
                                             </a>
-                                            <button onclick="deleteCustomer(@item.CustomerId)" class="btn btn-sm btn-soft-danger" title="Xóa">
+                                            <button onclick="deleteCustomer(@item.CustomerId)" class="btn btn-soft-success" title="Xóa">
                                                 <i class="ri-delete-bin-line"></i>
                                             </button>
                                         </div>

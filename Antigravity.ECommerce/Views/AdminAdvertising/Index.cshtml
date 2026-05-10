@@ -54,7 +54,7 @@
  </div>
  </div>
  <div class="col-xxl-3 col-sm-4">
- <select name="position" class="form-select border-light">
+ <select class="form-control selectpicker" data-live-search="true" name="position">
  <option value="">-- Tất cả vị trí --</option>
  <option value="Home_Slide" selected="@(position =="Home_Slide")">Trang chủ - Slide lớn</option>
  <option disabled>── Trang Sản phẩm ──</option>
@@ -80,7 +80,7 @@
  </select>
  </div>
  <div class="col-xxl-2 col-sm-4">
- <select name="status" class="form-select border-light">
+ <select class="form-control selectpicker" data-live-search="true" name="status">
  <option value="">-- Trạng thái --</option>
  <option value="1" selected="@(status == 1)">Đang hiện</option>
  <option value="0" selected="@(status == 0)">Đang ẩn</option>

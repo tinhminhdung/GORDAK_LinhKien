@@ -107,7 +107,7 @@
  </select>
  </div>
  <div class="col-xxl-2 col-sm-6">
- <select class="selectpicker form-control" name="requiresVat" id="RequiresVat">
+ <select class="form-control selectpicker" data-live-search="true" name="requiresVat" id="RequiresVat">
  <option value="">-- Yêu cầu VAT --</option>
  <option value="true" selected="@(ViewBag.RequiresVat == true ?"selected" : null)">Cần xuất VAT</option>
  <option value="false" selected="@(ViewBag.RequiresVat == false ?"selected" : null)">Không yêu cầu</option>

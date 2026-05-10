@@ -57,7 +57,7 @@
                                 <input type="text" class="form-control bg-light" value="Super Admin" disabled>
                                 <small class="text-warning">Không thể đổi vai trò cho tài khoản Root.</small>
                             } else {
-                                <select class="form-select border-primary" asp-for="RoleId" required>
+                                <select class="form-control selectpicker" data-live-search="true" asp-for="RoleId" required>
                                     @if (ViewBag.Roles != null)
                                     {
                                         foreach (var role in (List<Antigravity.ECommerce.Models.AdminRole>)ViewBag.Roles)
@@ -74,7 +74,7 @@
                                 <input type="hidden" asp-for="Status" />
                                 <div class="form-control bg-light text-success fw-bold">Đang hoạt động</div>
                             } else {
-                                <select class="form-select" asp-for="Status">
+                                <select class="form-control selectpicker" data-live-search="true" asp-for="Status">
                                     <option value="1">Kích hoạt (Hoạt động)</option>
                                     <option value="0">Tạm khóa (Ngừng truy cập)</option>
                                 </select>
@@ -85,10 +85,10 @@
                     <div class="mb-4">
                         <label class="form-label fw-bold">Ảnh đại diện</label>
                         <div class="input-group mb-2">
-                            <input type="text" class="form-control" asp-for="Avatar" id="Avatar" readonly>
+                            <input type="text" class="form-control" asp-for="Avatar" id="Avatar">
                             <button class="btn btn-primary" type="button" onclick="openFileManager('Avatar')">Chọn ảnh</button>
                         </div>
-                        <img id="imgPreview" src="@(string.IsNullOrEmpty(Model.Avatar) ? "/assets/images/users/multi-user.jpg" : Model.Avatar)" style="max-width: 120px; border-radius: 50%; border: 3px solid #eee; padding: 5px;" class="mt-2 shadow-sm" />
+                        <img id="imgPreview" src="@(string.IsNullOrEmpty(Model.Avatar) ? "/assets/images/users/avatar-blank.png" : Model.Avatar)" style="max-width: 120px; border-radius: 50%; border: 3px solid #eee; padding: 5px;" class="mt-2 shadow-sm" />
                     </div>
 
                 <div class="d-flex justify-content-between mt-4 border-top pt-3">

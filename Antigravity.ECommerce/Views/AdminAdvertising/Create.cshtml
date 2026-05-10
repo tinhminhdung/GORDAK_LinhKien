@@ -1,4 +1,4 @@
-@model Antigravity.ECommerce.Models.Advertising
+﻿@model Antigravity.ECommerce.Models.Advertising
 @{
     ViewBag.Title = "Thêm Banner mới";
     Layout = "_AdminLayout";
@@ -19,7 +19,7 @@
                             <div class="mb-3">
                                 <label class="form-label" id="label_Image">Ảnh Banner <small class="text-muted">(ưu tiên hơn icon nếu có cả 2)</small></label>
                                 <div class="input-group">
-                                    <input type="text" class="form-control" asp-for="Image" id="Image" readonly>
+                                    <input type="text" class="form-control" asp-for="Image" id="Image">
                                     <button class="btn btn-primary" type="button" onclick="browseImage('Image')">Chọn ảnh</button>
                                 </div>
                                 <div id="image_preview" class="mt-2 text-center border rounded p-2 d-none">
@@ -80,7 +80,7 @@
                 </div>
                 <div class="card-body">
                     <div class="mb-3">
-                        <select class="form-select" asp-for="Position" id="Position" onchange="updateLabels()" required>
+                        <select class="form-control selectpicker" data-live-search="true" asp-for="Position" id="Position" onchange="updateLabels()" required>
                             <option value="Home_Slide">Trang chủ - Slide lớn</option>
                             <option disabled>▬▬ Trang Sản phẩm ▬▬</option>
                             <option value="Product_Commitment">Cam kết chất lượng</option>
@@ -108,7 +108,7 @@
 
                     <div class="mb-3" id="group_Target">
                         <label class="form-label">Cách mở trang</label>
-                        <select class="form-select" asp-for="Target">
+                        <select class="form-control selectpicker" data-live-search="true" asp-for="Target">
                             <option value="_self">Mở tại trang hiện tại (_self)</option>
                             <option value="_blank">Mở tab mới (_blank)</option>
                         </select>
@@ -121,7 +121,7 @@
 
                     <div class="mb-3">
                         <label class="form-label">Trạng thái</label>
-                        <select class="form-select" asp-for="Status">
+                        <select class="form-control selectpicker" data-live-search="true" asp-for="Status">
                             <option value="1">Kích hoạt (Hiện)</option>
                             <option value="0">Tạm ẩn</option>
                         </select>

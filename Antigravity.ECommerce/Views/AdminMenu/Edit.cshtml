@@ -1,4 +1,4 @@
-@model Antigravity.ECommerce.Models.Category
+﻿@model Antigravity.ECommerce.Models.Category
 @{
     ViewBag.Title = "Chỉnh sửa mục Menu";
     Layout = "_AdminLayout";
@@ -66,7 +66,7 @@
                             <div class="row mb-3">
                                 <div class="col-md-6 parent-select">
                                     <label class="form-label">Danh mục cha</label>
-                                    <select class="form-select" id="ParentIdSelect" name="ParentId">
+                                    <select class="form-control selectpicker" data-live-search="true" id="ParentIdSelect" name="ParentId">
                                         <option value="0" data-pos="all">-- Là Menu cấp gốc --</option>
                                         @if (ViewBag.Categories != null)
                                         {
@@ -82,7 +82,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <label class="form-label">Kiểu trang</label>
-                                    <select class="form-select" asp-for="LinkType" id="LinkType" onchange="toggleFormAreas()">
+                                    <select class="form-control selectpicker" data-live-search="true" asp-for="LinkType" id="LinkType" onchange="toggleFormAreas()">
                                         <option value="1">Trang liên kết</option>
                                         <option value="2">Trang nội dung</option>
                                         <option value="3">Url / Đường dẫn</option>
@@ -95,7 +95,7 @@
                                 <div class="row mb-3">
                                     <div class="col-md-6">
                                         <label class="form-label">Nhóm liên kết</label>
-                                        <select class="form-select" id="system-group" onchange="toggleSystemSubGroup()">
+                                        <select class="form-control selectpicker" data-live-search="true" id="system-group" onchange="toggleSystemSubGroup()">
                                             <option value="Home">Trang chủ</option>
                                             <option value="Product">Danh mục Sản phẩm</option>
                                             <option value="News">Danh mục Tin tức</option>
@@ -111,7 +111,7 @@
                                     <div class="col-md-6 d-none" id="sub-group-product">
                                         <label class="form-label">Chuyên mục liên kết (Sản phẩm)</label>
                                         <div class="d-flex gap-2">
-                                            <select class="form-select" data-choices="true" data-choices-search-true="true" id="select-product-cat">
+                                            <select class="form-control selectpicker" data-live-search="true" data-choices="true" data-choices-search-true="true" id="select-product-cat">
                                                 <option value="san-pham.html" data-name="Sản phẩm">&gt;&gt;&gt; TẤT CẢ SẢN PHẨM &lt;&lt;&lt;</option>
                                                 @foreach(var cat in ViewBag.ProductCategories as List<Antigravity.ECommerce.Models.Category>) {
                                                     <option value="@cat.Slug" data-name="@cat.Name" data-title="@cat.SeoTitle" data-desc="@cat.SeoDescription" data-key="@cat.SeoKeywords">@cat.Name</option>
@@ -124,7 +124,7 @@
                                     <div class="col-md-6 d-none" id="sub-group-news">
                                         <label class="form-label">Chuyên mục liên kết (Tin tức)</label>
                                         <div class="d-flex gap-2">
-                                            <select class="form-select" data-choices="true" data-choices-search-true="true" id="select-news-cat">
+                                            <select class="form-control selectpicker" data-live-search="true" data-choices="true" data-choices-search-true="true" id="select-news-cat">
                                                 <option value="tin-tuc.html" data-name="Tin tức">&gt;&gt;&gt; TẤT CẢ TIN TỨC &lt;&lt;&lt;</option>
                                                 @foreach(var cat in ViewBag.NewsCategories as List<Antigravity.ECommerce.Models.Category>) {
                                                     <option value="@cat.Slug" data-name="@cat.Name" data-title="@cat.SeoTitle" data-desc="@cat.SeoDescription" data-key="@cat.SeoKeywords">@cat.Name</option>
@@ -137,7 +137,7 @@
                                     <div class="col-md-6 d-none" id="sub-group-video">
                                         <label class="form-label">Chuyên mục liên kết (Video)</label>
                                         <div class="d-flex gap-2">
-                                            <select class="form-select" data-choices="true" data-choices-search-true="true" id="select-video-cat">
+                                            <select class="form-control selectpicker" data-live-search="true" data-choices="true" data-choices-search-true="true" id="select-video-cat">
                                                 <option value="video.html" data-name="Video">&gt;&gt;&gt; TẤT CẢ VIDEO &lt;&lt;&lt;</option>
                                                 @foreach(var cat in ViewBag.VideoCategories as List<Antigravity.ECommerce.Models.Category>) {
                                                     <option value="@cat.Slug" data-name="@cat.Name" data-title="@cat.SeoTitle" data-desc="@cat.SeoDescription" data-key="@cat.SeoKeywords">@cat.Name</option>
@@ -150,7 +150,7 @@
                                     <div class="col-md-6 d-none" id="sub-group-gallery">
                                         <label class="form-label">Chuyên mục liên kết (Thư viện ảnh)</label>
                                         <div class="d-flex gap-2">
-                                            <select class="form-select" data-choices="true" data-choices-search-true="true" id="select-gallery-cat">
+                                            <select class="form-control selectpicker" data-live-search="true" data-choices="true" data-choices-search-true="true" id="select-gallery-cat">
                                                 <option value="thu-vien-anh.html" data-name="Thư viện ảnh">&gt;&gt;&gt; TẤT CẢ HÌNH ẢNH &lt;&lt;&lt;</option>
                                                 @foreach(var cat in ViewBag.GalleryCategories as List<Antigravity.ECommerce.Models.Category>) {
                                                     <option value="@cat.Slug" data-name="@cat.Name" data-title="@cat.SeoTitle" data-desc="@cat.SeoDescription" data-key="@cat.SeoKeywords">@cat.Name</option>
@@ -163,7 +163,7 @@
                                     <div class="col-md-6 d-none" id="sub-group-faq">
                                         <label class="form-label">Chuyên mục liên kết (Hỏi đáp)</label>
                                         <div class="d-flex gap-2">
-                                            <select class="form-select" data-choices="true" data-choices-search-true="true" id="select-faq-cat">
+                                            <select class="form-control selectpicker" data-live-search="true" data-choices="true" data-choices-search-true="true" id="select-faq-cat">
                                                 <option value="hoi-dap.html" data-name="Hỏi đáp">&gt;&gt;&gt; TẤT CẢ HỎI ĐÁP &lt;&lt;&lt;</option>
                                                 @foreach(var cat in ViewBag.FAQCategories as List<Antigravity.ECommerce.Models.Category>) {
                                                     <option value="@cat.Slug" data-name="@cat.Name" data-title="@cat.SeoTitle" data-desc="@cat.SeoDescription" data-key="@cat.SeoKeywords">@cat.Name</option>
@@ -176,7 +176,7 @@
                                     <div class="col-md-6 d-none" id="sub-group-document">
                                         <label class="form-label">Chuyên mục liên kết (Tài liệu)</label>
                                         <div class="d-flex gap-2">
-                                            <select class="form-select" data-choices="true" data-choices-search-true="true" id="select-document-cat">
+                                            <select class="form-control selectpicker" data-live-search="true" data-choices="true" data-choices-search-true="true" id="select-document-cat">
                                                 <option value="tai-lieu.html" data-name="Tài liệu">&gt;&gt;&gt; TẤT CẢ TÀI LIỆU &lt;&lt;&lt;</option>
                                                 @foreach(var cat in ViewBag.DocumentCategories as List<Antigravity.ECommerce.Models.Category>) {
                                                     <option value="@cat.Slug" data-name="@cat.Name" data-title="@cat.SeoTitle" data-desc="@cat.SeoDescription" data-key="@cat.SeoKeywords">@cat.Name</option>
@@ -253,7 +253,7 @@
                         <div class="card-body">
                             <div class="mb-3">
                                 <label class="form-label">Kiểu xuất hiện trang</label>
-                                <select class="form-select" asp-for="Target">
+                                <select class="form-control selectpicker" data-live-search="true" asp-for="Target">
                                     <option value="_self">Cùng trang (Mặc định)</option>
                                     <option value="_blank">Trang mới (Mở tab mới)</option>
                                 </select>

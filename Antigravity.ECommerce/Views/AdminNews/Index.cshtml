@@ -48,7 +48,7 @@
  </div>
  </div>
  <div class="col-xxl-3 col-sm-4">
- <select name="catId" class="selectpicker border-light" data-live-search="true">
+ <select class="form-control selectpicker" data-live-search="true" name="catId" data-live-search="true">
  <option value="">-- Tất cả danh mục --</option>
  @foreach (var cat in ViewBag.Categories)
  {
@@ -57,7 +57,7 @@
  </select>
  </div>
  <div class="col-xxl-2 col-sm-4">
- <select name="status" class="form-select border-light">
+ <select class="form-control selectpicker" data-live-search="true" name="status">
  <option value="">-- Trạng thái --</option>
  <option value="1" selected="@(ViewBag.Status == 1)">Đã đăng</option>
  <option value="0" selected="@(ViewBag.Status == 0)">Bản nháp</option>

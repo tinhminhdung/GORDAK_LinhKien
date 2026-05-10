@@ -26,7 +26,7 @@
                 <form method="get" action="/AdminLog" class="row g-3">
                     <div class="col-xxl-2 col-sm-6">
                         <label class="form-label fs-12 text-muted mb-0">Hành động</label>
-                        <select name="actionType" class="form-select form-select-sm">
+                        <select class="form-control selectpicker" data-live-search="true" name="actionType">
                             <option value="">-- Tất cả hành động --</option>
                             <option value="Login" selected="@(ViewBag.CurrentAction == "Login")">Đăng nhập</option>
                             <option value="Create" selected="@(ViewBag.CurrentAction == "Create")">Thêm mới</option>
@@ -36,7 +36,7 @@
                     </div>
                     <div class="col-xxl-2 col-sm-6">
                         <label class="form-label fs-12 text-muted mb-0">Tài khoản</label>
-                        <select name="username" class="form-select form-select-sm">
+                        <select class="form-control selectpicker" data-live-search="true" name="username">
                             <option value="">-- Tất cả quản trị viên --</option>
                             @if(ViewBag.Usernames != null) {
                                 foreach(var u in ViewBag.Usernames) {
@@ -47,7 +47,7 @@
                     </div>
                     <div class="col-xxl-3 col-sm-6">
                         <label class="form-label fs-12 text-muted mb-0">Chức năng (Module)</label>
-                        <select name="module" class="form-select form-select-sm">
+                        <select class="form-control selectpicker" data-live-search="true" name="module">
                             <option value="">-- Tất cả module --</option>
                             @if(ViewBag.Modules != null) {
                                 foreach(var m in ViewBag.Modules) {

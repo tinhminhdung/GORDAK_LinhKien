@@ -1,4 +1,4 @@
-@model Antigravity.ECommerce.Models.Gallery
+﻿@model Antigravity.ECommerce.Models.Gallery
 @using Antigravity.ECommerce.Services
 @{
     Layout = "~/Views/Shared/_MainLayout.cshtml";
@@ -152,7 +152,7 @@
                 @foreach(var r in related.Take(5)) {
                     <div class="tt-hot-item">
                         <a href="/album/@(r.Slug).html">
-                            <img src="@(string.IsNullOrEmpty(r.CoverImage) ? "/assets/images/placeholder.png" : r.CoverImage)" alt="@r.AlbumName">
+                            <img src="@(string.IsNullOrEmpty(r.CoverImage) ? "/assets/images/no-image.png" : r.CoverImage)" alt="@r.AlbumName">
                         </a>
                         <div>
                             <a href="/album/@(r.Slug).html" class="tt-hot-title line-clamp-2">@r.AlbumName</a>

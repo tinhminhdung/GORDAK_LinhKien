@@ -1,4 +1,4 @@
-@model Antigravity.ECommerce.Models.Video
+﻿@model Antigravity.ECommerce.Models.Video
 @{ 
     Layout = "_AdminLayout"; 
     ViewBag.Title = "Chỉnh sửa Video"; 
@@ -98,7 +98,7 @@
                 <div class="card-body">
                     <div class="mb-3">
                         <label class="form-label">Trạng thái</label>
-                        <select class="form-select" asp-for="Status">
+                        <select class="form-control selectpicker" data-live-search="true" asp-for="Status">
                             <option value="1" selected="@(Model.Status==1)">Đang hiện</option>
                             <option value="0" selected="@(Model.Status==0)">Đang ẩn</option>
                         </select>

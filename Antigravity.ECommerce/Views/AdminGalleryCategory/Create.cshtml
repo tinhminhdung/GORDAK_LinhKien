@@ -72,7 +72,7 @@
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">Trạng thái</label>
-                            <select class="form-control" asp-for="Status">
+                            <select class="form-control selectpicker" data-live-search="true" asp-for="Status">
                                 <option value="1">Hiển thị</option>
                                 <option value="0">Ẩn</option>
                             </select>
@@ -123,7 +123,7 @@
             <div class="card-header"><h5 class="card-title mb-0">Hình ảnh danh mục</h5></div>
             <div class="card-body">
                 <div class="input-group mb-3">
-                    <input type="text" class="form-control" asp-for="Image" id="Image" form="categoryForm" placeholder="Chưa chọn ảnh..." readonly>
+                    <input type="text" class="form-control" asp-for="Image" id="Image" form="categoryForm" placeholder="Chưa chọn ảnh...">
                     <button class="btn btn-primary" type="button" onclick="openFileManager('Image')">Chọn ảnh</button>
                 </div>
                 <img id="imgPreview" src="" style="max-width: 100%; display: none; border-radius: 4px;" />

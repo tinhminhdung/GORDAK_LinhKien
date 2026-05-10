@@ -1,4 +1,4 @@
-@model Antigravity.ECommerce.Models.Product
+﻿@model Antigravity.ECommerce.Models.Product
 @using Antigravity.ECommerce.Services
 @using Antigravity.ECommerce.Models
 @{
@@ -93,7 +93,7 @@
           <div class="col-md-6">
             <div class="pd2-gallery">
               <div class="pd2-main-img-wrap">
-                <img id="mainImg" src="@(allImages.Count > 0 ? allImages[0] : "/assets/images/placeholder.png")" alt="@Model.Name" data-bs-toggle="modal" data-bs-target="#imageZoomModal" style="cursor: zoom-in;">
+                <img id="mainImg" src="@(allImages.Count > 0 ? allImages[0] : "/assets/images/no-image.png")" alt="@Model.Name" data-bs-toggle="modal" data-bs-target="#imageZoomModal" style="cursor: zoom-in;">
                 <div class="pd2-expand-btn" data-bs-toggle="modal" data-bs-target="#imageZoomModal"><i class="fa-solid fa-expand"></i></div>
               </div>
               @if(allImages.Count > 1)
@@ -364,7 +364,7 @@
               {
                 <div class="pd2-acc-item">
                   <a href="/san-pham/detail/@(item.Slug)-@(item.ProductId).html" class="d-block flex-shrink-0">
-                    <img src="@(string.IsNullOrEmpty(item.MainImage) ? "/assets/images/placeholder.png" : item.MainImage)" class="pd2-acc-img" alt="@item.Name">
+                    <img src="@(string.IsNullOrEmpty(item.MainImage) ? "/assets/images/no-image.png" : item.MainImage)" class="pd2-acc-img" alt="@item.Name">
                   </a>
                   <div class="pd2-acc-info">
                     <a href="/san-pham/detail/@(item.Slug)-@(item.ProductId).html" class="text-decoration-none text-dark"><div class="pd2-acc-name">@item.Name</div></a>
@@ -383,7 +383,7 @@
                   var item = accessories[i];
                   <div class="pd2-acc-item mt-3">
                     <a href="/san-pham/detail/@(item.Slug)-@(item.ProductId).html" class="d-block flex-shrink-0">
-                      <img src="@(string.IsNullOrEmpty(item.MainImage) ? "/assets/images/placeholder.png" : item.MainImage)" class="pd2-acc-img" alt="@item.Name">
+                      <img src="@(string.IsNullOrEmpty(item.MainImage) ? "/assets/images/no-image.png" : item.MainImage)" class="pd2-acc-img" alt="@item.Name">
                     </a>
                     <div class="pd2-acc-info">
                       <a href="/san-pham/detail/@(item.Slug)-@(item.ProductId).html" class="text-decoration-none text-dark"><div class="pd2-acc-name">@item.Name</div></a>
@@ -415,7 +415,7 @@
               {
                 <div class="pd2-acc-item">
                   <a href="/san-pham/detail/@(item.Slug)-@(item.ProductId).html" class="d-block flex-shrink-0">
-                    <img src="@(string.IsNullOrEmpty(item.MainImage) ? "/assets/images/placeholder.png" : item.MainImage)" class="pd2-acc-img" alt="@item.Name">
+                    <img src="@(string.IsNullOrEmpty(item.MainImage) ? "/assets/images/no-image.png" : item.MainImage)" class="pd2-acc-img" alt="@item.Name">
                   </a>
                   <div class="pd2-acc-info">
                     <a href="/san-pham/detail/@(item.Slug)-@(item.ProductId).html" class="text-decoration-none text-dark"><div class="pd2-acc-name">@item.Name</div></a>
@@ -434,7 +434,7 @@
                   var item = viewedProducts[i];
                   <div class="pd2-acc-item mt-3">
                     <a href="/san-pham/detail/@(item.Slug)-@(item.ProductId).html" class="d-block flex-shrink-0">
-                      <img src="@(string.IsNullOrEmpty(item.MainImage) ? "/assets/images/placeholder.png" : item.MainImage)" class="pd2-acc-img" alt="@item.Name">
+                      <img src="@(string.IsNullOrEmpty(item.MainImage) ? "/assets/images/no-image.png" : item.MainImage)" class="pd2-acc-img" alt="@item.Name">
                     </a>
                     <div class="pd2-acc-info">
                       <a href="/san-pham/detail/@(item.Slug)-@(item.ProductId).html" class="text-decoration-none text-dark"><div class="pd2-acc-name">@item.Name</div></a>
@@ -483,7 +483,7 @@
                             }
                             <span class="badge-heart" onclick="toggleWishlist(@p.ProductId)" style="cursor:pointer"><i class="fa-regular fa-heart"></i></span>
                             <a href="/san-pham/detail/@(p.Slug)-@(p.ProductId).html" class="d-block text-center mb-2" style="height: 180px;">
-                                <img src="@(string.IsNullOrEmpty(p.MainImage) ? "/assets/images/placeholder.png" : p.MainImage)" class="product-img h-100 w-100 object-fit-contain" alt="@p.Name" loading="lazy">
+                                <img src="@(string.IsNullOrEmpty(p.MainImage) ? "/assets/images/no-image.png" : p.MainImage)" class="product-img h-100 w-100 object-fit-contain" alt="@p.Name" loading="lazy">
                             </a>
                             <h3 class="product-name"><a href="/san-pham/detail/@(p.Slug)-@(p.ProductId).html" class="text-decoration-none text-dark">@p.Name</a></h3>
                             <p class="product-desc line-clamp-2" style="font-size:12px; color:#666;">@(string.IsNullOrEmpty(p.ShortDescription) ? p.Name : p.ShortDescription)</p>

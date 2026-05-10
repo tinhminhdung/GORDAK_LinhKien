@@ -1,4 +1,4 @@
-@model Antigravity.ECommerce.Models.Video
+﻿@model Antigravity.ECommerce.Models.Video
 @{
     Layout = "~/Views/Shared/_MainLayout.cshtml";
     ViewData["Title"] = Model.Title;
@@ -77,7 +77,7 @@
                             <div class="vd-related-card">
                                 <div class="vd-thumb-wrap">
                                     <a href="@rUrl">
-                                        <img src="@(string.IsNullOrEmpty(r.ThumbnailUrl) ? "/assets/images/placeholder.png" : r.ThumbnailUrl)" alt="@r.Title" style="width:100%; object-fit:cover; aspect-ratio: 16/9;">
+                                        <img src="@(string.IsNullOrEmpty(r.ThumbnailUrl) ? "/assets/images/no-image.png" : r.ThumbnailUrl)" alt="@r.Title" style="width:100%; object-fit:cover; aspect-ratio: 16/9;">
                                         <div class="vd-play-icon-sm" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: white; font-size: 2rem; opacity: 0.8; text-shadow: 0 2px 4px rgba(0,0,0,0.5);"><i class="fa-solid fa-circle-play"></i></div>
                                     </a>
                                 </div>
@@ -123,7 +123,7 @@
                     <div class="tt-hot-item">
                         <div class="vd-thumb-wrap vd-thumb-sm" style="width: 80px; flex-shrink: 0; position: relative;">
                             <a href="/video/detail/@(hv.Slug).html">
-                                <img src="@(string.IsNullOrEmpty(hv.ThumbnailUrl) ? "/assets/images/placeholder.png" : hv.ThumbnailUrl)" alt="@hv.Title" style="width:100%; aspect-ratio:16/9; object-fit:cover; border-radius: 4px;">
+                                <img src="@(string.IsNullOrEmpty(hv.ThumbnailUrl) ? "/assets/images/no-image.png" : hv.ThumbnailUrl)" alt="@hv.Title" style="width:100%; aspect-ratio:16/9; object-fit:cover; border-radius: 4px;">
                                 <div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); color:#fff; font-size:16px; opacity:0.8;"><i class="fa-solid fa-circle-play"></i></div>
                             </a>
                         </div>

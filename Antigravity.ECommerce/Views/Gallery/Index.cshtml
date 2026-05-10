@@ -1,4 +1,4 @@
-@model List<Antigravity.ECommerce.Models.Gallery>
+﻿@model List<Antigravity.ECommerce.Models.Gallery>
 @using Antigravity.ECommerce.Services
 @{
     Layout = "~/Views/Shared/_MainLayout.cshtml";
@@ -100,7 +100,7 @@
                             <a href="/album/@(gallery.Slug).html" class="text-decoration-none">
                                 <div class="card gallery-card h-100">
                                     <div class="gallery-img-wrap">
-                                        <img src="@(string.IsNullOrEmpty(gallery.CoverImage) ? "/assets/images/placeholder.png" : gallery.CoverImage)" alt="@gallery.AlbumName">
+                                        <img src="@(string.IsNullOrEmpty(gallery.CoverImage) ? "/assets/images/no-image.png" : gallery.CoverImage)" alt="@gallery.AlbumName">
                                         <span class="album-count"><i class="mdi mdi-image-multiple-outline me-1"></i>Album</span>
                                         <div class="gallery-overlay">
                                             <h5 class="mb-1 text-white">@gallery.AlbumName</h5>
@@ -177,7 +177,7 @@
                 @foreach(var hg in hotGalleries) {
                     <div class="tt-hot-item">
                         <a href="/album/@(hg.Slug).html">
-                            <img src="@(string.IsNullOrEmpty(hg.CoverImage) ? "/assets/images/placeholder.png" : hg.CoverImage)" alt="@hg.AlbumName">
+                            <img src="@(string.IsNullOrEmpty(hg.CoverImage) ? "/assets/images/no-image.png" : hg.CoverImage)" alt="@hg.AlbumName">
                         </a>
                         <div>
                             <a href="/album/@(hg.Slug).html" class="tt-hot-title line-clamp-2">@hg.AlbumName</a>

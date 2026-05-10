@@ -1,4 +1,4 @@
-@{
+﻿@{
     var settings = Antigravity.ECommerce.Services.SSetting.GetViewModel();
 }
 <!doctype html>
@@ -197,6 +197,20 @@
             border: 1px solid #ced4da !important; /* Chuẩn hóa màu viền cho đồng bộ */
 		}
         
+        /* Loại bỏ border/padding bị lặp lại ở thẻ div bọc ngoài của selectpicker */
+        form[id$="FilterForm"] div.bootstrap-select.form-control,
+        form[id$="filterForm"] div.bootstrap-select.form-control {
+            padding: 0 !important;
+            border: none !important;
+            height: auto !important;
+        }
+
+        /* Đảm bảo ô selectpicker có khoảng trống mũi tên bên phải */
+        form[id$="FilterForm"] .bootstrap-select > .dropdown-toggle,
+        form[id$="filterForm"] .bootstrap-select > .dropdown-toggle {
+            padding-right: 2.25rem !important;
+        }
+
         /* Fix padding cho ô tìm kiếm có icon kính lúp */
         form[id$="FilterForm"] .search-box .form-control,
         form[id$="filterForm"] .search-box .form-control {
@@ -995,6 +1009,48 @@
 					width: '100%'
 				});
 			});
+		});
+	</script>
+
+	<!-- Global Image Preview Handler -->
+	<script>
+		document.addEventListener("DOMContentLoaded", function() {
+			var preview = document.getElementById("imgPreview");
+			if (preview) {
+				var possibleInputs = ["Image", "MainImage", "Avatar", "CoverImage", "FilePath"];
+				
+				possibleInputs.forEach(function(id) {
+					var el = document.getElementById(id);
+					if (el) {
+						var defaultImg = "";
+						if (id === "Avatar") {
+							defaultImg = "/assets/images/users/avatar-blank.png";
+						} else if (id === "MainImage") {
+							defaultImg = "/assets/images/no-image.png";
+						} else if (preview.classList.contains("img-thumbnail")) {
+							defaultImg = "/assets/images/no-image.png";
+						}
+
+						el.addEventListener("input", function() {
+							var val = this.value.trim();
+							if (val) {
+								preview.src = val;
+								if (preview.style.display === 'none') {
+									preview.style.display = 'block';
+								}
+							} else {
+								if (defaultImg) {
+									preview.src = defaultImg;
+									preview.style.display = 'block';
+								} else {
+									preview.src = "";
+									preview.style.display = 'none';
+								}
+							}
+						});
+					}
+				});
+			}
 		});
 	</script>
 

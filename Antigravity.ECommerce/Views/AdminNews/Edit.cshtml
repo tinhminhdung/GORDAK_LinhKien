@@ -78,7 +78,7 @@
                     <div class="mb-3">
                         <label class="form-label">Ảnh đại diện bài viết</label>
                         <div class="input-group">
-                            <input type="text" class="form-control" asp-for="Image" id="txtImage" readonly>
+                            <input type="text" class="form-control" asp-for="Image" id="txtImage">
                             <button class="btn btn-primary" type="button" onclick="browseImage('txtImage')">Chọn ảnh</button>
                         </div>
                         <div id="image_preview" class="mt-2 text-center border rounded p-2 @(string.IsNullOrEmpty(Model.Image) ? "d-none" : "")">
@@ -100,7 +100,7 @@
 
                     <div class="mb-3">
                         <label class="form-label">Trạng thái</label>
-                        <select class="form-select" asp-for="Status">
+                        <select class="form-control selectpicker" data-live-search="true" asp-for="Status">
                             <option value="1">Đăng bài ngay</option>
                             <option value="0">Lưu bản nháp</option>
                         </select>

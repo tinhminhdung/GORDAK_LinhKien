@@ -70,7 +70,7 @@
                         <input type="text" class="form-control form-control-sm" name="kw" value="@ViewBag.Keyword" placeholder="Mã đơn hàng...">
                     </div>
                     <div class="col-auto">
-                        <select class="form-select form-select-sm" name="status">
+                        <select class="form-control selectpicker" data-live-search="true" name="status">
                             <option value="">Tất cả trạng thái</option>
                             <option value="0" selected="@(ViewBag.Status == 0)">Mới</option>
                             <option value="1" selected="@(ViewBag.Status == 1)">Xác nhận</option>

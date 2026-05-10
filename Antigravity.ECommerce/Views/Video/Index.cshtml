@@ -1,4 +1,4 @@
-@model List<Antigravity.ECommerce.Models.Video>
+﻿@model List<Antigravity.ECommerce.Models.Video>
 @{
     Layout = "~/Views/Shared/_MainLayout.cshtml";
     var categories = ViewBag.Categories as List<Antigravity.ECommerce.Models.Category> ?? new List<Antigravity.ECommerce.Models.Category>();
@@ -55,7 +55,7 @@
                 <div class="vd-player-wrap mb-4">
                     <a href="@featuredUrl" class="d-block text-decoration-none text-dark">
                         <div class="vd-player-main">
-                            <img src="@(string.IsNullOrEmpty(featuredVideo.ThumbnailUrl) ? "/assets/images/placeholder.png" : featuredVideo.ThumbnailUrl)" alt="@featuredVideo.Title" class="vd-player-thumb">
+                            <img src="@(string.IsNullOrEmpty(featuredVideo.ThumbnailUrl) ? "/assets/images/no-image.png" : featuredVideo.ThumbnailUrl)" alt="@featuredVideo.Title" class="vd-player-thumb">
                             <div class="vd-player-overlay">
                                 <span class="vd-badge-live">MỚI NHẤT</span>
                                 <button type="button" class="vd-play-btn"><i class="fa-solid fa-play"></i></button>
@@ -83,7 +83,7 @@
                             <div class="vd-related-card">
                                 <div class="vd-thumb-wrap">
                                     <a href="@videoUrl">
-                                        <img src="@(string.IsNullOrEmpty(item.ThumbnailUrl) ? "/assets/images/placeholder.png" : item.ThumbnailUrl)" alt="@item.Title">
+                                        <img src="@(string.IsNullOrEmpty(item.ThumbnailUrl) ? "/assets/images/no-image.png" : item.ThumbnailUrl)" alt="@item.Title">
                                         <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: white; font-size: 2rem; opacity: 0.8; text-shadow: 0 2px 4px rgba(0,0,0,0.5);"><i class="fa-solid fa-circle-play"></i></div>
                                     </a>
                                 </div>
@@ -174,7 +174,7 @@
                     <div class="tt-hot-item">
                         <div class="vd-thumb-wrap vd-thumb-sm" style="width: 80px; flex-shrink: 0; position: relative;">
                             <a href="/video/detail/@(hv.Slug).html">
-                                <img src="@(string.IsNullOrEmpty(hv.ThumbnailUrl) ? "/assets/images/placeholder.png" : hv.ThumbnailUrl)" alt="@hv.Title" style="width:100%; aspect-ratio:16/9; object-fit:cover; border-radius: 4px;">
+                                <img src="@(string.IsNullOrEmpty(hv.ThumbnailUrl) ? "/assets/images/no-image.png" : hv.ThumbnailUrl)" alt="@hv.Title" style="width:100%; aspect-ratio:16/9; object-fit:cover; border-radius: 4px;">
                                 <div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); color:#fff; font-size:16px; opacity:0.8;"><i class="fa-solid fa-circle-play"></i></div>
                             </a>
                         </div>

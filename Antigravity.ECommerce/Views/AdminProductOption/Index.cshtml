@@ -1,4 +1,4 @@
-@model IEnumerable<Antigravity.ECommerce.Models.ProductOption>
+﻿@model IEnumerable<Antigravity.ECommerce.Models.ProductOption>
 @{
     ViewData["Title"] = "Quản lý " + ViewBag.PageTitle;
     Layout = "_AdminLayout";
@@ -25,7 +25,7 @@
                 <div class="d-flex align-items-center">
                     <h5 class="card-title mb-0 flex-grow-1">Danh sách @ViewBag.PageTitle</h5>
                     <div class="flex-shrink-0">
-                        <a href="/AdminProductOption/Create?type=@ViewBag.Type" class="btn btn-primary btn-sm"><i class="ri-add-line align-bottom me-1"></i> Thêm mới</a>
+                        <a href="/AdminProductOption/Create?type=@ViewBag.Type" class="btn btn-primary"><i class="ri-add-line align-bottom me-1"></i> Thêm mới</a>
                     </div>
                 </div>
             </div>
