@@ -13,6 +13,18 @@ namespace Antigravity.ECommerce.Controllers
     {
         public IActionResult Index(string kw = "", int? status = null, string? menuPosition = null, int page = 1, int size = 20)
         {
+            if (Request.Query.ContainsKey("menuPosition"))
+            {
+                if (string.IsNullOrEmpty(menuPosition))
+                    Response.Cookies.Delete("AdminMenu_Position");
+                else
+                    Response.Cookies.Append("AdminMenu_Position", menuPosition, new CookieOptions { Expires = DateTime.Now.AddDays(1) });
+            }
+            else
+            {
+                menuPosition = Request.Cookies["AdminMenu_Position"];
+            }
+
             // Lấy tất cả menu dạng cây (hierarchical)
             var allMenu = SCategory.GetAll().Where(x => x.CategoryType == 0).ToList();
             
@@ -70,7 +82,7 @@ namespace Antigravity.ECommerce.Controllers
             PrepareMenuBag();
 
             // Kế thừa MenuPosition từ cha — tránh admin phải chọn lại vị trí
-            string inheritedPosition = "Header"; // default
+            string inheritedPosition = Request.Cookies["AdminMenu_Position"] ?? "Header"; // default
             if (parentId.HasValue && parentId.Value > 0)
             {
                 var parent = SCategory.GetById(parentId.Value);

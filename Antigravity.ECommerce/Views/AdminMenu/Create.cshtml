@@ -4,6 +4,7 @@
 	Layout = "_AdminLayout";
 }
 
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
 <style>
 	.google-preview {
 		font-family: arial, sans-serif;
@@ -93,13 +94,13 @@
 							<div class="row mb-3">
 								<div class="col-md-6 parent-select">
 									<label class="form-label">Danh mục cha</label>
-									<select class="form-select" data-choices="true" data-choices-search-true="true" asp-for="ParentId">
-										<option value="0">-- Là Menu cấp gốc --</option>
+									<select class="form-select" id="ParentIdSelect" name="ParentId">
+										<option value="0" data-pos="all">-- Là Menu cấp gốc --</option>
 										@if (ViewBag.Categories != null)
 										{
 											foreach (var cat in ViewBag.Categories as List<Antigravity.ECommerce.Models.Category>)
 											{
-												<option value="@cat.CategoryId" selected="@(Model.ParentId == cat.CategoryId ? "selected" : null)">@cat.Name</option>
+												<option value="@cat.CategoryId" data-pos="@cat.MenuPosition" selected="@(Model.ParentId == cat.CategoryId ? "selected" : null)">@cat.Name</option>
 											}
 										}
 									</select>
@@ -372,8 +373,64 @@
 				$('.menu-pos-cb:checked').each(function() { vals.push($(this).val()); });
 				$('#MenuPositionHidden').val(vals.join(','));
 			}
-			$('.menu-pos-cb').on('change', syncMenuPosition);
+
+			var allParentOptions = [];
+			$('#ParentIdSelect option').each(function() {
+				allParentOptions.push({
+					value: $(this).val(),
+					text: $(this).text(),
+					pos: $(this).attr('data-pos') || '',
+					selected: $(this).is(':selected')
+				});
+			});
+
+			function filterParentCategories() {
+				var selectedPos = [];
+				$('.menu-pos-cb:checked').each(function() { selectedPos.push($(this).val()); });
+				var parentSelect = $('#ParentIdSelect');
+				parentSelect.empty();
+				
+				var showCurrentTree = false;
+
+				allParentOptions.forEach(function(opt) {
+					var show = false;
+					if (opt.value === "0") {
+						show = true;
+					}
+					else {
+						var textTrim = opt.text.trim();
+						var isRoot = !textTrim.startsWith('-');
+
+						if (isRoot) {
+							if (!opt.pos) {
+								show = selectedPos.includes('Header');
+							} else {
+								var optPosArr = opt.pos.split(',').map(s => s.trim());
+								show = selectedPos.some(p => optPosArr.includes(p));
+							}
+							showCurrentTree = show;
+						} else {
+							show = showCurrentTree;
+						}
+					}
+					if (show) {
+						var sel = opt.selected ? ' selected' : '';
+						parentSelect.append('<option value="'+opt.value+'" data-pos="'+opt.pos+'"'+sel+'>'+opt.text+'</option>');
+					}
+				});
+
+				// Refresh Bootstrap Select UI
+				if (parentSelect.hasClass('selectpicker') || parentSelect.parent().hasClass('bootstrap-select')) {
+					parentSelect.selectpicker('refresh');
+				}
+			}
+
+			$('.menu-pos-cb').on('change', function() {
+				syncMenuPosition();
+				filterParentCategories();
+			});
 			syncMenuPosition();
+			filterParentCategories();
 
 			toggleFormAreas();
 			updateGooglePreview();

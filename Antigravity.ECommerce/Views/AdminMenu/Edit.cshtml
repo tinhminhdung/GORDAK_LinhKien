@@ -4,12 +4,21 @@
     Layout = "_AdminLayout";
 }
 
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
 <style>
     .google-preview { font-family: arial, sans-serif; max-width: 600px; }
     .google-title { color: #1a0dab; font-size: 18px; line-height: 1.3; margin-bottom: 4px; cursor: pointer; }
     .google-title:hover { text-decoration: underline; }
     .google-url { color: #006621; font-size: 14px; line-height: 1.5; margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .google-desc { color: #70757a; font-size: 14px; line-height: 1.57; word-wrap: break-word; }
+    .icon-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; max-height: 450px; overflow-y: auto; padding: 4px; }
+    .icon-cell { display: flex; flex-direction: column; align-items: center; padding: 10px 4px; border: 2px solid transparent; border-radius: 10px; cursor: pointer; transition: all 0.15s; background: #fafafa; min-height: 70px; }
+    .icon-cell:hover { background: #e3f2fd; border-color: #2196F3; transform: translateY(-2px); }
+    .icon-cell.selected { background: #bbdefb; border-color: #1565C0; }
+    .icon-cell i { font-size: 22px; color: #333; margin-bottom: 4px; }
+    .icon-cell small { font-size: 8px; color: #888; text-align: center; word-break: break-all; line-height: 1.2; }
+    .icon-preview-box { width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; background: #f8f9fa; border: 1px solid #dee2e6; border-right: none; border-radius: 8px 0 0 8px; font-size: 20px; }
+    .loading-text { text-align: center; padding: 40px; color: #999; }
 </style>
 
 <div class="row">
@@ -57,12 +66,15 @@
                             <div class="row mb-3">
                                 <div class="col-md-6 parent-select">
                                     <label class="form-label">Danh mục cha</label>
-                                    <select class="form-select" data-choices="true" data-choices-search-true="true" asp-for="ParentId">
-                                        <option value="0">-- Là Menu cấp gốc --</option>
-                                        @if (ViewBag.Categories != null) {
-                                            foreach (var cat in ViewBag.Categories as List<Antigravity.ECommerce.Models.Category>) {
-                                                if (cat.CategoryId != Model.CategoryId) {
-                                                    <option value="@cat.CategoryId" selected="@(Model.ParentId == cat.CategoryId ? "selected" : null)">@cat.Name</option>
+                                    <select class="form-select" id="ParentIdSelect" name="ParentId">
+                                        <option value="0" data-pos="all">-- Là Menu cấp gốc --</option>
+                                        @if (ViewBag.Categories != null)
+                                        {
+                                            foreach (var cat in ViewBag.Categories as List<Antigravity.ECommerce.Models.Category>)
+                                            {
+                                                if (cat.CategoryId != Model.CategoryId)
+                                                {
+                                                    <option value="@cat.CategoryId" data-pos="@cat.MenuPosition" selected="@(Model.ParentId == cat.CategoryId ? "selected" : null)">@cat.Name</option>
                                                 }
                                             }
                                         }
@@ -278,6 +290,30 @@
     </div>
 </form>
 
+<!-- Modal Icon Picker -->
+<div class="modal fade" id="modalIconPicker" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content" style="border-radius:14px;overflow:hidden;">
+            <div class="modal-header" style="background:#f8f9fa;">
+                <h5 class="modal-title fw-bold"><i class="ri-remixicon-line me-2"></i>Chọn Icon</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="search-box mb-2">
+                    <i class="ri-search-line search-icon"></i>
+                    <input type="text" id="searchIconInput" class="form-control" placeholder="Tìm: gio hang, chuong, kho, xe tai, nguoi dung, truck, home..." oninput="filterIcons(this.value)"/>
+                </div>
+                <p style="font-size:11px;color:#999;margin-bottom:8px;">💡 Gõ không dấu hoặc có dấu đều được: <em>gio hang, giỏ hàng, kho, xe tải, chuông...</em></p>
+                <div class="d-flex justify-content-between mb-2">
+                    <span class="text-muted" style="font-size:12px;">Tổng: <strong id="iconCount">0</strong> icon</span>
+                    <span class="text-muted" style="font-size:12px;" id="loadStatus">Đang tải...</span>
+                </div>
+                <div class="icon-grid" id="iconGrid"><div class="loading-text"><i class="ri-loader-4-line ri-spin me-2"></i>Đang tải icon...</div></div>
+            </div>
+        </div>
+    </div>
+</div>
+
 @section Scripts {
     <script>
         $(function() {
@@ -291,14 +327,70 @@
                 });
             }
 
-            // Sync checkboxes -> hidden field
+            // Sync checkboxes to hidden field
             function syncMenuPosition() {
                 var vals = [];
                 $('.menu-pos-cb:checked').each(function() { vals.push($(this).val()); });
                 $('#MenuPositionHidden').val(vals.join(','));
             }
-            $('.menu-pos-cb').on('change', syncMenuPosition);
+
+            var allParentOptions = [];
+            $('#ParentIdSelect option').each(function() {
+                allParentOptions.push({
+                    value: $(this).val(),
+                    text: $(this).text(),
+                    pos: $(this).attr('data-pos') || '',
+                    selected: $(this).is(':selected')
+                });
+            });
+
+            function filterParentCategories() {
+                var selectedPos = [];
+                $('.menu-pos-cb:checked').each(function() { selectedPos.push($(this).val()); });
+                var parentSelect = $('#ParentIdSelect');
+                parentSelect.empty();
+                
+                var showCurrentTree = false;
+
+                allParentOptions.forEach(function(opt) {
+                    var show = false;
+                    if (opt.value === "0") {
+                        show = true;
+                    }
+                    else {
+                        var textTrim = opt.text.trim();
+                        var isRoot = !textTrim.startsWith('-');
+
+                        if (isRoot) {
+                            if (!opt.pos) {
+                                show = selectedPos.includes('Header');
+                            } else {
+                                var optPosArr = opt.pos.split(',').map(s => s.trim());
+                                show = selectedPos.some(p => optPosArr.includes(p));
+                            }
+                            showCurrentTree = show;
+                        } else {
+                            show = showCurrentTree;
+                        }
+                    }
+                    if (show) {
+                        var sel = opt.selected ? ' selected' : '';
+                        parentSelect.append('<option value="'+opt.value+'" data-pos="'+opt.pos+'"'+sel+'>'+opt.text+'</option>');
+                    }
+                });
+
+                // Refresh Bootstrap Select UI
+                if (parentSelect.hasClass('selectpicker') || parentSelect.parent().hasClass('bootstrap-select')) {
+                    parentSelect.selectpicker('refresh');
+                }
+            }
+
+            $('.menu-pos-cb').on('change', function() {
+                syncMenuPosition();
+                filterParentCategories();
+            });
             syncMenuPosition();
+            filterParentCategories();
 
             toggleFormAreas();
             initSystemLinkState();
@@ -480,6 +572,180 @@
                 $('#DirectUrl').val(finalUrl);
                 $('<input>').attr({ type: 'hidden', name: 'Target', value: finalUrl }).appendTo('#menuForm');
             }
+        });
+
+        // ============ ICON PICKER LOGIC ============
+        const VI_MAP = {
+            'gio hang':'cart shopping bag basket','mua hang':'cart shopping','mua sam':'cart shopping bag',
+            'cua hang':'store shop','ban hang':'store cash register receipt sales',
+            'tien':'money dollar coins wallet sack','thanh toan':'credit card money payment',
+            'the':'card credit id badge','vi':'wallet',
+            'kho':'warehouse box boxes pallet dolly','hop':'box cube archive','kien hang':'box package truck',
+            'giao hang':'truck shipping delivery fast','van chuyen':'truck shipping','xe tai':'truck',
+            'xe':'car truck bus bicycle van taxi','o to':'car automobile',
+            'nguoi dung':'user person people','nguoi':'user person','nhan vien':'user tie id employee',
+            'nhom':'users group people team','tai khoan':'user circle account',
+            'nha':'home house building','trang chu':'home house dashboard',
+            'bieu do':'chart graph bar line pie area column','thong ke':'chart graph analytics statistics',
+            'danh sach':'list table check ul','bang':'table cells grid th',
+            'them':'plus add circle create new','xoa':'trash delete remove eraser can',
+            'sua':'edit pen pencil write modify','luu':'save floppy disk store',
+            'tai':'download upload cloud arrow','tai len':'upload cloud arrow up',
+            'tai xuong':'download cloud arrow down',
+            'tim kiem':'search magnifying glass find','loc':'filter funnel sort',
+            'xem':'eye view visible show','an':'eye slash hidden hide invisible',
+            'khoa':'lock key shield secure','mo khoa':'unlock open',
+            'dang nhap':'sign-in login right bracket','dang xuat':'sign-out logout power off',
+            'in':'print printer','sao chep':'copy paste clone duplicate',
+            'chuong':'bell notification alert ring','thong bao':'bell notification exclamation alert',
+            'thu':'envelope mail email letter','tin nhan':'comment message sms chat',
+            'dien thoai':'phone mobile cell call','goi':'phone headset support',
+            'cai dat':'cog gear setting wrench tool configure','cau hinh':'cog gear sliders setting',
+            'bao mat':'shield lock key secure guard','co so du lieu':'database server storage',
+            'tap tin':'file document paper','thu muc':'folder directory open plus',
+            'anh':'image photo picture camera gallery','hinh anh':'image photo picture',
+            'video':'video film camera play record','nhac':'music headphones audio sound',
+            'vi tri':'map marker location pin dot','ban do':'map globe earth',
+            'dong ho':'clock time watch','lich':'calendar date schedule day',
+            'lich su':'history clock rotate undo past','thoi gian':'clock hourglass stopwatch timer',
+            'canh bao':'exclamation warning triangle alert danger','loi':'times circle bug error crash',
+            'thong tin':'info circle information','tro giup':'question circle help life ring',
+            'cam':'ban block slash forbidden','co':'flag banner pennant',
+            'ngoi sao':'star rating favorite','yeu thich':'heart star bookmark love favorite',
+            'trai tim':'heart love like','thich':'thumbs up like','khong thich':'thumbs down dislike',
+            'giai thuong':'award trophy medal crown prize','qua':'gift present box surprise',
+            'lua':'fire hot flame burn','sam set':'bolt lightning thunder flash',
+            'sach':'book reading education open','hoc':'graduation cap school university education',
+            'toa nha':'building office city tower','benh vien':'hospital clinic medical',
+            'do an':'utensils food restaurant eat','ca phe':'mug hot coffee cup drink',
+            'em be':'baby child carriage kids','tre em':'baby child children kids',
+            'ma vach':'barcode qrcode scan code','quet':'barcode qrcode scan camera',
+            'dong bo':'sync refresh arrows rotate reload','lam moi':'sync refresh redo reload',
+            'hoan tac':'undo arrow left back','xac nhan':'check circle approve confirm done',
+            'dung':'check circle correct right','sai':'times cross wrong xmark',
+            'may bay':'plane flight travel airplane','xe dap':'bicycle bike cycle',
+            'bao':'newspaper blog article news','danh dau':'bookmark flag tag mark',
+            'may':'cloud server weather','wifi':'wifi signal wireless network',
+            'pin':'battery power energy charge','sac':'battery charging bolt power',
+            'micro':'microphone record voice audio','loa':'volume speaker sound audio',
+            'man hinh':'desktop monitor display tv screen','may tinh':'laptop computer desktop',
+            'di dong':'mobile phone tablet portable','may tinh bang':'tablet ipad pad',
+            'chia se':'share nodes link social','lien ket':'link chain paperclip connect',
+            'bat tay':'handshake deal agreement','mui ten':'arrow right left up down chevron angle',
+            'tien trinh':'spinner circle notch loading progress','phan tram':'percent percentage',
+            'nha may':'industry factory production','tau':'ship boat anchor sail',
+            'tau hoa':'train railway subway metro','xe buyt':'bus transit transport',
+            'mua':'rain umbrella cloud weather','tuyet':'snowflake cold winter ice',
+            'nang':'sun bright day weather','trang':'moon night dark crescent',
+            'cau vong':'rainbow arc colors','gio':'wind air breeze blow',
+            'ban phim':'keyboard type input','chuot':'mouse pointer cursor click',
+            'o cung':'hard drive disk storage hdd','chip':'microchip cpu processor',
+            'robot':'robot android bot machine','mat':'face smile frown meh grin',
+            'binh luan':'comment comments message chat discuss',
+            'huong dan':'book open compass directions guide',
+            'cong cu':'tools wrench screwdriver hammer','sua chua':'wrench tools fix repair',
+            'diem':'location dot pin marker spot','dia chi':'address book location map',
+            'doi':'arrows rotate exchange swap change','chuyen':'exchange arrow right left transfer',
+            'nhap':'right bracket import enter input','xuat':'right from bracket export output',
+            'tang':'arrow up plus increase grow','giam':'arrow down minus decrease shrink',
+            'mo rong':'expand maximize enlarge arrows','thu nho':'compress minimize shrink',
+            'phat':'play start begin forward','dung lai':'pause stop square',
+            'am thanh':'volume speaker sound audio music','tat tieng':'volume xmark mute silent',
+        };
+
+        function removeDiacritics(str) {
+            return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/đ/g, 'd').replace(/Đ/g, 'D');
+        }
+
+        let ALL_ICONS = [];
+        let modalInstance = null;
+
+        async function loadAllIcons() {
+            try {
+                document.getElementById('loadStatus').textContent = 'Đang tải từ FontAwesome...';
+                const resp = await fetch('https://raw.githubusercontent.com/FortAwesome/Font-Awesome/6.x/metadata/icons.json');
+                const json = await resp.json();
+                const icons = [];
+                for (const [name, meta] of Object.entries(json)) {
+                    if (meta.styles && meta.styles.includes('solid')) icons.push('fas fa-' + name);
+                }
+                ALL_ICONS = icons.sort();
+                document.getElementById('loadStatus').textContent = `✅ Đã tải ${ALL_ICONS.length} icon`;
+            } catch (e) {
+                console.warn('Fetch metadata failed, parsing CSS...', e);
+                loadFromCSS();
+            }
+        }
+
+        function loadFromCSS() {
+            const icons = new Set();
+            for (const sheet of document.styleSheets) {
+                try {
+                    for (const rule of sheet.cssRules) {
+                        if (rule.selectorText && rule.style && rule.style.content) {
+                            const m = rule.selectorText.match(/\.fa-([a-z0-9-]+)::before/);
+                            if (m && m[1].length > 1) icons.add(m[1]);
+                        }
+                    }
+                } catch (e) {}
+            }
+            ALL_ICONS = Array.from(icons).sort().map(n => 'fas fa-' + n);
+            document.getElementById('loadStatus').textContent = `✅ Đã tải ${ALL_ICONS.length} icon (CSS)`;
+        }
+
+        function openIconPicker() {
+            if (!modalInstance) modalInstance = new bootstrap.Modal(document.getElementById('modalIconPicker'));
+            document.getElementById('searchIconInput').value = '';
+            renderIconGrid(ALL_ICONS);
+            modalInstance.show();
+            setTimeout(() => document.getElementById('searchIconInput').focus(), 300);
+        }
+
+        function renderIconGrid(icons) {
+            const cur = document.getElementById('MenuIcon').value;
+            const display = icons.slice(0, 500);
+            const extra = icons.length > 500 ? `<p class="text-muted text-center py-2" style="grid-column:1/-1;font-size:12px;">Hiển thị 500/${icons.length} — hãy gõ để lọc thêm</p>` : '';
+            const html = display.map(icon => {
+                const name = icon.replace(/^fas fa-/, '');
+                const sel = icon === cur ? 'selected' : '';
+                return `<div class="icon-cell ${sel}" onclick="selectIcon('${icon}')" title="${icon}"><i class="${icon}"></i><small>${name}</small></div>`;
+            }).join('') + extra;
+            document.getElementById('iconGrid').innerHTML = html || '<p class="text-muted text-center py-4">Không tìm thấy icon nào</p>';
+            document.getElementById('iconCount').textContent = icons.length;
+        }
+
+        function filterIcons(keyword) {
+            const raw = keyword.toLowerCase().trim();
+            if (!raw) { renderIconGrid(ALL_ICONS); return; }
+            const kwNoDiac = removeDiacritics(raw);
+            let extraEN = '';
+            for (const [viKey, enVal] of Object.entries(VI_MAP)) {
+                if (viKey.includes(kwNoDiac) || kwNoDiac.includes(viKey)) extraEN += ' ' + enVal;
+            }
+            const allTerms = (kwNoDiac + ' ' + extraEN).trim().split(/\s+/);
+            const filtered = ALL_ICONS.filter(icon => allTerms.some(t => icon.includes(t)));
+            renderIconGrid(filtered);
+        }
+
+        function selectIcon(iconClass) {
+            $('#MenuIcon').val(iconClass);
+            $('#iconPreviewBox').html('<i class="' + iconClass + '" style="font-size: 20px;"></i>');
+            modalInstance.hide();
+        }
+
+        $('#MenuIcon').on('input', function() {
+            var val = $(this).val();
+            if(val.trim().startsWith('<')) {
+                $('#iconPreviewBox').html(val);
+            } else {
+                $('#iconPreviewBox').html('<i class="' + val + '" style="font-size: 20px;"></i>');
+            }
+        });
+
+        $(function() {
+            loadAllIcons();
+            // Trigger initial preview
+            $('#MenuIcon').trigger('input');
         });
     </script>
 }
