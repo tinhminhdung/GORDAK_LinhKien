@@ -167,6 +167,11 @@
                             <input type="number" class="form-control" asp-for="Weight">
                         </div>
                     </div>
+
+                    <div class="card-body p-0 d-flex justify-content-between">
+                        <a href="/AdminProduct" class="btn btn-light"><i class="ri-arrow-go-back-line me-1"></i>Quay lại</a>
+                        <button type="submit" class="btn btn-success px-4"><i class="ri-save-line me-1"></i>Lưu thay đổi</button>
+                    </div>
                 </div>
             </div>
 
@@ -175,7 +180,7 @@
                 <div class="card-header d-flex align-items-center">
                     <h5 class="card-title mb-0 flex-grow-1">Thư viện Ảnh &amp; Video (Gallery)</h5>
                     <div class="flex-shrink-0 d-flex gap-2">
-                        <button class="btn btn-soft-danger btn-sm" type="button" onclick="addVideoPrompt()"><i class="ri-youtube-line align-bottom me-1"></i>Thêm Video Youtube</button>
+                        <button class="btn btn-soft-danger btn-sm d-none" type="button" onclick="addVideoPrompt()"><i class="ri-youtube-line align-bottom me-1"></i>Thêm Video Youtube</button>
                         <button class="btn btn-soft-primary btn-sm" type="button" onclick="openFileManager('AlbumImage')"><i class="ri-image-add-line align-bottom me-1"></i>Thêm Ảnh Album</button>
                     </div>
                 </div>
@@ -191,12 +196,7 @@
                 </div>
             </div>
 
-            <div class="card border-0 bg-transparent">
-                <div class="card-body p-0 d-flex justify-content-between">
-                    <a href="/AdminProduct" class="btn btn-light"><i class="ri-arrow-go-back-line me-1"></i>Quay lại</a>
-                    <button type="submit" class="btn btn-success px-4"><i class="ri-save-line me-1"></i>Lưu thay đổi</button>
-                </div>
-            </div>
+               
         </div>
 
         <div class="col-lg-4">
@@ -463,13 +463,12 @@
                 mediaItems.forEach((m, i) => {
                     const thumb = m.type === 'video' ? 'https://img.youtube.com/vi/' + getYoutubeId(m.url) + '/mqdefault.jpg' : m.url;
                     preview.innerHTML += `
-                        <div class="col-md-3 gallery-item" data-url="${m.url}" data-type="${m.type}">
+                        <div class="col-md-3 gallery-item cursor-move" data-url="${m.url}" data-type="${m.type}">
                             <div class="card m-0 border shadow-none">
                                 <div class="position-relative">
-                                    <div class="drag-handle position-absolute top-0 start-0 m-1 bg-white bg-opacity-75 rounded px-1 cursor-move" style="z-index:10;"><i class="ri-drag-move-fill"></i></div>
-                                    <img src="${thumb}" class="card-img-top rounded" style="height: 120px; object-fit: cover;">
+                                    <img src="${thumb}" class="card-img-top rounded" style="height: 120px; object-fit: cover; pointer-events: none;">
                                     ${m.type === 'video' ? '<div class="position-absolute top-50 start-50 translate-middle pointer-events-none"><i class="ri-play-circle-fill text-white fs-40 opacity-75"></i></div>' : ''}
-                                    <button type="button" onclick="removeMedia(${i})" class="btn btn-danger btn-sm position-absolute top-0 end-0 m-1"><i class="ri-delete-bin-line"></i></button>
+                                    <button type="button" onclick="removeMedia(${i})" class="btn btn-danger btn-sm position-absolute top-0 end-0 m-1" style="z-index: 10;"><i class="ri-delete-bin-line"></i></button>
                                 </div>
                             </div>
                         </div>`;
@@ -482,7 +481,6 @@
             const el = document.getElementById('multimedia-preview');
             new Sortable(el, {
                 animation: 150,
-                handle: '.drag-handle',
                 draggable: '.gallery-item',
                 onEnd: function() {
                     updateMediaOrder();
