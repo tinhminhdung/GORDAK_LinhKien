@@ -65,32 +65,32 @@
 
             <div class="card-body border border-dashed border-end-0 border-start-0 py-3">
                 <form id="filterForm" method="get" class="row g-2">
-                    <input type="hidden" name="page" value="@ViewBag.PageIndex" />
-                    <div class="col-sm-4">
-                        <div class="search-box">
-                            <input type="text" name="kw" class="form-control form-control-sm" value="@ViewBag.Keyword" placeholder="Tìm tên menu, slug...">
-                            <i class="ri-search-line search-icon"></i>
-                        </div>
-                    </div>
-                    <div class="col-sm-2">
-                        <select class="form-select form-select-sm" name="menuPosition">
-                            <option value="">--- Vị trí ---</option>
-                            <option value="Header" selected="@(ViewBag.MenuPosition != null && ViewBag.MenuPosition.ToString() == "Header" ? "selected" : null)">Header</option>
-                            <option value="Footer" selected="@(ViewBag.MenuPosition != null && ViewBag.MenuPosition.ToString() == "Footer" ? "selected" : null)">Footer</option>
-                        </select>
-                    </div>
-                    <div class="col-sm-3">
-                        <select class="form-select form-select-sm" name="status">
-                            <option value="">--- Trạng thái ---</option>
-                            <option value="1" selected="@(ViewBag.Status != null && ViewBag.Status.ToString() == "1" ? "selected" : null)">Hiển thị</option>
-                            <option value="0" selected="@(ViewBag.Status != null && ViewBag.Status.ToString() == "0" ? "selected" : null)">Đang ẩn</option>
-                        </select>
-                    </div>
-                    <div class="col-sm-3 d-flex gap-2">
-                        <button type="submit" class="btn btn-primary btn-sm w-100"><i class="ri-filter-line me-1"></i>Lọc</button>
-                        <a href="/AdminMenu" class="btn btn-light btn-sm w-100">Reset</a>
-                    </div>
-                </form>
+ <input type="hidden" name="page" value="@ViewBag.PageIndex" />
+ <div class="col-sm-4">
+ <div class="search-box">
+ <input type="text" name="kw" class="form-control" value="@ViewBag.Keyword" placeholder="Tìm tên menu, slug...">
+ <i class="ri-search-line search-icon"></i>
+ </div>
+ </div>
+ <div class="col-sm-2">
+ <select class="form-select" name="menuPosition">
+ <option value="">--- Vị trí ---</option>
+ <option value="Header" selected="@(ViewBag.MenuPosition != null && ViewBag.MenuPosition.ToString() =="Header" ?"selected" : null)">Header</option>
+ <option value="Footer" selected="@(ViewBag.MenuPosition != null && ViewBag.MenuPosition.ToString() =="Footer" ?"selected" : null)">Footer</option>
+ </select>
+ </div>
+ <div class="col-sm-3">
+ <select class="form-select" name="status">
+ <option value="">--- Trạng thái ---</option>
+ <option value="1" selected="@(ViewBag.Status != null && ViewBag.Status.ToString() =="1" ?"selected" : null)">Hiển thị</option>
+ <option value="0" selected="@(ViewBag.Status != null && ViewBag.Status.ToString() =="0" ?"selected" : null)">Đang ẩn</option>
+ </select>
+ </div>
+ <div class="col-sm-3 d-flex gap-2">
+ <button type="submit" class="btn btn-primary w-100"><i class="ri-filter-line me-1"></i>Lọc</button>
+ <a href="/AdminMenu" class="btn btn-light w-100">Reset</a>
+ </div>
+ </form>
             </div>
 
             <div class="card-body pt-0">

@@ -46,22 +46,22 @@
                     <div class="row mb-4">
                         <div class="col-md-4">
                             <form method="get" action="/AdminLocation" id="filterForm">
-                                <input type="hidden" name="type" value="ward" />
-                                <select name="provinceId" class="form-select" onchange="document.getElementById('filterForm').submit();">
-                                    <option value="">-- Tất cả Tỉnh/Thành phố --</option>
-                                    @foreach (var p in ViewBag.AllProvinces)
-                                    {
-                                        if (ViewBag.ProvinceId == p.ProvinceId)
-                                        {
-                                            <option value="@p.ProvinceId" selected>@p.Name</option>
-                                        }
-                                        else
-                                        {
-                                            <option value="@p.ProvinceId">@p.Name</option>
-                                        }
-                                    }
-                                </select>
-                            </form>
+ <input type="hidden" name="type" value="ward" />
+ <select name="provinceId" class="form-select" onchange="document.getElementById('filterForm').submit();">
+ <option value="">-- Tất cả Tỉnh/Thành phố --</option>
+ @foreach (var p in ViewBag.AllProvinces)
+ {
+ if (ViewBag.ProvinceId == p.ProvinceId)
+ {
+ <option value="@p.ProvinceId" selected>@p.Name</option>
+ }
+ else
+ {
+ <option value="@p.ProvinceId">@p.Name</option>
+ }
+ }
+ </select>
+ </form>
                         </div>
                     </div>
                 }

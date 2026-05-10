@@ -1,4 +1,4 @@
-@model List<Antigravity.ECommerce.Models.Video>
+﻿@model List<Antigravity.ECommerce.Models.Video>
 @{
     Layout = "_AdminLayout";
     ViewBag.Title = "Quản lý Video YouTube";
@@ -40,45 +40,45 @@
         <div class="card shadow-sm border-0 mb-4">
             <div class="card-header border-0 bg-transparent py-3">
                 <form method="get" action="/AdminVideo/Index" id="filterForm">
-                    <input type="hidden" name="sort" value="@ViewBag.SortColumn" />
-                    <input type="hidden" name="order" value="@ViewBag.SortOrder" />
-                    <input type="hidden" name="page" id="pageIndex" value="@pageIndex" />
-                    <div class="row g-3">
-                        <div class="col-xxl-6 col-sm-8">
-                            <div class="search-box">
-                                <input type="text" name="kw" value="@kw" class="form-control border-light" placeholder="Tìm tiêu đề video...">
-                                <i class="ri-search-line search-icon"></i>
-                            </div>
-                        </div>
-                        <div class="col-xxl-3 col-sm-3">
-                            <select name="categoryId" class="form-select border-light">
-                                <option value="">-- Tất cả danh mục --</option>
-                                @if (ViewBag.Categories != null)
-                                {
-                                    foreach (var c in ViewBag.Categories as List<Antigravity.ECommerce.Models.Category>)
-                                    {
-                                        <option value="@c.CategoryId" selected="@(categoryId == c.CategoryId)">@c.Name</option>
-                                    }
-                                }
-                            </select>
-                        </div>
-                        <div class="col-xxl-2 col-sm-3">
-                            <select name="status" class="form-select border-light">
-                                <option value="">-- Trạng thái --</option>
-                                <option value="1" selected="@(status == 1)">Đang hiện</option>
-                                <option value="0" selected="@(status == 0)">Đang ẩn</option>
-                            </select>
-                        </div>
-                        <div class="col-xxl-3 col-sm-6 d-flex gap-2">
-                            <button type="submit" class="btn btn-primary flex-grow-1">
-                                <i class="ri-equalizer-fill me-1 align-bottom"></i> Lọc
-                            </button>
-                            <a href="/AdminVideo" class="btn btn-light px-3">
-                                <i class="ri-refresh-line align-bottom"></i>
-                            </a>
-                        </div>
-                    </div>
-                </form>
+ <input type="hidden" name="sort" value="@ViewBag.SortColumn" />
+ <input type="hidden" name="order" value="@ViewBag.SortOrder" />
+ <input type="hidden" name="page" id="pageIndex" value="@pageIndex" />
+ <div class="row g-3">
+ <div class="col-xxl-6 col-sm-8">
+ <div class="search-box">
+ <input type="text" name="kw" value="@kw" class="form-control border-light" placeholder="Tìm tiêu đề video...">
+ <i class="ri-search-line search-icon"></i>
+ </div>
+ </div>
+ <div class="col-xxl-3 col-sm-3">
+ <select name="categoryId" class="form-select border-light">
+ <option value="">-- Tất cả danh mục --</option>
+ @if (ViewBag.Categories != null)
+ {
+ foreach (var c in ViewBag.Categories as List<Antigravity.ECommerce.Models.Category>)
+ {
+ <option value="@c.CategoryId" selected="@(categoryId == c.CategoryId)">@c.Name</option>
+ }
+ }
+ </select>
+ </div>
+ <div class="col-xxl-2 col-sm-3">
+ <select name="status" class="form-select border-light">
+ <option value="">-- Trạng thái --</option>
+ <option value="1" selected="@(status == 1)">Đang hiện</option>
+ <option value="0" selected="@(status == 0)">Đang ẩn</option>
+ </select>
+ </div>
+ <div class="col-xxl-3 col-sm-6 d-flex gap-2">
+ <button type="submit" class="btn btn-primary flex-grow-1">
+ <i class="ri-equalizer-fill me-1 align-bottom"></i> Lọc
+ </button>
+ <a href="/AdminVideo" class="btn btn-light px-3">
+ <i class="ri-refresh-line align-bottom"></i>
+ </a>
+ </div>
+ </div>
+ </form>
             </div>
         </div>
 

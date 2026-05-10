@@ -1,4 +1,4 @@
-@model List<Antigravity.ECommerce.Models.Order>
+﻿@model List<Antigravity.ECommerce.Models.Order>
 @{
     ViewData["Title"] = "Quản lý Đơn hàng";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
@@ -73,60 +73,60 @@
 <div class="card">
     <div class="card-body">
         <form id="filterForm" method="get">
-            <input type="hidden" name="status" value="@ViewBag.Status" />
-            <input type="hidden" name="page" id="pageIndex" value="@ViewBag.PageIndex" />
-            <div class="row g-3 mb-3">
-                <div class="col-xxl-2 col-sm-6">
-                    <div class="search-box">
-                        <input type="text" name="kw" class="form-control" value="@ViewBag.Keyword" placeholder="Mã ĐH, SĐT...">
-                        <i class="ri-search-line search-icon"></i>
-                    </div>
-                </div>
-                <div class="col-xxl-2 col-sm-6">
-                    <select class="selectpicker" name="provinceId" id="ProvinceId" data-live-search="true">
-                        <option value="">-- Tất cả Tỉnh/Thành --</option>
-                        @if (ViewBag.Provinces != null)
-                        {
-                            foreach (Antigravity.ECommerce.Models.Province p in ViewBag.Provinces)
-                            {
-                                <option value="@p.ProvinceId" selected="@(ViewBag.ProvinceId == p.ProvinceId ? "selected" : null)">@p.Name</option>
-                            }
-                        }
-                    </select>
-                </div>
-                <div class="col-xxl-2 col-sm-6">
-                    <select class="selectpicker" name="wardId" id="WardId" data-live-search="true">
-                        <option value="">-- Tất cả Phường/Xã --</option>
-                        @if (ViewBag.Wards != null)
-                        {
-                            foreach (Antigravity.ECommerce.Models.Ward w in ViewBag.Wards)
-                            {
-                                <option value="@w.WardId" selected="@(ViewBag.WardId == w.WardId ? "selected" : null)">@w.Name</option>
-                            }
-                        }
-                    </select>
-                </div>
-                <div class="col-xxl-2 col-sm-6">
-                    <select class="selectpicker form-control" name="requiresVat" id="RequiresVat">
-                        <option value="">-- Yêu cầu VAT --</option>
-                        <option value="true" selected="@(ViewBag.RequiresVat == true ? "selected" : null)">Cần xuất VAT</option>
-                        <option value="false" selected="@(ViewBag.RequiresVat == false ? "selected" : null)">Không yêu cầu</option>
-                    </select>
-                </div>
-                <div class="col-xxl-2 col-sm-6">
-                    <div class="input-group">
-                        <input type="date" name="dateMin" class="form-control" value="@ViewBag.DateMin" title="Từ ngày">
-                        <input type="date" name="dateMax" class="form-control" value="@ViewBag.DateMax" title="Đến ngày">
-                    </div>
-                </div>
-                <div class="col-xxl-2 col-sm-6 d-flex gap-1">
-                    <button type="submit" class="btn btn-primary flex-grow-1"><i class="mdi mdi-filter-variant"></i> Lọc</button>
-                    <a href="/AdminOrder" class="btn btn-light"><i class="mdi mdi-refresh"></i></a>
-                    <a href="/AdminOrder/ExportCSV?kw=@ViewBag.Keyword&status=@ViewBag.Status&provinceId=@ViewBag.ProvinceId&wardId=@ViewBag.WardId&dateMin=@ViewBag.DateMin&dateMax=@ViewBag.DateMax" class="btn btn-success"><i class="mdi mdi-download"></i></a>
-                    <button type="button" class="btn btn-danger d-none" id="btnBulkDelete" onclick="bulkDelete()"><i class="mdi mdi-delete"></i></button>
-                </div>
-            </div>
-        </form>
+ <input type="hidden" name="status" value="@ViewBag.Status" />
+ <input type="hidden" name="page" id="pageIndex" value="@ViewBag.PageIndex" />
+ <div class="row g-3 mb-3">
+ <div class="col-xxl-2 col-sm-6">
+ <div class="search-box">
+ <input type="text" name="kw" class="form-control" value="@ViewBag.Keyword" placeholder="Mã ĐH, SĐT...">
+ <i class="ri-search-line search-icon"></i>
+ </div>
+ </div>
+ <div class="col-xxl-2 col-sm-6">
+ <select class="selectpicker" name="provinceId" id="ProvinceId" data-live-search="true">
+ <option value="">-- Tất cả Tỉnh/Thành --</option>
+ @if (ViewBag.Provinces != null)
+ {
+ foreach (Antigravity.ECommerce.Models.Province p in ViewBag.Provinces)
+ {
+ <option value="@p.ProvinceId" selected="@(ViewBag.ProvinceId == p.ProvinceId ?"selected" : null)">@p.Name</option>
+ }
+ }
+ </select>
+ </div>
+ <div class="col-xxl-2 col-sm-6">
+ <select class="selectpicker" name="wardId" id="WardId" data-live-search="true">
+ <option value="">-- Tất cả Phường/Xã --</option>
+ @if (ViewBag.Wards != null)
+ {
+ foreach (Antigravity.ECommerce.Models.Ward w in ViewBag.Wards)
+ {
+ <option value="@w.WardId" selected="@(ViewBag.WardId == w.WardId ?"selected" : null)">@w.Name</option>
+ }
+ }
+ </select>
+ </div>
+ <div class="col-xxl-2 col-sm-6">
+ <select class="selectpicker form-control" name="requiresVat" id="RequiresVat">
+ <option value="">-- Yêu cầu VAT --</option>
+ <option value="true" selected="@(ViewBag.RequiresVat == true ?"selected" : null)">Cần xuất VAT</option>
+ <option value="false" selected="@(ViewBag.RequiresVat == false ?"selected" : null)">Không yêu cầu</option>
+ </select>
+ </div>
+ <div class="col-xxl-2 col-sm-6">
+ <div class="input-group">
+ <input type="date" name="dateMin" class="form-control" value="@ViewBag.DateMin" title="Từ ngày">
+ <input type="date" name="dateMax" class="form-control" value="@ViewBag.DateMax" title="Đến ngày">
+ </div>
+ </div>
+ <div class="col-xxl-2 col-sm-6 d-flex gap-1">
+ <button type="submit" class="btn btn-primary flex-grow-1"><i class="mdi mdi-filter-variant"></i> Lọc</button>
+ <a href="/AdminOrder" class="btn btn-light"><i class="mdi mdi-refresh"></i></a>
+ <a href="/AdminOrder/ExportCSV?kw=@ViewBag.Keyword&status=@ViewBag.Status&provinceId=@ViewBag.ProvinceId&wardId=@ViewBag.WardId&dateMin=@ViewBag.DateMin&dateMax=@ViewBag.DateMax" class="btn btn-success"><i class="mdi mdi-download"></i></a>
+ <button type="button" class="btn btn-danger d-none" id="btnBulkDelete" onclick="bulkDelete()"><i class="mdi mdi-delete"></i></button>
+ </div>
+ </div>
+ </form>
 
         <div class="table-responsive">
             <table class="table table-centered table-nowrap mb-0 table-hover">

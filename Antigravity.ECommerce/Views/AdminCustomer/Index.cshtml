@@ -1,4 +1,4 @@
-@model List<Antigravity.ECommerce.Models.Customer>
+﻿@model List<Antigravity.ECommerce.Models.Customer>
 @{
     ViewData["Title"] = "Quản lý Khách hàng";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
@@ -37,26 +37,26 @@
                     </div>
                     <div class="col-sm-8">
                         <form method="get" class="row gy-2 gx-2 align-items-center justify-content-sm-end" id="filterForm">
-                            <input type="hidden" name="page" id="pageIndex" value="@ViewBag.PageIndex" />
-                            <input type="hidden" name="sort" value="@ViewBag.SortColumn" />
-                            <input type="hidden" name="order" value="@ViewBag.SortOrder" />
-                            <div class="col-auto">
-                                <input type="search" name="kw" class="form-control" placeholder="Tìm tên, SĐT..." value="@ViewBag.Keyword">
-                            </div>
-                            <div class="col-auto">
-                                <select name="rank" class="form-select">
-                                    <option value="">-- Hạng --</option>
-                                    <option value="0" selected="@(ViewBag.Rank == 0 ? "selected" : null)">Thường</option>
-                                    <option value="1" selected="@(ViewBag.Rank == 1 ? "selected" : null)">Bạc</option>
-                                    <option value="2" selected="@(ViewBag.Rank == 2 ? "selected" : null)">Vàng</option>
-                                    <option value="3" selected="@(ViewBag.Rank == 3 ? "selected" : null)">Kim Cương</option>
-                                </select>
-                            </div>
-                            <div class="col-auto">
-                                <button type="submit" class="btn btn-primary">Lọc</button>
-                                <a href="/AdminCustomer/ExportCSV?kw=@ViewBag.Keyword&rank=@ViewBag.Rank" class="btn btn-success ms-1"><i class="mdi mdi-download"></i> Xuất CSV</a>
-                            </div>
-                        </form>
+ <input type="hidden" name="page" id="pageIndex" value="@ViewBag.PageIndex" />
+ <input type="hidden" name="sort" value="@ViewBag.SortColumn" />
+ <input type="hidden" name="order" value="@ViewBag.SortOrder" />
+ <div class="col-auto">
+ <input type="search" name="kw" class="form-control" placeholder="Tìm tên, SĐT..." value="@ViewBag.Keyword">
+ </div>
+ <div class="col-auto">
+ <select name="rank" class="form-select">
+ <option value="">-- Hạng --</option>
+ <option value="0" selected="@(ViewBag.Rank == 0 ?"selected" : null)">Thường</option>
+ <option value="1" selected="@(ViewBag.Rank == 1 ?"selected" : null)">Bạc</option>
+ <option value="2" selected="@(ViewBag.Rank == 2 ?"selected" : null)">Vàng</option>
+ <option value="3" selected="@(ViewBag.Rank == 3 ?"selected" : null)">Kim Cương</option>
+ </select>
+ </div>
+ <div class="col-auto">
+ <button type="submit" class="btn btn-primary">Lọc</button>
+ <a href="/AdminCustomer/ExportCSV?kw=@ViewBag.Keyword&rank=@ViewBag.Rank" class="btn btn-success ms-1"><i class="mdi mdi-download"></i> Xuất CSV</a>
+ </div>
+ </form>
                     </div>
                 </div>
 

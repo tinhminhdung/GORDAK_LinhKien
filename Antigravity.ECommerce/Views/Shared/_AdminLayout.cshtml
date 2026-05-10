@@ -183,6 +183,31 @@
 		    color: #45cb85 !important;
 		}
 		.cursor-pointer { cursor: pointer; }
+
+		/* Make all filter form inputs noticeably larger to match Create/Edit form sizes */
+		form[id$="FilterForm"] .form-control, 
+		form[id$="FilterForm"] .form-select, 
+		form[id$="FilterForm"] .btn,
+		form[id$="filterForm"] .form-control,
+		form[id$="filterForm"] .form-select,
+		form[id$="filterForm"] .btn {
+			padding: 0.6rem 1rem !important;
+			font-size: 14.5px !important;
+			height: 45px !important;
+            border: 1px solid #ced4da !important; /* Chuẩn hóa màu viền cho đồng bộ */
+		}
+        
+        /* Fix padding cho ô tìm kiếm có icon kính lúp */
+        form[id$="FilterForm"] .search-box .form-control,
+        form[id$="filterForm"] .search-box .form-control {
+            padding-left: 40px !important; /* Dịch chữ sang phải để không dính icon */
+        }
+
+		form[id$="FilterForm"] .search-box .search-icon,
+		form[id$="filterForm"] .search-box .search-icon {
+			line-height: 45px;
+            font-size: 16px;
+		}
     </style>
     @await RenderSectionAsync("Styles", required: false)
 </head>

@@ -37,42 +37,42 @@
         <div class="card shadow-sm border-0">
             <div class="card-header border-0 bg-transparent py-3">
                 <form method="get" action="/AdminNews/Index" id="newsFilterForm">
-                    <input type="hidden" name="page" id="pageIndex" value="@pageIndex" />
-                    <input type="hidden" name="sort" value="@ViewBag.SortColumn" />
-                    <input type="hidden" name="order" value="@ViewBag.SortOrder" />
-                    <div class="row g-3">
-                        <div class="col-xxl-4 col-sm-6">
-                            <div class="search-box">
-                                <input type="text" name="kw" value="@ViewBag.Keyword" class="form-control border-light" placeholder="Tìm tiêu đề bài viết...">
-                                <i class="ri-search-line search-icon"></i>
-                            </div>
-                        </div>
-                        <div class="col-xxl-3 col-sm-4">
-                            <select name="catId" class="selectpicker border-light" data-live-search="true">
-                                <option value="">-- Tất cả danh mục --</option>
-                                @foreach (var cat in ViewBag.Categories)
-                                {
-                                    <option value="@cat.CategoryId" selected="@(ViewBag.CategoryId == cat.CategoryId)">@cat.Name</option>
-                                }
-                            </select>
-                        </div>
-                        <div class="col-xxl-2 col-sm-4">
-                            <select name="status" class="form-select border-light">
-                                <option value="">-- Trạng thái --</option>
-                                <option value="1" selected="@(ViewBag.Status == 1)">Đã đăng</option>
-                                <option value="0" selected="@(ViewBag.Status == 0)">Bản nháp</option>
-                            </select>
-                        </div>
-                        <div class="col-xxl-3 col-sm-4 d-flex gap-2">
-                            <button type="submit" class="btn btn-primary flex-grow-1">
-                                <i class="ri-equalizer-fill me-1 align-bottom"></i> Lọc
-                            </button>
-                            <a href="/AdminNews" class="btn btn-light px-3">
-                                <i class="ri-refresh-line align-bottom"></i>
-                            </a>
-                        </div>
-                    </div>
-                </form>
+ <input type="hidden" name="page" id="pageIndex" value="@pageIndex" />
+ <input type="hidden" name="sort" value="@ViewBag.SortColumn" />
+ <input type="hidden" name="order" value="@ViewBag.SortOrder" />
+ <div class="row g-3">
+ <div class="col-xxl-4 col-sm-6">
+ <div class="search-box">
+ <input type="text" name="kw" value="@ViewBag.Keyword" class="form-control border-light" placeholder="Tìm tiêu đề bài viết...">
+ <i class="ri-search-line search-icon"></i>
+ </div>
+ </div>
+ <div class="col-xxl-3 col-sm-4">
+ <select name="catId" class="selectpicker border-light" data-live-search="true">
+ <option value="">-- Tất cả danh mục --</option>
+ @foreach (var cat in ViewBag.Categories)
+ {
+ <option value="@cat.CategoryId" selected="@(ViewBag.CategoryId == cat.CategoryId)">@cat.Name</option>
+ }
+ </select>
+ </div>
+ <div class="col-xxl-2 col-sm-4">
+ <select name="status" class="form-select border-light">
+ <option value="">-- Trạng thái --</option>
+ <option value="1" selected="@(ViewBag.Status == 1)">Đã đăng</option>
+ <option value="0" selected="@(ViewBag.Status == 0)">Bản nháp</option>
+ </select>
+ </div>
+ <div class="col-xxl-3 col-sm-4 d-flex gap-2">
+ <button type="submit" class="btn btn-primary flex-grow-1">
+ <i class="ri-equalizer-fill me-1 align-bottom"></i> Lọc
+ </button>
+ <a href="/AdminNews" class="btn btn-light px-3">
+ <i class="ri-refresh-line align-bottom"></i>
+ </a>
+ </div>
+ </div>
+ </form>
             </div>
             
             <div class="card-body pt-0">

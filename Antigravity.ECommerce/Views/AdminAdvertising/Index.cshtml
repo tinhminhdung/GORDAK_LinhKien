@@ -1,4 +1,4 @@
-@model List<Antigravity.ECommerce.Models.Advertising>
+﻿@model List<Antigravity.ECommerce.Models.Advertising>
 @{
     ViewBag.Title = "Quản lý Quảng cáo & Banner";
     Layout = "_AdminLayout";
@@ -43,59 +43,59 @@
         <div class="card shadow-sm border-0 mb-4">
             <div class="card-header border-0 bg-transparent py-3">
                 <form method="get" action="/AdminAdvertising/Index" id="filterForm">
-                    <input type="hidden" name="sort" value="@ViewBag.SortColumn" />
-                    <input type="hidden" name="order" value="@ViewBag.SortOrder" />
-                    <input type="hidden" name="page" id="pageIndex" value="@pageIndex" />
-                    <div class="row g-3">
-                        <div class="col-xxl-4 col-sm-6">
-                            <div class="search-box">
-                                <input type="text" name="kw" value="@kw" class="form-control border-light" placeholder="Tìm tiêu đề banner...">
-                                <i class="ri-search-line search-icon"></i>
-                            </div>
-                        </div>
-                        <div class="col-xxl-3 col-sm-4">
-                            <select name="position" class="form-select border-light">
-                                <option value="">-- Tất cả vị trí --</option>
-                                <option value="Home_Slide" selected="@(position == "Home_Slide")">Trang chủ - Slide lớn</option>
-                                <option disabled>── Trang Sản phẩm ──</option>
-                                <option value="Product_Commitment" selected="@(position == "Product_Commitment")">Cam kết chất lượng</option>
-                                <option value="Product_DealerCert" selected="@(position == "Product_DealerCert")">Chứng nhận đại lý</option>
-                                <option disabled>── Trang chủ - Module ──</option>
-                                <option value="Home_WhyChoose" selected="@(position == "Home_WhyChoose")">Vì sao chọn chúng tôi</option>
-                                <option value="Home_BrandIntro" selected="@(position == "Home_BrandIntro")">Giới thiệu Thương hiệu</option>
-                                <option value="Home_BrandStat" selected="@(position == "Home_BrandStat")">Thống kê Thương hiệu</option>
-                                <option disabled>── Trang Giới thiệu ──</option>
-                                <option value="About_Hero" selected="@(position == "About_Hero")">Giới thiệu - Banner đầu trang</option>
-                                <option value="About_HeroStat" selected="@(position == "About_HeroStat")">Giới thiệu - Thống kê hero</option>
-                                <option value="About_Intro" selected="@(position == "About_Intro")">Giới thiệu - Về Gordak</option>
-                                <option value="About_CoreValues" selected="@(position == "About_CoreValues")">Giới thiệu - Giá trị cốt lõi</option>
-                                <option value="About_Timeline" selected="@(position == "About_Timeline")">Giới thiệu - Hành trình</option>
-                                <option value="About_JourneyImages" selected="@(position == "About_JourneyImages")">Giới thiệu - Ảnh hành trình</option>
-                                <option value="About_Cert" selected="@(position == "About_Cert")">Giới thiệu - Chứng nhận</option>
-                                <option disabled>── Trang Liên hệ ──</option>
-                                <option value="Contact_Connect" selected="@(position == "Contact_Connect")">Kết nối với Gordak</option>
-                                <option value="Contact_CTA" selected="@(position == "Contact_CTA")">Cần tư vấn thêm (Banner CTA)</option>
-                                <option disabled>── Sidebar Chung ──</option>
-                                <option value="Sidebar_CTA" selected="@(position == "Sidebar_CTA")">Cột bên - Banner tư vấn (TT, SP, FAQ...)</option>
-                            </select>
-                        </div>
-                        <div class="col-xxl-2 col-sm-4">
-                            <select name="status" class="form-select border-light">
-                                <option value="">-- Trạng thái --</option>
-                                <option value="1" selected="@(status == 1)">Đang hiện</option>
-                                <option value="0" selected="@(status == 0)">Đang ẩn</option>
-                            </select>
-                        </div>
-                        <div class="col-xxl-3 col-sm-4 d-flex gap-2">
-                            <button type="submit" class="btn btn-primary flex-grow-1">
-                                <i class="ri-equalizer-fill me-1 align-bottom"></i> Lọc
-                            </button>
-                            <a href="/AdminAdvertising" class="btn btn-light px-3">
-                                <i class="ri-refresh-line align-bottom"></i>
-                            </a>
-                        </div>
-                    </div>
-                </form>
+ <input type="hidden" name="sort" value="@ViewBag.SortColumn" />
+ <input type="hidden" name="order" value="@ViewBag.SortOrder" />
+ <input type="hidden" name="page" id="pageIndex" value="@pageIndex" />
+ <div class="row g-3">
+ <div class="col-xxl-4 col-sm-6">
+ <div class="search-box">
+ <input type="text" name="kw" value="@kw" class="form-control border-light" placeholder="Tìm tiêu đề banner...">
+ <i class="ri-search-line search-icon"></i>
+ </div>
+ </div>
+ <div class="col-xxl-3 col-sm-4">
+ <select name="position" class="form-select border-light">
+ <option value="">-- Tất cả vị trí --</option>
+ <option value="Home_Slide" selected="@(position =="Home_Slide")">Trang chủ - Slide lớn</option>
+ <option disabled>── Trang Sản phẩm ──</option>
+ <option value="Product_Commitment" selected="@(position =="Product_Commitment")">Cam kết chất lượng</option>
+ <option value="Product_DealerCert" selected="@(position =="Product_DealerCert")">Chứng nhận đại lý</option>
+ <option disabled>── Trang chủ - Module ──</option>
+ <option value="Home_WhyChoose" selected="@(position =="Home_WhyChoose")">Vì sao chọn chúng tôi</option>
+ <option value="Home_BrandIntro" selected="@(position =="Home_BrandIntro")">Giới thiệu Thương hiệu</option>
+ <option value="Home_BrandStat" selected="@(position =="Home_BrandStat")">Thống kê Thương hiệu</option>
+ <option disabled>── Trang Giới thiệu ──</option>
+ <option value="About_Hero" selected="@(position =="About_Hero")">Giới thiệu - Banner đầu trang</option>
+ <option value="About_HeroStat" selected="@(position =="About_HeroStat")">Giới thiệu - Thống kê hero</option>
+ <option value="About_Intro" selected="@(position =="About_Intro")">Giới thiệu - Về Gordak</option>
+ <option value="About_CoreValues" selected="@(position =="About_CoreValues")">Giới thiệu - Giá trị cốt lõi</option>
+ <option value="About_Timeline" selected="@(position =="About_Timeline")">Giới thiệu - Hành trình</option>
+ <option value="About_JourneyImages" selected="@(position =="About_JourneyImages")">Giới thiệu - Ảnh hành trình</option>
+ <option value="About_Cert" selected="@(position =="About_Cert")">Giới thiệu - Chứng nhận</option>
+ <option disabled>── Trang Liên hệ ──</option>
+ <option value="Contact_Connect" selected="@(position =="Contact_Connect")">Kết nối với Gordak</option>
+ <option value="Contact_CTA" selected="@(position =="Contact_CTA")">Cần tư vấn thêm (Banner CTA)</option>
+ <option disabled>── Sidebar Chung ──</option>
+ <option value="Sidebar_CTA" selected="@(position =="Sidebar_CTA")">Cột bên - Banner tư vấn (TT, SP, FAQ...)</option>
+ </select>
+ </div>
+ <div class="col-xxl-2 col-sm-4">
+ <select name="status" class="form-select border-light">
+ <option value="">-- Trạng thái --</option>
+ <option value="1" selected="@(status == 1)">Đang hiện</option>
+ <option value="0" selected="@(status == 0)">Đang ẩn</option>
+ </select>
+ </div>
+ <div class="col-xxl-3 col-sm-4 d-flex gap-2">
+ <button type="submit" class="btn btn-primary flex-grow-1">
+ <i class="ri-equalizer-fill me-1 align-bottom"></i> Lọc
+ </button>
+ <a href="/AdminAdvertising" class="btn btn-light px-3">
+ <i class="ri-refresh-line align-bottom"></i>
+ </a>
+ </div>
+ </div>
+ </form>
             </div>
         </div>
 
