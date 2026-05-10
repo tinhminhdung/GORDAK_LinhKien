@@ -30,6 +30,7 @@ namespace Antigravity.ECommerce.Services
             var dict = GetDictionary();
             return new GlobalSettingsViewModel
             {
+                EnableProductReviews = dict.GetValueOrDefault("EnableProductReviews", "true").ToLower() == "true",
                 SiteTitle = dict.GetValueOrDefault("SiteTitle", ""),
                 SiteDescription = dict.GetValueOrDefault("SiteDescription", ""),
                 MetaDescription = dict.GetValueOrDefault("MetaDescription", ""),
@@ -108,6 +109,7 @@ namespace Antigravity.ECommerce.Services
 
         public static void SaveSettings(GlobalSettingsViewModel model, string updatedBy)
         {
+            FSetting.UpdateValue("EnableProductReviews", model.EnableProductReviews.ToString(), updatedBy);
             FSetting.UpdateValue("SiteTitle", model.SiteTitle ?? "", updatedBy);
             FSetting.UpdateValue("SiteDescription", model.SiteDescription ?? "", updatedBy);
             FSetting.UpdateValue("MetaDescription", model.MetaDescription ?? "", updatedBy);

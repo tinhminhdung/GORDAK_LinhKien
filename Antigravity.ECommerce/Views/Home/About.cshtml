@@ -11,6 +11,7 @@
     var aboutTimeline = ViewBag.AboutTimeline as List<Advertising> ?? new List<Advertising>();
     var aboutJourneyImages = ViewBag.AboutJourneyImages as List<Advertising> ?? new List<Advertising>();
     var aboutCert = ViewBag.AboutCert as List<Advertising> ?? new List<Advertising>();
+    var aboutCertDesc = ViewBag.AboutCertDesc as Advertising;
 }
 
 
@@ -40,7 +41,13 @@
                     else
                     { <i class="@stat.VideoUrl"></i> }
                     <strong>@stat.Title</strong>
-                    <small>@(stat.Description ?? stat.Link)</small>
+                    <small>
+                        @{
+                            var labelText = stat.Description ?? stat.Link ?? "";
+                            labelText = System.Text.RegularExpressions.Regex.Replace(labelText, "<.*?>", String.Empty);
+                        }
+                        @labelText
+                    </small>
                 </div>
             </div>
             }
@@ -200,7 +207,23 @@
       }
       <div class="col-12 col-md-4">
         <div class="gt-cert-text-box">
-          <p>Tất cả sản phẩm Gordak đều được kiểm định nghiêm ngặt trước khi đến tay khách hàng. Chúng tôi cam kết mang đến sản phẩm chính hãng, chất lượng cao và dịch vụ hỗ trợ tốt nhất.</p>
+          @if(aboutCertDesc != null)
+          {
+              @Html.Raw(aboutCertDesc.Description)
+              @if(!string.IsNullOrEmpty(aboutCertDesc.Link) && !string.IsNullOrEmpty(aboutCertDesc.VideoUrl))
+              {
+                  <a href="@aboutCertDesc.Link" class="gt-cert-btn" target="@(aboutCertDesc.Target ?? "_self")">
+                      @aboutCertDesc.VideoUrl
+                  </a>
+              }
+          }
+          else
+          {
+              <p>Tất cả sản phẩm Gordak đều được kiểm định nghiêm ngặt trước khi đến tay khách hàng. Chúng tôi cam kết mang đến sản phẩm chính hãng, chất lượng cao và dịch vụ hỗ trợ tốt nhất.</p>
+              <a href="/chuyen-muc/chung-nhan.html" class="gt-cert-btn">
+                  Xem toàn bộ chứng nhận <i class="fa-solid fa-chevron-right ms-1"></i>
+              </a>
+          }
         </div>
       </div>
     </div>

@@ -705,6 +705,20 @@
                             <div class="tab-pane fade" id="nav-product" role="tabpanel">
                                 <h5 class="fw-bold mb-4">Cấu hình Hiển thị Sản phẩm</h5>
                                 <div class="row g-4">
+                                    <div class="col-md-12">
+                                        <div class="card border border-success-subtle shadow-none rounded-4">
+                                            <div class="card-body">
+                                                <div class="form-check form-switch form-check-lg d-flex align-items-center">
+                                                    <input class="form-check-input" type="checkbox" role="switch" id="EnableProductReviews" name="EnableProductReviews" value="true" @(Model.EnableProductReviews ? "checked" : "") style="transform: scale(1.5); margin-right: 15px;">
+                                                    <input type="hidden" name="EnableProductReviews" value="false" />
+                                                    <label class="form-check-label fw-bold mb-0" for="EnableProductReviews">Bật chức năng Đánh giá / Bình luận sản phẩm</label>
+                                                </div>
+                                                <div class="small text-muted mt-2 ps-5">
+                                                    <i class="fas fa-info-circle me-1"></i> Cho phép khách hàng gửi đánh giá sao và bình luận dưới mỗi trang chi tiết sản phẩm. Tắt nếu không muốn hiển thị.
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                     <div class="col-md-6">
                                         <div class="card border border-warning-subtle shadow-none rounded-4">
                                             <div class="card-body">

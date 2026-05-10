@@ -18,6 +18,7 @@ namespace Antigravity.ECommerce.Models
     public class GlobalSettingsViewModel
     {
         // General
+        public bool EnableProductReviews { get; set; } = true;
         public string SiteTitle { get; set; } = string.Empty;
         public string SiteDescription { get; set; } = string.Empty;
         public string? MetaDescription { get; set; } // SEO Meta

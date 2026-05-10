@@ -237,6 +237,20 @@ namespace Antigravity.ECommerce.Controllers
                     foreach (var d in certDefaults) { d.CreatedBy = createdBy; SAdvertising.Insert(d); }
                     break;
 
+                case "About_Cert_Desc":
+                    SAdvertising.Insert(new Advertising
+                    {
+                        Title = "CHỨNG NHẬN",
+                        Description = "Tất cả sản phẩm Gordak đều được kiểm định nghiêm ngặt trước khi đến tay khách hàng. Chúng tôi cam kết mang đến sản phẩm chính hãng, chất lượng cao và dịch vụ hỗ trợ tốt nhất.",
+                        Link = "/chuyen-muc/chung-nhan.html",
+                        VideoUrl = "Xem toàn bộ chứng nhận >",
+                        Position = "About_Cert_Desc",
+                        SortOrder = 1,
+                        Status = 1,
+                        CreatedBy = createdBy
+                    });
+                    break;
+
                 case "Product_DealerCert":
                     SAdvertising.Insert(new Advertising
                     {

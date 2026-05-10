@@ -79,7 +79,7 @@
         
         <div class="row">
           <!-- Nửa trái: Gallery -->
-          <div class="col-md-6">
+          <div class="col-md-5">
             <div class="pd2-gallery">
               <div class="pd2-main-img-wrap">
                 <img id="mainImg" src="@(allImages.Count > 0 ? allImages[0] : "/assets/images/placeholder.png")" alt="@Model.Name" data-bs-toggle="modal" data-bs-target="#imageZoomModal" style="cursor: zoom-in;">
@@ -102,7 +102,7 @@
           </div>
 
           <!-- Nửa phải: Info -->
-          <div class="col-md-6">
+          <div class="col-md-7">
             <div class="pd2-info">
               
               <h1 class="pd2-title">@Model.Name</h1>
@@ -157,11 +157,11 @@
                   <span class="pd2-price-main">@Model.Price.ToString("N0")đ</span>
                 </div>
                 @if(Model.OldPrice > Model.Price){
-                <div class="pd2-price-row">
-                  <span style="color:#666;">Giá thị trường:</span>
-                  <span style="text-decoration: line-through; color:#999;">@Model.OldPrice.ToString("N0")đ</span>
-                  <span class="badge bg-danger ms-2">-@((int)((Model.OldPrice - Model.Price) / Model.OldPrice * 100))%</span>
-                </div>
+                // <div class="pd2-price-row">
+                //   <span style="color:#666;">Giá thị trường:</span>
+                //   <span style="text-decoration: line-through; color:#999;">@Model.OldPrice.ToString("N0")đ</span>
+                //   <span class="badge bg-danger ms-2">-@((int)((Model.OldPrice - Model.Price) / Model.OldPrice * 100))%</span>
+                // </div>
                 }
               </div>
 
@@ -339,9 +339,11 @@
               if(i < 3)
               {
                 <div class="pd2-acc-item">
-                  <img src="@(string.IsNullOrEmpty(item.MainImage) ? "/assets/images/placeholder.png" : item.MainImage)" class="pd2-acc-img" alt="@item.Name">
+                  <a href="/san-pham/detail/@(item.Slug).html" class="d-block flex-shrink-0">
+                    <img src="@(string.IsNullOrEmpty(item.MainImage) ? "/assets/images/placeholder.png" : item.MainImage)" class="pd2-acc-img" alt="@item.Name">
+                  </a>
                   <div class="pd2-acc-info">
-                    <div class="pd2-acc-name">@item.Name</div>
+                    <a href="/san-pham/detail/@(item.Slug).html" class="text-decoration-none text-dark"><div class="pd2-acc-name">@item.Name</div></a>
                     <div class="pd2-acc-price">@item.Price.ToString("N0")đ</div>
                     <a href="/san-pham/detail/@(item.Slug).html" class="pd2-acc-btn">Xem chi tiết</a>
                   </div>
@@ -351,14 +353,16 @@
             
             @if(accessories.Count > 3)
             {
-              <div class="collapse" id="collapseAccessories">
+              <div class="collapse" id="collapseAcc">
                 @for(int i = 3; i < accessories.Count; i++)
                 {
                   var item = accessories[i];
                   <div class="pd2-acc-item mt-3">
-                    <img src="@(string.IsNullOrEmpty(item.MainImage) ? "/assets/images/placeholder.png" : item.MainImage)" class="pd2-acc-img" alt="@item.Name">
+                    <a href="/san-pham/detail/@(item.Slug).html" class="d-block flex-shrink-0">
+                      <img src="@(string.IsNullOrEmpty(item.MainImage) ? "/assets/images/placeholder.png" : item.MainImage)" class="pd2-acc-img" alt="@item.Name">
+                    </a>
                     <div class="pd2-acc-info">
-                      <div class="pd2-acc-name">@item.Name</div>
+                      <a href="/san-pham/detail/@(item.Slug).html" class="text-decoration-none text-dark"><div class="pd2-acc-name">@item.Name</div></a>
                       <div class="pd2-acc-price">@item.Price.ToString("N0")đ</div>
                       <a href="/san-pham/detail/@(item.Slug).html" class="pd2-acc-btn">Xem chi tiết</a>
                     </div>
@@ -369,7 +373,7 @@
           </div>
           @if(accessories.Count > 3)
           {
-            <a class="pd2-view-all mb-3" data-bs-toggle="collapse" href="#collapseAccessories" role="button" aria-expanded="false" aria-controls="collapseAccessories" onclick="toggleText(this, 'Xem tất cả phụ kiện', 'Thu gọn')">Xem tất cả phụ kiện <i class="fa-solid fa-chevron-down"></i></a>
+            <a class="pd2-view-all mb-3" data-bs-toggle="collapse" href="#collapseAcc" role="button" aria-expanded="false" aria-controls="collapseAcc" onclick="toggleText(this, 'Xem tất cả phụ kiện', 'Thu gọn')">Xem tất cả phụ kiện <i class="fa-solid fa-chevron-down"></i></a>
           }
         </div>
         }
@@ -386,9 +390,11 @@
               if(i < 3)
               {
                 <div class="pd2-acc-item">
-                  <img src="@(string.IsNullOrEmpty(item.MainImage) ? "/assets/images/placeholder.png" : item.MainImage)" class="pd2-acc-img" alt="@item.Name">
+                  <a href="/san-pham/detail/@(item.Slug).html" class="d-block flex-shrink-0">
+                    <img src="@(string.IsNullOrEmpty(item.MainImage) ? "/assets/images/placeholder.png" : item.MainImage)" class="pd2-acc-img" alt="@item.Name">
+                  </a>
                   <div class="pd2-acc-info">
-                    <div class="pd2-acc-name">@item.Name</div>
+                    <a href="/san-pham/detail/@(item.Slug).html" class="text-decoration-none text-dark"><div class="pd2-acc-name">@item.Name</div></a>
                     <div class="pd2-acc-price">@item.Price.ToString("N0")đ</div>
                     <a href="/san-pham/detail/@(item.Slug).html" class="pd2-acc-btn">Xem chi tiết</a>
                   </div>
@@ -403,9 +409,11 @@
                 {
                   var item = viewedProducts[i];
                   <div class="pd2-acc-item mt-3">
-                    <img src="@(string.IsNullOrEmpty(item.MainImage) ? "/assets/images/placeholder.png" : item.MainImage)" class="pd2-acc-img" alt="@item.Name">
+                    <a href="/san-pham/detail/@(item.Slug).html" class="d-block flex-shrink-0">
+                      <img src="@(string.IsNullOrEmpty(item.MainImage) ? "/assets/images/placeholder.png" : item.MainImage)" class="pd2-acc-img" alt="@item.Name">
+                    </a>
                     <div class="pd2-acc-info">
-                      <div class="pd2-acc-name">@item.Name</div>
+                      <a href="/san-pham/detail/@(item.Slug).html" class="text-decoration-none text-dark"><div class="pd2-acc-name">@item.Name</div></a>
                       <div class="pd2-acc-price">@item.Price.ToString("N0")đ</div>
                       <a href="/san-pham/detail/@(item.Slug).html" class="pd2-acc-btn">Xem chi tiết</a>
                     </div>
@@ -424,6 +432,12 @@
       </div>
 
     </div>
+
+    <!-- Product Reviews -->
+    @if(settings?.EnableProductReviews ?? true)
+    {
+        @await Html.PartialAsync("_ProductReviews", Model)
+    }
 
     <!-- SẢN PHẨM LIÊN QUAN (Full width - styled like homepage) -->
     @if(related.Count > 0)

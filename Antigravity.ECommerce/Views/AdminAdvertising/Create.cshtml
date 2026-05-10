@@ -82,14 +82,14 @@
                     <div class="mb-3">
                         <select class="form-select" asp-for="Position" id="Position" onchange="updateLabels()" required>
                             <option value="Home_Slide">Trang chủ - Slide lớn</option>
-                            <option disabled>── Trang Sản phẩm ──</option>
+                            <option disabled>▬▬ Trang Sản phẩm ▬▬</option>
                             <option value="Product_Commitment">Cam kết chất lượng</option>
                             <option value="Product_DealerCert">Chứng nhận đại lý</option>
-                            <option disabled>── Trang chủ - Module ──</option>
+                            <option disabled>▬▬ Trang chủ - Module ▬▬</option>
                             <option value="Home_WhyChoose">Vì sao chọn chúng tôi</option>
                             <option value="Home_BrandIntro">Giới thiệu Thương hiệu</option>
                             <option value="Home_BrandStat">Thống kê Thương hiệu</option>
-                            <option disabled>── Trang Giới thiệu ──</option>
+                            <option disabled>▬▬ Trang Giới thiệu ▬▬</option>
                             <option value="About_Hero">Giới thiệu - Banner đầu trang</option>
                             <option value="About_HeroStat">Giới thiệu - Thống kê hero</option>
                             <option value="About_Intro">Giới thiệu - Về Gordak</option>
@@ -97,10 +97,11 @@
                             <option value="About_Timeline">Giới thiệu - Hành trình phát triển</option>
                             <option value="About_JourneyImages">Giới thiệu - Ảnh hành trình</option>
                             <option value="About_Cert">Giới thiệu - Chứng nhận</option>
-                            <option disabled>── Trang Liên hệ ──</option>
+                            <option value="About_Cert_Desc">Giới thiệu - Nội dung phần chứng nhận</option>
+                            <option disabled>▬▬ Trang Liên hệ ▬▬</option>
                             <option value="Contact_Connect">Liên hệ - Kết nối với Gordak</option>
                             <option value="Contact_CTA">Liên hệ - Banner Cần tư vấn thêm</option>
-                            <option disabled>── Sidebar Chung ──</option>
+                            <option disabled>▬▬ Sidebar Chung ▬▬</option>
                             <option value="Sidebar_CTA">Cột bên - Banner tư vấn (TT, SP, FAQ...)</option>
                         </select>
                     </div>
@@ -280,6 +281,14 @@
                 description: { show: true, label: 'Mô tả chứng nhận', useCK: true },
                 link: { show: false },
                 target: false, schedule: false
+            },
+            'About_Cert_Desc': {
+                title: 'Tiêu đề nhãn (không hiển thị) <span class="text-danger">*</span>',
+                image: { show: false },
+                videoUrl: { show: true, label: 'Chữ trên nút bấm (VD: Xem toàn bộ chứng nhận >)', col: 'col-md-12' },
+                description: { show: true, label: 'Nội dung mô tả <span class="text-danger">*</span>', useCK: true },
+                link: { show: true, label: 'Link của nút bấm', placeholder: '/chuyen-muc/chung-nhan.html' },
+                target: true, schedule: false
             },
             'Product_Commitment': {
                 title: 'Tiêu đề cam kết <span class="text-danger">*</span>',

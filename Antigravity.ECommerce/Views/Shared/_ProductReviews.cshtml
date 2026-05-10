@@ -9,7 +9,7 @@
         <div class="p-4 bg-light rounded-4">
             <div class="display-4 fw-bold text-warning">@reviewStats.AverageRating.ToString("0.1")</div>
             <div class="text-warning fs-4 mb-1">
-                @for(int s=1;s<=5;s++){<i class="ri-star-fill @(s <= Math.Round(reviewStats.AverageRating) ? "" : "opacity-25")"></i>}
+                @for(int s=1;s<=5;s++){<i class="fa-solid fa-star @(s <= Math.Round(reviewStats.AverageRating) ? "" : "opacity-25")"></i>}
             </div>
             <div class="text-muted" style="font-size:0.85rem;">@reviewStats.TotalReviews đánh giá</div>
         </div>
@@ -21,7 +21,7 @@
             var count = starCounts[i];
             var pct = reviewStats.TotalReviews > 0 ? (count*100/reviewStats.TotalReviews) : 0;
             <div class="d-flex align-items-center mb-1">
-                <span class="text-nowrap me-2" style="font-size:0.8rem;min-width:35px;">@starNum <i class="ri-star-fill text-warning"></i></span>
+                <span class="text-nowrap me-2" style="font-size:0.8rem;min-width:35px;">@starNum <i class="fa-solid fa-star text-warning"></i></span>
                 <div class="progress flex-grow-1" style="height:8px;border-radius:4px;">
                     <div class="progress-bar bg-warning" style="width:@pct%"></div>
                 </div>
@@ -50,12 +50,12 @@
                     <div class="d-flex align-items-center mb-1">
                         <strong style="font-size:0.9rem;">@rv.CustomerName</strong>
                         @if(rv.IsVerifiedPurchase){
-                            <span class="badge bg-success-subtle text-success ms-2" style="font-size:0.7rem;"><i class="ri-check-line"></i> Đã mua hàng</span>
+                            <span class="badge bg-success-subtle text-success ms-2" style="font-size:0.7rem;"><i class="fa-solid fa-check"></i> Đã mua hàng</span>
                         }
                         <span class="text-muted ms-auto" style="font-size:0.75rem;">@rv.CreatedAt.ToString("dd/MM/yyyy")</span>
                     </div>
                     <div class="text-warning mb-1" style="font-size:0.85rem;">
-                        @for(int s=1;s<=5;s++){<i class="ri-star-fill @(s <= rv.Rating ? "" : "opacity-25")"></i>}
+                        @for(int s=1;s<=5;s++){<i class="fa-solid fa-star @(s <= rv.Rating ? "" : "opacity-25")"></i>}
                     </div>
                     @if(!string.IsNullOrEmpty(rv.Title)){
                         <div class="fw-semibold mb-1" style="font-size:0.9rem;">@rv.Title</div>
@@ -63,7 +63,7 @@
                     <p class="text-muted mb-1" style="font-size:0.85rem;">@rv.Content</p>
                     @if(!string.IsNullOrEmpty(rv.AdminReply)){
                         <div class="bg-light rounded-3 p-3 mt-2" style="border-left:3px solid #405189;">
-                            <div class="fw-semibold mb-1" style="font-size:0.8rem;color:#405189;"><i class="ri-customer-service-2-line me-1"></i> Phản hồi từ shop</div>
+                            <div class="fw-semibold mb-1" style="font-size:0.8rem;color:#405189;"><i class="fa-solid fa-headset me-1"></i> Phản hồi từ shop</div>
                             <p class="mb-0 text-muted" style="font-size:0.83rem;">@rv.AdminReply</p>
                         </div>
                     }
@@ -72,7 +72,7 @@
         }
     } else {
         <div class="text-center py-4 text-muted">
-            <i class="ri-chat-smile-3-line display-4 opacity-25"></i>
+            <i class="fa-regular fa-comments display-4 opacity-25"></i>
             <p class="mt-2">Chưa có đánh giá nào</p>
         </div>
     }
@@ -82,12 +82,12 @@
 
 <!-- Submit review form -->
 <div id="reviewFormArea">
-    <h6 class="fw-bold mb-3"><i class="ri-edit-2-line me-1"></i> Viết đánh giá của bạn</h6>
+    <h6 class="fw-bold mb-3"><i class="fa-solid fa-pen me-1"></i> Viết đánh giá của bạn</h6>
     <div class="mb-3">
         <label class="form-label" style="font-size:0.85rem;">Chọn số sao <span class="text-danger">*</span></label>
         <div id="starPicker" class="d-flex gap-1 fs-4" style="cursor:pointer;">
             @for(int s=1;s<=5;s++){
-                <i class="ri-star-line text-warning star-pick" data-value="@s"></i>
+                <i class="fa-regular fa-star text-warning star-pick" data-value="@s"></i>
             }
         </div>
         <input type="hidden" id="reviewRating" value="0">
@@ -101,7 +101,7 @@
         <textarea id="reviewContent" class="form-control" rows="3" placeholder="Chia sẻ trải nghiệm của bạn..." style="font-size:0.9rem;"></textarea>
     </div>
     <button class="btn btn-primary rounded-pill px-4" style="font-size:0.9rem;" onclick="submitReview(@Model.ProductId)">
-        <i class="ri-send-plane-line me-1"></i> Gửi đánh giá
+        <i class="fa-solid fa-paper-plane me-1"></i> Gửi đánh giá
     </button>
 </div>
 
@@ -113,20 +113,20 @@
                 var val = parseInt(this.dataset.value);
                 document.getElementById('reviewRating').value = val;
                 document.querySelectorAll('.star-pick').forEach(function(s, idx) {
-                    s.className = (idx < val) ? 'ri-star-fill text-warning star-pick' : 'ri-star-line text-warning star-pick';
+                    s.className = (idx < val) ? 'fa-solid fa-star text-warning star-pick' : 'fa-regular fa-star text-warning star-pick';
                 });
             });
             star.addEventListener('mouseenter', function() {
                 var val = parseInt(this.dataset.value);
                 document.querySelectorAll('.star-pick').forEach(function(s, idx) {
-                    s.className = (idx < val) ? 'ri-star-fill text-warning star-pick' : 'ri-star-line text-warning star-pick';
+                    s.className = (idx < val) ? 'fa-solid fa-star text-warning star-pick' : 'fa-regular fa-star text-warning star-pick';
                 });
             });
         });
         document.getElementById('starPicker')?.addEventListener('mouseleave', function() {
             var val = parseInt(document.getElementById('reviewRating').value);
             document.querySelectorAll('.star-pick').forEach(function(s, idx) {
-                s.className = (idx < val) ? 'ri-star-fill text-warning star-pick' : 'ri-star-line text-warning star-pick';
+                s.className = (idx < val) ? 'fa-solid fa-star text-warning star-pick' : 'fa-regular fa-star text-warning star-pick';
             });
         });
 
@@ -142,14 +142,14 @@
                     res.reviews.forEach(function(rv) {
                         var avatar = rv.customerAvatar || ('https://ui-avatars.com/api/?name=' + encodeURIComponent(rv.customerName || 'User') + '&background=random&size=40');
                         var stars = '';
-                        for(var i=1;i<=5;i++) stars += '<i class="ri-star-fill ' + (i<=rv.rating?'':'opacity-25') + '"></i>';
-                        var verified = rv.isVerifiedPurchase ? '<span class="badge bg-success-subtle text-success ms-2" style="font-size:0.7rem;"><i class="ri-check-line"></i> Đã mua hàng</span>' : '';
-                        var adminReply = rv.adminReply ? '<div class="bg-light rounded-3 p-3 mt-2" style="border-left:3px solid #405189;"><div class="fw-semibold mb-1" style="font-size:0.8rem;color:#405189;"><i class="ri-customer-service-2-line me-1"></i> Phản hồi từ shop</div><p class="mb-0 text-muted" style="font-size:0.83rem;">' + rv.adminReply + '</p></div>' : '';
+                        for(var i=1;i<=5;i++) stars += '<i class="fa-solid fa-star ' + (i<=rv.rating?'':'opacity-25') + '"></i>';
+                        var verified = rv.isVerifiedPurchase ? '<span class="badge bg-success-subtle text-success ms-2" style="font-size:0.7rem;"><i class="fa-solid fa-check"></i> Đã mua hàng</span>' : '';
+                        var adminReply = rv.adminReply ? '<div class="bg-light rounded-3 p-3 mt-2" style="border-left:3px solid #405189;"><div class="fw-semibold mb-1" style="font-size:0.8rem;color:#405189;"><i class="fa-solid fa-headset me-1"></i> Phản hồi từ shop</div><p class="mb-0 text-muted" style="font-size:0.83rem;">' + rv.adminReply + '</p></div>' : '';
                         var titleHtml = rv.title ? '<div class="fw-semibold mb-1" style="font-size:0.9rem;">' + rv.title + '</div>' : '';
                         html += '<div class="d-flex mb-4 pb-3 border-bottom"><img src="' + avatar + '" class="rounded-circle me-3 flex-shrink-0" style="width:44px;height:44px;object-fit:cover;"><div class="flex-grow-1"><div class="d-flex align-items-center mb-1"><strong style="font-size:0.9rem;">' + (rv.customerName||'') + '</strong>' + verified + '<span class="text-muted ms-auto" style="font-size:0.75rem;">' + new Date(rv.createdAt).toLocaleDateString('vi-VN') + '</span></div><div class="text-warning mb-1" style="font-size:0.85rem;">' + stars + '</div>' + titleHtml + '<p class="text-muted mb-1" style="font-size:0.85rem;">' + (rv.content||'') + '</p>' + adminReply + '</div></div>';
                     });
                 } else {
-                    html = '<div class="text-center py-4 text-muted"><i class="ri-chat-smile-3-line display-4 opacity-25"></i><p class="mt-2">Không có đánh giá nào</p></div>';
+                    html = '<div class="text-center py-4 text-muted"><i class="fa-regular fa-comments display-4 opacity-25"></i><p class="mt-2">Không có đánh giá nào</p></div>';
                 }
                 $('#reviewsList').html(html);
             });

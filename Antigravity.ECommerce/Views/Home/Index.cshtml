@@ -47,6 +47,10 @@
           }
       }
     </div>
+    
+    <!-- Controls -->
+    <button class="hero-slider-btn prev-btn" onclick="prevSlide()"><i class="fa-solid fa-chevron-left"></i></button>
+    <button class="hero-slider-btn next-btn" onclick="nextSlide()"><i class="fa-solid fa-chevron-right"></i></button>
   </div>
 </section>
 
@@ -103,7 +107,7 @@
             <div class="mt-auto">
                 <div class="product-price">@p.Price.ToString("N0")đ</div>
                 <div class="product-actions d-flex gap-2 mt-2">
-                  <a href="/san-pham/detail/@(p.Slug).html" class="btn-outline-gd flex-fill text-center px-0 py-1" style="font-size:13px;">Chi tiết</a>
+                  <a href="/san-pham/detail/@(p.Slug).html" class="btn-outline-gd flex-fill text-center px-0 py-1" style="font-size:13px;">Xem chi tiết</a>
                   <a href="javascript:void(0)" onclick="addToCart(@p.ProductId,1)" class="btn-gd flex-fill d-flex align-items-center justify-content-center gap-1 py-1" style="font-size:13px;">
                     <i class="fa-solid fa-cart-shopping"></i> Mua
                   </a>
@@ -173,14 +177,15 @@
     var brandIntro = ViewBag.BrandIntro as Antigravity.ECommerce.Models.Advertising;
     var brandStats = ViewBag.BrandStats as List<Antigravity.ECommerce.Models.Advertising> ?? new List<Antigravity.ECommerce.Models.Advertising>();
 }
-<section class="container section-brand mt-5">
-  <div class="row g-4 align-items-center brand-card">
-    <div class="col-lg-5">
-      <div class="brand-img-wrap">
-        <img src="@brandIntro?.Image" alt="@brandIntro?.Title" class="factory-img w-100" loading="lazy">
-      </div>
-    </div>
-    <div class="col-lg-7">
+  <section class="container section-brand mt-5">
+    <div class="brand-card">
+      <div class="row g-0 align-items-center">
+        <div class="col-lg-5">
+          <div class="brand-img-wrap">
+            <img src="@brandIntro?.Image" alt="@brandIntro?.Title" class="factory-img w-100" loading="lazy">
+          </div>
+        </div>
+        <div class="col-lg-7 px-3 px-lg-4 py-3">
       <h2 class="brand-title">@brandIntro?.Title</h2>
       <p class="brand-desc">@brandIntro?.Description</p>
       <p class="brand-desc">@brandIntro?.VideoUrl</p>
@@ -190,16 +195,27 @@
       <div class="row g-3 my-3 stats-row">
         @foreach(var stat in brandStats)
         {
-        <div class="col-3 text-center">
-          @if (!string.IsNullOrEmpty(stat.Image))
-          {
-            <img src="@stat.Image" alt="@stat.Title" class="stat-ico" style="max-height:32px;">
-          }
-          else
-          {
-            <i class="@stat.VideoUrl stat-ico"></i>
-          }
-          <b class="stat-num">@stat.Title</b><small class="stat-label">@(stat.Description ?? stat.Link)</small>
+        <div class="col-6 col-md-3">
+          <div class="d-flex align-items-center justify-content-center justify-content-lg-start gap-2">
+            @if (!string.IsNullOrEmpty(stat.Image))
+            {
+              <img src="@stat.Image" alt="@stat.Title" class="stat-ico mb-0" style="max-height:32px; display:inline-block;">
+            }
+            else
+            {
+              <i class="@stat.VideoUrl stat-ico mb-0" style="display:inline-block;"></i>
+            }
+            <div class="d-flex flex-column text-start">
+              <b class="stat-num" style="display:block;">@stat.Title</b>
+              <small class="stat-label" style="display:block;">
+                @{
+                    var labelText = stat.Description ?? stat.Link ?? "";
+                    labelText = System.Text.RegularExpressions.Regex.Replace(labelText, "<.*?>", String.Empty);
+                }
+                @labelText
+              </small>
+            </div>
+          </div>
         </div>
         }
       </div>
@@ -299,6 +315,7 @@
     resetInterval();
   }
   function nextSlide() { goToSlide((currentSlide + 1) % slides.length); }
+  function prevSlide() { goToSlide((currentSlide - 1 + slides.length) % slides.length); }
   function resetInterval() { clearInterval(sliderInterval); sliderInterval = setInterval(nextSlide, 5000); }
   if (slides.length > 0) resetInterval();
 

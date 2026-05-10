@@ -139,6 +139,9 @@ public class HomeController : Controller
         var aboutCert = Antigravity.ECommerce.Services.SCache.GetOrSet("About_Cert", () =>
             Antigravity.ECommerce.Services.SAdvertising.GetByPosition("About_Cert"), 60);
 
+        var aboutCertDesc = Antigravity.ECommerce.Services.SCache.GetOrSet("About_Cert_Desc", () =>
+            Antigravity.ECommerce.Services.SAdvertising.GetByPosition("About_Cert_Desc")?.FirstOrDefault(), 60);
+
         // Ảnh hành trình
         var aboutJourneyImages = Antigravity.ECommerce.Services.SCache.GetOrSet("About_JourneyImages", () =>
             Antigravity.ECommerce.Services.SAdvertising.GetByPosition("About_JourneyImages"), 60);
@@ -150,6 +153,7 @@ public class HomeController : Controller
         ViewBag.FeaturedProducts = featuredProducts;
         ViewBag.AboutTimeline = aboutTimeline;
         ViewBag.AboutCert = aboutCert;
+        ViewBag.AboutCertDesc = aboutCertDesc;
         ViewBag.AboutJourneyImages = aboutJourneyImages;
 
         return View();
