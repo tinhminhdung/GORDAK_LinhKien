@@ -106,35 +106,51 @@
 
         <!-- CỘT PHẢI: Đơn hàng -->
         <div class="col-lg-5">
-          <div class="gh-order-box">
-            <div class="d-flex justify-content-between align-items-center mb-3">
-              <h3 class="gh-order-title"><i class="fa-solid fa-cart-shopping"></i> ĐƠN HÀNG CỦA BẠN</h3>
-              <a href="/gio-hang.html" class="gh-edit-link">Chỉnh sửa giỏ hàng</a>
+          <div class="gh-order-box border rounded-3 p-4 bg-white shadow-sm">
+            <div class="d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom">
+              <h4 class="gh-order-title mb-0 fw-bold" style="color: #1a2b4c;"><i class="fa-solid fa-cart-shopping me-2"></i> ĐƠN HÀNG CỦA BẠN</h4>
+              <a href="/gio-hang.html" class="text-decoration-underline text-primary small">Chỉnh sửa giỏ hàng</a>
             </div>
 
             <!-- Product item -->
-            @foreach(var item in Model.Items) {
-                <div class="gh-order-item">
-                  <img src="@item.ProductImage" alt="@item.ProductName" class="gh-order-img">
-                  <div class="gh-order-info">
-                    <strong>@item.ProductName</strong>
-                    <small>Số lượng: @item.Quantity</small>
-                  </div>
-                  <div class="gh-order-price-wrap">
-                    <span class="gh-order-price">@item.Price.ToString("N0")đ</span>
-                    <span class="text-muted">x @item.Quantity</span>
-                  </div>
-                </div>
-            }
+            <div class="gh-order-items mb-4">
+                @foreach(var item in Model.Items) {
+                    <div class="gh-order-item border rounded-3 p-3 mb-3 bg-white d-flex align-items-center">
+                        <div class="me-3" style="width: 70px; flex-shrink: 0;">
+                            <img src="@item.ProductImage" alt="@item.ProductName" class="img-fluid rounded border">
+                        </div>
+                        <div class="flex-grow-1">
+                            <h6 class="fw-bold mb-1" style="color: #1a2b4c;">@item.ProductName</h6>
+                            @if(!string.IsNullOrEmpty(item.ProductCode)) {
+                                <div class="text-muted small mb-1">Mã sản phẩm: @item.ProductCode</div>
+                            }
+                            @if(!string.IsNullOrEmpty(item.Warranty)) {
+                                <div class="text-muted small">Bảo hành: @item.Warranty</div>
+                            }
+                        </div>
+                        <div class="text-end ms-3" style="min-width: 100px;">
+                            <div class="text-danger fw-bold fs-6 mb-1">@item.Price.ToString("N0")đ</div>
+                            <div class="text-muted small text-end">x @item.Quantity</div>
+                        </div>
+                    </div>
+                }
+            </div>
 
-            <hr style="border-color:#e5e5e5">
-            <div class="d-flex justify-content-between mb-2"><span>Tạm tính</span><span>@Model.SubTotal.ToString("N0")đ</span></div>
-            <div class="d-flex justify-content-between mb-3"><span>Phí vận chuyển</span><span class="text-muted">@((Model.ShippingFee > 0) ? Model.ShippingFee.ToString("N0") + "đ" : "Miễn phí")</span></div>
-            <hr style="border-color:#e5e5e5">
-            <div class="d-flex justify-content-between align-items-center">
-              <strong style="font-size:15px">Tổng thanh toán</strong>
+            <div class="bg-light rounded-3 p-3 mb-3">
+                <div class="d-flex justify-content-between mb-2">
+                    <span class="text-muted">Tạm tính</span>
+                    <span class="fw-medium">@Model.SubTotal.ToString("N0")đ</span>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <span class="text-muted">Phí vận chuyển</span>
+                    <span class="fw-medium">@((Model.ShippingFee > 0) ? Model.ShippingFee.ToString("N0") + "đ" : "Miễn phí")</span>
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-between align-items-center p-3 bg-soft-primary rounded-3 border" style="background-color: #f8fbff; border-color: #e5f0fa !important;">
+              <strong style="font-size:16px; color: #1a2b4c;">Tổng thanh toán</strong>
               <div class="text-end">
-                <span class="gh-total-price">@Model.TotalAmount.ToString("N0")đ</span>
+                <span class="gh-total-price text-danger fw-bold fs-4 d-block">@Model.TotalAmount.ToString("N0")đ</span>
                 <small class="d-block text-muted">(Đã bao gồm VAT)</small>
               </div>
             </div>

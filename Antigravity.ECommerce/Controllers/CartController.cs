@@ -51,6 +51,12 @@ namespace Antigravity.ECommerce.Controllers
                     item.Price = freshProduct.Price;
                     item.ProductName = freshProduct.Name;
                     item.ProductImage = freshProduct.MainImage;
+                    item.ProductCode = freshProduct.SKU;
+                    
+                    if (freshProduct.WarrantyId.HasValue) {
+                        var wCat = Antigravity.ECommerce.Framework.FCategory.GetById(freshProduct.WarrantyId.Value);
+                        if (wCat != null) item.Warranty = wCat.Name;
+                    }
                 }
             }
             cart.RemoveAll(x => {
@@ -147,9 +153,16 @@ namespace Antigravity.ECommerce.Controllers
             }
             else
             {
+                string? warrantyName = null;
+                if (product.WarrantyId.HasValue) {
+                    var wCat = Antigravity.ECommerce.Framework.FCategory.GetById(product.WarrantyId.Value);
+                    if (wCat != null) warrantyName = wCat.Name;
+                }
                 cart.Add(new CartItem {
                     ProductId = productId,
                     ProductName = product.Name,
+                    ProductCode = product.SKU,
+                    Warranty = warrantyName,
                     ProductImage = product.MainImage,
                     Price = product.Price,
                     Quantity = quantity

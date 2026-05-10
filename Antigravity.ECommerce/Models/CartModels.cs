@@ -10,6 +10,10 @@ namespace Antigravity.ECommerce.Models
         public int ProductId { get; set; }
         /// <summary> Tên sản phẩm </summary>
         public string ProductName { get; set; }
+        /// <summary> Mã sản phẩm </summary>
+        public string? ProductCode { get; set; }
+        /// <summary> Thời gian bảo hành </summary>
+        public string? Warranty { get; set; }
         /// <summary> Ảnh đại diện sản phẩm </summary>
         public string ProductImage { get; set; }
         /// <summary> Giá bán hiện tại </summary>
