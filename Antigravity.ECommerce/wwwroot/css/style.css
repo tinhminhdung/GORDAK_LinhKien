@@ -513,7 +513,7 @@ img {
 /* Dots */
 .slider-dots {
     position: absolute;
-    bottom: 18px;
+    bottom: 30px;
     left: 50%;
     transform: translateX(-50%);
     display: flex;
@@ -1323,7 +1323,7 @@ img {
 /* ========== RESPONSIVE ========== */
 @media(max-width:991.98px) {
     .banner-img {
-        height: 240px
+        height: 180px
     }
 
     .hero-overlay {

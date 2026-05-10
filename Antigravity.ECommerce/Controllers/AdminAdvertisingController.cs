@@ -242,7 +242,7 @@ namespace Antigravity.ECommerce.Controllers
                     {
                         Title = "CHỨNG NHẬN",
                         Description = "Tất cả sản phẩm Gordak đều được kiểm định nghiêm ngặt trước khi đến tay khách hàng. Chúng tôi cam kết mang đến sản phẩm chính hãng, chất lượng cao và dịch vụ hỗ trợ tốt nhất.",
-                        Link = "/chuyen-muc/chung-nhan.html",
+                        Link = "/gioi-thieu.html",
                         VideoUrl = "Xem toàn bộ chứng nhận >",
                         Position = "About_Cert_Desc",
                         SortOrder = 1,

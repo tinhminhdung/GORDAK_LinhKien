@@ -103,6 +103,7 @@
                                             <option value="Gallery">Thư viện ảnh</option>
                                             <option value="FAQ">Hỏi đáp (FAQ)</option>
                                             <option value="Document">Tài liệu</option>
+                                            <option value="About">Trang Giới thiệu</option>
                                             <option value="Contact">Trang Liên hệ</option>
                                         </select>
                                     </div>
@@ -427,27 +428,78 @@
             var linkType = '@Model.LinkType';
             if (linkType == "1") {
                 if (url == "/" || url == "") $('#system-group').val("Home");
+                else if (url.includes("gioi-thieu")) $('#system-group').val("About");
                 else if (url.includes("lien-he")) $('#system-group').val("Contact");
                 else {
                     var pureSlug = url.replace(".html", "").split('/').pop();
-                    $('#select-product-cat option').each(function() {
-                        if ($(this).val() == pureSlug) { $('#system-group').val("Product"); $('#select-product-cat').val(pureSlug); }
-                    });
-                    $('#select-news-cat option').each(function() {
-                        if ($(this).val() == pureSlug) { $('#system-group').val("News"); $('#select-news-cat').val(pureSlug); }
-                    });
-                    $('#select-video-cat option').each(function() {
-                        if ($(this).val() == pureSlug) { $('#system-group').val("Video"); $('#select-video-cat').val(pureSlug); }
-                    });
-                    $('#select-gallery-cat option').each(function() {
-                        if ($(this).val() == pureSlug) { $('#system-group').val("Gallery"); $('#select-gallery-cat').val(pureSlug); }
-                    });
-                    $('#select-faq-cat option').each(function() {
-                        if ($(this).val() == pureSlug) { $('#system-group').val("FAQ"); $('#select-faq-cat').val(pureSlug); }
-                    });
-                    $('#select-document-cat option').each(function() {
-                        if ($(this).val() == pureSlug) { $('#system-group').val("Document"); $('#select-document-cat').val(pureSlug); }
-                    });
+                    var found = false;
+
+                    // Check product categories
+                    if (!found) {
+                        if (url.includes("/san-pham")) {
+                            $('#system-group').val("Product");
+                            $('#select-product-cat option').each(function() {
+                                var optVal = $(this).val().replace(".html", "");
+                                if (optVal == pureSlug) { $('#select-product-cat').val($(this).val()); }
+                            });
+                            found = true;
+                        }
+                    }
+                    // Check news categories
+                    if (!found) {
+                        if (url.includes("/tin-tuc")) {
+                            $('#system-group').val("News");
+                            $('#select-news-cat option').each(function() {
+                                var optVal = $(this).val().replace(".html", "");
+                                if (optVal == pureSlug) { $('#select-news-cat').val($(this).val()); }
+                            });
+                            found = true;
+                        }
+                    }
+                    // Check video categories
+                    if (!found) {
+                        if (url.includes("/video")) {
+                            $('#system-group').val("Video");
+                            $('#select-video-cat option').each(function() {
+                                var optVal = $(this).val().replace(".html", "");
+                                if (optVal == pureSlug) { $('#select-video-cat').val($(this).val()); }
+                            });
+                            found = true;
+                        }
+                    }
+                    // Check gallery categories
+                    if (!found) {
+                        if (url.includes("/thu-vien-anh")) {
+                            $('#system-group').val("Gallery");
+                            $('#select-gallery-cat option').each(function() {
+                                var optVal = $(this).val().replace(".html", "");
+                                if (optVal == pureSlug) { $('#select-gallery-cat').val($(this).val()); }
+                            });
+                            found = true;
+                        }
+                    }
+                    // Check FAQ categories
+                    if (!found) {
+                        if (url.includes("/hoi-dap")) {
+                            $('#system-group').val("FAQ");
+                            $('#select-faq-cat option').each(function() {
+                                var optVal = $(this).val().replace(".html", "");
+                                if (optVal == pureSlug) { $('#select-faq-cat').val($(this).val()); }
+                            });
+                            found = true;
+                        }
+                    }
+                    // Check document categories
+                    if (!found) {
+                        if (url.includes("/tai-lieu")) {
+                            $('#system-group').val("Document");
+                            $('#select-document-cat option').each(function() {
+                                var optVal = $(this).val().replace(".html", "");
+                                if (optVal == pureSlug) { $('#select-document-cat').val($(this).val()); }
+                            });
+                            found = true;
+                        }
+                    }
                 }
                 toggleSystemSubGroup();
             } else if (linkType == "3") {
@@ -475,6 +527,7 @@
             var finalUrl = "";
             var slug = "";
             if (group == "Home") finalUrl = "/";
+            else if (group == "About") finalUrl = "/gioi-thieu.html";
             else if (group == "Contact") finalUrl = "/lien-he.html";
             else if (group == "Product") {
                 slug = $('#select-product-cat').val();

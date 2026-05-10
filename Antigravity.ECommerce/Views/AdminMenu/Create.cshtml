@@ -128,6 +128,7 @@
 											<option value="Gallery">Thư viện ảnh</option>
 											<option value="FAQ">Hỏi đáp (FAQ)</option>
 											<option value="Document">Tài liệu</option>
+											<option value="About">Trang Giới thiệu</option>
 											<option value="Contact">Trang Liên hệ</option>
 										</select>
 									</div>
@@ -485,6 +486,7 @@
 			var slug = "";
 
 			if (group == "Home") finalUrl = "/";
+			else if (group == "About") finalUrl = "/gioi-thieu.html";
 			else if (group == "Contact") finalUrl = "/lien-he.html";
 			else if (group == "Product") {
 				slug = $('#select-product-cat').val();
