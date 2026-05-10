@@ -63,7 +63,16 @@
     string activeClass = isActive ? " active" : "";
 }
 
-<li><a href="@GetUrl(Model)" class="@activeClass">@if(!string.IsNullOrEmpty(Model.Icon)){<i class="@Model.Icon"></i> }@Model.Name@if(hasChildren){ <i class="fa-solid fa-chevron-down nav-arr"></i>}</a>
+<li><a href="@GetUrl(Model)" class="@activeClass">
+    @if(!string.IsNullOrEmpty(Model.Icon)){
+        if(Model.Icon.Trim().StartsWith("<")) {
+            <span class="nav-icon me-1 d-inline-flex align-items-center justify-content-center">@Html.Raw(Model.Icon)</span>
+        } else {
+            <i class="@Model.Icon nav-icon me-1"></i>
+        }
+    }
+    @Model.Name@if(hasChildren){ <i class="fa-solid fa-chevron-down nav-arr ms-1" style="font-size: 10px;"></i>}
+</a>
 @if (hasChildren)
 {
     <ul>

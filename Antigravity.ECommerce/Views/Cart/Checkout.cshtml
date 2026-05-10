@@ -28,142 +28,195 @@
   <form asp-action="ProcessCheckout" method="post" id="checkoutForm">
       <div class="row g-4">
         <!-- CỘT TRÁI: Form -->
-        <div class="col-lg-7">
-          <div class="gh-form-box">
-            <h2 class="gh-section-title"><i class="fa-solid fa-user-circle" style="color:#1a3c8a"></i> THÔNG TIN NGƯỜI NHẬN HÀNG</h2>
+        <div class="col-lg-7" style="font-family: 'Roboto', 'Open Sans', sans-serif;">
+          <div class="gh-form-box bg-white p-3 p-md-4 mb-4 mb-lg-0" style="border: 1px solid #e5e5e5; border-radius: 8px;">
+            <div class="border-bottom mb-4 pb-3">
+              <h5 class="mb-0 fw-semibold" style="color: #1a3c8a; font-size: 16px;"><i class="fa-regular fa-clipboard me-2"></i> THÔNG TIN NGƯỜI NHẬN HÀNG</h5>
+            </div>
               <div class="row g-3">
                 <div class="col-md-6">
-                  <label class="lh-label">Họ và tên <span class="text-danger">*</span></label>
-                  <div class="gh-input-wrap"><i class="fa-regular fa-user"></i><input type="text" asp-for="FullName" class="form-control lh-input" placeholder="Nhập họ và tên" required></div>
+                  <label class="fw-bold mb-1" style="color: #1a2b4c; font-size: 14px;">Họ và tên <span class="text-danger">*</span></label>
+                  <div class="gh-input-wrap position-relative">
+                    <i class="fa-regular fa-user position-absolute top-50 translate-middle-y" style="left: 12px; color: #8fa3b7;"></i>
+                    <input type="text" asp-for="FullName" class="form-control" style="padding-left: 35px; border-color: #e5e5e5; font-size: 14px; border-radius: 6px;" placeholder="Nhập họ và tên" required>
+                  </div>
                 </div>
                 <div class="col-md-6">
-                  <label class="lh-label">Số điện thoại <span class="text-danger">*</span></label>
-                  <div class="gh-input-wrap"><i class="fa-solid fa-phone"></i><input type="tel" asp-for="Phone" class="form-control lh-input" placeholder="Nhập số điện thoại" required></div>
+                  <label class="fw-bold mb-1" style="color: #1a2b4c; font-size: 14px;">Số điện thoại <span class="text-danger">*</span></label>
+                  <div class="gh-input-wrap position-relative">
+                    <i class="fa-solid fa-phone position-absolute top-50 translate-middle-y" style="left: 12px; color: #8fa3b7; font-size: 13px;"></i>
+                    <input type="tel" asp-for="Phone" class="form-control" style="padding-left: 35px; border-color: #e5e5e5; font-size: 14px; border-radius: 6px;" placeholder="Nhập số điện thoại" required>
+                  </div>
                 </div>
                 
-                <!-- Province and Ward logic kept from previous codebase -->
                 <div class="col-md-6">
-                    <label class="lh-label">Tỉnh / Thành phố <span class="text-danger">*</span></label>
-                    <div class="gh-input-wrap"><i class="fa-solid fa-map"></i>
-                        <select id="ProvinceId" name="ProvinceId" class="form-select lh-input" required>
+                    <label class="fw-bold mb-1" style="color: #1a2b4c; font-size: 14px;">Tỉnh / Thành phố <span class="text-danger">*</span></label>
+                    <div class="gh-input-wrap position-relative">
+                        <i class="fa-solid fa-map position-absolute top-50 translate-middle-y" style="left: 12px; color: #8fa3b7; font-size: 13px;"></i>
+                        <select id="ProvinceId" name="ProvinceId" class="form-select" style="padding-left: 35px; border-color: #e5e5e5; font-size: 14px; border-radius: 6px;" required>
                             <option value="">- Chọn Tỉnh/Thành -</option>
                         </select>
                     </div>
                 </div>
                 <div class="col-md-6">
-                    <label class="lh-label">Phường / Xã <span class="text-danger">*</span></label>
-                    <div class="gh-input-wrap"><i class="fa-solid fa-map-pin"></i>
-                        <select id="WardId" name="WardId" class="form-select lh-input" required>
+                    <label class="fw-bold mb-1" style="color: #1a2b4c; font-size: 14px;">Phường / Xã <span class="text-danger">*</span></label>
+                    <div class="gh-input-wrap position-relative">
+                        <i class="fa-solid fa-map-pin position-absolute top-50 translate-middle-y" style="left: 12px; color: #8fa3b7; font-size: 13px;"></i>
+                        <select id="WardId" name="WardId" class="form-select" style="padding-left: 35px; border-color: #e5e5e5; font-size: 14px; border-radius: 6px;" required>
                             <option value="">- Chọn Phường/Xã -</option>
                         </select>
                     </div>
                 </div>
 
                 <div class="col-12">
-                  <label class="lh-label">Địa chỉ nhận hàng (Số nhà, tên đường) <span class="text-danger">*</span></label>
-                  <div class="gh-input-wrap"><i class="fa-solid fa-location-dot"></i><input type="text" id="DetailAddress" asp-for="Address" class="form-control lh-input" placeholder="Số nhà, tên đường, khu vực..." required></div>
+                  <label class="fw-bold mb-1" style="color: #1a2b4c; font-size: 14px;">Địa chỉ nhận hàng <span class="text-danger">*</span></label>
+                  <div class="gh-input-wrap position-relative">
+                    <i class="fa-solid fa-location-dot position-absolute top-50 translate-middle-y" style="left: 12px; color: #8fa3b7; font-size: 13px;"></i>
+                    <input type="text" id="DetailAddress" asp-for="Address" class="form-control" style="padding-left: 35px; border-color: #e5e5e5; font-size: 14px; border-radius: 6px;" placeholder="Số nhà, tên đường, phường/xã, quận/huyện, tỉnh/thành phố" required>
+                  </div>
                 </div>
                 <input type="hidden" name="FullAddress" id="FullAddress" />
 
                 <div class="col-12">
-                  <label class="lh-label">Email</label>
-                  <div class="gh-input-wrap"><i class="fa-solid fa-envelope"></i><input type="email" asp-for="Email" class="form-control lh-input" placeholder="Nhập email để nhận thông tin đơn hàng"></div>
+                  <label class="fw-bold mb-1" style="color: #1a2b4c; font-size: 14px;">Email</label>
+                  <div class="gh-input-wrap position-relative">
+                    <i class="fa-regular fa-envelope position-absolute top-50 translate-middle-y" style="left: 12px; color: #8fa3b7; font-size: 13px;"></i>
+                    <input type="email" asp-for="Email" class="form-control" style="padding-left: 35px; border-color: #e5e5e5; font-size: 14px; border-radius: 6px;" placeholder="Nhập email để nhận thông tin đơn hàng">
+                  </div>
                 </div>
                 <div class="col-12">
-                  <label class="lh-label">Ghi chú đơn hàng</label>
-                  <div class="gh-input-wrap"><i class="fa-regular fa-comment"></i><input type="text" asp-for="Note" class="form-control lh-input" placeholder="Ví dụ: giao giờ hành chính, gọi trước khi giao..."></div>
+                  <label class="fw-bold mb-1" style="color: #1a2b4c; font-size: 14px;">Ghi chú đơn hàng</label>
+                  <div class="gh-input-wrap position-relative">
+                    <i class="fa-regular fa-comment position-absolute top-50 translate-middle-y" style="left: 12px; color: #8fa3b7; font-size: 13px;"></i>
+                    <input type="text" asp-for="Note" class="form-control" style="padding-left: 35px; border-color: #e5e5e5; font-size: 14px; border-radius: 6px;" placeholder="Ví dụ: giao giờ hành chính, gọi trước khi giao...">
+                  </div>
                 </div>
               </div>
 
               <!-- Checkbox VAT -->
-              <div class="gh-vat-check mt-3">
+              <div class="mt-4 pt-3 border-top">
                 <div class="form-check">
                   <input class="form-check-input" type="checkbox" id="vatCheck" name="RequiresVAT" value="true" data-bs-toggle="collapse" data-bs-target="#vatForm">
-                  <label class="form-check-label" for="vatCheck">
-                    <strong>Tôi cần xuất hóa đơn VAT</strong>
-                    <small class="d-block text-muted">Tích vào đây nếu bạn cần xuất hóa đơn VAT cho đơn hàng này.</small>
+                  <label class="form-check-label ms-1" for="vatCheck">
+                    <strong style="color: #1a2b4c; font-size: 14px;">Tôi cần xuất hóa đơn VAT</strong>
+                    <div class="text-muted mt-1" style="font-size: 13px;">Tích vào đây nếu bạn cần xuất hóa đơn VAT cho đơn hàng này.</div>
                   </label>
                 </div>
               </div>
 
               <!-- VAT Form (collapsible) -->
               <div class="collapse" id="vatForm">
-                <div class="gh-vat-form mt-3">
-                  <h4 class="gh-vat-title"><i class="fa-solid fa-file-invoice"></i> THÔNG TIN XUẤT HÓA ĐƠN <i class="fa-solid fa-chevron-down float-end"></i></h4>
-                  <div class="row g-3 mt-1">
-                    <div class="col-md-6"><label class="lh-label">Tên công ty <span class="text-danger">*</span></label><input type="text" asp-for="VATCompanyName" class="form-control lh-input" placeholder="Nhập tên công ty"></div>
-                    <div class="col-md-6"><label class="lh-label">Mã số thuế <span class="text-danger">*</span></label><input type="text" asp-for="VATTaxCode" class="form-control lh-input" placeholder="Nhập mã số thuế"></div>
-                    <div class="col-12"><label class="lh-label">Địa chỉ công ty <span class="text-danger">*</span></label><input type="text" asp-for="VATCompanyAddress" class="form-control lh-input" placeholder="Nhập địa chỉ công ty"></div>
-                    <div class="col-12"><label class="lh-label">Email nhận hóa đơn</label><input type="email" asp-for="VATInvoiceEmail" class="form-control lh-input" placeholder="Nhập email nhận hóa đơn"></div>
+                <div class="mt-3 p-3 bg-light" style="border: 1px solid #e5e5e5; border-radius: 6px;">
+                  <h6 class="fw-bold mb-3" style="color: #1a3c8a; font-size: 14px;">THÔNG TIN XUẤT HÓA ĐƠN</h6>
+                  <div class="row g-3">
+                    <div class="col-md-6"><label class="fw-bold mb-1" style="color: #1a2b4c; font-size: 13px;">Tên công ty <span class="text-danger">*</span></label><input type="text" asp-for="VATCompanyName" class="form-control" style="font-size: 13px; border-radius: 4px;" placeholder="Nhập tên công ty"></div>
+                    <div class="col-md-6"><label class="fw-bold mb-1" style="color: #1a2b4c; font-size: 13px;">Mã số thuế <span class="text-danger">*</span></label><input type="text" asp-for="VATTaxCode" class="form-control" style="font-size: 13px; border-radius: 4px;" placeholder="Nhập mã số thuế"></div>
+                    <div class="col-12"><label class="fw-bold mb-1" style="color: #1a2b4c; font-size: 13px;">Địa chỉ công ty <span class="text-danger">*</span></label><input type="text" asp-for="VATCompanyAddress" class="form-control" style="font-size: 13px; border-radius: 4px;" placeholder="Nhập địa chỉ công ty"></div>
+                    <div class="col-12"><label class="fw-bold mb-1" style="color: #1a2b4c; font-size: 13px;">Email nhận hóa đơn</label><input type="email" asp-for="VATInvoiceEmail" class="form-control" style="font-size: 13px; border-radius: 4px;" placeholder="Nhập email nhận hóa đơn"></div>
                   </div>
                 </div>
               </div>
 
               <!-- Submit Button -->
-              <button type="submit" class="gh-btn-submit mt-4"><i class="fa-solid fa-cart-shopping"></i> XÁC NHẬN ĐẶT HÀNG</button>
+              <button type="submit" class="btn w-100 mt-4 py-2 text-white fw-bold d-flex align-items-center justify-content-center" style="background-color: #003399; border-radius: 6px; font-size: 15px;"><i class="fa-solid fa-cart-shopping me-2"></i> XÁC NHẬN ĐẶT HÀNG</button>
           </div>
         </div>
 
         <!-- CỘT PHẢI: Đơn hàng -->
-        <div class="col-lg-5">
-          <div class="gh-order-box border rounded-3 p-4 bg-white shadow-sm">
-            <div class="d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom">
-              <h4 class="gh-order-title mb-0 fw-bold" style="color: #1a2b4c;"><i class="fa-solid fa-cart-shopping me-2"></i> ĐƠN HÀNG CỦA BẠN</h4>
-              <a href="/gio-hang.html" class="text-decoration-underline text-primary small">Chỉnh sửa giỏ hàng</a>
+        <div class="col-lg-5" style="font-family: 'Roboto', 'Open Sans', sans-serif;">
+          <div class="gh-order-box bg-white p-3 p-md-4" style="border: 1px solid #e5e5e5; border-radius: 8px;">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <h5 class="mb-0 fw-semibold" style="color: #1a3c8a; font-size: 16px;"><i class="fa-solid fa-cart-shopping me-2"></i> ĐƠN HÀNG CỦA BẠN</h5>
+              <a href="/gio-hang.html" class="text-decoration-underline" style="color: #1a3c8a; font-size: 13px;">Chỉnh sửa giỏ hàng</a>
             </div>
 
             <!-- Product item -->
-            <div class="gh-order-items mb-4">
+            <div class="gh-order-items mb-3">
                 @foreach(var item in Model.Items) {
-                    <div class="gh-order-item border rounded-3 p-3 mb-3 bg-white d-flex align-items-center">
-                        <div class="me-3" style="width: 70px; flex-shrink: 0;">
-                            <img src="@item.ProductImage" alt="@item.ProductName" class="img-fluid rounded border">
+                    <div class="gh-order-item d-flex align-items-center bg-white p-2 mb-2" style="border: 1px solid #e5e5e5; border-radius: 6px;">
+                        <div class="me-3" style="width: 90px; height: 90px; flex-shrink: 0;">
+                            <img src="@item.ProductImage" alt="@item.ProductName" style="width: 100%; height: 100%; object-fit: contain; border-radius: 4px;">
                         </div>
-                        <div class="flex-grow-1">
-                            <h6 class="fw-bold mb-1" style="color: #1a2b4c;">@item.ProductName</h6>
+                        <div class="flex-grow-1 pe-2">
+                            <div class="mb-1 fw-medium" style="color: #333; font-size: 14px; line-height: 1.4;">@item.ProductName</div>
                             @if(!string.IsNullOrEmpty(item.ProductCode)) {
-                                <div class="text-muted small mb-1">Mã sản phẩm: @item.ProductCode</div>
+                                <div class="text-muted" style="font-size: 13px; margin-bottom: 2px;">Mã sản phẩm: @item.ProductCode</div>
                             }
                             @if(!string.IsNullOrEmpty(item.Warranty)) {
-                                <div class="text-muted small">Bảo hành: @item.Warranty</div>
+                                <div class="text-muted" style="font-size: 13px;">Bảo hành: @item.Warranty</div>
                             }
                         </div>
-                        <div class="text-end ms-3" style="min-width: 100px;">
-                            <div class="text-danger fw-bold fs-6 mb-1">@item.Price.ToString("N0")đ</div>
-                            <div class="text-muted small text-end">x @item.Quantity</div>
+                        <div class="text-end" style="min-width: 90px;">
+                            <div class="text-danger fw-semibold mb-1" style="font-size: 15px;">@item.Price.ToString("N0")đ</div>
+                            <div class="text-muted text-end" style="font-size: 13px;">x @item.Quantity</div>
                         </div>
                     </div>
                 }
             </div>
 
-            <div class="bg-light rounded-3 p-3 mb-3">
+            <!-- Summary Box -->
+            <div class="bg-white p-3 mb-3" style="border: 1px solid #e5e5e5; border-radius: 6px;">
                 <div class="d-flex justify-content-between mb-2">
-                    <span class="text-muted">Tạm tính</span>
-                    <span class="fw-medium">@Model.SubTotal.ToString("N0")đ</span>
+                    <span style="color: #333; font-size: 14px;">Tạm tính</span>
+                    <span class="fw-medium" style="color: #333; font-size: 14px;">@Model.SubTotal.ToString("N0")đ</span>
                 </div>
                 <div class="d-flex justify-content-between">
-                    <span class="text-muted">Phí vận chuyển</span>
-                    <span class="fw-medium">@((Model.ShippingFee > 0) ? Model.ShippingFee.ToString("N0") + "đ" : "Miễn phí")</span>
+                    <span style="color: #333; font-size: 14px;">Phí vận chuyển</span>
+                    <span class="fw-medium" style="color: #333; font-size: 14px;">@((Model.ShippingFee > 0) ? Model.ShippingFee.ToString("N0") + "đ" : "Liên hệ")</span>
                 </div>
             </div>
 
-            <div class="d-flex justify-content-between align-items-center p-3 bg-soft-primary rounded-3 border" style="background-color: #f8fbff; border-color: #e5f0fa !important;">
-              <strong style="font-size:16px; color: #1a2b4c;">Tổng thanh toán</strong>
+            <!-- Total Box -->
+            <div class="d-flex justify-content-between align-items-center p-3 bg-white" style="border: 1px solid #e5e5e5; border-radius: 6px; background-color: #fafbfc !important;">
+              <strong style="font-size:16px; color: #1a3c8a;">Tổng thanh toán</strong>
               <div class="text-end">
-                <span class="gh-total-price text-danger fw-bold fs-4 d-block">@Model.TotalAmount.ToString("N0")đ</span>
-                <small class="d-block text-muted">(Đã bao gồm VAT)</small>
+                <span class="text-danger fw-semibold d-block" style="font-size: 22px; line-height: 1;">@Model.TotalAmount.ToString("N0")đ</span>
+                <small class="d-block text-muted mt-1" style="font-size: 12px;">(Đã bao gồm VAT)</small>
               </div>
             </div>
           </div>
 
           <!-- Hỗ trợ -->
-          <div class="gh-support-box mt-3">
-            <h4><i class="fa-solid fa-headset" style="color:#1a3c8a"></i> CẦN HỖ TRỢ?</h4>
-            <p class="text-muted" style="font-size:13px">Đội ngũ kỹ thuật của chúng tôi luôn sẵn sàng hỗ trợ bạn!</p>
-            <div class="d-flex flex-wrap gap-3 mt-2">
-              <div class="d-flex align-items-center gap-2"><i class="fa-solid fa-phone" style="color:#1a3c8a"></i><div><small class="text-muted">Hotline</small><br><strong>0963 344 888</strong></div></div>
-              <div class="d-flex align-items-center gap-2"><div class="zalo-circle" style="width:28px;height:28px;font-size:9px">Zalo</div><div><small class="text-muted">Chat Zalo</small><br><strong>Tư vấn 24/7</strong></div></div>
-              <div class="d-flex align-items-center gap-2"><i class="fa-solid fa-envelope" style="color:#1a3c8a"></i><div><small class="text-muted">Email</small><br><strong>info@nhatminhesc.com</strong></div></div>
+          @{
+              var settings = Antigravity.ECommerce.Services.SSetting.GetViewModel();
+          }
+          <div class="mt-3 p-3 bg-white" style="border: 1px solid #e5f0fa; border-radius: 8px; background-color: #f8fbff !important;">
+            <div class="d-flex align-items-center mb-1">
+                <i class="fa-solid fa-headset me-2 fs-5" style="color: #003399;"></i>
+                <h6 class="mb-0 fw-bold" style="color: #003399; font-size: 15px;">CẦN HỖ TRỢ?</h6>
+            </div>
+            <p class="text-muted mb-3" style="font-size:13px; padding-left: 30px;">Đội ngũ kỹ thuật của chúng tôi luôn sẵn sàng hỗ trợ bạn!</p>
+            
+            <div class="d-flex flex-wrap align-items-center justify-content-between px-1 px-md-3 gap-3">
+              <!-- Hotline -->
+              <div class="d-flex align-items-center gap-2">
+                <i class="fa-solid fa-phone fs-4" style="color: #3b82f6;"></i>
+                <div class="text-nowrap">
+                    <div style="font-size: 13px; color: #1a2b4c; font-weight: 500;">Hotline</div>
+                    <div class="fw-bold" style="color: #1a3c8a; font-size: 14px;">@(string.IsNullOrEmpty(settings.Hotline) ? "0963 344 888" : settings.Hotline)</div>
+                </div>
+              </div>
+
+              <!-- Zalo -->
+              <div class="d-flex align-items-center gap-2">
+                <div class="d-flex align-items-center justify-content-center text-primary bg-white fw-bold" style="width:30px; height:30px; font-size:10px; border: 1.5px solid #3b82f6; border-radius: 50% 50% 50% 0px;">Zalo</div>
+                <div class="text-nowrap">
+                    <div style="font-size: 13px; color: #1a2b4c; font-weight: 500;">Chat Zalo</div>
+                    <div class="fw-bold" style="color: #1a3c8a; font-size: 14px;">Tư vấn 24/7</div>
+                </div>
+              </div>
+
+              <!-- Line (Hidden on small screens if wrapped, but kept for desktop) -->
+              <div class="d-none d-lg-block" style="width: 1px; height: 35px; background-color: #e5e5e5; margin-right: 10px; margin-left: 10px;"></div>
+
+              <!-- Email -->
+              <div class="d-flex align-items-center gap-2">
+                <i class="fa-regular fa-envelope fs-4" style="color: #3b82f6;"></i>
+                <div class="text-nowrap">
+                    <div style="font-size: 13px; color: #1a2b4c; font-weight: 500;">Email</div>
+                    <div class="fw-bold" style="color: #1a3c8a; font-size: 14px;">@(string.IsNullOrEmpty(settings.Email) ? "info@nhatminhesc.com" : settings.Email)</div>
+                </div>
+              </div>
             </div>
           </div>
         </div>

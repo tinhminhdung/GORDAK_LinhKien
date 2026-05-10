@@ -11,7 +11,7 @@ namespace Antigravity.ECommerce.Controllers
     [Permission("Menu")]
     public class AdminMenuController : Controller
     {
-        public IActionResult Index(string kw = "", int? status = null, int page = 1, int size = 20)
+        public IActionResult Index(string kw = "", int? status = null, string? menuPosition = null, int page = 1, int size = 20)
         {
             // Lấy tất cả menu dạng cây (hierarchical)
             var allMenu = SCategory.GetAll().Where(x => x.CategoryType == 0).ToList();
@@ -21,6 +21,8 @@ namespace Antigravity.ECommerce.Controllers
                 allMenu = allMenu.Where(x => x.Name.Contains(kw, StringComparison.OrdinalIgnoreCase) || (x.Slug ?? "").Contains(kw, StringComparison.OrdinalIgnoreCase)).ToList();
             if (status.HasValue)
                 allMenu = allMenu.Where(x => x.Status == status.Value).ToList();
+            if (!string.IsNullOrEmpty(menuPosition))
+                allMenu = allMenu.Where(x => !string.IsNullOrEmpty(x.MenuPosition) && x.MenuPosition.Contains(menuPosition, StringComparison.OrdinalIgnoreCase)).ToList();
 
             // Paginate only ROOT items, children always shown
             var roots = allMenu.Where(x => x.ParentId == 0).OrderBy(x => x.SortOrder).ToList();
@@ -33,6 +35,7 @@ namespace Antigravity.ECommerce.Controllers
 
             ViewBag.Keyword = kw;
             ViewBag.Status = status;
+            ViewBag.MenuPosition = menuPosition;
             ViewBag.TotalCount = allMenu.Count;
             ViewBag.PageIndex = page;
             ViewBag.PageSize = size;

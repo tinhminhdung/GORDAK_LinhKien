@@ -37,10 +37,22 @@
                 <div class="col-lg-8">
                     <div class="card">
                         <div class="card-body">
-                            <div class="mb-3">
-                                <label class="form-label">Tên hiển thị trên Menu <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" asp-for="Name" id="MenuName" placeholder="VD: Trang chủ, Sản phẩm, Giới thiệu..." required>
-                            </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Tên hiển thị trên Menu <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" asp-for="Name" id="MenuName" placeholder="VD: Trang chủ, Sản phẩm, Giới thiệu..." required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Icon / Biểu tượng (Chỉ dành cho menu cấp 1)</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text p-0" style="width: 44px; display: flex; align-items: center; justify-content: center; background: #f8f9fa;">
+                                            <div id="iconPreviewBox"></div>
+                                        </span>
+                                        <input type="text" class="form-control" asp-for="Icon" id="MenuIcon" placeholder="VD: fas fa-home hoặc <img src='...'>">
+                                        <button class="btn btn-primary" type="button" onclick="openIconPicker()"><i class="ri-search-line me-1"></i>Chọn Icon</button>
+                                        <button class="btn btn-outline-secondary" type="button" onclick="selectIconImage()">Chọn ảnh</button>
+                                    </div>
+                                    <small class="text-muted">Nhập mã class Icon (VD: fas fa-home) hoặc chọn ảnh.</small>
+                                </div>
 
                             <div class="row mb-3">
                                 <div class="col-md-6 parent-select">
@@ -427,6 +439,17 @@
 
         $('#SeoTitle, #SeoDescription, #Slug').on('input', updateGooglePreview);
         $('#select-product-cat, #select-news-cat, #select-video-cat, #select-gallery-cat, #select-faq-cat, #select-document-cat').on('change', syncFinalUrl);
+
+        function selectIconImage() {
+            window.open('/FileManager?type=image&field_id=MenuIcon', 'FileManager', 'width=900,height=600');
+        }
+
+        // Callback for file manager
+        function SetUrl(url, width, height, alt, field_id) {
+            if (field_id == 'MenuIcon') {
+                $('#MenuIcon').val('<img src="' + url + '" alt="icon" style="width:24px;height:24px;">');
+            }
+        }
 
         function copyFullCategory(type) {
             var sel = $('#select-' + type + '-cat');
