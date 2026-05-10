@@ -6,7 +6,7 @@
 @section Styles {
     <style>
         .member-layout {
-            padding: 3rem 15px;
+            padding: 1.5rem 15px;
             background: #f8f9fa;
             min-height: calc(100vh - 200px);
         }
@@ -67,8 +67,8 @@
             transition: all 0.2s;
         }
         .member-nav a:hover, .member-nav a.active {
-            background: #eef2ff;
-            color: #4f46e5;
+            background: #e6f0fa;
+            color: #1a3c8a;
         }
         .member-nav a i {
             margin-right: 10px;
@@ -82,14 +82,101 @@
         }
         @@media (max-width: 767px) {
             .member-layout {
-                padding: 1.5rem 0;
+                padding: 0.5rem 0;
             }
-            .member-sidebar, .member-content {
-                padding: 1.5rem;
-                margin: 0 15px;
-                border-radius: 12px;
-                width: calc(100% - 30px);
+            .member-sidebar {
+                padding: 0.75rem;
+                margin: 0;
+                border-radius: 10px;
+                width: 100%;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.04);
             }
+            .member-content {
+                padding: 0.75rem;
+                margin: 0;
+                border-radius: 10px;
+                width: 100%;
+            }
+            .member-avatar-box {
+                display: flex;
+                align-items: center;
+                text-align: left;
+                margin-bottom: 0.75rem;
+                padding-bottom: 0.75rem;
+                gap: 12px;
+            }
+            .member-avatar {
+                width: 50px;
+                height: 50px;
+                margin-bottom: 0;
+                border-width: 2px;
+            }
+            .member-name {
+                font-size: 1rem;
+                margin-bottom: 0.15rem;
+            }
+            .member-rank {
+                font-size: 0.75rem;
+                padding: 0.15rem 0.6rem;
+            }
+            .member-nav {
+                display: flex;
+                overflow-x: auto;
+                gap: 4px;
+                padding-bottom: 4px;
+                -webkit-overflow-scrolling: touch;
+                scrollbar-width: none;
+            }
+            .member-nav::-webkit-scrollbar {
+                display: none;
+            }
+            .member-nav li {
+                margin-bottom: 0;
+                flex-shrink: 0;
+            }
+            .member-nav a {
+                padding: 0.4rem 0.75rem;
+                font-size: 0.8rem;
+                border-radius: 20px;
+                white-space: nowrap;
+                background: #f5f7fa;
+            }
+            .member-nav a:hover, .member-nav a.active {
+                background: #1a3c8a;
+                color: #fff;
+            }
+            .member-nav a i {
+                font-size: 0.85rem;
+                margin-right: 5px;
+            }
+        }
+        
+        /* Ghi đè màu chủ đạo cho các trang thành viên */
+        .btn-primary {
+            background-color: #1a3c8a;
+            border-color: #1a3c8a;
+        }
+        .btn-primary:hover {
+            background-color: #122b63;
+            border-color: #122b63;
+        }
+        .btn-outline-primary {
+            color: #1a3c8a;
+            border-color: #1a3c8a;
+        }
+        .btn-outline-primary:hover {
+            background-color: #1a3c8a;
+            border-color: #1a3c8a;
+            color: #fff;
+        }
+        .text-primary {
+            color: #1a3c8a !important;
+        }
+        .btn-link {
+            color: #1a3c8a;
+        }
+        .btn-link:hover {
+            color: #122b63;
         }
     </style>
     @RenderSection("MemberStyles", required: false)
@@ -116,37 +203,37 @@
                     <ul class="member-nav">
                         <li>
                             <a href="@Url.Action("Dashboard", "Member")" class="@(ViewContext.RouteData.Values["action"]?.ToString() == "Dashboard" ? "active" : "")">
-                                <i class="ri-dashboard-line"></i> Tổng quan
+                                <i class="fa-solid fa-gauge"></i> Tổng quan
                             </a>
                         </li>
                         <li>
                             <a href="@Url.Action("Orders", "Member")" class="@(ViewContext.RouteData.Values["action"]?.ToString() == "Orders" ? "active" : "")">
-                                <i class="ri-file-list-3-line"></i> Đơn hàng của tôi
+                                <i class="fa-solid fa-file-invoice-dollar"></i> Đơn hàng của tôi
                             </a>
                         </li>
                         <li>
                             <a href="@Url.Action("Profile", "Member")" class="@(ViewContext.RouteData.Values["action"]?.ToString() == "Profile" ? "active" : "")">
-                                <i class="ri-user-settings-line"></i> Thông tin cá nhân
+                                <i class="fa-solid fa-user-gear"></i> Thông tin cá nhân
                             </a>
                         </li>
                         <li>
                             <a href="@Url.Action("Wishlist", "Member")" class="@(ViewContext.RouteData.Values["action"]?.ToString() == "Wishlist" ? "active" : "")">
-                                <i class="ri-heart-3-line"></i> Sản phẩm yêu thích
+                                <i class="fa-solid fa-heart"></i> Sản phẩm yêu thích
                             </a>
                         </li>
                         <li>
                             <a href="/thanh-vien/danh-gia.html" class="@(ViewContext.RouteData.Values["action"]?.ToString() == "MyReviews" ? "active" : "")">
-                                <i class="ri-star-line"></i> Đánh giá của tôi
+                                <i class="fa-solid fa-star"></i> Đánh giá của tôi
                             </a>
                         </li>
                         <li>
                             <a href="@Url.Action("ChangePassword", "Member")" class="@(ViewContext.RouteData.Values["action"]?.ToString() == "ChangePassword" ? "active" : "")">
-                                <i class="ri-lock-password-line"></i> Đổi mật khẩu
+                                <i class="fa-solid fa-key"></i> Đổi mật khẩu
                             </a>
                         </li>
                         <li>
                             <a href="@Url.Action("Logout", "Account")" class="text-danger">
-                                <i class="ri-logout-box-r-line"></i> Đăng xuất
+                                <i class="fa-solid fa-right-from-bracket"></i> Đăng xuất
                             </a>
                         </li>
                     </ul>

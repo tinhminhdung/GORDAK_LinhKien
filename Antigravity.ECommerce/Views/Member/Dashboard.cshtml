@@ -54,6 +54,35 @@
             padding-bottom: 0.5rem;
             border-bottom: 2px solid #edf2f7;
         }
+        @@media (max-width: 767px) {
+            .stat-card {
+                padding: 0.75rem;
+                border-radius: 12px;
+            }
+            .stat-icon {
+                width: 42px;
+                height: 42px;
+                font-size: 1.25rem;
+                margin-right: 0.75rem;
+                border-radius: 10px;
+            }
+            .stat-content h3 {
+                font-size: 1.1rem;
+            }
+            .stat-content p {
+                font-size: 0.75rem;
+            }
+            .section-title {
+                font-size: 1rem;
+                margin-bottom: 1rem;
+            }
+            .member-content .table {
+                font-size: 0.8rem;
+            }
+            .member-content h4 {
+                font-size: 1rem;
+            }
+        }
     </style>
 }
 
@@ -98,7 +127,8 @@
 <h4 class="section-title">Đơn hàng gần đây</h4>
 @if (recentOrders != null && recentOrders.Any())
 {
-    <div class="table-responsive">
+    <!-- Desktop table -->
+    <div class="table-responsive d-none d-md-block">
         <table class="table table-hover align-middle">
             <thead class="table-light">
                 <tr>
@@ -142,15 +172,45 @@
             </tbody>
         </table>
     </div>
+
+    <!-- Mobile card list -->
+    <div class="d-md-none">
+        @foreach (var order in recentOrders)
+        {
+            <div style="background:#fff;border:1px solid #edf2f7;border-radius:10px;padding:10px;margin-bottom:8px;">
+                <div class="d-flex justify-content-between align-items-center mb-1">
+                    <strong style="font-size:0.82rem;">@order.OrderCode</strong>
+                    <small class="text-muted" style="font-size:0.72rem;">@order.CreatedAt.ToString("dd/MM/yyyy")</small>
+                </div>
+                <div class="d-flex justify-content-between align-items-center">
+                    <span class="fw-bold text-danger" style="font-size:0.95rem;">@order.TotalAmount.ToString("N0")đ</span>
+                    <span>
+                        @switch (order.OrderStatus)
+                        {
+                            case 0: <span class="badge bg-warning" style="font-size:0.7rem;">Chờ xác nhận</span>; break;
+                            case 1: <span class="badge bg-info" style="font-size:0.7rem;">Đang xử lý</span>; break;
+                            case 2: <span class="badge bg-primary" style="font-size:0.7rem;">Đang giao</span>; break;
+                            case 3: <span class="badge bg-success" style="font-size:0.7rem;">Hoàn thành</span>; break;
+                            case 4: <span class="badge bg-danger" style="font-size:0.7rem;">Đã hủy</span>; break;
+                            default: <span class="badge bg-secondary" style="font-size:0.7rem;">N/A</span>; break;
+                        }
+                        <a href="@Url.Action("OrderDetail", "Member", new { id = order.OrderId })" class="btn btn-sm btn-outline-primary ms-1" style="font-size:0.72rem;padding:2px 8px;">Chi tiết</a>
+                    </span>
+                </div>
+            </div>
+        }
+    </div>
+
     <div class="text-center mt-3">
-        <a href="@Url.Action("Orders", "Member")" class="btn btn-link text-decoration-none">Xem tất cả đơn hàng <i class="ri-arrow-right-line"></i></a>
+        <a href="@Url.Action("Orders", "Member")" class="btn btn-link text-decoration-none">Xem tất cả đơn hàng <i class="fa-solid fa-arrow-right"></i></a>
     </div>
 }
 else
 {
     <div class="text-center py-4">
-        <i class="ri-shopping-cart-2-line text-muted mb-3 d-block" style="font-size: 80px; opacity: 0.5"></i>
+        <i class="fa-solid fa-cart-arrow-down text-muted mb-3 d-block" style="font-size: 80px; opacity: 0.5"></i>
         <p class="text-muted">Bạn chưa có đơn hàng nào.</p>
         <a href="/" class="btn btn-primary">Mua sắm ngay</a>
     </div>
 }
+

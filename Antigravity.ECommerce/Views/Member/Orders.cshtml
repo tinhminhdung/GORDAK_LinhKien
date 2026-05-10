@@ -4,11 +4,104 @@
     ViewData["Title"] = "Lịch sử đơn hàng";
 }
 
-<h4 class="mb-4 pb-2 border-bottom fw-bold text-dark">Đơn hàng của tôi</h4>
+@section MemberStyles {
+    <style>
+        .order-card-mobile {
+            display: none;
+        }
+        #orderFilters .btn {
+            background: #f5f7fa;
+            color: #4a5568;
+            border: 1px solid #e2e8f0;
+        }
+        #orderFilters .btn.active {
+            background: #1a3c8a;
+            color: #fff;
+            border-color: #1a3c8a;
+        }
+        @@media (max-width: 767px) {
+            .order-table-desktop {
+                display: none !important;
+            }
+            .order-card-mobile {
+                display: block;
+            }
+            .order-card {
+                background: #fff;
+                border: 1px solid #edf2f7;
+                border-radius: 10px;
+                padding: 12px;
+                margin-bottom: 10px;
+            }
+            .order-card-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 8px;
+                padding-bottom: 8px;
+                border-bottom: 1px solid #f0f0f0;
+            }
+            .order-card-code {
+                font-weight: 700;
+                font-size: 0.85rem;
+                color: #1a202c;
+            }
+            .order-card-date {
+                font-size: 0.75rem;
+                color: #718096;
+            }
+            .order-card-body {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 8px;
+            }
+            .order-card-price {
+                font-size: 1rem;
+                font-weight: 700;
+                color: #e53e3e;
+            }
+            .order-card-footer {
+                display: flex;
+                gap: 6px;
+                align-items: center;
+            }
+            .order-card-footer .btn {
+                font-size: 0.78rem;
+                padding: 4px 12px;
+            }
+        }
+    </style>
+}
+
+<h4 class="mb-3 pb-2 border-bottom fw-bold text-dark">Đơn hàng của tôi</h4>
+
+<!-- Bộ lọc trạng thái -->
+<div class="d-flex flex-wrap gap-2 mb-3" id="orderFilters">
+    <button class="btn btn-sm rounded-pill active" data-filter="all" onclick="filterOrders('all', this)" style="font-size:0.8rem;">
+        <i class="fa-solid fa-list me-1"></i> Tất cả
+    </button>
+    <button class="btn btn-sm rounded-pill" data-filter="0" onclick="filterOrders('0', this)" style="font-size:0.8rem;">
+        <i class="fa-solid fa-clock me-1"></i> Chờ xác nhận
+    </button>
+    <button class="btn btn-sm rounded-pill" data-filter="1" onclick="filterOrders('1', this)" style="font-size:0.8rem;">
+        <i class="fa-solid fa-spinner me-1"></i> Đang xử lý
+    </button>
+    <button class="btn btn-sm rounded-pill" data-filter="2" onclick="filterOrders('2', this)" style="font-size:0.8rem;">
+        <i class="fa-solid fa-truck me-1"></i> Đang giao
+    </button>
+    <button class="btn btn-sm rounded-pill" data-filter="3" onclick="filterOrders('3', this)" style="font-size:0.8rem;">
+        <i class="fa-solid fa-circle-check me-1"></i> Hoàn thành
+    </button>
+    <button class="btn btn-sm rounded-pill" data-filter="4" onclick="filterOrders('4', this)" style="font-size:0.8rem;">
+        <i class="fa-solid fa-ban me-1"></i> Đã hủy
+    </button>
+</div>
 
 @if (Model != null && Model.Any())
 {
-    <div class="table-responsive">
+    <!-- Desktop: Table -->
+    <div class="table-responsive order-table-desktop">
         <table class="table table-hover align-middle">
             <thead class="table-light">
                 <tr>
@@ -23,8 +116,8 @@
             <tbody>
                 @foreach (var order in Model)
                 {
-                    <tr>
-                        <td><strong>@order.OrderCode</strong></td>
+                    <tr data-status="@order.OrderStatus">
+                        <td><strong>@order.OrderCode</strong> @if(order.RequiresVAT){<span class="badge bg-info-subtle text-info" title="Yêu cầu xuất hóa đơn VAT"><i class="fa-solid fa-file-invoice"></i> VAT</span>}</td>
                         <td>@order.CreatedAt.ToString("dd/MM/yyyy HH:mm")</td>
                         <td><strong class="text-danger">@order.TotalAmount.ToString("N0")đ</strong></td>
                         <td>
@@ -41,7 +134,7 @@
                         <td>
                             @if (order.PaymentStatus == 1)
                             {
-                                <span class="badge bg-success"><i class="ri-check-line"></i> Đã thanh toán</span>
+                                <span class="badge bg-success"><i class="fa-solid fa-check"></i> Đã thanh toán</span>
                             }
                             else
                             {
@@ -63,13 +156,78 @@
             </tbody>
         </table>
     </div>
+
+    <!-- Mobile: Card list -->
+    <div class="order-card-mobile">
+        @foreach (var order in Model)
+        {
+            <div class="order-card" data-status="@order.OrderStatus">
+                <div class="order-card-header">
+                    <span class="order-card-code">@order.OrderCode @if(order.RequiresVAT){<span class="badge bg-info-subtle text-info" style="font-size:0.65rem;"><i class="fa-solid fa-file-invoice"></i> VAT</span>}</span>
+                    <span class="order-card-date">@order.CreatedAt.ToString("dd/MM/yyyy HH:mm")</span>
+                </div>
+                <div class="order-card-body">
+                    <span class="order-card-price">@order.TotalAmount.ToString("N0")đ</span>
+                    <span>
+                        @switch (order.OrderStatus)
+                        {
+                            case 0: <span class="badge bg-warning">Chờ xác nhận</span>; break;
+                            case 1: <span class="badge bg-info">Đang xử lý</span>; break;
+                            case 2: <span class="badge bg-primary">Đang giao</span>; break;
+                            case 3: <span class="badge bg-success">Hoàn thành</span>; break;
+                            case 4: <span class="badge bg-danger">Đã hủy</span>; break;
+                            default: <span class="badge bg-secondary">Không xác định</span>; break;
+                        }
+                    </span>
+                </div>
+                <div class="order-card-footer">
+                    @if (order.PaymentStatus == 1)
+                    {
+                        <span class="badge bg-success"><i class="fa-solid fa-check"></i> Đã TT</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-secondary">Chưa TT</span>
+                    }
+                    <a href="@Url.Action("OrderDetail", "Member", new { id = order.OrderId })" class="btn btn-sm btn-outline-primary ms-auto">Chi tiết</a>
+                    @if(order.OrderStatus == 3)
+                    {
+                        <form asp-controller="Member" asp-action="Reorder" method="post" class="d-inline">
+                            <input type="hidden" name="orderId" value="@order.OrderId" />
+                            <button type="submit" class="btn btn-sm btn-outline-success">Mua lại</button>
+                        </form>
+                    }
+                </div>
+            </div>
+        }
+    </div>
 }
 else
 {
     <div class="text-center py-5">
-        <img src="/assets/img/empty-cart.png" alt="Không có đơn hàng" style="width: 150px; opacity: 0.5" class="mb-3">
+        <i class="fa-solid fa-box-open text-muted mb-3 d-block" style="font-size: 4rem; opacity: 0.4;"></i>
         <h5 class="text-muted">Bạn chưa có đơn hàng nào</h5>
         <p class="text-muted mb-4">Hãy khám phá các sản phẩm hấp dẫn của chúng tôi</p>
         <a href="/" class="btn btn-primary px-4 py-2">Mua sắm ngay</a>
     </div>
+}
+
+@section MemberScripts {
+    <script>
+        function filterOrders(status, btn) {
+            // Update active button
+            document.querySelectorAll('#orderFilters .btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            // Filter desktop table rows
+            document.querySelectorAll('.order-table-desktop tbody tr[data-status]').forEach(row => {
+                row.style.display = (status === 'all' || row.dataset.status === status) ? '' : 'none';
+            });
+
+            // Filter mobile cards
+            document.querySelectorAll('.order-card-mobile .order-card[data-status]').forEach(card => {
+                card.style.display = (status === 'all' || card.dataset.status === status) ? '' : 'none';
+            });
+        }
+    </script>
 }

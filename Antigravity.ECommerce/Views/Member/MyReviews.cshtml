@@ -2,6 +2,8 @@
 @{
     Layout = "_MemberLayout";
     ViewData["Title"] = "Đánh giá của tôi";
+    int pageIndex = ViewBag.PageIndex ?? 1;
+    int totalPages = ViewBag.TotalPages ?? 1;
 }
 
 <h4 class="mb-4 pb-2 border-bottom fw-bold text-dark">Đánh giá của tôi</h4>
@@ -20,9 +22,9 @@
                     <span class="text-muted ms-auto" style="font-size:0.75rem;">@rv.CreatedAt.ToString("dd/MM/yyyy")</span>
                 </div>
                 <div class="text-warning mb-1" style="font-size:0.85rem;">
-                    @for(int s=1;s<=5;s++){<i class="ri-star-fill @(s <= rv.Rating ? "" : "opacity-25")"></i>}
+                    @for(int s=1;s<=5;s++){<i class="fa-solid fa-star @(s <= rv.Rating ? "text-warning" : "text-muted opacity-25")"></i>}
                     @if(rv.IsVerifiedPurchase){
-                        <span class="badge bg-success-subtle text-success ms-2" style="font-size:0.7rem;"><i class="ri-check-line"></i> Đã mua hàng</span>
+                        <span class="badge bg-success-subtle text-success ms-2" style="font-size:0.7rem;"><i class="fa-solid fa-check"></i> Đã mua hàng</span>
                     }
                 </div>
                 @if(!string.IsNullOrEmpty(rv.Title)){
@@ -31,7 +33,7 @@
                 <p class="text-muted mb-1" style="font-size:0.85rem;">@rv.Content</p>
                 @if(!string.IsNullOrEmpty(rv.AdminReply)){
                     <div class="bg-light rounded-3 p-3 mt-2" style="border-left:3px solid #405189;">
-                        <div class="fw-semibold mb-1" style="font-size:0.8rem;color:#405189;"><i class="ri-customer-service-2-line me-1"></i> Phản hồi từ shop</div>
+                        <div class="fw-semibold mb-1" style="font-size:0.8rem;color:#405189;"><i class="fa-solid fa-headset me-1"></i> Phản hồi từ shop</div>
                         <p class="mb-0 text-muted" style="font-size:0.83rem;">@rv.AdminReply</p>
                     </div>
                 }
@@ -41,11 +43,37 @@
             </div>
         </div>
     }
+
+    @if (totalPages > 1)
+    {
+        <nav aria-label="Phân trang đánh giá" class="mt-3">
+            <ul class="pagination pagination-sm justify-content-center mb-0">
+                @if (pageIndex > 1)
+                {
+                    <li class="page-item">
+                        <a class="page-link" href="/thanh-vien/danh-gia.html?page=@(pageIndex - 1)"><i class="fa-solid fa-chevron-left"></i></a>
+                    </li>
+                }
+                @for (int i = 1; i <= totalPages; i++)
+                {
+                    <li class="page-item @(i == pageIndex ? "active" : "")">
+                        <a class="page-link" href="/thanh-vien/danh-gia.html?page=@i">@i</a>
+                    </li>
+                }
+                @if (pageIndex < totalPages)
+                {
+                    <li class="page-item">
+                        <a class="page-link" href="/thanh-vien/danh-gia.html?page=@(pageIndex + 1)"><i class="fa-solid fa-chevron-right"></i></a>
+                    </li>
+                }
+            </ul>
+        </nav>
+    }
 }
 else
 {
     <div class="text-center py-5">
-        <i class="ri-star-smile-line display-4 text-muted opacity-25"></i>
+        <i class="fa-solid fa-face-smile display-4 text-muted opacity-25"></i>
         <h5 class="text-muted mt-3">Bạn chưa có đánh giá nào</h5>
         <p class="text-muted" style="font-size:0.9rem;">Hãy mua sắm và chia sẻ trải nghiệm của bạn</p>
         <a href="/" class="btn btn-primary rounded-pill px-4">Mua sắm ngay</a>

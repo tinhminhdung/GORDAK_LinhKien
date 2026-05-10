@@ -46,10 +46,10 @@
             transition: all 0.3s;
         }
         .step.active .step-icon {
-            border-color: #4f46e5;
-            background: #4f46e5;
+            border-color: #1a3c8a;
+            background: #1a3c8a;
             color: #fff;
-            box-shadow: 0 0 0 5px rgba(79, 70, 229, 0.2);
+            box-shadow: 0 0 0 5px rgba(26, 60, 138, 0.2);
         }
         .step.done .step-icon {
             border-color: #48bb78;
@@ -61,29 +61,63 @@
             font-weight: 600;
             color: #4a5568;
         }
+        @@media (max-width: 767px) {
+            .step-icon {
+                width: 36px;
+                height: 36px;
+                font-size: 1rem;
+                margin-bottom: 6px;
+            }
+            .timeline-steps::before {
+                top: 17px;
+            }
+            .step-label {
+                font-size: 0.7rem;
+            }
+            .timeline-steps {
+                margin-bottom: 1rem;
+                padding-bottom: 1rem;
+            }
+            .member-content .table {
+                font-size: 0.8rem;
+            }
+            .member-content h4 {
+                font-size: 1rem;
+            }
+            .member-content .card-body {
+                padding: 0.75rem;
+            }
+            .member-content .card-body h6 {
+                font-size: 0.85rem;
+            }
+            .member-content .card-body p {
+                font-size: 0.8rem;
+                margin-bottom: 0.35rem;
+            }
+        }
     </style>
 }
 
 <div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom">
     <h4 class="fw-bold text-dark mb-0">Chi tiết đơn hàng: <span class="text-primary">@Model.OrderCode</span></h4>
-    <a href="@Url.Action("Orders", "Member")" class="btn btn-outline-secondary btn-sm"><i class="ri-arrow-left-line"></i> Quay lại</a>
+    <a href="@Url.Action("Orders", "Member")" class="btn btn-outline-secondary btn-sm"><i class="fa-solid fa-arrow-left"></i> Quay lại</a>
 </div>
 
 <div class="timeline-steps">
     <div class="step @(Model.OrderStatus >= 0 ? (Model.OrderStatus > 0 ? "done" : "active") : "")">
-        <div class="step-icon"><i class="ri-shopping-cart-2-line"></i></div>
+        <div class="step-icon"><i class="fa-solid fa-clipboard-list"></i></div>
         <div class="step-label">Chờ xác nhận</div>
     </div>
     <div class="step @(Model.OrderStatus >= 1 ? (Model.OrderStatus > 1 ? "done" : "active") : "")">
-        <div class="step-icon"><i class="ri-box-3-line"></i></div>
+        <div class="step-icon"><i class="fa-solid fa-box"></i></div>
         <div class="step-label">Đang xử lý</div>
     </div>
     <div class="step @(Model.OrderStatus >= 2 ? (Model.OrderStatus > 2 ? "done" : "active") : "")">
-        <div class="step-icon"><i class="ri-truck-line"></i></div>
+        <div class="step-icon"><i class="fa-solid fa-truck-fast"></i></div>
         <div class="step-label">Đang giao</div>
     </div>
     <div class="step @(Model.OrderStatus == 3 ? "active" : "")">
-        <div class="step-icon"><i class="ri-checkbox-circle-line"></i></div>
+        <div class="step-icon"><i class="fa-solid fa-circle-check"></i></div>
         <div class="step-label">Hoàn thành</div>
     </div>
 </div>
@@ -92,7 +126,7 @@
     <div class="col-md-6 mb-3">
         <div class="card h-100 border-0 shadow-sm rounded-4">
             <div class="card-body">
-                <h6 class="card-title text-muted mb-3"><i class="ri-map-pin-line me-2"></i>Thông tin giao hàng</h6>
+                <h6 class="card-title text-muted mb-3"><i class="fa-solid fa-location-dot me-2"></i>Thông tin giao hàng</h6>
                 <p class="mb-1"><strong>@Model.CustomerName</strong></p>
                 <p class="mb-1">SĐT: @Model.CustomerPhone</p>
                 <p class="mb-1">Email: @Model.CustomerEmail</p>
@@ -103,7 +137,7 @@
     <div class="col-md-6 mb-3">
         <div class="card h-100 border-0 shadow-sm rounded-4">
             <div class="card-body">
-                <h6 class="card-title text-muted mb-3"><i class="ri-bank-card-line me-2"></i>Thanh toán & Ghi chú</h6>
+                <h6 class="card-title text-muted mb-3"><i class="fa-solid fa-credit-card me-2"></i>Thanh toán & Ghi chú</h6>
                 <p class="mb-1">Phương thức: <strong>@Model.PaymentMethod</strong></p>
                 <p class="mb-1">
                     Trạng thái: 
@@ -119,7 +153,31 @@
     </div>
 </div>
 
-<div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+@if (Model.RequiresVAT)
+{
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm rounded-4" style="border-left: 4px solid #1a3c8a !important;">
+                <div class="card-body">
+                    <h6 class="card-title mb-3" style="color:#1a3c8a;"><i class="fa-solid fa-file-invoice me-2"></i>Thông tin xuất hóa đơn VAT</h6>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p class="mb-1"><span class="text-muted">Tên công ty:</span> <strong>@Model.VATCompanyName</strong></p>
+                            <p class="mb-1"><span class="text-muted">Mã số thuế:</span> <strong>@Model.VATTaxCode</strong></p>
+                        </div>
+                        <div class="col-md-6">
+                            <p class="mb-1"><span class="text-muted">Địa chỉ:</span> @Model.VATCompanyAddress</p>
+                            <p class="mb-0"><span class="text-muted">Email nhận HĐ:</span> @Model.VATInvoiceEmail</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<!-- Desktop: Product Table -->
+<div class="card border-0 shadow-sm rounded-4 overflow-hidden d-none d-md-block">
     <div class="table-responsive">
         <table class="table mb-0 align-middle">
             <thead class="table-light">
@@ -137,12 +195,7 @@
                     {
                         <tr>
                             <td>
-                                <div class="d-flex align-items-center">
-                                    @* Giả sử có đường dẫn ảnh hoặc không *@
-                                    <div class="ms-3">
-                                        <h6 class="mb-0">@item.ProductName</h6>
-                                    </div>
-                                </div>
+                                <div class="fw-semibold text-dark" style="font-size: 14px;">@item.ProductName</div>
                             </td>
                             <td class="text-center">@item.Price.ToString("N0")đ</td>
                             <td class="text-center">@item.Quantity</td>
@@ -169,12 +222,43 @@
     </div>
 </div>
 
+<!-- Mobile: Product Cards -->
+<div class="d-md-none">
+    @if (items != null)
+    {
+        foreach (var item in items)
+        {
+            <div style="background:#fff;border:1px solid #edf2f7;border-radius:10px;padding:10px;margin-bottom:8px;">
+                <div class="fw-semibold text-dark mb-1" style="font-size:0.85rem;">@item.ProductName</div>
+                <div class="d-flex justify-content-between align-items-center">
+                    <span class="text-muted" style="font-size:0.8rem;">@item.Price.ToString("N0")đ × @item.Quantity</span>
+                    <span class="fw-bold" style="font-size:0.9rem;">@item.TotalPrice.ToString("N0")đ</span>
+                </div>
+            </div>
+        }
+    }
+    <div style="background:#f8f9fa;border-radius:10px;padding:10px;">
+        <div class="d-flex justify-content-between mb-1" style="font-size:0.8rem;">
+            <span class="text-muted">Tạm tính:</span>
+            <span>@Model.SubTotal.ToString("N0")đ</span>
+        </div>
+        <div class="d-flex justify-content-between mb-1" style="font-size:0.8rem;">
+            <span class="text-muted">Phí vận chuyển:</span>
+            <span>@Model.ShippingFee.ToString("N0")đ</span>
+        </div>
+        <div class="d-flex justify-content-between pt-1 border-top" style="font-size:1rem;">
+            <span class="fw-bold">Tổng cộng:</span>
+            <span class="fw-bold text-danger">@Model.TotalAmount.ToString("N0")đ</span>
+        </div>
+    </div>
+</div>
+
 @if (Model.OrderStatus == 3)
 {
     <div class="text-end mt-4">
         <form asp-controller="Member" asp-action="Reorder" method="post">
             <input type="hidden" name="orderId" value="@Model.OrderId" />
-            <button type="submit" class="btn btn-primary px-4 py-2"><i class="ri-shopping-cart-line me-2"></i>Mua lại đơn hàng này</button>
+            <button type="submit" class="btn btn-primary px-4 py-2"><i class="fa-solid fa-cart-arrow-down me-2"></i>Mua lại đơn hàng này</button>
         </form>
     </div>
 }
