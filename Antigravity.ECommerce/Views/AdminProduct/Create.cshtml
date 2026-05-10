@@ -584,6 +584,20 @@
                     tagsList.pop(); renderTags();
                 }
             });
+            input.addEventListener('paste', function(e) {
+                e.preventDefault();
+                let pasteData = (e.clipboardData || window.clipboardData).getData('text');
+                if (pasteData) {
+                    let pastedTags = pasteData.split(',');
+                    pastedTags.forEach(tag => {
+                        let cleanTag = tag.trim();
+                        if (cleanTag && !tagsList.includes(cleanTag)) {
+                            tagsList.push(cleanTag);
+                        }
+                    });
+                    renderTags();
+                }
+            });
         }
 
         function removeTag(index) { tagsList.splice(index, 1); renderTags(); }

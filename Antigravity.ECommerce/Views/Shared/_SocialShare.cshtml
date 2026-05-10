@@ -1,0 +1,28 @@
+@model string
+@{
+    var shareUrl = Context.Request.Scheme + "://" + Context.Request.Host + Context.Request.Path;
+    var title = Model ?? "Chia sẻ";
+}
+<div class="d-flex align-items-center flex-wrap gap-3 mt-4 mb-4 p-3 rounded-3" style="background-color: #f8f9fa; border: 1px solid #e9ecef;">
+    <span class="fw-bold" style="font-size: 15px; color: #1a2b4c;"><i class="fa-solid fa-share-nodes me-2"></i>@title </span>
+    <div class="d-flex gap-2 flex-wrap">
+        <a href="https://www.facebook.com/sharer/sharer.php?u=@shareUrl" target="_blank" class="d-flex align-items-center justify-content-center rounded-circle text-white text-decoration-none shadow-sm" style="width: 36px; height: 36px; background:#3b5998; font-size: 15px; transition: opacity 0.2s;" title="Chia sẻ Facebook" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
+            <i class="fa-brands fa-facebook-f"></i>
+        </a>
+        <a href="https://twitter.com/intent/tweet?url=@shareUrl" target="_blank" class="d-flex align-items-center justify-content-center rounded-circle text-white text-decoration-none shadow-sm" style="width: 36px; height: 36px; background:#1da1f2; font-size: 15px; transition: opacity 0.2s;" title="Chia sẻ Twitter" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
+            <i class="fa-brands fa-twitter"></i>
+        </a>
+        <a href="https://www.linkedin.com/shareArticle?mini=true&url=@shareUrl" target="_blank" class="d-flex align-items-center justify-content-center rounded-circle text-white text-decoration-none shadow-sm" style="width: 36px; height: 36px; background:#0a66c2; font-size: 15px; transition: opacity 0.2s;" title="Chia sẻ LinkedIn" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
+            <i class="fa-brands fa-linkedin-in"></i>
+        </a>
+        <a href="https://zalo.me/share?url=@shareUrl" target="_blank" class="d-flex align-items-center justify-content-center rounded-circle text-white text-decoration-none shadow-sm" style="width: 36px; height: 36px; background:#0068ff; font-size: 15px; transition: opacity 0.2s;" title="Chia sẻ Zalo" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
+            <strong style="font-size: 10px; font-family: sans-serif; font-style: normal; letter-spacing: 0.5px;">Zalo</strong>
+        </a>
+        <a href="https://t.me/share/url?url=@shareUrl" target="_blank" class="d-flex align-items-center justify-content-center rounded-circle text-white text-decoration-none shadow-sm" style="width: 36px; height: 36px; background:#0088cc; font-size: 15px; transition: opacity 0.2s;" title="Chia sẻ Telegram" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
+            <i class="fa-brands fa-telegram"></i>
+        </a>
+        <button onclick="navigator.clipboard.writeText('@shareUrl'); const o=this; const i=o.innerHTML; o.innerHTML='<i class=\'fa-solid fa-check text-success\'></i>'; setTimeout(()=>o.innerHTML=i, 2000);" class="btn d-flex align-items-center justify-content-center rounded-circle text-dark text-decoration-none shadow-sm p-0 border-0" style="width: 36px; height: 36px; background:#e2e8f0; font-size: 15px; transition: background 0.2s;" title="Copy Link" onmouseover="this.style.background='#cbd5e1'" onmouseout="this.style.background='#e2e8f0'">
+            <i class="fa-solid fa-link"></i>
+        </button>
+    </div>
+</div>

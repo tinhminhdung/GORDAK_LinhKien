@@ -64,14 +64,7 @@
             }
             
             <!-- Social Share -->
-            <div class="d-flex align-items-center gap-3 mt-5 p-3 bg-light rounded-3">
-                <span class="fw-bold">Chia sẻ bài viết: </span>
-                <div class="d-flex gap-2">
-                    <a href="https://www.facebook.com/sharer/sharer.php?u=@(Context.Request.Scheme + "://" + Context.Request.Host + Context.Request.Path)" target="_blank" class="social-circle" style="background:#3b5998;"><i class="fa-brands fa-facebook-f"></i></a>
-                    <a href="https://twitter.com/intent/tweet?url=@(Context.Request.Scheme + "://" + Context.Request.Host + Context.Request.Path)" target="_blank" class="social-circle" style="background:#1da1f2;"><i class="fa-brands fa-twitter"></i></a>
-                    <a href="https://www.linkedin.com/shareArticle?mini=true&url=@(Context.Request.Scheme + "://" + Context.Request.Host + Context.Request.Path)" target="_blank" class="social-circle" style="background:#0a66c2;"><i class="fa-brands fa-linkedin-in"></i></a>
-                </div>
-            </div>
+            <partial name="_SocialShare" model='"Chia sẻ bài viết:"' />
 
             <!-- Tin liên quan -->
             @if(related.Any()) {
@@ -83,7 +76,7 @@
                                 <div class="tt-card-small">
                                     <div class="tt-card-img-wrap">
                                         <a href="/tin-tuc/detail/@(r.Slug).html">
-                                            <img src="@(string.IsNullOrEmpty(r.Image) ? "/assets/images/placeholder.png" : r.Image)" alt="@r.Title" style="height: 140px;">
+                                            <img src="@(string.IsNullOrEmpty(r.Image) ? "/assets/images/placeholder.png" : r.Image)" alt="@r.Title" style="height: 140px; width: 100%; object-fit: cover;">
                                         </a>
                                     </div>
                                     <h3 class="tt-card-title-sm line-clamp-2" style="font-size: 13px;">

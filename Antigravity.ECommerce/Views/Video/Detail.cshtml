@@ -61,9 +61,8 @@
                 <div class="tt-card-desc mb-3" style="font-size: 15px; color: #444;">
                     @Html.Raw(Model.SeoDescription)
                 </div>
-                <div class="vd-actions">
-                    <a href="https://www.facebook.com/sharer/sharer.php?u=@(Context.Request.Scheme + "://" + Context.Request.Host + Context.Request.Path)" target="_blank" class="vd-action-btn"><i class="fa-solid fa-share-nodes"></i> Chia sẻ</a>
-                </div>
+                <!-- Social Share -->
+                <partial name="_SocialShare" model='"Chia sẻ video:"' />
             </div>
 
             <!-- Video liên quan -->
