@@ -73,6 +73,33 @@
     </image:image>
   </url>
   <url>
+    <loc>https://localhost:7057/san-pham/tram-han5.html</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://localhost:7057/uploads/logo/logo_dak.png</image:loc>
+      <image:title>Trạm hàn5</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://localhost:7057/tin-tuc/tram-han2.html</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://localhost:7057/uploads/logo/logo_dak.png</image:loc>
+      <image:title>Trạm hàn2</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://localhost:7057/tin-tuc/tram-han1.html</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://localhost:7057/uploads/logo/logo_dak.png</image:loc>
+      <image:title>Trạm hàn</image:title>
+    </image:image>
+  </url>
+  <url>
     <loc>https://localhost:7057/tin-tuc/cong-nghe-ky-thuat.html</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
@@ -178,6 +205,15 @@
     <image:image>
       <image:loc>https://localhost:7057/uploads/SanPham/--Ampe-kim--Kep-dong/638731534184276425.jpg</image:loc>
       <image:title>Thiết bị đo điện</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://localhost:7057/san-pham/detail/11111111-668.html</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://localhost:7057/uploads/logo/logo_dak.png</image:loc>
+      <image:title>11111111</image:title>
     </image:image>
   </url>
   <url>

@@ -1,0 +1,11 @@
+#Hosting
+http://gordak.vn:8443
+
+
+https://103.131.74.26:8443/login_up.php
+tk: gordak.vn
+pass: LrSEdqpmcb2i$04&
+
+#FTP
+tk: gordakvn6a01
+pass: GSxUedmol36f*n1$

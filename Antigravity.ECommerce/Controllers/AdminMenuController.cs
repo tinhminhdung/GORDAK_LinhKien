@@ -117,12 +117,12 @@ namespace Antigravity.ECommerce.Controllers
                     }
                 }
 
-                // Duplicate Name Check
-                var existingName = SCategory.Search(model.Name, null, null, "Name", "ASC", 1, 10, 0).FirstOrDefault(x => x.Name == model.Name);
-                if (existingName != null)
-                {
-                    ModelState.AddModelError("Name", "Tên Menu này đã tồn tại.");
-                }
+                // BỎ KIỂM TRA TRÙNG TÊN: Cho phép đặt trùng tên menu (VD: 2 nút "Sản phẩm" ở 2 vị trí khác nhau)
+                // var existingName = SCategory.Search(model.Name, null, null, "Name", "ASC", 1, 10, 0).FirstOrDefault(x => x.Name == model.Name);
+                // if (existingName != null)
+                // {
+                //     ModelState.AddModelError("Name", "Tên Menu này đã tồn tại.");
+                // }
 
                 if (ModelState.IsValid)
                 {
@@ -164,12 +164,12 @@ namespace Antigravity.ECommerce.Controllers
                     }
                 }
 
-                // Duplicate Name Check
-                var existingName = SCategory.Search(model.Name, null, null, "Name", "ASC", 1, 10, 0).FirstOrDefault(x => x.Name == model.Name && x.CategoryId != model.CategoryId);
-                if (existingName != null)
-                {
-                    ModelState.AddModelError("Name", "Tên Menu này đã tồn tại.");
-                }
+                // BỎ KIỂM TRA TRÙNG TÊN: Cho phép đặt trùng tên menu
+                // var existingName = SCategory.Search(model.Name, null, null, "Name", "ASC", 1, 10, 0).FirstOrDefault(x => x.Name == model.Name && x.CategoryId != model.CategoryId);
+                // if (existingName != null)
+                // {
+                //     ModelState.AddModelError("Name", "Tên Menu này đã tồn tại.");
+                // }
 
                 if (ModelState.IsValid)
                 {

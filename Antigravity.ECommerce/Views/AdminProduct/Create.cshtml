@@ -1,4 +1,4 @@
-﻿@model Antigravity.ECommerce.Models.Product
+@model Antigravity.ECommerce.Models.Product
 @{
     ViewData["Title"] = "Thêm mới Sản phẩm";
     Layout = "_AdminLayout";
@@ -557,18 +557,30 @@
             const displayOld = document.getElementById('display_OldPrice'), hiddenOld = document.getElementById('OldPrice');
             const displayPur = document.getElementById('display_PurchasePrice'), hiddenPur = document.getElementById('PurchasePrice');
             
-            function formatNumber(inputDisplay, inputHidden) {
+            function formatNumber(inputDisplay, inputHidden, vatType) {
                 if(!inputDisplay || !inputHidden) return;
                 inputDisplay.addEventListener('input', function() {
-                    let val = this.value.replace(/,/g, '');
-                    inputHidden.value = isNaN(val) || val === '' ? 0 : val;
-                    this.value = val.toString().replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                    // Lấy ra tất cả các chữ số
+                    let rawVal = this.value.replace(/\D/g, '');
+                    let num = rawVal === '' ? 0 : parseInt(rawVal, 10);
+                    inputHidden.value = num;
+                    this.value = (num === 0 && rawVal === '') ? '' : num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+
+                    if (vatType === 'price' && displayOld && hiddenOld) {
+                        let old = Math.round(num / 1.08);
+                        hiddenOld.value = old;
+                        displayOld.value = (old === 0 && rawVal === '') ? '' : old.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                    } else if (vatType === 'oldPrice' && display && hidden) {
+                        let price = Math.round(num * 1.08);
+                        hidden.value = price;
+                        display.value = (price === 0 && rawVal === '') ? '' : price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                    }
                 });
             }
             
-            formatNumber(display, hidden);
-            formatNumber(displayOld, hiddenOld);
-            formatNumber(displayPur, hiddenPur);
+            formatNumber(display, hidden, 'price');
+            formatNumber(displayOld, hiddenOld, 'oldPrice');
+            formatNumber(displayPur, hiddenPur, null);
         }
 
         let tagsList = [];

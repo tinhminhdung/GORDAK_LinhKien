@@ -1,4 +1,4 @@
-﻿@model Antigravity.ECommerce.Models.Category
+@model Antigravity.ECommerce.Models.Category
 @{
     ViewBag.Title = "Chỉnh sửa mục Menu";
     Layout = "_AdminLayout";
@@ -37,6 +37,7 @@
 </div>
 
 <form asp-action="Edit" method="post" id="menuForm">
+    <div asp-validation-summary="All" class="text-danger mb-3" style="font-weight: bold;"></div>
     <input type="hidden" asp-for="CategoryId" />
     <input type="hidden" asp-for="Url" id="DirectUrl" />
 
@@ -49,6 +50,7 @@
                                 <div class="mb-3">
                                     <label class="form-label">Tên hiển thị trên Menu <span class="text-danger">*</span></label>
                                     <input type="text" class="form-control" asp-for="Name" id="MenuName" placeholder="VD: Trang chủ, Sản phẩm, Giới thiệu..." required>
+                                    <span asp-validation-for="Name" class="text-danger d-block mt-1"></span>
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label">Icon / Biểu tượng (Chỉ dành cho menu cấp 1)</label>
@@ -196,6 +198,7 @@
                                         <input type="text" class="form-control" asp-for="Slug" id="Slug" placeholder="nhap-duong-dan">
                                         <span class="input-group-text d-none" id="slug-suffix">.html</span>
                                     </div>
+                                    <span asp-validation-for="Slug" class="text-danger d-block mt-1"></span>
                                     <small class="text-muted italic" id="help-slug-url">Slug dùng để tạo đường dẫn thân thiện SEO.</small>
                                 </div>
                             </div>
