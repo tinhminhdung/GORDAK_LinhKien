@@ -1,4 +1,4 @@
-﻿@using Antigravity.ECommerce.Models
+@using Antigravity.ECommerce.Models
 @{
     Layout = "_MainLayout";
     ViewBag.Title = "Về thương hiệu Gordak";
@@ -28,7 +28,7 @@
         <p class="gt-hero-label">@aboutHero?.Link</p>
         <h1 class="gt-hero-title">@aboutHero?.Title</h1>
         <p class="gt-hero-subtitle">@aboutHero?.VideoUrl</p>
-        <p class="gt-hero-desc">@aboutHero?.Description</p>
+        <p class="gt-hero-desc">@Html.Raw(aboutHero?.Description)</p>
         @if(heroStats.Count > 0)
         {
         <div class="row g-3 mt-3">
@@ -94,7 +94,7 @@
           else if (!string.IsNullOrEmpty(item.VideoUrl))
           { <i class="@item.VideoUrl"></i> }
           <strong>@item.Title</strong>
-          <small>@(item.Description ?? item.Link)</small>
+          <small>@Html.Raw(item.Description ?? item.Link)</small>
         </div>
       </div>
       }
@@ -120,7 +120,7 @@
               else
               { <i class="@tl.VideoUrl"></i> }
             </div>
-            <div><strong>@tl.Title</strong><p>@(tl.Description ?? tl.Link)</p></div>
+            <div><strong>@tl.Title</strong><p>@Html.Raw(tl.Description ?? tl.Link)</p></div>
           </div>
           }
         }
@@ -172,11 +172,11 @@
             <h3 class="product-name"><a href="/san-pham/detail/@(p.Slug)-@(p.ProductId).html" class="text-decoration-none text-dark">@p.Name</a></h3>
             <p class="product-desc line-clamp-2" style="font-size:12px; color:#666;">@(string.IsNullOrEmpty(p.ShortDescription) ? p.Name : p.ShortDescription)</p>
             <div class="mt-auto">
-                <div class="product-price">@p.Price.ToString("N0")đ</div>
+                <div class="product-price">@p.OldPrice.ToString("N0")đ</div>
                 <div class="product-actions d-flex gap-2 mt-2">
-                  <a href="/san-pham/detail/@(p.Slug)-@(p.ProductId).html" class="btn-outline-gd flex-fill text-center px-0 py-1" style="font-size:13px;">Xem chi tiết</a>
-                  <a href="javascript:void(0)" onclick="addToCart(@p.ProductId,1)" class="btn-gd flex-fill d-flex align-items-center justify-content-center gap-1 py-1" style="font-size:13px;">
-                    <i class="fa-solid fa-cart-shopping"></i> Mua ngay
+                  <a href="/san-pham/detail/@(p.Slug)-@(p.ProductId).html" class="btn-outline-gd flex-fill text-center px-0 py-1" style="font-size:13px;"><i class="fa-solid fa-eye" style="margin-right:4px;"></i>Xem chi tiết</a>
+                  <a href="javascript:void(0)" onclick="addToCart(@p.ProductId,1)" class="btn-gd d-flex align-items-center justify-content-center px-0 py-0" style="width:36px; flex-shrink:0;" title="Thêm vào giỏ hàng">
+                    <i class="fa-solid fa-cart-shopping" style="font-size:14px;"></i>
                   </a>
                 </div>
             </div>

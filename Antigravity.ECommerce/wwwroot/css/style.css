@@ -723,7 +723,7 @@ img {
     border-radius: 5px;
     padding: 7px 4px;
     text-align: center;
-    font-size: 13px !important;
+    font-size: 16px !important;
     transition: all .15s;
     cursor: pointer;
     display: flex;
@@ -4730,5 +4730,211 @@ h1.fw-bold.mb-3.display-5 {
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
+}
+
+/* =================================================================
+   CMS CONTENT STYLES
+   Áp dụng cho mọi vùng nội dung do Admin soạn thảo bằng TinyMCE:
+   .product-content  → Chi tiết / Thông số sản phẩm
+   .main-detail-content → Chi tiết Tin tức, Trang nội dung
+   ================================================================= */
+.product-content,
+.main-detail-content {
+    font-size: 15px;
+    line-height: 1.75;
+    color: #1a2b4a;
+    word-break: break-word;
+}
+
+/* ---- Link ---- */
+.product-content a,
+.main-detail-content a {
+    color: #0d6efd;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    transition: color .15s;
+}
+.product-content a:hover,
+.main-detail-content a:hover {
+    color: #0a58ca;
+}
+
+/* ---- Headings ---- */
+.product-content h1,
+.product-content h2,
+.product-content h3,
+.product-content h4,
+.product-content h5,
+.product-content h6,
+.main-detail-content h1,
+.main-detail-content h2,
+.main-detail-content h3,
+.main-detail-content h4,
+.main-detail-content h5,
+.main-detail-content h6 {
+    color: #0d2556;
+    font-weight: 700;
+    line-height: 1.35;
+    margin-top: 1.4em;
+    margin-bottom: .6em;
+}
+.product-content h2, .main-detail-content h2 { font-size: 1.35em; }
+.product-content h3, .main-detail-content h3 { font-size: 1.18em; }
+.product-content h4, .main-detail-content h4 { font-size: 1.05em; }
+
+/* ---- Paragraph & spacing ---- */
+.product-content p,
+.main-detail-content p {
+    margin-top: 0;
+    margin-bottom: .85em;
+}
+
+/* ---- Image ---- */
+.product-content img,
+.main-detail-content img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 6px;
+    margin: 10px 0;
+    display: block;
+}
+
+/* ---- TABLE - khôi phục đường kẻ ---- */
+.product-content table,
+.main-detail-content table {
+    width: 100%;
+    border-collapse: collapse !important;
+    margin: 18px 0;
+    font-size: 14px;
+    overflow-x: auto;
+    display: table;
+}
+.product-content table td,
+.product-content table th,
+.product-content table tr,
+.product-content table thead,
+.product-content table tbody,
+.product-content table tfoot,
+.main-detail-content table td,
+.main-detail-content table th,
+.main-detail-content table tr,
+.main-detail-content table thead,
+.main-detail-content table tbody,
+.main-detail-content table tfoot {
+    border: 1px solid #c8d6e5 !important;
+    border-width: 1px !important;
+    border-style: solid !important;
+    border-color: #c8d6e5 !important;
+}
+.product-content table th,
+.main-detail-content table th {
+    background: #f0f4fb;
+    font-weight: 700;
+    color: #0d2556;
+    padding: 9px 14px;
+    text-align: center;
+}
+.product-content table td,
+.main-detail-content table td {
+    padding: 8px 14px;
+    vertical-align: middle;
+    color: #2a3a54;
+}
+.product-content table tr:nth-child(even) td,
+.main-detail-content table tr:nth-child(even) td {
+    background: #f8faff;
+}
+.product-content table tr:hover td,
+.main-detail-content table tr:hover td {
+    background: #eef3fb;
+}
+
+/* ---- List ---- */
+.product-content ul,
+.product-content ol,
+.main-detail-content ul,
+.main-detail-content ol {
+    padding-left: 1.6em;
+    margin-bottom: .85em;
+}
+.product-content ul { list-style: disc; }
+.product-content ol { list-style: decimal; }
+.main-detail-content ul { list-style: disc; }
+.main-detail-content ol { list-style: decimal; }
+.product-content li,
+.main-detail-content li {
+    margin-bottom: .3em;
+}
+
+/* ---- Blockquote ---- */
+.product-content blockquote,
+.main-detail-content blockquote {
+    border-left: 4px solid #1a3c8a;
+    margin: 16px 0;
+    padding: 10px 18px;
+    background: #f4f7fb;
+    border-radius: 0 6px 6px 0;
+    color: #334;
+    font-style: italic;
+}
+
+/* ---- Code / Pre ---- */
+.product-content pre,
+.main-detail-content pre {
+    background: #1e293b;
+    color: #e2e8f0;
+    border-radius: 6px;
+    padding: 14px 18px;
+    overflow-x: auto;
+    font-size: 13px;
+    margin: 16px 0;
+}
+.product-content code,
+.main-detail-content code {
+    background: #f0f4fb;
+    border-radius: 4px;
+    padding: 1px 5px;
+    font-size: 13px;
+    color: #c0392b;
+}
+
+/* Responsive table wrapper */
+@media (max-width: 768px) {
+    .product-content table,
+    .main-detail-content table {
+        display: block;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+}
+
+/* ---- Hiển thị nhiều ảnh trên 1 dòng trong bài viết ---- */
+.product-content h1:has(> img:nth-of-type(2)),
+.product-content h2:has(> img:nth-of-type(2)),
+.product-content h3:has(> img:nth-of-type(2)),
+.product-content h4:has(> img:nth-of-type(2)),
+.product-content h5:has(> img:nth-of-type(2)),
+.product-content h6:has(> img:nth-of-type(2)),
+.product-content p:has(> img:nth-of-type(2)) {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 8px;
+    align-items: center;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.product-content h1:has(> img:nth-of-type(2)) > img,
+.product-content h2:has(> img:nth-of-type(2)) > img,
+.product-content h3:has(> img:nth-of-type(2)) > img,
+.product-content h4:has(> img:nth-of-type(2)) > img,
+.product-content h5:has(> img:nth-of-type(2)) > img,
+.product-content h6:has(> img:nth-of-type(2)) > img,
+.product-content p:has(> img:nth-of-type(2)) > img {
+    flex: 1 1 0;
+    min-width: 0;
+    max-height: 400px; /* Tránh ảnh quá cao làm vỡ layout */
+    object-fit: contain;
+    width: auto;
 }
 

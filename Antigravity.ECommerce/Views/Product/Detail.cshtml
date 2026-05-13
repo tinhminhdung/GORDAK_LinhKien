@@ -1,4 +1,4 @@
-﻿@model Antigravity.ECommerce.Models.Product
+@model Antigravity.ECommerce.Models.Product
 @using Antigravity.ECommerce.Services
 @using Antigravity.ECommerce.Models
 @{
@@ -162,7 +162,7 @@
                 </div>
                 }
                 <div class="pd2-price-row">
-                  <span style="color:#666;"><b style="color:#e30000;">Giá bán</b>@(Model.Price > 0 ? " (VAT 8 %)" : ""):</span>
+                  <span style="color:#666;"><b style="color:#e30000;">Giá bán</b>@(Model.Price > 0 ? " (Sau VAT)" : ""):</span>
                                 <span class="pd2-price-red">@Model.Price.ToString("N0")đ</span>
                 </div>
               </div>
@@ -317,7 +317,7 @@
               </div>
               <div class="pd2-commit-text">
                 <h4>@item.Title</h4>
-                <p>@item.Description</p>
+                <p>@Html.Raw(item.Description)</p>
               </div>
             </div>
             }
@@ -368,8 +368,8 @@
                   </a>
                   <div class="pd2-acc-info">
                     <a href="/san-pham/detail/@(item.Slug)-@(item.ProductId).html" class="text-decoration-none text-dark"><div class="pd2-acc-name">@item.Name</div></a>
-                    <div class="pd2-acc-price">@item.Price.ToString("N0")đ</div>
-                    <a href="/san-pham/detail/@(item.Slug)-@(item.ProductId).html" class="pd2-acc-btn">Xem chi tiết</a>
+                    <div class="pd2-acc-price">@item.OldPrice.ToString("N0")đ</div>
+                    <a href="/san-pham/detail/@(item.Slug)-@(item.ProductId).html" class="pd2-acc-btn"><i class="fa-solid fa-eye" style="margin-right:4px;"></i>Xem chi tiết</a>
                   </div>
                 </div>
               }
@@ -387,8 +387,8 @@
                     </a>
                     <div class="pd2-acc-info">
                       <a href="/san-pham/detail/@(item.Slug)-@(item.ProductId).html" class="text-decoration-none text-dark"><div class="pd2-acc-name">@item.Name</div></a>
-                      <div class="pd2-acc-price">@item.Price.ToString("N0")đ</div>
-                      <a href="/san-pham/detail/@(item.Slug)-@(item.ProductId).html" class="pd2-acc-btn">Xem chi tiết</a>
+                      <div class="pd2-acc-price">@item.OldPrice.ToString("N0")đ</div>
+                      <a href="/san-pham/detail/@(item.Slug)-@(item.ProductId).html" class="pd2-acc-btn"><i class="fa-solid fa-eye" style="margin-right:4px;"></i>Xem chi tiết</a>
                     </div>
                   </div>
                 }
@@ -419,8 +419,8 @@
                   </a>
                   <div class="pd2-acc-info">
                     <a href="/san-pham/detail/@(item.Slug)-@(item.ProductId).html" class="text-decoration-none text-dark"><div class="pd2-acc-name">@item.Name</div></a>
-                    <div class="pd2-acc-price">@item.Price.ToString("N0")đ</div>
-                    <a href="/san-pham/detail/@(item.Slug)-@(item.ProductId).html" class="pd2-acc-btn">Xem chi tiết</a>
+                    <div class="pd2-acc-price">@item.OldPrice.ToString("N0")đ</div>
+                    <a href="/san-pham/detail/@(item.Slug)-@(item.ProductId).html" class="pd2-acc-btn"><i class="fa-solid fa-eye" style="margin-right:4px;"></i>Xem chi tiết</a>
                   </div>
                 </div>
               }
@@ -438,8 +438,8 @@
                     </a>
                     <div class="pd2-acc-info">
                       <a href="/san-pham/detail/@(item.Slug)-@(item.ProductId).html" class="text-decoration-none text-dark"><div class="pd2-acc-name">@item.Name</div></a>
-                      <div class="pd2-acc-price">@item.Price.ToString("N0")đ</div>
-                      <a href="/san-pham/detail/@(item.Slug)-@(item.ProductId).html" class="pd2-acc-btn">Xem chi tiết</a>
+                      <div class="pd2-acc-price">@item.OldPrice.ToString("N0")đ</div>
+                      <a href="/san-pham/detail/@(item.Slug)-@(item.ProductId).html" class="pd2-acc-btn"><i class="fa-solid fa-eye" style="margin-right:4px;"></i>Xem chi tiết</a>
                     </div>
                   </div>
                 }
@@ -488,11 +488,11 @@
                             <h3 class="product-name"><a href="/san-pham/detail/@(p.Slug)-@(p.ProductId).html" class="text-decoration-none text-dark">@p.Name</a></h3>
                             <p class="product-desc line-clamp-2" style="font-size:12px; color:#666;">@(string.IsNullOrEmpty(p.ShortDescription) ? p.Name : p.ShortDescription)</p>
                             <div class="mt-auto">
-                                <div class="product-price">@p.Price.ToString("N0")đ</div>
+                                <div class="product-price">@p.OldPrice.ToString("N0")đ</div>
                                 <div class="product-actions d-flex gap-2 mt-2">
-                                    <a href="/san-pham/detail/@(p.Slug)-@(p.ProductId).html" class="btn-outline-gd flex-fill text-center px-0 py-1" style="font-size:13px;">Xem chi tiết</a>
-                                    <a href="javascript:void(0)" onclick="addToCart(@p.ProductId,1)" class="btn-gd flex-fill d-flex align-items-center justify-content-center gap-1 py-1" style="font-size:13px;">
-                                        <i class="fa-solid fa-cart-shopping"></i> Mua ngay
+                                    <a href="/san-pham/detail/@(p.Slug)-@(p.ProductId).html" class="btn-outline-gd flex-fill text-center px-0 py-1" style="font-size:13px;"><i class="fa-solid fa-eye" style="margin-right:4px;"></i>Xem chi tiết</a>
+                                    <a href="javascript:void(0)" onclick="addToCart(@p.ProductId,1)" class="btn-gd d-flex align-items-center justify-content-center px-0 py-0" style="width:36px; flex-shrink:0;" title="Thêm vào giỏ hàng">
+                                        <i class="fa-solid fa-cart-shopping" style="font-size:14px;"></i>
                                     </a>
                                 </div>
                             </div>

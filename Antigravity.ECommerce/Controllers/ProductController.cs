@@ -222,7 +222,40 @@ namespace Antigravity.ECommerce.Controllers
         }
         #endregion
 
-        #region 3. Tính năng Đánh giá (AJAX API)
+        #region 3. Live Search Suggest API
+        /// <summary>
+        /// API trả về gợi ý sản phẩm khi người dùng gõ tìm kiếm (Live Search)
+        /// Kết quả được cache 5 phút để giảm tải DB
+        /// </summary>
+        [HttpGet]
+        public IActionResult SearchSuggest(string q = "")
+        {
+            if (string.IsNullOrWhiteSpace(q) || q.Trim().Length < 1)
+                return Json(new List<object>());
+
+            string keyword = q.Trim();
+            string cacheKey = $"Product_Suggest_{keyword.ToLower()}";
+
+            var results = SCache.GetOrSet(cacheKey, () =>
+            {
+                var products = FProduct.Search(keyword, null, 1, null, null, null, "CreatedAt", "DESC", 1, 8);
+                return products.Select(p => new
+                {
+                    id = p.ProductId,
+                    name = p.Name,
+                    slug = p.Slug,
+                    image = string.IsNullOrEmpty(p.MainImage) ? "/assets/images/no-image.png" : p.MainImage,
+                    price = p.Price,
+                    priceFormatted = p.Price > 0 ? p.Price.ToString("N0") + "đ" : "Liên hệ",
+                    url = $"/san-pham/detail/{p.Slug}-{p.ProductId}.html"
+                }).ToList();
+            }, 5);
+
+            return Json(results);
+        }
+        #endregion
+
+        #region 4. Tính năng Đánh giá (AJAX API)
         /// <summary>
         /// API Xử lý hành động gửi đánh giá của khách hàng
         /// </summary>

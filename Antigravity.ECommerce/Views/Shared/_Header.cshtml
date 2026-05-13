@@ -55,12 +55,15 @@
           } 
         </a>
       </div>
-      <!-- Search -->
-      <div class="col">
-        <form action="/Product/Search" method="get" class="search-box d-flex ms-auto me-4" style="max-width:515px; margin:0;">
-          <input class="form-control search-input" name="q" placeholder="Bạn cần tìm sản phẩm nào?" required />
-          <button class="btn-search" type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
-        </form>
+      <!-- Search Desktop -->
+      <div class="col" style="min-width:0;">
+        <div class="gd-search-wrap" id="gdSearchDesktop" style="position:relative; width:100%;">
+          <form action="/Product/Search" method="get" class="search-box d-flex ms-auto me-4" style="max-width:515px; margin:0 !important;" autocomplete="off" onsubmit="return validateSearch('gdSearchInput')">
+            <input class="form-control search-input" id="gdSearchInput" name="q" placeholder="Bạn cần tìm sản phẩm nào?" autocomplete="off" />
+            <button class="btn-search" type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
+          </form>
+          <div class="gd-suggest-box" id="gdSuggestDesktop"></div>
+        </div>
       </div>
       <!-- Quick actions -->
       <div class="col-auto d-flex align-items-center gap-4">
@@ -173,10 +176,13 @@
   </div>
 
   <div class="container pb-2">
-    <form action="/Product/Search" method="get" class="search-box d-flex">
-      <input class="form-control search-input" name="q" placeholder="Bạn cần tìm sản phẩm nào?" required />
-      <button class="btn-search" type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
-    </form>
+    <div class="gd-search-wrap" id="gdSearchMobile">
+      <form action="/Product/Search" method="get" class="search-box d-flex" autocomplete="off" onsubmit="return validateSearch('gdSearchInputMobile')">
+        <input class="form-control search-input" id="gdSearchInputMobile" name="q" placeholder="Bạn cần tìm sản phẩm nào?" autocomplete="off" />
+        <button class="btn-search" type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
+      </form>
+      <div class="gd-suggest-box" id="gdSuggestMobile"></div>
+    </div>
   </div>
   <!-- Mobile icon row -->
   <div class="mobile-quick-row container d-flex justify-content-around text-center pb-2">
@@ -190,3 +196,223 @@
     <a href="/lien-he.html" class="mq-item text-decoration-none"><i class="fa-solid fa-address-book"></i><span>Liên hệ</span></a>
   </div>
 </header>
+
+<style>
+/* ===== LIVE SEARCH SUGGEST ===== */
+#gdSuggestDesktop, #gdSuggestMobile {
+  position: absolute;
+  top: calc(100% + 5px);
+  left: 0;
+  right: 0;
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 8px 40px rgba(26,60,138,0.18), 0 2px 8px rgba(0,0,0,0.08);
+  z-index: 99999;
+  overflow: hidden;
+  display: none;
+  border: 1px solid rgba(26,60,138,0.1);
+  animation: gdSuggestIn 0.16s cubic-bezier(.4,0,.2,1);
+  max-height: 520px;
+  overflow-y: auto;
+}
+@@keyframes gdSuggestIn {
+  from { opacity:0; transform:translateY(-6px) scaleY(.97); }
+  to   { opacity:1; transform:translateY(0)    scaleY(1); }
+}
+#gdSuggestDesktop.gd-open, #gdSuggestMobile.gd-open { display: block; }
+.gd-suggest-header {
+  padding: 9px 14px 5px;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: .07em;
+  color: #94a3b8;
+  text-transform: uppercase;
+  background: #f8faff;
+  border-bottom: 1px solid #eef2f9;
+}
+.gd-suggest-item {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 9px 14px;
+  text-decoration: none !important;
+  color: #1e293b !important;
+  transition: background .13s, transform .13s;
+  border-bottom: 1px solid #f4f7fb;
+}
+.gd-suggest-item:last-of-type { border-bottom: none; }
+.gd-suggest-item:hover, .gd-suggest-item.gd-active {
+  background: linear-gradient(90deg,#eff6ff,#f0fdf4);
+  transform: translateX(3px);
+}
+.gd-suggest-thumb {
+  width: 46px; height: 46px;
+  object-fit: contain;
+  border-radius: 8px;
+  border: 1px solid #e2eaf4;
+  background: #f8faff;
+  flex-shrink: 0;
+}
+.gd-suggest-info { flex:1; min-width:0; }
+.gd-suggest-name {
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.4;
+  white-space: normal;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.gd-suggest-name em { font-style:normal; color:#e30000; font-weight:700; }
+.gd-suggest-price { font-size:12.5px; font-weight:700; color:#e30000; margin-top:2px; }
+.gd-suggest-arr { color:#cbd5e1; font-size:11px; flex-shrink:0; }
+.gd-suggest-item:hover .gd-suggest-arr { color:#1a3c8a; }
+.gd-suggest-footer {
+  padding: 9px 14px;
+  background: #f8faff;
+  text-align: center;
+  border-top: 1px solid #eef2f9;
+}
+.gd-suggest-footer a {
+  font-size: 12.5px;
+  color: #1a3c8a;
+  font-weight: 600;
+  text-decoration: none;
+}
+.gd-suggest-footer a:hover { color:#e30000; }
+.gd-suggest-loading {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 14px;
+  color: #94a3b8;
+  font-size: 12.5px;
+}
+.gd-suggest-spin {
+  width:16px; height:16px;
+  border:2px solid #e2e8f0;
+  border-top-color:#1a3c8a;
+  border-radius:50%;
+  animation: gdSpin .65s linear infinite;
+}
+@@keyframes gdSpin { to { transform:rotate(360deg); } }
+.gd-suggest-empty {
+  padding:18px 14px;
+  text-align:center;
+  color:#94a3b8;
+  font-size:12.5px;
+}
+.gd-suggest-empty i { display:block; font-size:26px; margin-bottom:6px; color:#cbd5e1; }
+</style>
+
+<script>
+(function(){
+  var DELAY = 280, MINC = 1;
+
+  function esc(t){ return t.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'); }
+  function hi(text,q){
+    if(!q) return text;
+    return text.replace(new RegExp('('+esc(q)+')','gi'),'<em>$1</em>');
+  }
+
+  function initSearch(inputId, boxId){
+    var inp = document.getElementById(inputId);
+    var box = document.getElementById(boxId);
+    if(!inp || !box) return;
+
+    var timer=null, lastQ='', curQ='', curData=[], activeIdx=-1;
+
+    function getItems(){ return box.querySelectorAll('.gd-suggest-item'); }
+
+    function open(){ box.classList.add('gd-open'); }
+    function close(){ box.classList.remove('gd-open'); activeIdx=-1; }
+
+    function setActive(idx){
+      var els=getItems();
+      els.forEach(function(e){ e.classList.remove('gd-active'); });
+      if(idx>=0 && idx<els.length){
+        els[idx].classList.add('gd-active');
+        els[idx].scrollIntoView({block:'nearest'});
+        inp.value = curData[idx]?curData[idx].name:curQ;
+      } else {
+        inp.value = curQ;
+      }
+      activeIdx = idx;
+    }
+
+    function render(data, q){
+      curData = data; activeIdx = -1;
+      if(!data||!data.length){
+        box.innerHTML='<div class="gd-suggest-empty"><i class="fa-regular fa-face-sad-tear"></i>Không tìm thấy sản phẩm nào</div>';
+        return;
+      }
+      var h='<div class="gd-suggest-header"><i class="fa-solid fa-bolt" style="margin-right:4px;"></i>Gợi ý tìm kiếm</div>';
+      data.forEach(function(p,i){
+        h+='<a href="'+p.url+'" class="gd-suggest-item" data-idx="'+i+'">';
+        h+='<img class="gd-suggest-thumb" src="'+p.image+'" alt="" loading="lazy">';
+        h+='<div class="gd-suggest-info">';
+        h+='<div class="gd-suggest-name">'+hi(p.name,q)+'</div>';
+        h+='<div class="gd-suggest-price">'+p.priceFormatted+'</div>';
+        h+='</div><i class="fa-solid fa-chevron-right gd-suggest-arr"></i></a>';
+      });
+      h+='<div class="gd-suggest-footer"><a href="/Product/Search?q='+encodeURIComponent(q)+'">';
+      h+='<i class="fa-solid fa-magnifying-glass" style="margin-right:4px;"></i>';
+      h+='Xem tất cả kết quả cho &ldquo;'+q+'&rdquo;</a></div>';
+      box.innerHTML = h;
+    }
+
+    function doFetch(q){
+      curQ = q;
+      box.innerHTML='<div class="gd-suggest-loading"><div class="gd-suggest-spin"></div>Đang tìm...</div>';
+      open();
+      fetch('/Product/SearchSuggest?q='+encodeURIComponent(q))
+        .then(function(r){ return r.json(); })
+        .then(function(d){ if(inp.value.trim()===curQ) render(d,q); })
+        .catch(function(){ box.innerHTML='<div class="gd-suggest-empty"><i class="fa-solid fa-triangle-exclamation"></i>Có lỗi, vui lòng thử lại</div>'; });
+    }
+
+    inp.addEventListener('input',function(){
+      var q=this.value.trim();
+      clearTimeout(timer);
+      if(q.length<MINC){ close(); return; }
+      if(q===lastQ){ open(); return; }
+      lastQ=q;
+      timer=setTimeout(function(){ doFetch(q); }, DELAY);
+    });
+
+    inp.addEventListener('keydown',function(e){
+      if(!box.classList.contains('gd-open')) return;
+      var n=getItems().length;
+      if(e.key==='ArrowDown'){ e.preventDefault(); setActive((activeIdx+1)%n); }
+      else if(e.key==='ArrowUp'){ e.preventDefault(); setActive(activeIdx<=0?n-1:activeIdx-1); }
+      else if(e.key==='Enter' && activeIdx>=0 && curData[activeIdx]){
+        e.preventDefault(); window.location.href=curData[activeIdx].url;
+      } else if(e.key==='Escape'){ close(); this.blur(); }
+    });
+
+    inp.addEventListener('focus',function(){
+      if(this.value.trim().length>=MINC && curData.length) open();
+    });
+
+    document.addEventListener('click',function(e){
+      if(!inp.contains(e.target)&&!box.contains(e.target)) close();
+    });
+  }
+
+  window.validateSearch=function(id){
+    var e=document.getElementById(id);
+    return !!(e&&e.value.trim().length>0);
+  };
+
+  if(document.readyState==='loading'){
+    document.addEventListener('DOMContentLoaded',function(){
+      initSearch('gdSearchInput','gdSuggestDesktop');
+      initSearch('gdSearchInputMobile','gdSuggestMobile');
+    });
+  } else {
+    initSearch('gdSearchInput','gdSuggestDesktop');
+    initSearch('gdSearchInputMobile','gdSuggestMobile');
+  }
+})();
+</script>

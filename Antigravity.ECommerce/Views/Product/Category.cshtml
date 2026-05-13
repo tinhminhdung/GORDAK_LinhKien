@@ -1,4 +1,4 @@
-﻿@model List<Antigravity.ECommerce.Models.Product>
+@model List<Antigravity.ECommerce.Models.Product>
 @{
     Layout = "_MainLayout";
     var category = ViewBag.Category as Antigravity.ECommerce.Models.Category;
@@ -83,6 +83,10 @@
     }
   </div>
   
+  <div class="d-none d-lg-block mt-4 mb-2 position-relative" style="height: 1px; background: rgba(26,60,138,0.15);">
+    <div style="position: absolute; left: 50%; top: -1px; transform: translateX(-50%); width: 100px; height: 3px; background: #1a3c8a; border-radius: 2px;"></div>
+  </div>
+  
   <!-- Mobile & Desktop Filter Trigger -->
   <div class="d-flex justify-content-between align-items-center mt-3 border-top pt-3 d-lg-none">
     <div class="fw-bold text-dark"><i class="fa-solid fa-list me-1"></i> Hiển thị @(Model != null ? Model.Count : 0) sản phẩm</div>
@@ -109,11 +113,11 @@
                   <h3 class="product-name"><a href="/san-pham/detail/@(p.Slug)-@(p.ProductId).html" class="text-decoration-none text-dark">@p.Name</a></h3>
                   <p class="product-desc line-clamp-2" style="font-size:12px; color:#666;">@(string.IsNullOrEmpty(p.ShortDescription) ? p.Name : p.ShortDescription)</p>
                   <div class="mt-auto">
-                      <div class="product-price">@p.Price.ToString("N0")đ</div>
+                      <div class="product-price">@p.OldPrice.ToString("N0")đ</div>
                       <div class="product-actions d-flex gap-2 mt-2">
-                        <a href="/san-pham/detail/@(p.Slug)-@(p.ProductId).html" class="btn-outline-gd flex-fill text-center px-0 py-1" style="font-size:13px;">Xem chi tiết</a>
-                        <a href="javascript:void(0)" onclick="addToCart(@p.ProductId,1)" class="btn-gd flex-fill d-flex align-items-center justify-content-center gap-1 py-1" style="font-size:13px;">
-                          <i class="fa-solid fa-cart-shopping"></i> Mua ngay
+                        <a href="/san-pham/detail/@(p.Slug)-@(p.ProductId).html" class="btn-outline-gd flex-fill text-center px-0 py-1" style="font-size:13px;"><i class="fa-solid fa-eye" style="margin-right:4px;"></i>Xem chi tiết</a>
+                        <a href="javascript:void(0)" onclick="addToCart(@p.ProductId,1)" class="btn-gd d-flex align-items-center justify-content-center px-0 py-0" style="width:36px; flex-shrink:0;" title="Thêm vào giỏ hàng">
+                          <i class="fa-solid fa-cart-shopping" style="font-size:14px;"></i>
                         </a>
                       </div>
                   </div>
@@ -167,11 +171,11 @@
             <h3 class="product-name"><a href="/san-pham/detail/@(p.Slug)-@(p.ProductId).html" class="text-decoration-none text-dark">@p.Name</a></h3>
             <p class="product-desc line-clamp-2" style="font-size:12px; color:#666;">@(string.IsNullOrEmpty(p.ShortDescription) ? p.Name : p.ShortDescription)</p>
             <div class="mt-auto">
-                <div class="product-price">@p.Price.ToString("N0")đ</div>
+                <div class="product-price">@p.OldPrice.ToString("N0")đ</div>
                 <div class="product-actions d-flex gap-2 mt-2">
-                  <a href="/san-pham/detail/@(p.Slug)-@(p.ProductId).html" class="btn-outline-gd flex-fill text-center px-0 py-1" style="font-size:13px;">Xem chi tiết</a>
-                  <a href="javascript:void(0)" onclick="addToCart(@p.ProductId,1)" class="btn-gd flex-fill d-flex align-items-center justify-content-center gap-1 py-1" style="font-size:13px;">
-                    <i class="fa-solid fa-cart-shopping"></i> Mua ngay
+                  <a href="/san-pham/detail/@(p.Slug)-@(p.ProductId).html" class="btn-outline-gd flex-fill text-center px-0 py-1" style="font-size:13px;"><i class="fa-solid fa-eye" style="margin-right:4px;"></i>Xem chi tiết</a>
+                  <a href="javascript:void(0)" onclick="addToCart(@p.ProductId,1)" class="btn-gd d-flex align-items-center justify-content-center px-0 py-0" style="width:36px; flex-shrink:0;" title="Thêm vào giỏ hàng">
+                    <i class="fa-solid fa-cart-shopping" style="font-size:14px;"></i>
                   </a>
                 </div>
             </div>
@@ -192,7 +196,7 @@
     {
         foreach(var c in commitments)
         {
-            <div class="sp-commit-item"><i class="@c.VideoUrl"></i><div><strong>@c.Title</strong><small>@c.Description</small></div></div>
+            <div class="sp-commit-item"><i class="@c.VideoUrl"></i><div><strong>@c.Title</strong><small>@Html.Raw(c.Description)</small></div></div>
         }
     }
   </div>

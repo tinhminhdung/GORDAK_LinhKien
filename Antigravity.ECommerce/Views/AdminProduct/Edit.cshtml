@@ -136,19 +136,27 @@
             <div class="card">
                 <div class="card-header"><h5 class="card-title mb-0">Giá bán &amp; Tồn kho</h5></div>
                 <div class="card-body">
-                    <div class="row mb-3">
-                        <div class="col-md-4">
+                    <div class="row mb-3 align-items-end">
+                        <div class="col-md-3">
                             <label class="form-label">Giá gốc nhập (VNĐ) <i class="mdi mdi-information text-primary" data-bs-toggle="tooltip" title="Giá vốn để tính toán tỷ suất lợi nhuận (khách không thấy)"></i></label>
                             <input type="text" class="form-control text-muted fs-14" id="display_PurchasePrice" placeholder="0">
                             <input type="hidden" asp-for="PurchasePrice" id="PurchasePrice">
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <label class="form-label">Giá (Chưa VAT)</label>
                             <input type="text" class="form-control fs-14" id="display_OldPrice" placeholder="VD: 92,593">
                             <input type="hidden" asp-for="OldPrice" id="OldPrice">
                         </div>
+                        <div class="col-md-2">
+                            <label class="form-label">Thuế VAT</label>
+                            <select class="form-select fs-14" id="vatRate">
+                                <option value="1.08" selected>8%</option>
+                                <option value="1.10">10%</option>
+                                <option value="1">0%</option>
+                            </select>
+                        </div>
                         <div class="col-md-4">
-                            <label class="form-label">Giá bán (VAT 8%) <span class="text-danger">*</span> <i class="mdi mdi-information text-primary" data-bs-toggle="tooltip" title="Số tiền thực tế khách hàng phải trả khi mua"></i></label>
+                            <label class="form-label">Giá bán (Sau VAT) <span class="text-danger">*</span> <i class="mdi mdi-information text-primary" data-bs-toggle="tooltip" title="Số tiền thực tế khách hàng phải trả khi mua"></i></label>
                             <input type="text" class="form-control fw-bold text-success fs-16" id="display_Price" placeholder="VD: 100,000">
                             <input type="hidden" asp-for="Price" id="Price">
                         </div>
@@ -576,17 +584,30 @@
                     inputHidden.value = num;
                     this.value = (num === 0 && rawVal === '') ? '' : num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 
+                    let vat = parseFloat(document.getElementById('vatRate').value) || 1.08;
+
                     if (vatType === 'price' && displayOld && hiddenOld) {
-                        let old = Math.round(num / 1.08);
+                        let old = Math.round(num / vat);
                         hiddenOld.value = old;
                         displayOld.value = (old === 0 && rawVal === '') ? '' : old.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
                     } else if (vatType === 'oldPrice' && display && hidden) {
-                        let price = Math.round(num * 1.08);
+                        let price = Math.round(num * vat);
                         hidden.value = price;
                         display.value = (price === 0 && rawVal === '') ? '' : price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
                     }
                 });
             }
+            
+            document.getElementById('vatRate').addEventListener('change', function() {
+                let vat = parseFloat(this.value) || 1.08;
+                let oldVal = document.getElementById('display_OldPrice').value.replace(/\D/g, '');
+                if (oldVal) {
+                    let num = parseInt(oldVal, 10);
+                    let price = Math.round(num * vat);
+                    document.getElementById('Price').value = price;
+                    document.getElementById('display_Price').value = price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                }
+            });
             
             formatNumber(display, hidden, 'price');
             formatNumber(displayOld, hiddenOld, 'oldPrice');

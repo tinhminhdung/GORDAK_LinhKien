@@ -92,7 +92,7 @@
                                 <th style="width:100px;" class="text-center">Số lượng SP</th>
                                 <th style="width:90px;" class="text-center">Thứ tự</th>
                                 <th style="width:130px;">Trạng thái</th>
-                                <th style="width:280px;  display:none">Hiện trang chủ (Số SP / Thứ tự)</th>
+                                <th style="width:280px;  ">Hiện trang chủ (Số SP / Thứ tự)</th>
                                 <th style="width:140px;" class="text-center">Chức năng</th>
                             </tr>
                         </thead>
@@ -152,7 +152,7 @@
                                                     </label>
                                                 </div>
                                             </td>
-                                            <td style="display:none">
+                                            <td >
                                                 @{
                                                     var homeSetting = homeCategories.FirstOrDefault(h => h.CategoryId == item.CategoryId);
                                                     bool isHome = homeSetting != null && homeSetting.IsActive;
