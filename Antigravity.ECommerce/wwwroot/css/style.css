@@ -4938,3 +4938,8 @@ h1.fw-bold.mb-3.display-5 {
     width: auto;
 }
 
+
+
+.footer-col P {
+    margin-bottom: 4PX;
+}
