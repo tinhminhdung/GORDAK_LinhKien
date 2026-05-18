@@ -25,6 +25,13 @@ namespace Antigravity.ECommerce.Controllers
             var allActive = SVideo.GetAll().Where(x => x.Status == 1).ToList();
             ViewBag.TotalVideoCount = allActive.Count;
             
+            var lookup = SCategory.GetAll().ToLookup(x => x.ParentId);
+            foreach (var cat in categories)
+            {
+                var catIds = SCategory.GetDescendantIds(cat.CategoryId, lookup);
+                cat.ItemCount = allActive.Count(x => catIds.Contains(x.CategoryId));
+            }
+            
             // Nếu có tham số urlCategory, tìm danh mục tương ứng
             if (!string.IsNullOrEmpty(urlCategory))
             {
@@ -92,8 +99,16 @@ namespace Antigravity.ECommerce.Controllers
 
             // Bổ sung dữ liệu cho Sidebar
             var categories = SCategory.Search(null, null, 1, "SortOrder", "ASC", 1, 100, 3);
-            ViewBag.Categories = categories;
             var allActive = SVideo.GetAll().Where(x => x.Status == 1).ToList();
+            
+            var lookup = SCategory.GetAll().ToLookup(x => x.ParentId);
+            foreach (var cat in categories)
+            {
+                var catIds = SCategory.GetDescendantIds(cat.CategoryId, lookup);
+                cat.ItemCount = allActive.Count(x => catIds.Contains(x.CategoryId));
+            }
+
+            ViewBag.Categories = categories;
             ViewBag.TotalVideoCount = allActive.Count;
             ViewBag.HotVideos = allActive.Where(x => x.IsHot).OrderByDescending(x => x.SortOrder).ThenByDescending(x => x.CreatedAt).Take(5).ToList();
 

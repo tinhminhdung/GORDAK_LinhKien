@@ -1,4 +1,4 @@
-﻿@model Antigravity.ECommerce.Models.AdminUser
+@model Antigravity.ECommerce.Models.AdminUser
 @{
     Layout = "_AdminLayout";
     ViewData["Title"] = "Chỉnh sửa tài khoản: " + Model.Username;
@@ -14,7 +14,7 @@
                 }
             </div>
             <div class="card-body p-4">
-                <form action="/AdminUser/Edit" method="post" enctype="multipart/form-data"><div asp-validation-summary="All" class="text-danger mb-3 fw-bold"></div>
+                <form action="/AdminUser/Edit" method="post" enctype="multipart/form-data" autocomplete="off"><div asp-validation-summary="All" class="text-danger mb-3 fw-bold"></div>
                     <input type="hidden" asp-for="UserId" />
                     <input type="hidden" asp-for="Username" />
 
@@ -27,7 +27,7 @@
                         <div class="col-md-6 mb-3">
                             <label class="form-label fw-bold">Mật khẩu mới <i class="ri-information-line text-info" data-bs-toggle="tooltip" title="Để trống nếu không muốn thay đổi mật khẩu hiện tại."></i></label>
                             <div class="input-group">
-                                <input type="password" class="form-control border-info" asp-for="Password" id="password_input" placeholder="Nhập để đổi, trống để giữ nguyên">
+                                <input type="password" class="form-control border-info" asp-for="Password" id="password_input" placeholder="Nhập để đổi, trống để giữ nguyên" autocomplete="new-password">
                                 <button class="btn btn-outline-info" type="button" onclick="togglePassword()"><i class="ri-eye-line"></i></button>
                             </div>
                         </div>
@@ -41,7 +41,7 @@
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label class="form-label fw-bold">Email</label>
-                            <input type="email" class="form-control" asp-for="Email" placeholder="email@example.com">
+                            <input type="email" class="form-control" asp-for="Email" placeholder="email@example.com" autocomplete="off">
                         </div>
                         <div class="col-md-6 mb-3">
                             <label class="form-label fw-bold">Số điện thoại</label>

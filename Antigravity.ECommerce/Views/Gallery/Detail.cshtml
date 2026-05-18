@@ -1,4 +1,4 @@
-﻿@model Antigravity.ECommerce.Models.Gallery
+@model Antigravity.ECommerce.Models.Gallery
 @using Antigravity.ECommerce.Services
 @{
     Layout = "~/Views/Shared/_MainLayout.cshtml";
@@ -10,7 +10,14 @@
 
     // Lấy dữ liệu cho Sidebar trực tiếp trong View
     var categories = SCategory.GetAll().Where(x => x.Status == 1 && x.CategoryType == 6).OrderBy(x => x.SortOrder).ToList();
-    var totalGalleryCount = SGallery.GetAll().Count(x => x.Status == 1);
+    var allGalleries = SGallery.GetAll().Where(x => x.Status == 1).ToList();
+    var totalGalleryCount = allGalleries.Count;
+    var lookup = SCategory.GetAll().ToLookup(x => x.ParentId);
+    foreach (var cat in categories)
+    {
+        var catIds = SCategory.GetDescendantIds(cat.CategoryId, lookup);
+        cat.ItemCount = allGalleries.Count(x => catIds.Contains(x.CategoryId));
+    }
 }
 
 @section Styles {

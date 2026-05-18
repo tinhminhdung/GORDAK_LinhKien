@@ -62,10 +62,17 @@ namespace Antigravity.ECommerce.Controllers
                 }
                 else
                 {
-                    model.CreatedBy = User.Identity?.Name ?? "Admin";
-                    SProduct.Insert(model);
-                    SSeo.RefreshSitemapAndCache();
-                    return RedirectToAction("Index");
+                    try
+                    {
+                        model.CreatedBy = User.Identity?.Name ?? "Admin";
+                        SProduct.Insert(model);
+                        SSeo.RefreshSitemapAndCache();
+                        return RedirectToAction("Index");
+                    }
+                    catch (Exception ex)
+                    {
+                        ModelState.AddModelError("", "Lỗi khi thêm mới: " + ex.Message + (ex.InnerException != null ? " - " + ex.InnerException.Message : ""));
+                    }
                 }
             }
             ViewBag.Categories = SCategory.GetHierarchical().Where(x => x.CategoryType == 1).ToList();
@@ -104,10 +111,17 @@ namespace Antigravity.ECommerce.Controllers
                 }
                 else
                 {
-                    model.UpdatedBy = User.Identity?.Name ?? "Admin";
-                    SProduct.Update(model);
-                    SSeo.RefreshSitemapAndCache();
-                    return RedirectToAction("Index");
+                    try
+                    {
+                        model.UpdatedBy = User.Identity?.Name ?? "Admin";
+                        SProduct.Update(model);
+                        SSeo.RefreshSitemapAndCache();
+                        return RedirectToAction("Index");
+                    }
+                    catch (Exception ex)
+                    {
+                        ModelState.AddModelError("", "Lỗi khi cập nhật: " + ex.Message + (ex.InnerException != null ? " - " + ex.InnerException.Message : ""));
+                    }
                 }
             }
             ViewBag.Categories = SCategory.GetHierarchical().Where(x => x.CategoryType == 1).ToList();

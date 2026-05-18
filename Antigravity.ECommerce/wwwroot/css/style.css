@@ -82,10 +82,9 @@ img {
 }
 
     .top-header .py-3 {
-        padding-top: .15rem !important;
-        padding-bottom: .15rem !important
+        padding-top: 1.15rem !important;
+        padding-bottom: 1.15rem !important;
     }
-
 .search-box {
     max-width: 380px
 }
@@ -709,7 +708,8 @@ img {
     font-size: 15px;
     color: #e30000;
     font-weight: 900;
-    margin: 10px 0
+    margin: 10px 0;
+    text-align: center;
 }
 
 .product-actions {
@@ -1400,7 +1400,7 @@ img {
     }
 
     .btn-outline-gd, .btn-gd {
-        font-size: 11px;
+        font-size: 11px !important;
         padding: 5px 6px;
         border-radius: 6px;
         gap: 3px;
@@ -1685,7 +1685,7 @@ img {
     display: flex;
     align-items: center;
     gap: 10px;
-    margin-bottom: 4px;
+    margin-bottom: 5px;
     font-size: 14px;
 }
 
@@ -4775,19 +4775,19 @@ h1.fw-bold.mb-3.display-5 {
     color: #0d2556;
     font-weight: 700;
     line-height: 1.35;
-    margin-top: 1.4em;
-    margin-bottom: .6em;
+    margin-top: 5px;
+    margin-bottom: 5px;
 }
 .product-content h2, .main-detail-content h2 { font-size: 1.35em; }
 .product-content h3, .main-detail-content h3 { font-size: 1.18em; }
 .product-content h4, .main-detail-content h4 { font-size: 1.05em; }
 
 /* ---- Paragraph & spacing ---- */
-.product-content p,
-.main-detail-content p {
-    margin-top: 0;
-    margin-bottom: .85em;
-}
+    .product-content p,
+    .main-detail-content p {
+        margin-top: 0;
+        margin-bottom: 4px;
+    }
 
 /* ---- Image ---- */
 .product-content img,

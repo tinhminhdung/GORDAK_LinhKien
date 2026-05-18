@@ -73,7 +73,7 @@
       {
         <a href="/san-pham/@(cat.Slug).html" class="sp-cat-item @((category != null && category.CategoryId == cat.CategoryId) ? "active" : "")">
           @if(!string.IsNullOrEmpty(cat.Image)){
-            <img src="@cat.Image" alt="@cat.Name" style="width: 32px; height: 32px; object-fit: contain;" />
+                        <img src="@cat.Image" alt="@cat.Name" style="width: 65px; height: 65px; object-fit: contain;" />
           } else {
             <i class="@(cat.Icon ?? "fa-solid fa-box")"></i>
           }

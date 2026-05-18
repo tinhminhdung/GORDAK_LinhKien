@@ -19,6 +19,18 @@ namespace Antigravity.ECommerce.Controllers
             
             // Lấy danh sách các danh mục Thư viện ảnh (CategoryType = 6) để hiển thị Menu/Sidebar
             var categories = SCategory.Search(null, null, 1, "SortOrder", "ASC", 1, 100, 6);
+            
+            // Deferred execution giúp tiết kiệm RAM khi duyệt hàng ngàn Album
+            IEnumerable<Gallery> allGalleries = SGallery.GetAll().Where(x => x.Status == 1);
+            
+            var lookup = SCategory.GetAll().ToLookup(x => x.ParentId);
+            var allGalleriesList = allGalleries.ToList();
+            foreach (var cat in categories)
+            {
+                var catIds = SCategory.GetDescendantIds(cat.CategoryId, lookup);
+                cat.ItemCount = allGalleriesList.Count(x => catIds.Contains(x.CategoryId));
+            }
+            
             ViewBag.Categories = categories;
             
             if (!string.IsNullOrEmpty(urlCategory))
@@ -43,8 +55,8 @@ namespace Antigravity.ECommerce.Controllers
                 ViewData["Title"] = "Thư viện ảnh - Album Gallery";
             }
 
-            // Deferred execution giúp tiết kiệm RAM khi duyệt hàng ngàn Album
-            IEnumerable<Gallery> allGalleries = SGallery.GetAll().Where(x => x.Status == 1);
+            // Deferred execution đã được khởi tạo ở trên, không cần tạo lại
+            // allGalleries = SGallery.GetAll().Where(x => x.Status == 1);
             if (categoryId.HasValue)
             {
                 var allCatIds = SCategory.GetDescendantIds(categoryId.Value);
