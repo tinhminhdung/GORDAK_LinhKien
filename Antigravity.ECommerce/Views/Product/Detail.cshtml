@@ -533,8 +533,15 @@
             if (t === el) currentThumbIndex = idx;
         });
         el.classList.add('active');
-        // Scroll the thumbnail container to make the active thumb visible
-        el.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+        // Scroll the thumbnail container to make the active thumb visible without scrolling the window
+        const container = document.getElementById('thumbScroll');
+        if (container) {
+            const scrollLeft = el.offsetLeft - (container.clientWidth / 2) + (el.clientWidth / 2);
+            container.scrollTo({
+                left: scrollLeft,
+                behavior: 'smooth'
+            });
+        }
     }
 
     // Auto Slide
