@@ -2,612 +2,657 @@
 @using Antigravity.ECommerce.Services
 @using Antigravity.ECommerce.Models
 @{
-    Layout = "_MainLayout";
-    ViewData["Title"] = !string.IsNullOrEmpty(Model.SeoTitle) ? Model.SeoTitle : Model.Name;
-    ViewData["Description"] = !string.IsNullOrEmpty(Model.SeoDescription) ? Model.SeoDescription : Model.ShortDescription;
-    
-    var related = ViewBag.RelatedProducts as List<Product> ?? new List<Product>();
-    var gallery = !string.IsNullOrEmpty(Model.ImageGallery) ? Model.ImageGallery.Split(',', StringSplitOptions.RemoveEmptyEntries).ToList() : new List<string>();
-    var tags = !string.IsNullOrEmpty(Model.Tags) ? Model.Tags.Split(',').ToList() : new List<string>();
-    var commitments = ViewBag.Commitments as List<Advertising> ?? new List<Advertising>();
-    var dealerCerts = ViewBag.DealerCert as List<Advertising> ?? new List<Advertising>();
-    var settings = ViewBag.Settings as GlobalSettingsViewModel;
-    var videos = !string.IsNullOrEmpty(Model.YoutubeVideo) ? Model.YoutubeVideo.Split(',', StringSplitOptions.RemoveEmptyEntries).ToList() : new List<string>();
+	Layout = "_MainLayout";
+	ViewData["Title"] = !string.IsNullOrEmpty(Model.SeoTitle) ? Model.SeoTitle : Model.Name;
+	ViewData["Description"] = !string.IsNullOrEmpty(Model.SeoDescription) ? Model.SeoDescription : Model.ShortDescription;
 
-    // Tạo danh sách tất cả ảnh (hiển thị theo thứ tự sắp xếp của Admin trong Gallery)
-    var allImages = new List<string>();
-    if (gallery.Count > 0)
-    {
-        allImages.AddRange(gallery);
-        // Nếu MainImage chưa có trong gallery, chèn vào đầu để không bị sót
-        if (!string.IsNullOrEmpty(Model.MainImage) && !allImages.Contains(Model.MainImage))
-        {
-            allImages.Insert(0, Model.MainImage);
-        }
-    }
-    else
-    {
-        if (!string.IsNullOrEmpty(Model.MainImage)) allImages.Add(Model.MainImage);
-    }
+	var related = ViewBag.RelatedProducts as List<Product> ?? new List<Product>();
+	var gallery = !string.IsNullOrEmpty(Model.ImageGallery) ? Model.ImageGallery.Split(',', StringSplitOptions.RemoveEmptyEntries).ToList() : new List<string>();
+	var tags = !string.IsNullOrEmpty(Model.Tags) ? Model.Tags.Split(',').ToList() : new List<string>();
+	var commitments = ViewBag.Commitments as List<Advertising> ?? new List<Advertising>();
+	var dealerCerts = ViewBag.DealerCert as List<Advertising> ?? new List<Advertising>();
+	var settings = ViewBag.Settings as GlobalSettingsViewModel;
+	var videos = !string.IsNullOrEmpty(Model.YoutubeVideo) ? Model.YoutubeVideo.Split(',', StringSplitOptions.RemoveEmptyEntries).ToList() : new List<string>();
 
-    // Tìm danh mục chính của sản phẩm để hiển thị trên Breadcrumb
-    Category mainCat = null;
-    if (!string.IsNullOrEmpty(Model.CategoryIds))
-    {
-        var firstCatIdStr = Model.CategoryIds.Split(',', StringSplitOptions.RemoveEmptyEntries).FirstOrDefault();
-        if (int.TryParse(firstCatIdStr, out int catId))
-        {
-            mainCat = SCategory.GetById(catId);
-        }
-    }
+	// Tạo danh sách tất cả ảnh (hiển thị theo thứ tự sắp xếp của Admin trong Gallery)
+	var allImages = new List<string>();
+	if (gallery.Count > 0)
+	{
+		allImages.AddRange(gallery);
+		// Nếu MainImage chưa có trong gallery, chèn vào đầu để không bị sót
+		if (!string.IsNullOrEmpty(Model.MainImage) && !allImages.Contains(Model.MainImage))
+		{
+			allImages.Insert(0, Model.MainImage);
+		}
+	}
+	else
+	{
+		if (!string.IsNullOrEmpty(Model.MainImage)) allImages.Add(Model.MainImage);
+	}
 
-    // SEO Schema
-    ViewData["SchemaProduct"] = Model;
-    
-    var schemaBreadcrumbs = new List<BreadcrumbItem> {
-        new BreadcrumbItem { Name = "Trang chủ", Url = "/" },
-        new BreadcrumbItem { Name = "Sản phẩm", Url = "/san-pham.html" }
-    };
-    if (mainCat != null)
-    {
-        schemaBreadcrumbs.Add(new BreadcrumbItem { Name = mainCat.Name, Url = $"/san-pham/{mainCat.Slug}.html" });
-    }
-    schemaBreadcrumbs.Add(new BreadcrumbItem { Name = Model.Name, Url = Context.Request.Path });
-    ViewData["SchemaBreadcrumbs"] = schemaBreadcrumbs;
+	// Tìm danh mục chính của sản phẩm để hiển thị trên Breadcrumb
+	Category mainCat = null;
+	if (!string.IsNullOrEmpty(Model.CategoryIds))
+	{
+		var firstCatIdStr = Model.CategoryIds.Split(',', StringSplitOptions.RemoveEmptyEntries).FirstOrDefault();
+		if (int.TryParse(firstCatIdStr, out int catId))
+		{
+			mainCat = SCategory.GetById(catId);
+		}
+	}
 
-    if (videos.Count > 0)
-    {
-        ViewData["SchemaVideo"] = new Video {
-            Title = "Video: " + Model.Name,
-            YoutubeId = videos[0],
-            ThumbnailUrl = $"https://img.youtube.com/vi/{videos[0]}/maxresdefault.jpg",
-            CreatedAt = Model.CreatedAt
-        };
-    }
+	// SEO Schema
+	ViewData["SchemaProduct"] = Model;
+
+	var schemaBreadcrumbs = new List<BreadcrumbItem> {
+		new BreadcrumbItem { Name = "Trang chủ", Url = "/" },
+		new BreadcrumbItem { Name = "Sản phẩm", Url = "/san-pham.html" }
+	};
+	if (mainCat != null)
+	{
+		schemaBreadcrumbs.Add(new BreadcrumbItem { Name = mainCat.Name, Url = $"/san-pham/{mainCat.Slug}.html" });
+	}
+	schemaBreadcrumbs.Add(new BreadcrumbItem { Name = Model.Name, Url = Context.Request.Path });
+	ViewData["SchemaBreadcrumbs"] = schemaBreadcrumbs;
+
+	if (videos.Count > 0)
+	{
+		ViewData["SchemaVideo"] = new Video
+				{
+					Title = "Video: " + Model.Name,
+					YoutubeId = videos[0],
+					ThumbnailUrl = $"https://img.youtube.com/vi/{videos[0]}/maxresdefault.jpg",
+					CreatedAt = Model.CreatedAt
+				};
+	}
 }
 
 <main class="container pd2-wrap">
-    
-    <!-- Breadcrumb -->
-    <div class="pd2-breadcrumb">
-        <a href="/">Trang chủ</a> 
-        <i class="fa-solid fa-chevron-right separator"></i> 
-        <a href="/san-pham.html">Sản phẩm</a>
-        <i class="fa-solid fa-chevron-right separator"></i> 
-        @if(mainCat != null)
-        {
-            <a href="/san-pham/@(mainCat.Slug).html">@mainCat.Name</a>
-            <i class="fa-solid fa-chevron-right separator"></i> 
-        }
-        <span class="active">@Model.Name</span>
-    </div>
 
-    <!-- Main 3-Column Layout: Left (9) - Right (3) -->
-    <div class="row pd2-main-row">
-      
-      <!-- CỘT TRÁI (CHỨA GALLERY, INFO, TABS) -->
-      <div class="col-lg-9">
-        
-        <div class="row">
-          <!-- Nửa trái: Gallery -->
-          <div class="col-md-6">
-            <div class="pd2-gallery">
-              <div class="pd2-main-img-wrap">
-                <img id="mainImg" src="@(allImages.Count > 0 ? allImages[0] : "/assets/images/no-image.png")" alt="@Model.Name" data-bs-toggle="modal" data-bs-target="#imageZoomModal" style="cursor: zoom-in;">
-                <div class="pd2-expand-btn" data-bs-toggle="modal" data-bs-target="#imageZoomModal"><i class="fa-solid fa-expand"></i></div>
-              </div>
-              @if(allImages.Count > 1)
-              {
-              <div class="pd2-thumbs-wrapper position-relative mt-3" style="padding: 0 25px;">
-                <i class="fa-solid fa-chevron-left pd2-thumb-nav position-absolute top-50 translate-middle-y" id="thumbPrev" style="left: 0; z-index: 2; cursor: pointer; font-size: 20px; padding: 10px; color: #333;"></i>
-                <div class="pd2-thumbs w-100" id="thumbScroll">
-                  @for(int i = 0; i < allImages.Count; i++)
-                  {
-                      <div class="pd2-thumb-item @(i == 0 ? "active" : "")" onclick="changeImg(this, '@allImages[i]')">
-                        <img src="@allImages[i]" alt="Thumb @(i+1)">
-                      </div>
-                  }
-                </div>
-                <i class="fa-solid fa-chevron-right pd2-thumb-nav position-absolute top-50 translate-middle-y" id="thumbNext" style="right: 0; z-index: 2; cursor: pointer; font-size: 20px; padding: 10px; color: #333;"></i>
-              </div>
-              }
-            </div>
-          </div>
+	<!-- Breadcrumb -->
+	<div class="pd2-breadcrumb">
+		<a href="/">Trang chủ</a>
+		<i class="fa-solid fa-chevron-right separator"></i>
+		<a href="/san-pham.html">Sản phẩm</a>
+		<i class="fa-solid fa-chevron-right separator"></i>
+		@if (mainCat != null)
+		{
+			<a href="/san-pham/@(mainCat.Slug).html">@mainCat.Name</a>
+			<i class="fa-solid fa-chevron-right separator"></i>
+		}
+		<span class="active">@Model.Name</span>
+	</div>
 
-          <!-- Nửa phải: Info -->
-          <div class="col-md-6">
-            <div class="pd2-info">
-              
-              <h1 class="pd2-title">@Model.Name</h1>
-              
-              <table class="pd2-meta-table">
-                @if(!string.IsNullOrEmpty(Model.SKU)){
-                <tr>
-                  <td class="pd2-meta-label">Mã sản phẩm:</td>
-                  <td>@Model.SKU</td>
-                </tr>
-                }
-                <tr>
-                  <td class="pd2-meta-label">Thương hiệu:</td>
-                  <td>@(Model.BrandId > 0 ? Antigravity.ECommerce.Services.SProductOption.GetById(Model.BrandId.Value)?.Name ?? "GORDAK" : "GORDAK")</td>
-                </tr>
-                <tr>
-                  <td class="pd2-meta-label">Tình trạng:</td>
-                  @if(Model.ConditionId > 0)
-                  {
-                      <td class="pd2-status-green">@(Antigravity.ECommerce.Services.SProductOption.GetById(Model.ConditionId.Value)?.Name ?? (Model.Stock > 0 ? "Còn hàng" : "Hết hàng"))</td>
-                  }
-                  else
-                  {
-                      <td class="@(Model.Stock > 0 ? "pd2-status-green" : "text-danger")">@(Model.Stock > 0 ? "Còn hàng" : "Hết hàng")</td>
-                  }
-                </tr>
-                <tr>
-                  <td class="pd2-meta-label">Bảo hành:</td>
-                  <td>@(Model.WarrantyId > 0 ? Antigravity.ECommerce.Services.SProductOption.GetById(Model.WarrantyId.Value)?.Name ?? "12 tháng" : "12 tháng")</td>
-                </tr>
-                @if(!string.IsNullOrEmpty(Model.Unit)){
-                <tr>
-                  <td class="pd2-meta-label">Đơn vị:</td>
-                  <td>@Model.Unit</td>
-                </tr>
-                }
-              </table>
+	<!-- Main 3-Column Layout: Left (9) - Right (3) -->
+	<div class="row pd2-main-row">
 
-              <div class="pd2-price-wrap">
-                @if(Model.OldPrice > 0){
-                <div class="pd2-price-row">
-                  <span style="color:#666;"><b style="color:#e30000;">Giá</b> (Chưa VAT):</span>
-                  <span class="pd2-price-red">@Model.OldPrice.ToString("N0")đ</span>
-                </div>
-                }
-                <div class="pd2-price-row">
-                  <span style="color:#666;"><b style="color:#e30000;">Giá bán</b>@(Model.Price > 0 ? " (Sau VAT)" : ""):</span>
-                                <span class="pd2-price-red">@Model.Price.ToString("N0")đ</span>
-                </div>
-              </div>
+		<!-- CỘT TRÁI (CHỨA GALLERY, INFO, TABS) -->
+		<div class="col-lg-9">
 
-              <!-- Action Buttons -->
-              <a href="javascript:void(0)" onclick="addToCartAndBuy(@Model.ProductId)" class="pd2-btn-buy">
-                <span class="main-text">MUA NGAY</span>
-                <span class="sub-text">Giao hàng tận nơi hoặc nhận tại cửa hàng</span>
-              </a>
+			<div class="row">
+				<!-- Nửa trái: Gallery -->
+				<div class="col-md-6">
+					<div class="pd2-gallery">
+						<div class="pd2-main-img-wrap">
+							<img id="mainImg" src="@(allImages.Count > 0 ? allImages[0] : "/assets/images/no-image.png")" alt="@Model.Name" data-bs-toggle="modal" data-bs-target="#imageZoomModal" style="cursor: zoom-in;">
+							<div class="pd2-expand-btn" data-bs-toggle="modal" data-bs-target="#imageZoomModal"><i class="fa-solid fa-expand"></i></div>
+						</div>
+						@if (allImages.Count > 1)
+						{
+							<div class="pd2-thumbs-wrapper position-relative mt-3" style="padding: 0 25px;">
+								<i class="fa-solid fa-chevron-left pd2-thumb-nav position-absolute top-50 translate-middle-y" id="thumbPrev" style="left: 0; z-index: 2; cursor: pointer; font-size: 20px; padding: 10px; color: #333;"></i>
+								<div class="pd2-thumbs w-100" id="thumbScroll">
+									@for (int i = 0; i < allImages.Count; i++)
+									{
+										<div class="pd2-thumb-item @(i == 0 ? "active" : "")" onclick="changeImg(this, '@allImages[i]')">
+											<img src="@allImages[i]" alt="Thumb @(i+1)">
+										</div>
+									}
+								</div>
+								<i class="fa-solid fa-chevron-right pd2-thumb-nav position-absolute top-50 translate-middle-y" id="thumbNext" style="right: 0; z-index: 2; cursor: pointer; font-size: 20px; padding: 10px; color: #333;"></i>
+							</div>
+						}
+					</div>
+				</div>
 
-              <a href="javascript:void(0)" onclick="addToCart(@Model.ProductId, 1)" class="pd2-btn-outline">
-                <i class="fa-solid fa-cart-shopping"></i> THÊM VÀO GIỎ HÀNG
-              </a>
+				<!-- Nửa phải: Info -->
+				<div class="col-md-6">
+					<div class="pd2-info">
 
-              @if(!string.IsNullOrEmpty(settings?.Zalo))
-              {
-              <a href="https://zalo.me/@settings.Zalo" target="_blank" class="pd2-btn-zalo text-decoration-none">
-                <i class="fa-solid fa-phone-volume"></i> 
-                <div class="text-wrap">
-                  <span class="main-text">CHAT ZALO NGAY</span>
-                  <span class="sub-text">Tư vấn nhanh 24/7</span>
-                </div>
-                <div class="zalo-icon-right">Zalo</div>
-              </a>
-              }
+						<h1 class="pd2-title">@Model.Name</h1>
 
-              <!-- Ecommerce links - chỉ hiện nếu có điền link -->
-              @if(!string.IsNullOrEmpty(Model.ShopeeLink) || !string.IsNullOrEmpty(Model.LazadaLink))
-              {
-              <div class="pd2-ecommerce">
-                <span>Mua SP trên sàn:</span>
-                @if(!string.IsNullOrEmpty(Model.ShopeeLink))
-                {
-                <a href="@Model.ShopeeLink" target="_blank" class="pd2-ecommerce-btn">
-                  <i class="fa-solid fa-bag-shopping" style="color: #ee4d2d;"></i> <span class="shopee-text">Shopee</span>
-                </a>
-                }
-                @if(!string.IsNullOrEmpty(Model.LazadaLink))
-                {
-                <a href="@Model.LazadaLink" target="_blank" class="pd2-ecommerce-btn">
-                  <i class="fa-solid fa-heart" style="color: #0f136d;"></i> <span class="lazada-text">Lazada</span>
-                </a>
-                }
-              </div>
-              }
+						<table class="pd2-meta-table">
+							@if (!string.IsNullOrEmpty(Model.SKU))
+							{
+								<tr>
+									<td class="pd2-meta-label">Mã sản phẩm:</td>
+									<td>@Model.SKU</td>
+								</tr>
+							}
+							<tr>
+								<td class="pd2-meta-label">Thương hiệu:</td>
+								<td>@(Model.BrandId > 0 ? Antigravity.ECommerce.Services.SProductOption.GetById(Model.BrandId.Value)?.Name ?? "GORDAK" : "GORDAK")</td>
+							</tr>
+							<tr>
+								<td class="pd2-meta-label">Tình trạng:</td>
+								@if (Model.ConditionId > 0)
+								{
+									<td class="pd2-status-green">@(Antigravity.ECommerce.Services.SProductOption.GetById(Model.ConditionId.Value)?.Name ?? (Model.Stock > 0 ? "Còn hàng" : "Hết hàng"))</td>
+								}
+								else
+								{
+									<td class="@(Model.Stock > 0 ? "pd2-status-green" : "text-danger")">@(Model.Stock > 0 ? "Còn hàng" : "Hết hàng")</td>
+								}
+							</tr>
+							<tr>
+								<td class="pd2-meta-label">Bảo hành:</td>
+								<td>@(Model.WarrantyId > 0 ? Antigravity.ECommerce.Services.SProductOption.GetById(Model.WarrantyId.Value)?.Name ?? "12 tháng" : "12 tháng")</td>
+							</tr>
+							@if (!string.IsNullOrEmpty(Model.Unit))
+							{
+								<tr>
+									<td class="pd2-meta-label">Đơn vị:</td>
+									<td>@Model.Unit</td>
+								</tr>
+							}
+						</table>
+
+						<div class="pd2-price-wrap">
+							@if (Model.OldPrice > 0)
+							{
+								<div class="pd2-price-row">
+									<span style="color:#666;"><b style="color:#e30000;">Giá</b> (Chưa VAT):</span>
+									<span class="pd2-price-red">@Model.OldPrice.ToString("N0")đ</span>
+								</div>
+							}
+							<div class="pd2-price-row">
+								<span style="color:#666;"><b style="color:#e30000;">Giá bán</b>@(Model.Price > 0 ? " (Sau VAT)" : ""):</span>
+								<span class="pd2-price-red">@Model.Price.ToString("N0")đ</span>
+							</div>
+						</div>
+
+						<!-- Action Buttons -->
+						<a href="javascript:void(0)" onclick="addToCartAndBuy(@Model.ProductId)" class="pd2-btn-buy">
+							<span class="main-text">MUA NGAY</span>
+							<span class="sub-text">Giao hàng tận nơi hoặc nhận tại cửa hàng</span>
+						</a>
+
+						<a href="javascript:void(0)" onclick="addToCart(@Model.ProductId, 1)" class="pd2-btn-outline">
+							<i class="fa-solid fa-cart-shopping"></i> THÊM VÀO GIỎ HÀNG
+						</a>
+
+						@if (!string.IsNullOrEmpty(settings?.Zalo))
+						{
+							<a href="https://zalo.me/@settings.Zalo" target="_blank" class="pd2-btn-zalo text-decoration-none">
+								<i class="fa-solid fa-phone-volume"></i>
+								<div class="text-wrap">
+									<span class="main-text">CHAT ZALO NGAY</span>
+									<span class="sub-text">Tư vấn nhanh 24/7</span>
+								</div>
+								<div class="zalo-icon-right">Zalo</div>
+							</a>
+						}
+
+						<!-- Ecommerce links - chỉ hiện nếu có điền link -->
+						@if (!string.IsNullOrEmpty(Model.ShopeeLink) || !string.IsNullOrEmpty(Model.LazadaLink))
+						{
+							<div class="pd2-ecommerce">
+								<span>Mua SP trên sàn:</span>
+								@if (!string.IsNullOrEmpty(Model.ShopeeLink))
+								{
+									<a href="@Model.ShopeeLink" target="_blank" class="pd2-ecommerce-btn">
+										<i class="fa-solid fa-bag-shopping" style="color: #ee4d2d;"></i> <span class="shopee-text">Shopee</span>
+									</a>
+								}
+								@if (!string.IsNullOrEmpty(Model.LazadaLink))
+								{
+									<a href="@Model.LazadaLink" target="_blank" class="pd2-ecommerce-btn">
+										<i class="fa-solid fa-heart" style="color: #0f136d;"></i> <span class="lazada-text">Lazada</span>
+									</a>
+								}
+							</div>
+						}
 
 
-            </div>
-          </div>
-        </div>
+					</div>
+				</div>
+			</div>
 
-        <!-- TABS MÔ TẢ & THÔNG SỐ & VIDEO -->
-        <div class="pd2-tabs-wrap">
-          <ul class="pd2-nav-tabs">
-            <li><button class="active" onclick="switchTab(this, 'desc')">MÔ TẢ SẢN PHẨM</button></li>
-            <li><button onclick="switchTab(this, 'spec')">THÔNG SỐ KỸ THUẬT</button></li>
-            <li><button onclick="switchTab(this, 'video')">VIDEO HƯỚNG DẪN</button></li>
-          </ul>
+			<!-- TABS MÔ TẢ & THÔNG SỐ & VIDEO -->
+			<div class="pd2-tabs-wrap">
+				<ul class="pd2-nav-tabs">
+					<li><button class="active" onclick="switchTab(this, 'desc')">MÔ TẢ SẢN PHẨM</button></li>
+					<li><button onclick="switchTab(this, 'spec')">THÔNG SỐ KỸ THUẬT</button></li>
+					<li><button onclick="switchTab(this, 'video')">VIDEO HƯỚNG DẪN</button></li>
+				</ul>
 
-          <div class="pd2-tab-content" id="tab-desc">
-            <div class="product-content">
-              @Html.Raw(Model.DetailDescription)
-            </div>
-          </div>
-          
-          <div class="pd2-tab-content" id="tab-spec" style="display: none;">
-            @if(!string.IsNullOrEmpty(Model.TechnicalSpecs))
-            {
-              <div class="product-content">
-                @Html.Raw(Model.TechnicalSpecs)
-              </div>
-            }
-            else
-            {
-              <p class="pd2-tab-desc text-muted">Thông số kỹ thuật đang được cập nhật...</p>
-            }
-          </div>
+				<div class="pd2-tab-content" id="tab-desc">
+					<div class="product-content">
+						@Html.Raw(Model.DetailDescription)
+					</div>
+				</div>
 
-          <div class="pd2-tab-content" id="tab-video" style="display: none;">
-            @if(!string.IsNullOrEmpty(Model.InstructionVideo))
-            {
-              <div class="pd2-tab-desc ck-content mb-4">
-                @Html.Raw(Model.InstructionVideo)
-              </div>
-            }
+				<div class="pd2-tab-content" id="tab-spec" style="display: none;">
+					@if (!string.IsNullOrEmpty(Model.TechnicalSpecs))
+					{
+						<div class="product-content">
+							@Html.Raw(Model.TechnicalSpecs)
+						</div>
+					}
+					else
+					{
+						<p class="pd2-tab-desc text-muted">Thông số kỹ thuật đang được cập nhật...</p>
+					}
+				</div>
 
-            @if(videos.Count > 0)
-            {
-              <div class="row g-3">
-                @foreach(var vid in videos)
-                {
-                  <div class="@(videos.Count == 1 ? "col-12" : "col-md-6")">
-                    <div class="ratio ratio-16x9 rounded overflow-hidden">
-                      <iframe src="https://www.youtube.com/embed/@vid.Trim()?rel=0" title="Video hướng dẫn" allowfullscreen allow="autoplay"></iframe>
-                    </div>
-                  </div>
-                }
-              </div>
-            }
+				<div class="pd2-tab-content" id="tab-video" style="display: none;">
+					@if (!string.IsNullOrEmpty(Model.InstructionVideo))
+					{
+						<div class="pd2-tab-desc ck-content mb-4">
+							@Html.Raw(Model.InstructionVideo)
+						</div>
+					}
 
-            @if(string.IsNullOrEmpty(Model.InstructionVideo) && videos.Count == 0)
-            {
-              <p class="pd2-tab-desc text-muted">Video hướng dẫn sử dụng đang được cập nhật...</p>
-            }
-          </div>
-        </div>
+					@if (videos.Count > 0)
+					{
+						<div class="row g-3">
+							@foreach (var vid in videos)
+							{
+								<div class="@(videos.Count == 1 ? "col-12" : "col-md-6")">
+									<div class="ratio ratio-16x9 rounded overflow-hidden">
+										<iframe src="https://www.youtube.com/embed/@vid.Trim()?rel=0" title="Video hướng dẫn" allowfullscreen allow="autoplay"></iframe>
+									</div>
+								</div>
+							}
+						</div>
+					}
 
-        <!-- TAGS -->
-        @if (tags.Count > 0)
-        {
-            <div class="mt-4 pt-3 border-top">
-                <div class="d-flex align-items-center flex-wrap gap-2">
-                    <span class="fw-bold me-2" style="color: #1a2b4c;"><i class="fa-solid fa-tags me-1"></i>Từ khóa:</span>
-                    @foreach (var tag in tags)
-                    {
-                        var cleanTag = tag.Trim();
-                        if (!string.IsNullOrEmpty(cleanTag))
-                        {
-                            <a href="/Product/Search?q=@System.Net.WebUtility.UrlEncode(cleanTag)" class="badge bg-light text-primary border border-primary-subtle fw-normal text-decoration-none" style="font-size:13px; padding: 6px 12px; transition: all 0.2s;" onmouseover="this.classList.replace('bg-light', 'bg-primary'); this.classList.replace('text-primary', 'text-white');" onmouseout="this.classList.replace('bg-primary', 'bg-light'); this.classList.replace('text-white', 'text-primary');">#@cleanTag</a>
-                        }
-                    }
-                </div>
-            </div>
-        }
+					@if (string.IsNullOrEmpty(Model.InstructionVideo) && videos.Count == 0)
+					{
+						<p class="pd2-tab-desc text-muted">Video hướng dẫn sử dụng đang được cập nhật...</p>
+					}
+				</div>
+			</div>
 
-        <!-- Social Share -->
-        <partial name="_SocialShare" model='"Chia sẻ sản phẩm:"' />
-        
-      </div>
+			<!-- TAGS -->
+			@if (tags.Count > 0)
+			{
+				<div class="mt-4 pt-3 border-top">
+					<div class="d-flex align-items-center flex-wrap gap-2">
+						<span class="fw-bold me-2" style="color: #1a2b4c;"><i class="fa-solid fa-tags me-1"></i>Từ khóa:</span>
+						@foreach (var tag in tags)
+						{
+							var cleanTag = tag.Trim();
+							if (!string.IsNullOrEmpty(cleanTag))
+							{
+								<a href="/Product/Search?q=@System.Net.WebUtility.UrlEncode(cleanTag)" class="badge bg-light text-primary border border-primary-subtle fw-normal text-decoration-none" style="font-size:13px; padding: 6px 12px; transition: all 0.2s;" onmouseover="this.classList.replace('bg-light', 'bg-primary'); this.classList.replace('text-primary', 'text-white');" onmouseout="this.classList.replace('bg-primary', 'bg-light'); this.classList.replace('text-white', 'text-primary');">#@cleanTag</a>
+							}
+						}
+					</div>
+				</div>
+			}
 
-      <!-- CỘT PHẢI (SIDEBAR) -->
-      <div class="col-lg-3">
-        
-        <!-- Box Cam Kết -->
-        @if(commitments.Count > 0)
-        {
-        <div class="pd2-sidebar-box">
-          <h3 class="pd2-sidebar-title text-start">CAM KẾT TỪ GORDAK</h3>
-          <div class="pd2-commit-list">
-            @foreach(var item in commitments)
-            {
-            <div class="pd2-commit-item">
-              <div class="pd2-commit-icon">
-                @if(!string.IsNullOrEmpty(item.Image))
-                {
-                  <img src="@item.Image" alt="@item.Title" style="max-height:24px;">
-                }
-                else
-                {
-                  <i class="@item.VideoUrl"></i>
-                }
-              </div>
-              <div class="pd2-commit-text">
-                <h4>@item.Title</h4>
-                <p>@Html.Raw(item.Description)</p>
-              </div>
-            </div>
-            }
-          </div>
-        </div>
-        }
+			<!-- Social Share -->
+			<partial name="_SocialShare" model='"Chia sẻ sản phẩm:"' />
 
-        <!-- Box Chứng nhận -->
-        @if(dealerCerts.Count > 0)
-        {
-        <div class="pd2-sidebar-box">
-                    <h3 class="pd2-sidebar-title">CHỨNG NHẬN NHÀ PHÂN PHỐI</h3>
-          <div class="pd2-cert-content" style="text-align:left; display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
-            @foreach(var cert in dealerCerts)
-            {
-              @if(!string.IsNullOrEmpty(cert.Image))
-              {
-                <img src="@cert.Image" alt="@cert.Title" class="pd2-cert-img" style="max-width:calc(50% - 8px); height:auto; object-fit:contain; margin-bottom:0; border-radius:4px;">
-              }
-            }
-          </div>
-          <div style="text-align:right; padding:10px 15px 5px;">
-            @{var certLink = dealerCerts.FirstOrDefault(x => !string.IsNullOrEmpty(x.Link));}
-            <a href="@(certLink != null ? certLink.Link : "/gioi-thieu.html")" class="pd2-cert-btn">Xem chứng nhận</a>
-          </div>
-        </div>
-        }
+		</div>
 
-        @{ 
-            var accessories = ViewBag.Accessories as List<Product> ?? new List<Product>(); 
-            var viewedProducts = ViewBag.ViewedProducts as List<Product> ?? new List<Product>();
-        }
+		<!-- CỘT PHẢI (SIDEBAR) -->
+		<div class="col-lg-3">
 
-        <!-- Box Phụ kiện liên quan -->
-        @if(accessories.Count > 0)
-        {
-        <div class="pd2-sidebar-box bg-white mt-3">
-          <h3 class="pd2-sidebar-title">PHỤ KIỆN LIÊN QUAN</h3>
-          <div class="pd2-acc-list">
-            @for(int i = 0; i < accessories.Count; i++)
-            {
-              var item = accessories[i];
-              if(i < 3)
-              {
-                <div class="pd2-acc-item">
-                  <a href="/san-pham/detail/@(item.Slug)-@(item.ProductId).html" class="d-block flex-shrink-0">
-                    <img src="@(string.IsNullOrEmpty(item.MainImage) ? "/assets/images/no-image.png" : item.MainImage)" class="pd2-acc-img" alt="@item.Name">
-                  </a>
-                  <div class="pd2-acc-info">
-                    <a href="/san-pham/detail/@(item.Slug)-@(item.ProductId).html" class="text-decoration-none text-dark"><div class="pd2-acc-name">@item.Name</div></a>
-                    <div class="pd2-acc-price">@item.OldPrice.ToString("N0")đ</div>
-                    <a href="/san-pham/detail/@(item.Slug)-@(item.ProductId).html" class="pd2-acc-btn"><i class="fa-solid fa-eye" style="margin-right:4px;"></i>Xem chi tiết</a>
-                  </div>
-                </div>
-              }
-            }
-            
-            @if(accessories.Count > 3)
-            {
-              <div class="collapse" id="collapseAcc">
-                @for(int i = 3; i < accessories.Count; i++)
-                {
-                  var item = accessories[i];
-                  <div class="pd2-acc-item mt-3">
-                    <a href="/san-pham/detail/@(item.Slug)-@(item.ProductId).html" class="d-block flex-shrink-0">
-                      <img src="@(string.IsNullOrEmpty(item.MainImage) ? "/assets/images/no-image.png" : item.MainImage)" class="pd2-acc-img" alt="@item.Name">
-                    </a>
-                    <div class="pd2-acc-info">
-                      <a href="/san-pham/detail/@(item.Slug)-@(item.ProductId).html" class="text-decoration-none text-dark"><div class="pd2-acc-name">@item.Name</div></a>
-                      <div class="pd2-acc-price">@item.OldPrice.ToString("N0")đ</div>
-                      <a href="/san-pham/detail/@(item.Slug)-@(item.ProductId).html" class="pd2-acc-btn"><i class="fa-solid fa-eye" style="margin-right:4px;"></i>Xem chi tiết</a>
-                    </div>
-                  </div>
-                }
-              </div>
-            }
-          </div>
-          @if(accessories.Count > 3)
-          {
-            <a class="pd2-view-all mb-3" data-bs-toggle="collapse" href="#collapseAcc" role="button" aria-expanded="false" aria-controls="collapseAcc" onclick="toggleText(this, 'Xem tất cả phụ kiện', 'Thu gọn')">Xem tất cả phụ kiện <i class="fa-solid fa-chevron-down"></i></a>
-          }
-        </div>
-        }
+			<!-- Box Cam Kết -->
+			@if (commitments.Count > 0)
+			{
+				<div class="pd2-sidebar-box">
+					<h3 class="pd2-sidebar-title text-start">CAM KẾT TỪ GORDAK</h3>
+					<div class="pd2-commit-list">
+						@foreach (var item in commitments)
+						{
+							<div class="pd2-commit-item">
+								<div class="pd2-commit-icon">
+									@if (!string.IsNullOrEmpty(item.Image))
+									{
+										<img src="@item.Image" alt="@item.Title" style="max-height:24px;">
+									}
+									else
+									{
+										<i class="@item.VideoUrl"></i>
+									}
+								</div>
+								<div class="pd2-commit-text">
+									<h4>@item.Title</h4>
+									<p>@Html.Raw(item.Description)</p>
+								</div>
+							</div>
+						}
+					</div>
+				</div>
+			}
 
-        <!-- Box Sản phẩm đã xem -->
-        @if(viewedProducts.Count > 0)
-        {
-        <div class="pd2-sidebar-box bg-white mt-3">
-          <h3 class="pd2-sidebar-title">SẢN PHẨM ĐÃ XEM</h3>
-          <div class="pd2-acc-list">
-            @for(int i = 0; i < viewedProducts.Count; i++)
-            {
-              var item = viewedProducts[i];
-              if(i < 3)
-              {
-                <div class="pd2-acc-item">
-                  <a href="/san-pham/detail/@(item.Slug)-@(item.ProductId).html" class="d-block flex-shrink-0">
-                    <img src="@(string.IsNullOrEmpty(item.MainImage) ? "/assets/images/no-image.png" : item.MainImage)" class="pd2-acc-img" alt="@item.Name">
-                  </a>
-                  <div class="pd2-acc-info">
-                    <a href="/san-pham/detail/@(item.Slug)-@(item.ProductId).html" class="text-decoration-none text-dark"><div class="pd2-acc-name">@item.Name</div></a>
-                    <div class="pd2-acc-price">@item.OldPrice.ToString("N0")đ</div>
-                    <a href="/san-pham/detail/@(item.Slug)-@(item.ProductId).html" class="pd2-acc-btn"><i class="fa-solid fa-eye" style="margin-right:4px;"></i>Xem chi tiết</a>
-                  </div>
-                </div>
-              }
-            }
-            
-            @if(viewedProducts.Count > 3)
-            {
-              <div class="collapse" id="collapseViewed">
-                @for(int i = 3; i < viewedProducts.Count; i++)
-                {
-                  var item = viewedProducts[i];
-                  <div class="pd2-acc-item mt-3">
-                    <a href="/san-pham/detail/@(item.Slug)-@(item.ProductId).html" class="d-block flex-shrink-0">
-                      <img src="@(string.IsNullOrEmpty(item.MainImage) ? "/assets/images/no-image.png" : item.MainImage)" class="pd2-acc-img" alt="@item.Name">
-                    </a>
-                    <div class="pd2-acc-info">
-                      <a href="/san-pham/detail/@(item.Slug)-@(item.ProductId).html" class="text-decoration-none text-dark"><div class="pd2-acc-name">@item.Name</div></a>
-                      <div class="pd2-acc-price">@item.OldPrice.ToString("N0")đ</div>
-                      <a href="/san-pham/detail/@(item.Slug)-@(item.ProductId).html" class="pd2-acc-btn"><i class="fa-solid fa-eye" style="margin-right:4px;"></i>Xem chi tiết</a>
-                    </div>
-                  </div>
-                }
-              </div>
-            }
-          </div>
-          @if(viewedProducts.Count > 3)
-          {
-            <a class="pd2-view-all mb-3" data-bs-toggle="collapse" href="#collapseViewed" role="button" aria-expanded="false" aria-controls="collapseViewed" onclick="toggleText(this, 'Xem tất cả sản phẩm đã xem', 'Thu gọn')">Xem tất cả sản phẩm đã xem <i class="fa-solid fa-chevron-down"></i></a>
-          }
-        </div>
-        }
+			<!-- Box Chứng nhận -->
+			@if (dealerCerts.Count > 0)
+			{
+				<div class="pd2-sidebar-box">
+					<h3 class="pd2-sidebar-title">CHỨNG NHẬN NHÀ PHÂN PHỐI</h3>
+					<div class="pd2-cert-content" style="text-align:left; display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+						@foreach (var cert in dealerCerts)
+						{
+							@if (!string.IsNullOrEmpty(cert.Image))
+							{
+								<img src="@cert.Image" alt="@cert.Title" class="pd2-cert-img" style="max-width:calc(50% - 8px); height:auto; object-fit:contain; margin-bottom:0; border-radius:4px;">
+							}
+						}
+					</div>
+					<div style="text-align:right; padding:10px 15px 5px;">
+						@{
+							var certLink = dealerCerts.FirstOrDefault(x => !string.IsNullOrEmpty(x.Link));
+						}
+						<a href="@(certLink != null ? certLink.Link : "/gioi-thieu.html")" class="pd2-cert-btn">Xem chứng nhận</a>
+					</div>
+				</div>
+			}
 
-      </div>
+			@{
+				var accessories = ViewBag.Accessories as List<Product> ?? new List<Product>();
+				var viewedProducts = ViewBag.ViewedProducts as List<Product> ?? new List<Product>();
+			}
 
-    </div>
+			<!-- Box Phụ kiện liên quan -->
+			@if (accessories.Count > 0)
+			{
+				<div class="pd2-sidebar-box bg-white mt-3">
+					<h3 class="pd2-sidebar-title">PHỤ KIỆN LIÊN QUAN</h3>
+					<div class="pd2-acc-list">
+						@for (int i = 0; i < accessories.Count; i++)
+						{
+							var item = accessories[i];
+							if (i < 3)
+							{
+								<div class="pd2-acc-item">
+									<a href="/san-pham/detail/@(item.Slug)-@(item.ProductId).html" class="d-block flex-shrink-0">
+										<img src="@(string.IsNullOrEmpty(item.MainImage) ? "/assets/images/no-image.png" : item.MainImage)" class="pd2-acc-img" alt="@item.Name">
+									</a>
+									<div class="pd2-acc-info">
+										<a href="/san-pham/detail/@(item.Slug)-@(item.ProductId).html" class="text-decoration-none text-dark"><div class="pd2-acc-name">@item.Name</div></a>
+										<div class="pd2-acc-price">@item.OldPrice.ToString("N0")đ</div>
+										<a href="/san-pham/detail/@(item.Slug)-@(item.ProductId).html" class="pd2-acc-btn"><i class="fa-solid fa-eye" style="margin-right:4px;"></i>Xem chi tiết</a>
+									</div>
+								</div>
+							}
+						}
 
-    <!-- Product Reviews -->
-    @if(settings?.EnableProductReviews ?? true)
-    {
-        @await Html.PartialAsync("_ProductReviews", Model)
-    }
+						@if (accessories.Count > 3)
+						{
+							<div class="collapse" id="collapseAcc">
+								@for (int i = 3; i < accessories.Count; i++)
+								{
+									var item = accessories[i];
+									<div class="pd2-acc-item mt-3">
+										<a href="/san-pham/detail/@(item.Slug)-@(item.ProductId).html" class="d-block flex-shrink-0">
+											<img src="@(string.IsNullOrEmpty(item.MainImage) ? "/assets/images/no-image.png" : item.MainImage)" class="pd2-acc-img" alt="@item.Name">
+										</a>
+										<div class="pd2-acc-info">
+											<a href="/san-pham/detail/@(item.Slug)-@(item.ProductId).html" class="text-decoration-none text-dark"><div class="pd2-acc-name">@item.Name</div></a>
+											<div class="pd2-acc-price">@item.OldPrice.ToString("N0")đ</div>
+											<a href="/san-pham/detail/@(item.Slug)-@(item.ProductId).html" class="pd2-acc-btn"><i class="fa-solid fa-eye" style="margin-right:4px;"></i>Xem chi tiết</a>
+										</div>
+									</div>
+								}
+							</div>
+						}
+					</div>
+					@if (accessories.Count > 3)
+					{
+						<a class="pd2-view-all mb-3" data-bs-toggle="collapse" href="#collapseAcc" role="button" aria-expanded="false" aria-controls="collapseAcc" onclick="toggleText(this, 'Xem tất cả phụ kiện', 'Thu gọn')">Xem tất cả phụ kiện <i class="fa-solid fa-chevron-down"></i></a>
+					}
+				</div>
+			}
 
-    <!-- SẢN PHẨM LIÊN QUAN (Full width - styled like homepage) -->
-    @if(related.Count > 0)
-    {
-    <section class="section-products" style="margin-top: 30px; margin-bottom: 30px;">
-      <div class="d-flex justify-content-between align-items-center section-head">
-        <h2 class="section-title">SẢN PHẨM LIÊN QUAN</h2>
-      </div>
-      <div class="row g-3">
-        @{ int relCount = 0; }
-        @foreach(var p in related.Take(5))
-        {
-          relCount++;
-                    <div class="col-6 col-md-4 col-lg-3 col-xl-2-4">
-                        <div class="product-card position-relative h-100 d-flex flex-column">
-                            @if (p.IsHot)
-                            {
-                                <span class="badge-hot">HOT</span>
-                            }
-                            <span class="badge-heart" onclick="toggleWishlist(@p.ProductId)" style="cursor:pointer"><i class="fa-regular fa-heart"></i></span>
-                            <a href="/san-pham/detail/@(p.Slug)-@(p.ProductId).html" class="d-block text-center mb-2" style="height: 180px;">
-                                <img src="@(string.IsNullOrEmpty(p.MainImage) ? "/assets/images/no-image.png" : p.MainImage)" class="product-img h-100 w-100 object-fit-contain" alt="@p.Name" loading="lazy">
-                            </a>
-                            <h3 class="product-name"><a href="/san-pham/detail/@(p.Slug)-@(p.ProductId).html" class="text-decoration-none text-dark">@p.Name</a></h3>
-                            <p class="product-desc line-clamp-2" style="font-size:12px; color:#666;">@(string.IsNullOrEmpty(p.ShortDescription) ? p.Name : p.ShortDescription)</p>
-                            <div class="mt-auto">
-                                <div class="product-price">@p.OldPrice.ToString("N0")đ</div>
-                                <div class="product-actions d-flex gap-2 mt-2">
-                                    <a href="/san-pham/detail/@(p.Slug)-@(p.ProductId).html" class="btn-outline-gd flex-fill text-center px-0 py-1" style="font-size:13px;"><i class="fa-solid fa-eye" style="margin-right:4px;"></i>Xem chi tiết</a>
-                                    <a href="javascript:void(0)" onclick="addToCart(@p.ProductId,1)" class="btn-gd d-flex align-items-center justify-content-center px-0 py-0" style="width:36px; flex-shrink:0;" title="Thêm vào giỏ hàng">
-                                        <i class="fa-solid fa-cart-shopping" style="font-size:14px;"></i>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-        }
-      </div>
-    </section>
-    }
+			<!-- Box Sản phẩm đã xem -->
+			@if (viewedProducts.Count > 0)
+			{
+				<div class="pd2-sidebar-box bg-white mt-3">
+					<h3 class="pd2-sidebar-title">SẢN PHẨM ĐÃ XEM</h3>
+					<div class="pd2-acc-list">
+						@for (int i = 0; i < viewedProducts.Count; i++)
+						{
+							var item = viewedProducts[i];
+							if (i < 3)
+							{
+								<div class="pd2-acc-item">
+									<a href="/san-pham/detail/@(item.Slug)-@(item.ProductId).html" class="d-block flex-shrink-0">
+										<img src="@(string.IsNullOrEmpty(item.MainImage) ? "/assets/images/no-image.png" : item.MainImage)" class="pd2-acc-img" alt="@item.Name">
+									</a>
+									<div class="pd2-acc-info">
+										<a href="/san-pham/detail/@(item.Slug)-@(item.ProductId).html" class="text-decoration-none text-dark"><div class="pd2-acc-name">@item.Name</div></a>
+										<div class="pd2-acc-price">@item.OldPrice.ToString("N0")đ</div>
+										<a href="/san-pham/detail/@(item.Slug)-@(item.ProductId).html" class="pd2-acc-btn"><i class="fa-solid fa-eye" style="margin-right:4px;"></i>Xem chi tiết</a>
+									</div>
+								</div>
+							}
+						}
+
+						@if (viewedProducts.Count > 3)
+						{
+							<div class="collapse" id="collapseViewed">
+								@for (int i = 3; i < viewedProducts.Count; i++)
+								{
+									var item = viewedProducts[i];
+									<div class="pd2-acc-item mt-3">
+										<a href="/san-pham/detail/@(item.Slug)-@(item.ProductId).html" class="d-block flex-shrink-0">
+											<img src="@(string.IsNullOrEmpty(item.MainImage) ? "/assets/images/no-image.png" : item.MainImage)" class="pd2-acc-img" alt="@item.Name">
+										</a>
+										<div class="pd2-acc-info">
+											<a href="/san-pham/detail/@(item.Slug)-@(item.ProductId).html" class="text-decoration-none text-dark"><div class="pd2-acc-name">@item.Name</div></a>
+											<div class="pd2-acc-price">@item.OldPrice.ToString("N0")đ</div>
+											<a href="/san-pham/detail/@(item.Slug)-@(item.ProductId).html" class="pd2-acc-btn"><i class="fa-solid fa-eye" style="margin-right:4px;"></i>Xem chi tiết</a>
+										</div>
+									</div>
+								}
+							</div>
+						}
+					</div>
+					@if (viewedProducts.Count > 3)
+					{
+						<a class="pd2-view-all mb-3" data-bs-toggle="collapse" href="#collapseViewed" role="button" aria-expanded="false" aria-controls="collapseViewed" onclick="toggleText(this, 'Xem tất cả sản phẩm đã xem', 'Thu gọn')">Xem tất cả sản phẩm đã xem <i class="fa-solid fa-chevron-down"></i></a>
+					}
+				</div>
+			}
+
+		</div>
+
+	</div>
+
+	<!-- Product Reviews -->
+	@if (settings?.EnableProductReviews ?? true)
+	{
+		@await Html.PartialAsync("_ProductReviews", Model)
+	}
+
+	<!-- SẢN PHẨM LIÊN QUAN (Full width - styled like homepage) -->
+	@if (related.Count > 0)
+	{
+		<section class="section-products" style="margin-top: 30px; margin-bottom: 30px;">
+			<div class="d-flex justify-content-between align-items-center section-head">
+				<h2 class="section-title">SẢN PHẨM LIÊN QUAN</h2>
+			</div>
+			<div class="row g-3">
+				@{
+					int relCount = 0;
+				}
+				@foreach (var p in related.Take(5))
+				{
+					relCount++;
+					<div class="col-6 col-md-4 col-lg-3 col-xl-2-4">
+						<div class="product-card position-relative h-100 d-flex flex-column">
+							@if (p.IsHot)
+							{
+								<span class="badge-hot">HOT</span>
+							}
+							<span class="badge-heart" onclick="toggleWishlist(@p.ProductId)" style="cursor:pointer"><i class="fa-regular fa-heart"></i></span>
+							<a href="/san-pham/detail/@(p.Slug)-@(p.ProductId).html" class="d-block text-center mb-2" style="height: 180px;">
+								<img src="@(string.IsNullOrEmpty(p.MainImage) ? "/assets/images/no-image.png" : p.MainImage)" class="product-img h-100 w-100 object-fit-contain" alt="@p.Name" loading="lazy">
+							</a>
+							<h3 class="product-name"><a href="/san-pham/detail/@(p.Slug)-@(p.ProductId).html" class="text-decoration-none text-dark">@p.Name</a></h3>
+							<p class="product-desc line-clamp-2" style="font-size:12px; color:#666;">@(string.IsNullOrEmpty(p.ShortDescription) ? p.Name : p.ShortDescription)</p>
+							<div class="mt-auto">
+								<div class="product-price">@p.OldPrice.ToString("N0")đ</div>
+								<div class="product-actions d-flex gap-2 mt-2">
+									<a href="/san-pham/detail/@(p.Slug)-@(p.ProductId).html" class="btn-outline-gd flex-fill text-center px-0 py-1" style="font-size:13px;"><i class="fa-solid fa-eye" style="margin-right:4px;"></i>Xem chi tiết</a>
+									<a href="javascript:void(0)" onclick="addToCart(@p.ProductId,1)" class="btn-gd d-flex align-items-center justify-content-center px-0 py-0" style="width:36px; flex-shrink:0;" title="Thêm vào giỏ hàng">
+										<i class="fa-solid fa-cart-shopping" style="font-size:14px;"></i>
+									</a>
+								</div>
+							</div>
+						</div>
+					</div>
+				}
+			</div>
+		</section>
+	}
 </main>
 
 <!-- Modal Phóng To Ảnh -->
 <div class="modal fade" id="imageZoomModal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered modal-lg d-flex justify-content-center">
-    <div class="modal-content border-0 bg-transparent align-items-center">
-      <div class="position-relative d-inline-block">
-        <button type="button" class="position-absolute d-flex align-items-center justify-content-center" data-bs-dismiss="modal" aria-label="Close" style="top: 10px; right: 10px; z-index: 1050; width: 36px; height: 36px; background-color: rgba(0,0,0,0.6); color: #fff; border-radius: 50%; opacity: 1; cursor: pointer; border: none; transition: background 0.3s;" onmouseover="this.style.backgroundColor='rgba(0,0,0,0.9)'" onmouseout="this.style.backgroundColor='rgba(0,0,0,0.6)'">
-            <i class="fa-solid fa-xmark fs-5"></i>
-        </button>
-        <img id="modalZoomImg" src="@(allImages.Count > 0 ? allImages[0] : "")" class="img-fluid rounded bg-white p-2" style="max-height: 85vh; border: 2px solid #e9ebec;" alt="Phóng to ảnh">
-      </div>
-    </div>
-  </div>
+	<div class="modal-dialog modal-dialog-centered modal-lg d-flex justify-content-center">
+		<div class="modal-content border-0 bg-transparent align-items-center">
+			<div class="position-relative d-inline-block">
+				<button type="button" class="position-absolute d-flex align-items-center justify-content-center" data-bs-dismiss="modal" aria-label="Close" style="top: 10px; right: 10px; z-index: 1050; width: 36px; height: 36px; background-color: rgba(0,0,0,0.6); color: #fff; border-radius: 50%; opacity: 1; cursor: pointer; border: none; transition: background 0.3s;" onmouseover="this.style.backgroundColor='rgba(0,0,0,0.9)'" onmouseout="this.style.backgroundColor='rgba(0,0,0,0.6)'">
+					<i class="fa-solid fa-xmark fs-5"></i>
+				</button>
+				<img id="modalZoomImg" src="@(allImages.Count > 0 ? allImages[0] : "")" class="img-fluid rounded bg-white p-2" style="max-height: 85vh; border: 2px solid #e9ebec;" alt="Phóng to ảnh">
+			</div>
+		</div>
+	</div>
 </div>
 
 @section Scripts {
-<script>
-    // === Gallery Thumbnail ===
-    const thumbs = document.querySelectorAll('.pd2-thumb-item');
-    let currentThumbIndex = 0;
-    let galleryInterval;
+	<script>
+		// === Gallery Thumbnail ===
+		const thumbs = document.querySelectorAll('.pd2-thumb-item');
+		let currentThumbIndex = 0;
+		let galleryInterval;
 
-    function changeImg(el, src) {
-        document.getElementById('mainImg').src = src;
-        document.getElementById('modalZoomImg').src = src;
-        thumbs.forEach((t, idx) => {
-            t.classList.remove('active');
-            if (t === el) currentThumbIndex = idx;
-        });
-        el.classList.add('active');
-        // Scroll the thumbnail container to make the active thumb visible without scrolling the window
-        const container = document.getElementById('thumbScroll');
-        if (container) {
-            const scrollLeft = el.offsetLeft - (container.clientWidth / 2) + (el.clientWidth / 2);
-            container.scrollTo({
-                left: scrollLeft,
-                behavior: 'smooth'
-            });
-        }
-    }
+		function changeImg(el, src) {
+			document.getElementById('mainImg').src = src;
+			document.getElementById('modalZoomImg').src = src;
+			thumbs.forEach((t, idx) => {
+				t.classList.remove('active');
+				if (t === el) currentThumbIndex = idx;
+			});
+			el.classList.add('active');
+			// Scroll the thumbnail container to make the active thumb visible without scrolling the window
+			const container = document.getElementById('thumbScroll');
+			if (container) {
+				const scrollLeft = el.offsetLeft - (container.clientWidth / 2) + (el.clientWidth / 2);
+				container.scrollTo({
+					left: scrollLeft,
+					behavior: 'smooth'
+				});
+			}
+		}
 
-    // Auto Slide
-    function startAutoSlide() {
-        if (thumbs.length <= 1) return;
-        galleryInterval = setInterval(() => {
-            currentThumbIndex = (currentThumbIndex + 1) % thumbs.length;
-            let nextThumb = thumbs[currentThumbIndex];
-            changeImg(nextThumb, nextThumb.querySelector('img').src);
-        }, 3000);
-    }
+		// Auto Slide
+		function startAutoSlide() {
+			if (thumbs.length <= 1) return;
+			galleryInterval = setInterval(() => {
+				currentThumbIndex = (currentThumbIndex + 1) % thumbs.length;
+				let nextThumb = thumbs[currentThumbIndex];
+				changeImg(nextThumb, nextThumb.querySelector('img').src);
+			}, 3000);
+		}
 
-    function stopAutoSlide() { clearInterval(galleryInterval); }
+		function stopAutoSlide() { clearInterval(galleryInterval); }
 
-    if (thumbs.length > 1) {
-        startAutoSlide();
-        const gallery = document.querySelector('.pd2-gallery');
-        if (gallery) {
-            gallery.addEventListener('mouseenter', stopAutoSlide);
-            gallery.addEventListener('mouseleave', startAutoSlide);
-        }
-    }
+		if (thumbs.length > 1) {
+			startAutoSlide();
+			const gallery = document.querySelector('.pd2-gallery');
+			if (gallery) {
+				gallery.addEventListener('mouseenter', stopAutoSlide);
+				gallery.addEventListener('mouseleave', startAutoSlide);
+			}
+		}
 
-    // Prev/Next buttons
-    const navPrev = document.getElementById('thumbPrev');
-    const navNext = document.getElementById('thumbNext');
-    if (navPrev) navPrev.addEventListener('click', () => {
-        currentThumbIndex = (currentThumbIndex - 1 + thumbs.length) % thumbs.length;
-        let t = thumbs[currentThumbIndex];
-        changeImg(t, t.querySelector('img').src);
-    });
-    if (navNext) navNext.addEventListener('click', () => {
-        currentThumbIndex = (currentThumbIndex + 1) % thumbs.length;
-        let t = thumbs[currentThumbIndex];
-        changeImg(t, t.querySelector('img').src);
-    });
+		// Prev/Next buttons
+		const navPrev = document.getElementById('thumbPrev');
+		const navNext = document.getElementById('thumbNext');
+		if (navPrev) navPrev.addEventListener('click', () => {
+			currentThumbIndex = (currentThumbIndex - 1 + thumbs.length) % thumbs.length;
+			let t = thumbs[currentThumbIndex];
+			changeImg(t, t.querySelector('img').src);
+		});
+		if (navNext) navNext.addEventListener('click', () => {
+			currentThumbIndex = (currentThumbIndex + 1) % thumbs.length;
+			let t = thumbs[currentThumbIndex];
+			changeImg(t, t.querySelector('img').src);
+		});
 
-    // === Tab Switching ===
-    function switchTab(btn, tabId) {
-        document.getElementById('tab-desc').style.display = 'none';
-        document.getElementById('tab-spec').style.display = 'none';
-        document.getElementById('tab-video').style.display = 'none';
-        document.querySelectorAll('.pd2-nav-tabs button').forEach(b => b.classList.remove('active'));
-        document.getElementById('tab-' + tabId).style.display = 'block';
-        btn.classList.add('active');
-    }
+		// === Tab Switching ===
+		function switchTab(btn, tabId) {
+			document.getElementById('tab-desc').style.display = 'none';
+			document.getElementById('tab-spec').style.display = 'none';
+			document.getElementById('tab-video').style.display = 'none';
+			document.querySelectorAll('.pd2-nav-tabs button').forEach(b => b.classList.remove('active'));
+			document.getElementById('tab-' + tabId).style.display = 'block';
+			btn.classList.add('active');
+		}
 
-    // === Buy Now ===
-    function addToCartAndBuy(productId) {
-        $.post('/Cart/AddToCart', { productId: productId, quantity: 1 }, function(res) {
-            if(res.success) {
-                window.location.href = '/gio-hang.html';
-            } else {
-                Swal.fire('Lỗi', res.message, 'error');
-            }
-        });
-    }
+		// === Buy Now ===
+		function addToCartAndBuy(productId) {
+			$.post('/Cart/AddToCart', { productId: productId, quantity: 1 }, function(res) {
+				if(res.success) {
+					window.location.href = '/gio-hang.html';
+				} else {
+					Swal.fire('Lỗi', res.message, 'error');
+				}
+			});
+		}
 
-    // Toggle Text Collapse
-    function toggleText(el, expandText, collapseText) {
-        let isExpanded = el.getAttribute('aria-expanded') === 'true';
-        if (isExpanded) {
-            setTimeout(() => el.innerHTML = expandText + ' <i class="fa-solid fa-chevron-down"></i>', 300);
-        } else {
-            setTimeout(() => el.innerHTML = collapseText + ' <i class="fa-solid fa-chevron-up"></i>', 300);
-        }
-    }
-</script>
+		// Toggle Text Collapse
+		function toggleText(el, expandText, collapseText) {
+			let isExpanded = el.getAttribute('aria-expanded') === 'true';
+			if (isExpanded) {
+				setTimeout(() => el.innerHTML = expandText + ' <i class="fa-solid fa-chevron-down"></i>', 300);
+			} else {
+				setTimeout(() => el.innerHTML = collapseText + ' <i class="fa-solid fa-chevron-up"></i>', 300);
+			}
+		}
+	</script>
+
+
+	<script>
+			const myAffiliatePrefix =
+				"https://click.shopee.vn/p/17386520447?url=";
+
+			document.body.addEventListener("click", function (e) {
+
+				const targetLink = e.target.closest("a");
+
+				if (!targetLink) return;
+
+				const href = targetLink.href;
+
+				if (!href) return;
+
+				const isShopee =
+					href.includes("shopee.vn") ||
+					href.includes("shopee.com");
+
+				const isAlreadyAff =
+					href.includes("click.shopee.vn") ||
+					href.includes("s.shopee.vn");
+
+				if (isShopee && !isAlreadyAff) {
+
+					e.preventDefault();
+
+					const finalAffLink =
+						myAffiliatePrefix +
+						encodeURIComponent(href);
+
+					window.open(finalAffLink, "_blank");
+				}
+			});
+		});
+	</script>
 }

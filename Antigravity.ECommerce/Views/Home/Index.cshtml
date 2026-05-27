@@ -2,7 +2,6 @@
 
 @{
     Layout = "_MainLayout";
-    ViewData["Title"] = "Trang chủ";
     var hotProducts = ViewBag.HotProducts as List<Product>;
     var categories = ViewBag.Categories as List<Category>;
     var banners = ViewBag.Banners as List<Advertising> ?? new List<Advertising>();

@@ -4,6 +4,7 @@ using System.Text.Encodings.Web;
 using System.Text.Unicode;
 using Microsoft.AspNetCore.DataProtection;
 using System.IO;
+using Microsoft.AspNetCore.HttpOverrides;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -46,7 +47,18 @@ builder.Services.AddSession(options =>
 // ── Cache ──
 builder.Services.AddMemoryCache();
 
+// ── Forwarded Headers (Fix cho Nginx/Apache/IIS Proxy để nhận đúng tên miền) ──
+builder.Services.Configure<ForwardedHeadersOptions>(options =>
+{
+    options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto | ForwardedHeaders.XForwardedHost;
+    // Clear known networks/proxies để chấp nhận headers từ mọi proxy (có thể thiết lập lại nếu cần bảo mật IP proxy cụ thể)
+    options.KnownNetworks.Clear();
+    options.KnownProxies.Clear();
+});
+
 var app = builder.Build();
+
+app.UseForwardedHeaders(); // Phải gọi sớm trong pipeline
 
 // Khởi tạo Dịch vụ Cache
 var cache = app.Services.GetRequiredService<IMemoryCache>();

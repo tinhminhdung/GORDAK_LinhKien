@@ -3342,6 +3342,8 @@ img {
         height: 220px;
         object-fit: cover;
         display: block;
+        border: 1px solid #d7d7d7;
+        border-radius: 9px;
     }
 
 .tt-badge {
