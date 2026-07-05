@@ -1,1273 +1,1256 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <urlset xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://localhost:7057/</loc>
+    <loc>https://localhost:44341/</loc>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/logo/logo_dak.png</image:loc>
+      <image:loc>https://localhost:44341/uploads/logo/logo_dak.png</image:loc>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/gioi-thieu.html</loc>
+    <loc>https://localhost:44341/gioi-thieu.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/logo/logo_dak.png</image:loc>
+      <image:loc>https://localhost:44341/uploads/logo/logo_dak.png</image:loc>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/lien-he.html</loc>
+    <loc>https://localhost:44341/lien-he.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/logo/logo_dak.png</image:loc>
+      <image:loc>https://localhost:44341/uploads/logo/logo_dak.png</image:loc>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/san-pham.html</loc>
+    <loc>https://localhost:44341/san-pham.html</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/logo/logo_dak.png</image:loc>
+      <image:loc>https://localhost:44341/uploads/logo/logo_dak.png</image:loc>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/tin-tuc.html</loc>
+    <loc>https://localhost:44341/tin-tuc.html</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/logo/logo_dak.png</image:loc>
+      <image:loc>https://localhost:44341/uploads/logo/logo_dak.png</image:loc>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/video.html</loc>
+    <loc>https://localhost:44341/video.html</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/logo/logo_dak.png</image:loc>
+      <image:loc>https://localhost:44341/uploads/logo/logo_dak.png</image:loc>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/chu-de-anh.html</loc>
+    <loc>https://localhost:44341/thu-vien-anh.html</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/logo/logo_dak.png</image:loc>
+      <image:loc>https://localhost:44341/uploads/logo/logo_dak.png</image:loc>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/tai-lieu.html</loc>
+    <loc>https://localhost:44341/tai-lieu.html</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/logo/logo_dak.png</image:loc>
+      <image:loc>https://localhost:44341/uploads/logo/logo_dak.png</image:loc>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/faq.html</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-    <image:image>
-      <image:loc>https://localhost:7057/uploads/logo/logo_dak.png</image:loc>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://localhost:7057/tin-tuc/tram-han2.html</loc>
+    <loc>https://localhost:44341/tin-tuc/tram-han2.html</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/logo/logo_dak.png</image:loc>
+      <image:loc>https://localhost:44341/uploads/logo/logo_dak.png</image:loc>
       <image:title>Trạm hàn2</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/tin-tuc/tram-han1.html</loc>
+    <loc>https://localhost:44341/tin-tuc/tram-han1.html</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/logo/logo_dak.png</image:loc>
+      <image:loc>https://localhost:44341/uploads/logo/logo_dak.png</image:loc>
       <image:title>Trạm hàn</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/tin-tuc/cong-nghe-ky-thuat.html</loc>
+    <loc>https://localhost:44341/tin-tuc/cong-nghe-ky-thuat.html</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/logo/logo_dak.png</image:loc>
+      <image:loc>https://localhost:44341/uploads/logo/logo_dak.png</image:loc>
       <image:title>Công nghệ - kỹ thuật</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/san-pham/may-hap-chip.html</loc>
+    <loc>https://localhost:44341/san-pham/may-hap-chip.html</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/SanPham/--But-thu-dien-dien-tu/638731491531483349.jpg</image:loc>
+      <image:loc>https://localhost:44341/uploads/SanPham/--But-thu-dien-dien-tu/638731491531483349.jpg</image:loc>
       <image:title>Máy hấp chíp</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/san-pham/phu-kien.html</loc>
+    <loc>https://localhost:44341/san-pham/phu-kien.html</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/sanppham/3---Copy.jpg</image:loc>
+      <image:loc>https://localhost:44341/uploads/sanppham/3---Copy.jpg</image:loc>
       <image:title>Phụ kiện</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/san-pham/tram-kho.html</loc>
+    <loc>https://localhost:44341/san-pham/tram-kho.html</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/SanPham/--Cam-bien-dong-mo-rong-cho-dong-ho-van-nang/638752245999693284.jpg</image:loc>
+      <image:loc>https://localhost:44341/uploads/SanPham/--Cam-bien-dong-mo-rong-cho-dong-ho-van-nang/638752245999693284.jpg</image:loc>
       <image:title>Trạm khò</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/san-pham/tram-han.html</loc>
+    <loc>https://localhost:44341/san-pham/tram-han.html</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/tramhan.png</image:loc>
+      <image:loc>https://localhost:44341/uploads/tramhan.png</image:loc>
       <image:title>Trạm hàn</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/tai-lieu/tai-lieu</loc>
+    <loc>https://localhost:44341/tai-lieu/tai-lieu.html</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/logo/logo_dak.png</image:loc>
+      <image:loc>https://localhost:44341/uploads/logo/logo_dak.png</image:loc>
       <image:title>Tài liệu</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/faq/faq</loc>
+    <loc>https://localhost:44341/video/video.html</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/logo/logo_dak.png</image:loc>
-      <image:title>FAQ</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://localhost:7057/video/video</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-    <image:image>
-      <image:loc>https://localhost:7057/uploads/logo/logo_dak.png</image:loc>
+      <image:loc>https://localhost:44341/uploads/logo/logo_dak.png</image:loc>
       <image:title>Video</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/chu-de-anh/thu-vien</loc>
+    <loc>https://localhost:44341/thu-vien-anh/thu-vien.html</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/logo/logo_dak.png</image:loc>
+      <image:loc>https://localhost:44341/uploads/logo/logo_dak.png</image:loc>
       <image:title>thư viện</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/tin-tuc/kien-thuc-dien-tu.html</loc>
+    <loc>https://localhost:44341/tin-tuc/kien-thuc-dien-tu.html</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/logo/logo_dak.png</image:loc>
+      <image:loc>https://localhost:44341/uploads/logo/logo_dak.png</image:loc>
       <image:title>Kiến thức Điện tử</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/san-pham/han-kho-ket-hop.html</loc>
+    <loc>https://localhost:44341/san-pham/han-kho-ket-hop.html</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/sanppham/kìm-kẹp.jpg</image:loc>
+      <image:loc>https://localhost:44341/uploads/sanppham/kìm-kẹp.jpg</image:loc>
       <image:title>Hàn khò kết hợp</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/san-pham/thiet-bi-do-dien.html</loc>
+    <loc>https://localhost:44341/san-pham/thiet-bi-do-dien.html</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/SanPham/--Ampe-kim--Kep-dong/638731534184276425.jpg</image:loc>
+      <image:loc>https://localhost:44341/uploads/SanPham/--Ampe-kim--Kep-dong/638731534184276425.jpg</image:loc>
       <image:title>Thiết bị đo điện</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/san-pham/detail/111111111111111-669.html</loc>
+    <loc>https://localhost:44341/san-pham/detail/111111111111111-669.html</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/logo/logo_dak.png</image:loc>
+      <image:loc>https://localhost:44341/uploads/logo/logo_dak.png</image:loc>
       <image:title>111111111111111</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/san-pham/detail/demo-san-pham-data-666.html</loc>
+    <loc>https://localhost:44341/san-pham/detail/demo-san-pham-data-666.html</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/SanPham/--Ampe-kim--Kep-dong/638728181679620913.jpg</image:loc>
+      <image:loc>https://localhost:44341/uploads/SanPham/--Ampe-kim--Kep-dong/638728181679620913.jpg</image:loc>
       <image:title>demo sản phẩm data</image:title>
     </image:image>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/SanPham/--Ampe-kim--Kep-dong/638730496932671913.jpg</image:loc>
+      <image:loc>https://localhost:44341/uploads/SanPham/--Ampe-kim--Kep-dong/638730496932671913.jpg</image:loc>
       <image:title>demo sản phẩm data</image:title>
     </image:image>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/Banner/636330478278386928.png</image:loc>
+      <image:loc>https://localhost:44341/uploads/Banner/636330478278386928.png</image:loc>
       <image:title>demo sản phẩm data</image:title>
     </image:image>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/SanPham/--But-thu-dien-dien-tu/638728126895920153.jpg</image:loc>
+      <image:loc>https://localhost:44341/uploads/SanPham/--But-thu-dien-dien-tu/638728126895920153.jpg</image:loc>
       <image:title>demo sản phẩm data</image:title>
     </image:image>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/SanPham/--But-thu-dien-dien-tu/638731491531483349.jpg</image:loc>
+      <image:loc>https://localhost:44341/uploads/SanPham/--But-thu-dien-dien-tu/638731491531483349.jpg</image:loc>
       <image:title>demo sản phẩm data</image:title>
     </image:image>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/SanPham/--But-thu-dien-dien-tu/638731504104572013.jpg</image:loc>
+      <image:loc>https://localhost:44341/uploads/SanPham/--But-thu-dien-dien-tu/638731504104572013.jpg</image:loc>
       <image:title>demo sản phẩm data</image:title>
     </image:image>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/SanPham/--Ampe-kim--Kep-dong/638442817927911194.jpg</image:loc>
+      <image:loc>https://localhost:44341/uploads/SanPham/--Ampe-kim--Kep-dong/638442817927911194.jpg</image:loc>
       <image:title>demo sản phẩm data</image:title>
     </image:image>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/SanPham/--Ampe-kim--Kep-dong/638442919436758328.jpg</image:loc>
+      <image:loc>https://localhost:44341/uploads/SanPham/--Ampe-kim--Kep-dong/638442919436758328.jpg</image:loc>
       <image:title>demo sản phẩm data</image:title>
     </image:image>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/SanPham/--Ampe-kim--Kep-dong/638731534184276425.jpg</image:loc>
+      <image:loc>https://localhost:44341/uploads/SanPham/--Ampe-kim--Kep-dong/638731534184276425.jpg</image:loc>
       <image:title>demo sản phẩm data</image:title>
     </image:image>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/SanPham/--Ampe-kim--Kep-dong/638730499293122636.jpg</image:loc>
+      <image:loc>https://localhost:44341/uploads/SanPham/--Ampe-kim--Kep-dong/638730499293122636.jpg</image:loc>
       <image:title>demo sản phẩm data</image:title>
     </image:image>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/SanPham/--Ampe-kim--Kep-dong/638729789101186679.jpg</image:loc>
+      <image:loc>https://localhost:44341/uploads/SanPham/--Ampe-kim--Kep-dong/638729789101186679.jpg</image:loc>
       <image:title>demo sản phẩm data</image:title>
     </image:image>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/SanPham/--Ampe-kim--Kep-dong/638729797805074015.jpg</image:loc>
+      <image:loc>https://localhost:44341/uploads/SanPham/--Ampe-kim--Kep-dong/638729797805074015.jpg</image:loc>
       <image:title>demo sản phẩm data</image:title>
     </image:image>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/SanPham/--Ampe-kim--Kep-dong/638731534823821497.jpg</image:loc>
+      <image:loc>https://localhost:44341/uploads/SanPham/--Ampe-kim--Kep-dong/638731534823821497.jpg</image:loc>
       <image:title>demo sản phẩm data</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-100-doiten-665.html</loc>
+    <loc>https://localhost:44341/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-100-doiten-665.html</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/SanPham/--Ampe-kim--Kep-dong/638442817927911194.jpg</image:loc>
+      <image:loc>https://localhost:44341/uploads/SanPham/--Ampe-kim--Kep-dong/638442817927911194.jpg</image:loc>
       <image:title>Thiết bị đo Ampe Kìm Hioki Model 100 dôiten</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-demo-2-664.html</loc>
+    <loc>https://localhost:44341/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-demo-2-664.html</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/SanPham/--Ampe-kim--Kep-dong/638728181679620913.jpg</image:loc>
+      <image:loc>https://localhost:44341/uploads/SanPham/--Ampe-kim--Kep-dong/638728181679620913.jpg</image:loc>
       <image:title>Thiết bị đo Ampe Kìm Hioki Model -- demo 2</image:title>
     </image:image>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/SanPham/--But-thu-dien-dien-tu/638731491531483349.jpg</image:loc>
+      <image:loc>https://localhost:44341/uploads/SanPham/--But-thu-dien-dien-tu/638731491531483349.jpg</image:loc>
       <image:title>Thiết bị đo Ampe Kìm Hioki Model -- demo 2</image:title>
     </image:image>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/SanPham/--But-thu-dien-dien-tu/638728126895920153.jpg</image:loc>
+      <image:loc>https://localhost:44341/uploads/SanPham/--But-thu-dien-dien-tu/638728126895920153.jpg</image:loc>
       <image:title>Thiết bị đo Ampe Kìm Hioki Model -- demo 2</image:title>
     </image:image>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/SanPham/--But-thu-dien-dien-tu/638731504104572013.jpg</image:loc>
+      <image:loc>https://localhost:44341/uploads/SanPham/--But-thu-dien-dien-tu/638731504104572013.jpg</image:loc>
       <image:title>Thiết bị đo Ampe Kìm Hioki Model -- demo 2</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-98-663.html</loc>
+    <loc>https://localhost:44341/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-98-663.html</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/SanPham/--Ampe-kim--Kep-dong/638728181094281763.jpg</image:loc>
+      <image:loc>https://localhost:44341/uploads/SanPham/--Ampe-kim--Kep-dong/638728181094281763.jpg</image:loc>
       <image:title>Thiết bị đo Ampe Kìm Hioki Model 98</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-97-662.html</loc>
+    <loc>https://localhost:44341/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-97-662.html</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/SanPham/--Ampe-kim--Kep-dong/638442924498428529.jpg</image:loc>
+      <image:loc>https://localhost:44341/uploads/SanPham/--Ampe-kim--Kep-dong/638442924498428529.jpg</image:loc>
       <image:title>Thiết bị đo Ampe Kìm Hioki Model 97</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-96-661.html</loc>
+    <loc>https://localhost:44341/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-96-661.html</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/SanPham/--Ampe-kim--Kep-dong/638442919436758328.jpg</image:loc>
+      <image:loc>https://localhost:44341/uploads/SanPham/--Ampe-kim--Kep-dong/638442919436758328.jpg</image:loc>
       <image:title>Thiết bị đo Ampe Kìm Hioki Model 96</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-95-660.html</loc>
+    <loc>https://localhost:44341/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-95-660.html</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/SanPham/--Ampe-kim--Kep-dong/638442817927911194.jpg</image:loc>
+      <image:loc>https://localhost:44341/uploads/SanPham/--Ampe-kim--Kep-dong/638442817927911194.jpg</image:loc>
       <image:title>Thiết bị đo Ampe Kìm Hioki Model 95</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-94-659.html</loc>
+    <loc>https://localhost:44341/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-94-659.html</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/SanPham/--Ampe-kim--Kep-dong/638728181679620913.jpg</image:loc>
+      <image:loc>https://localhost:44341/uploads/SanPham/--Ampe-kim--Kep-dong/638728181679620913.jpg</image:loc>
       <image:title>Thiết bị đo Ampe Kìm Hioki Model 94</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-93-658.html</loc>
+    <loc>https://localhost:44341/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-93-658.html</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/SanPham/--Ampe-kim--Kep-dong/638728181094281763.jpg</image:loc>
+      <image:loc>https://localhost:44341/uploads/SanPham/--Ampe-kim--Kep-dong/638728181094281763.jpg</image:loc>
       <image:title>Thiết bị đo Ampe Kìm Hioki Model 93</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-92-657.html</loc>
+    <loc>https://localhost:44341/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-92-657.html</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/SanPham/--Ampe-kim--Kep-dong/638442924498428529.jpg</image:loc>
+      <image:loc>https://localhost:44341/uploads/SanPham/--Ampe-kim--Kep-dong/638442924498428529.jpg</image:loc>
       <image:title>Thiết bị đo Ampe Kìm Hioki Model 92</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-91-656.html</loc>
+    <loc>https://localhost:44341/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-91-656.html</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/SanPham/--Ampe-kim--Kep-dong/638442919436758328.jpg</image:loc>
+      <image:loc>https://localhost:44341/uploads/SanPham/--Ampe-kim--Kep-dong/638442919436758328.jpg</image:loc>
       <image:title>Thiết bị đo Ampe Kìm Hioki Model 91</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-90-655.html</loc>
+    <loc>https://localhost:44341/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-90-655.html</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/SanPham/--Ampe-kim--Kep-dong/638442817927911194.jpg</image:loc>
+      <image:loc>https://localhost:44341/uploads/SanPham/--Ampe-kim--Kep-dong/638442817927911194.jpg</image:loc>
       <image:title>Thiết bị đo Ampe Kìm Hioki Model 90</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-89-654.html</loc>
+    <loc>https://localhost:44341/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-89-654.html</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/SanPham/--Ampe-kim--Kep-dong/638728181679620913.jpg</image:loc>
+      <image:loc>https://localhost:44341/uploads/SanPham/--Ampe-kim--Kep-dong/638728181679620913.jpg</image:loc>
       <image:title>Thiết bị đo Ampe Kìm Hioki Model 89</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-88-653.html</loc>
+    <loc>https://localhost:44341/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-88-653.html</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/SanPham/--Ampe-kim--Kep-dong/638728181094281763.jpg</image:loc>
+      <image:loc>https://localhost:44341/uploads/SanPham/--Ampe-kim--Kep-dong/638728181094281763.jpg</image:loc>
       <image:title>Thiết bị đo Ampe Kìm Hioki Model 88</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-87-652.html</loc>
+    <loc>https://localhost:44341/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-87-652.html</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/SanPham/--Ampe-kim--Kep-dong/638442924498428529.jpg</image:loc>
+      <image:loc>https://localhost:44341/uploads/SanPham/--Ampe-kim--Kep-dong/638442924498428529.jpg</image:loc>
       <image:title>Thiết bị đo Ampe Kìm Hioki Model 87</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-86-651.html</loc>
+    <loc>https://localhost:44341/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-86-651.html</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/SanPham/--Ampe-kim--Kep-dong/638442919436758328.jpg</image:loc>
+      <image:loc>https://localhost:44341/uploads/SanPham/--Ampe-kim--Kep-dong/638442919436758328.jpg</image:loc>
       <image:title>Thiết bị đo Ampe Kìm Hioki Model 86</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-85-650.html</loc>
+    <loc>https://localhost:44341/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-85-650.html</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/SanPham/--Ampe-kim--Kep-dong/638442817927911194.jpg</image:loc>
+      <image:loc>https://localhost:44341/uploads/SanPham/--Ampe-kim--Kep-dong/638442817927911194.jpg</image:loc>
       <image:title>Thiết bị đo Ampe Kìm Hioki Model 85</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-84-649.html</loc>
+    <loc>https://localhost:44341/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-84-649.html</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/SanPham/--Ampe-kim--Kep-dong/638728181679620913.jpg</image:loc>
+      <image:loc>https://localhost:44341/uploads/SanPham/--Ampe-kim--Kep-dong/638728181679620913.jpg</image:loc>
       <image:title>Thiết bị đo Ampe Kìm Hioki Model 84</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-83-648.html</loc>
+    <loc>https://localhost:44341/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-83-648.html</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/SanPham/--Ampe-kim--Kep-dong/638728181094281763.jpg</image:loc>
+      <image:loc>https://localhost:44341/uploads/SanPham/--Ampe-kim--Kep-dong/638728181094281763.jpg</image:loc>
       <image:title>Thiết bị đo Ampe Kìm Hioki Model 83</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-82-647.html</loc>
+    <loc>https://localhost:44341/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-82-647.html</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/SanPham/--Ampe-kim--Kep-dong/638442924498428529.jpg</image:loc>
+      <image:loc>https://localhost:44341/uploads/SanPham/--Ampe-kim--Kep-dong/638442924498428529.jpg</image:loc>
       <image:title>Thiết bị đo Ampe Kìm Hioki Model 82</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-81-646.html</loc>
+    <loc>https://localhost:44341/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-81-646.html</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/SanPham/--Ampe-kim--Kep-dong/638442919436758328.jpg</image:loc>
+      <image:loc>https://localhost:44341/uploads/SanPham/--Ampe-kim--Kep-dong/638442919436758328.jpg</image:loc>
       <image:title>Thiết bị đo Ampe Kìm Hioki Model 81</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-80-645.html</loc>
+    <loc>https://localhost:44341/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-80-645.html</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/SanPham/--Ampe-kim--Kep-dong/638442817927911194.jpg</image:loc>
+      <image:loc>https://localhost:44341/uploads/SanPham/--Ampe-kim--Kep-dong/638442817927911194.jpg</image:loc>
       <image:title>Thiết bị đo Ampe Kìm Hioki Model 80</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-79-644.html</loc>
+    <loc>https://localhost:44341/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-79-644.html</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/SanPham/--Ampe-kim--Kep-dong/638728181679620913.jpg</image:loc>
+      <image:loc>https://localhost:44341/uploads/SanPham/--Ampe-kim--Kep-dong/638728181679620913.jpg</image:loc>
       <image:title>Thiết bị đo Ampe Kìm Hioki Model 79</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-78-643.html</loc>
+    <loc>https://localhost:44341/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-78-643.html</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/SanPham/--Ampe-kim--Kep-dong/638728181094281763.jpg</image:loc>
+      <image:loc>https://localhost:44341/uploads/SanPham/--Ampe-kim--Kep-dong/638728181094281763.jpg</image:loc>
       <image:title>Thiết bị đo Ampe Kìm Hioki Model 78</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-77-642.html</loc>
+    <loc>https://localhost:44341/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-77-642.html</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/SanPham/--Ampe-kim--Kep-dong/638442924498428529.jpg</image:loc>
+      <image:loc>https://localhost:44341/uploads/SanPham/--Ampe-kim--Kep-dong/638442924498428529.jpg</image:loc>
       <image:title>Thiết bị đo Ampe Kìm Hioki Model 77</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-76-641.html</loc>
+    <loc>https://localhost:44341/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-76-641.html</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/SanPham/--Ampe-kim--Kep-dong/638442919436758328.jpg</image:loc>
+      <image:loc>https://localhost:44341/uploads/SanPham/--Ampe-kim--Kep-dong/638442919436758328.jpg</image:loc>
       <image:title>Thiết bị đo Ampe Kìm Hioki Model 76</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-75-640.html</loc>
+    <loc>https://localhost:44341/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-75-640.html</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/SanPham/--Ampe-kim--Kep-dong/638442817927911194.jpg</image:loc>
+      <image:loc>https://localhost:44341/uploads/SanPham/--Ampe-kim--Kep-dong/638442817927911194.jpg</image:loc>
       <image:title>Thiết bị đo Ampe Kìm Hioki Model 75</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-74-639.html</loc>
+    <loc>https://localhost:44341/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-74-639.html</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/SanPham/--Ampe-kim--Kep-dong/638728181679620913.jpg</image:loc>
+      <image:loc>https://localhost:44341/uploads/SanPham/--Ampe-kim--Kep-dong/638728181679620913.jpg</image:loc>
       <image:title>Thiết bị đo Ampe Kìm Hioki Model 74</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-73-638.html</loc>
+    <loc>https://localhost:44341/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-73-638.html</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/SanPham/--Ampe-kim--Kep-dong/638728181094281763.jpg</image:loc>
+      <image:loc>https://localhost:44341/uploads/SanPham/--Ampe-kim--Kep-dong/638728181094281763.jpg</image:loc>
       <image:title>Thiết bị đo Ampe Kìm Hioki Model 73</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-72-637.html</loc>
+    <loc>https://localhost:44341/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-72-637.html</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/SanPham/--Ampe-kim--Kep-dong/638442924498428529.jpg</image:loc>
+      <image:loc>https://localhost:44341/uploads/SanPham/--Ampe-kim--Kep-dong/638442924498428529.jpg</image:loc>
       <image:title>Thiết bị đo Ampe Kìm Hioki Model 72</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-71-636.html</loc>
+    <loc>https://localhost:44341/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-71-636.html</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/SanPham/--Ampe-kim--Kep-dong/638442919436758328.jpg</image:loc>
+      <image:loc>https://localhost:44341/uploads/SanPham/--Ampe-kim--Kep-dong/638442919436758328.jpg</image:loc>
       <image:title>Thiết bị đo Ampe Kìm Hioki Model 71</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-70-635.html</loc>
+    <loc>https://localhost:44341/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-70-635.html</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/SanPham/--Ampe-kim--Kep-dong/638442817927911194.jpg</image:loc>
+      <image:loc>https://localhost:44341/uploads/SanPham/--Ampe-kim--Kep-dong/638442817927911194.jpg</image:loc>
       <image:title>Thiết bị đo Ampe Kìm Hioki Model 70</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-69-634.html</loc>
+    <loc>https://localhost:44341/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-69-634.html</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/SanPham/--Ampe-kim--Kep-dong/638728181679620913.jpg</image:loc>
+      <image:loc>https://localhost:44341/uploads/SanPham/--Ampe-kim--Kep-dong/638728181679620913.jpg</image:loc>
       <image:title>Thiết bị đo Ampe Kìm Hioki Model 69</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-68-633.html</loc>
+    <loc>https://localhost:44341/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-68-633.html</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/SanPham/--Ampe-kim--Kep-dong/638728181094281763.jpg</image:loc>
+      <image:loc>https://localhost:44341/uploads/SanPham/--Ampe-kim--Kep-dong/638728181094281763.jpg</image:loc>
       <image:title>Thiết bị đo Ampe Kìm Hioki Model 68</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-67-632.html</loc>
+    <loc>https://localhost:44341/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-67-632.html</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/SanPham/--Ampe-kim--Kep-dong/638442924498428529.jpg</image:loc>
+      <image:loc>https://localhost:44341/uploads/SanPham/--Ampe-kim--Kep-dong/638442924498428529.jpg</image:loc>
       <image:title>Thiết bị đo Ampe Kìm Hioki Model 67</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-66-631.html</loc>
+    <loc>https://localhost:44341/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-66-631.html</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/SanPham/--Ampe-kim--Kep-dong/638442919436758328.jpg</image:loc>
+      <image:loc>https://localhost:44341/uploads/SanPham/--Ampe-kim--Kep-dong/638442919436758328.jpg</image:loc>
       <image:title>Thiết bị đo Ampe Kìm Hioki Model 66</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-65-630.html</loc>
+    <loc>https://localhost:44341/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-65-630.html</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/SanPham/--Ampe-kim--Kep-dong/638442817927911194.jpg</image:loc>
+      <image:loc>https://localhost:44341/uploads/SanPham/--Ampe-kim--Kep-dong/638442817927911194.jpg</image:loc>
       <image:title>Thiết bị đo Ampe Kìm Hioki Model 65</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-64-629.html</loc>
+    <loc>https://localhost:44341/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-64-629.html</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/SanPham/--Ampe-kim--Kep-dong/638728181679620913.jpg</image:loc>
+      <image:loc>https://localhost:44341/uploads/SanPham/--Ampe-kim--Kep-dong/638728181679620913.jpg</image:loc>
       <image:title>Thiết bị đo Ampe Kìm Hioki Model 64</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-63-628.html</loc>
+    <loc>https://localhost:44341/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-63-628.html</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/SanPham/--Ampe-kim--Kep-dong/638728181094281763.jpg</image:loc>
+      <image:loc>https://localhost:44341/uploads/SanPham/--Ampe-kim--Kep-dong/638728181094281763.jpg</image:loc>
       <image:title>Thiết bị đo Ampe Kìm Hioki Model 63</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-62-627.html</loc>
+    <loc>https://localhost:44341/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-62-627.html</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/SanPham/--Ampe-kim--Kep-dong/638442924498428529.jpg</image:loc>
+      <image:loc>https://localhost:44341/uploads/SanPham/--Ampe-kim--Kep-dong/638442924498428529.jpg</image:loc>
       <image:title>Thiết bị đo Ampe Kìm Hioki Model 62</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-61-626.html</loc>
+    <loc>https://localhost:44341/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-61-626.html</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/SanPham/--Ampe-kim--Kep-dong/638442919436758328.jpg</image:loc>
+      <image:loc>https://localhost:44341/uploads/SanPham/--Ampe-kim--Kep-dong/638442919436758328.jpg</image:loc>
       <image:title>Thiết bị đo Ampe Kìm Hioki Model 61</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-60-625.html</loc>
+    <loc>https://localhost:44341/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-60-625.html</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/SanPham/--Ampe-kim--Kep-dong/638442817927911194.jpg</image:loc>
+      <image:loc>https://localhost:44341/uploads/SanPham/--Ampe-kim--Kep-dong/638442817927911194.jpg</image:loc>
       <image:title>Thiết bị đo Ampe Kìm Hioki Model 60</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-59-624.html</loc>
+    <loc>https://localhost:44341/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-59-624.html</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/SanPham/--Ampe-kim--Kep-dong/638728181679620913.jpg</image:loc>
+      <image:loc>https://localhost:44341/uploads/SanPham/--Ampe-kim--Kep-dong/638728181679620913.jpg</image:loc>
       <image:title>Thiết bị đo Ampe Kìm Hioki Model 59</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-58-623.html</loc>
+    <loc>https://localhost:44341/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-58-623.html</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/SanPham/--Ampe-kim--Kep-dong/638728181094281763.jpg</image:loc>
+      <image:loc>https://localhost:44341/uploads/SanPham/--Ampe-kim--Kep-dong/638728181094281763.jpg</image:loc>
       <image:title>Thiết bị đo Ampe Kìm Hioki Model 58</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-57-622.html</loc>
+    <loc>https://localhost:44341/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-57-622.html</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/SanPham/--Ampe-kim--Kep-dong/638442924498428529.jpg</image:loc>
+      <image:loc>https://localhost:44341/uploads/SanPham/--Ampe-kim--Kep-dong/638442924498428529.jpg</image:loc>
       <image:title>Thiết bị đo Ampe Kìm Hioki Model 57</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-56-621.html</loc>
+    <loc>https://localhost:44341/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-56-621.html</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/SanPham/--Ampe-kim--Kep-dong/638442919436758328.jpg</image:loc>
+      <image:loc>https://localhost:44341/uploads/SanPham/--Ampe-kim--Kep-dong/638442919436758328.jpg</image:loc>
       <image:title>Thiết bị đo Ampe Kìm Hioki Model 56</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-55-620.html</loc>
+    <loc>https://localhost:44341/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-55-620.html</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/SanPham/--Ampe-kim--Kep-dong/638442817927911194.jpg</image:loc>
+      <image:loc>https://localhost:44341/uploads/SanPham/--Ampe-kim--Kep-dong/638442817927911194.jpg</image:loc>
       <image:title>Thiết bị đo Ampe Kìm Hioki Model 55</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-54-619.html</loc>
+    <loc>https://localhost:44341/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-54-619.html</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/SanPham/--Ampe-kim--Kep-dong/638728181679620913.jpg</image:loc>
+      <image:loc>https://localhost:44341/uploads/SanPham/--Ampe-kim--Kep-dong/638728181679620913.jpg</image:loc>
       <image:title>Thiết bị đo Ampe Kìm Hioki Model 54</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-53-618.html</loc>
+    <loc>https://localhost:44341/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-53-618.html</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/SanPham/--Ampe-kim--Kep-dong/638728181094281763.jpg</image:loc>
+      <image:loc>https://localhost:44341/uploads/SanPham/--Ampe-kim--Kep-dong/638728181094281763.jpg</image:loc>
       <image:title>Thiết bị đo Ampe Kìm Hioki Model 53</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-52-617.html</loc>
+    <loc>https://localhost:44341/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-52-617.html</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/SanPham/--Ampe-kim--Kep-dong/638442924498428529.jpg</image:loc>
+      <image:loc>https://localhost:44341/uploads/SanPham/--Ampe-kim--Kep-dong/638442924498428529.jpg</image:loc>
       <image:title>Thiết bị đo Ampe Kìm Hioki Model 52</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-51-616.html</loc>
+    <loc>https://localhost:44341/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-51-616.html</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/SanPham/--Ampe-kim--Kep-dong/638442919436758328.jpg</image:loc>
+      <image:loc>https://localhost:44341/uploads/SanPham/--Ampe-kim--Kep-dong/638442919436758328.jpg</image:loc>
       <image:title>Thiết bị đo Ampe Kìm Hioki Model 51</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-50-615.html</loc>
+    <loc>https://localhost:44341/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-50-615.html</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/SanPham/--Ampe-kim--Kep-dong/638442817927911194.jpg</image:loc>
+      <image:loc>https://localhost:44341/uploads/SanPham/--Ampe-kim--Kep-dong/638442817927911194.jpg</image:loc>
       <image:title>Thiết bị đo Ampe Kìm Hioki Model 50</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-49-614.html</loc>
+    <loc>https://localhost:44341/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-49-614.html</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/SanPham/--Ampe-kim--Kep-dong/638728181679620913.jpg</image:loc>
+      <image:loc>https://localhost:44341/uploads/SanPham/--Ampe-kim--Kep-dong/638728181679620913.jpg</image:loc>
       <image:title>Thiết bị đo Ampe Kìm Hioki Model 49</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-48-613.html</loc>
+    <loc>https://localhost:44341/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-48-613.html</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/SanPham/--Ampe-kim--Kep-dong/638728181094281763.jpg</image:loc>
+      <image:loc>https://localhost:44341/uploads/SanPham/--Ampe-kim--Kep-dong/638728181094281763.jpg</image:loc>
       <image:title>Thiết bị đo Ampe Kìm Hioki Model 48</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-47-612.html</loc>
+    <loc>https://localhost:44341/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-47-612.html</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/SanPham/--Ampe-kim--Kep-dong/638442924498428529.jpg</image:loc>
+      <image:loc>https://localhost:44341/uploads/SanPham/--Ampe-kim--Kep-dong/638442924498428529.jpg</image:loc>
       <image:title>Thiết bị đo Ampe Kìm Hioki Model 47</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-46-611.html</loc>
+    <loc>https://localhost:44341/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-46-611.html</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/SanPham/--Ampe-kim--Kep-dong/638442919436758328.jpg</image:loc>
+      <image:loc>https://localhost:44341/uploads/SanPham/--Ampe-kim--Kep-dong/638442919436758328.jpg</image:loc>
       <image:title>Thiết bị đo Ampe Kìm Hioki Model 46</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-45-610.html</loc>
+    <loc>https://localhost:44341/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-45-610.html</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/SanPham/--Ampe-kim--Kep-dong/638442817927911194.jpg</image:loc>
+      <image:loc>https://localhost:44341/uploads/SanPham/--Ampe-kim--Kep-dong/638442817927911194.jpg</image:loc>
       <image:title>Thiết bị đo Ampe Kìm Hioki Model 45</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-44-609.html</loc>
+    <loc>https://localhost:44341/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-44-609.html</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/SanPham/--Ampe-kim--Kep-dong/638728181679620913.jpg</image:loc>
+      <image:loc>https://localhost:44341/uploads/SanPham/--Ampe-kim--Kep-dong/638728181679620913.jpg</image:loc>
       <image:title>Thiết bị đo Ampe Kìm Hioki Model 44</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-43-608.html</loc>
+    <loc>https://localhost:44341/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-43-608.html</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/SanPham/--Ampe-kim--Kep-dong/638728181094281763.jpg</image:loc>
+      <image:loc>https://localhost:44341/uploads/SanPham/--Ampe-kim--Kep-dong/638728181094281763.jpg</image:loc>
       <image:title>Thiết bị đo Ampe Kìm Hioki Model 43</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-42-607.html</loc>
+    <loc>https://localhost:44341/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-42-607.html</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/SanPham/--Ampe-kim--Kep-dong/638442924498428529.jpg</image:loc>
+      <image:loc>https://localhost:44341/uploads/SanPham/--Ampe-kim--Kep-dong/638442924498428529.jpg</image:loc>
       <image:title>Thiết bị đo Ampe Kìm Hioki Model 42</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-41-606.html</loc>
+    <loc>https://localhost:44341/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-41-606.html</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/SanPham/--Ampe-kim--Kep-dong/638442919436758328.jpg</image:loc>
+      <image:loc>https://localhost:44341/uploads/SanPham/--Ampe-kim--Kep-dong/638442919436758328.jpg</image:loc>
       <image:title>Thiết bị đo Ampe Kìm Hioki Model 41</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-40-605.html</loc>
+    <loc>https://localhost:44341/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-40-605.html</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/SanPham/--Ampe-kim--Kep-dong/638442817927911194.jpg</image:loc>
+      <image:loc>https://localhost:44341/uploads/SanPham/--Ampe-kim--Kep-dong/638442817927911194.jpg</image:loc>
       <image:title>Thiết bị đo Ampe Kìm Hioki Model 40</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-39-604.html</loc>
+    <loc>https://localhost:44341/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-39-604.html</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/SanPham/--Ampe-kim--Kep-dong/638728181679620913.jpg</image:loc>
+      <image:loc>https://localhost:44341/uploads/SanPham/--Ampe-kim--Kep-dong/638728181679620913.jpg</image:loc>
       <image:title>Thiết bị đo Ampe Kìm Hioki Model 39</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-38-603.html</loc>
+    <loc>https://localhost:44341/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-38-603.html</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/SanPham/--Ampe-kim--Kep-dong/638728181094281763.jpg</image:loc>
+      <image:loc>https://localhost:44341/uploads/SanPham/--Ampe-kim--Kep-dong/638728181094281763.jpg</image:loc>
       <image:title>Thiết bị đo Ampe Kìm Hioki Model 38</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-37-602.html</loc>
+    <loc>https://localhost:44341/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-37-602.html</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/SanPham/--Ampe-kim--Kep-dong/638442924498428529.jpg</image:loc>
+      <image:loc>https://localhost:44341/uploads/SanPham/--Ampe-kim--Kep-dong/638442924498428529.jpg</image:loc>
       <image:title>Thiết bị đo Ampe Kìm Hioki Model 37</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-36-601.html</loc>
+    <loc>https://localhost:44341/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-36-601.html</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/SanPham/--Ampe-kim--Kep-dong/638442919436758328.jpg</image:loc>
+      <image:loc>https://localhost:44341/uploads/SanPham/--Ampe-kim--Kep-dong/638442919436758328.jpg</image:loc>
       <image:title>Thiết bị đo Ampe Kìm Hioki Model 36</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-35-600.html</loc>
+    <loc>https://localhost:44341/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-35-600.html</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/SanPham/--Ampe-kim--Kep-dong/638442817927911194.jpg</image:loc>
+      <image:loc>https://localhost:44341/uploads/SanPham/--Ampe-kim--Kep-dong/638442817927911194.jpg</image:loc>
       <image:title>Thiết bị đo Ampe Kìm Hioki Model 35</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-34-599.html</loc>
+    <loc>https://localhost:44341/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-34-599.html</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/SanPham/--Ampe-kim--Kep-dong/638728181679620913.jpg</image:loc>
+      <image:loc>https://localhost:44341/uploads/SanPham/--Ampe-kim--Kep-dong/638728181679620913.jpg</image:loc>
       <image:title>Thiết bị đo Ampe Kìm Hioki Model 34</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-33-598.html</loc>
+    <loc>https://localhost:44341/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-33-598.html</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/SanPham/--Ampe-kim--Kep-dong/638728181094281763.jpg</image:loc>
+      <image:loc>https://localhost:44341/uploads/SanPham/--Ampe-kim--Kep-dong/638728181094281763.jpg</image:loc>
       <image:title>Thiết bị đo Ampe Kìm Hioki Model 33</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-32-597.html</loc>
+    <loc>https://localhost:44341/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-32-597.html</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/SanPham/--Ampe-kim--Kep-dong/638442924498428529.jpg</image:loc>
+      <image:loc>https://localhost:44341/uploads/SanPham/--Ampe-kim--Kep-dong/638442924498428529.jpg</image:loc>
       <image:title>Thiết bị đo Ampe Kìm Hioki Model 32</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-31-596.html</loc>
+    <loc>https://localhost:44341/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-31-596.html</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/SanPham/--Ampe-kim--Kep-dong/638442919436758328.jpg</image:loc>
+      <image:loc>https://localhost:44341/uploads/SanPham/--Ampe-kim--Kep-dong/638442919436758328.jpg</image:loc>
       <image:title>Thiết bị đo Ampe Kìm Hioki Model 31</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-30-595.html</loc>
+    <loc>https://localhost:44341/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-30-595.html</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/SanPham/--Ampe-kim--Kep-dong/638442817927911194.jpg</image:loc>
+      <image:loc>https://localhost:44341/uploads/SanPham/--Ampe-kim--Kep-dong/638442817927911194.jpg</image:loc>
       <image:title>Thiết bị đo Ampe Kìm Hioki Model 30</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-29-594.html</loc>
+    <loc>https://localhost:44341/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-29-594.html</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/SanPham/--Ampe-kim--Kep-dong/638728181679620913.jpg</image:loc>
+      <image:loc>https://localhost:44341/uploads/SanPham/--Ampe-kim--Kep-dong/638728181679620913.jpg</image:loc>
       <image:title>Thiết bị đo Ampe Kìm Hioki Model 29</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-28-593.html</loc>
+    <loc>https://localhost:44341/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-28-593.html</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/SanPham/--Ampe-kim--Kep-dong/638728181094281763.jpg</image:loc>
+      <image:loc>https://localhost:44341/uploads/SanPham/--Ampe-kim--Kep-dong/638728181094281763.jpg</image:loc>
       <image:title>Thiết bị đo Ampe Kìm Hioki Model 28</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-27-592.html</loc>
+    <loc>https://localhost:44341/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-27-592.html</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/SanPham/--Ampe-kim--Kep-dong/638442924498428529.jpg</image:loc>
+      <image:loc>https://localhost:44341/uploads/SanPham/--Ampe-kim--Kep-dong/638442924498428529.jpg</image:loc>
       <image:title>Thiết bị đo Ampe Kìm Hioki Model 27</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-26-591.html</loc>
+    <loc>https://localhost:44341/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-26-591.html</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/SanPham/--Ampe-kim--Kep-dong/638442919436758328.jpg</image:loc>
+      <image:loc>https://localhost:44341/uploads/SanPham/--Ampe-kim--Kep-dong/638442919436758328.jpg</image:loc>
       <image:title>Thiết bị đo Ampe Kìm Hioki Model 26</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-25-590.html</loc>
+    <loc>https://localhost:44341/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-25-590.html</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/SanPham/--Ampe-kim--Kep-dong/638442817927911194.jpg</image:loc>
+      <image:loc>https://localhost:44341/uploads/SanPham/--Ampe-kim--Kep-dong/638442817927911194.jpg</image:loc>
       <image:title>Thiết bị đo Ampe Kìm Hioki Model 25</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-24-589.html</loc>
+    <loc>https://localhost:44341/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-24-589.html</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/SanPham/--Ampe-kim--Kep-dong/638728181679620913.jpg</image:loc>
+      <image:loc>https://localhost:44341/uploads/SanPham/--Ampe-kim--Kep-dong/638728181679620913.jpg</image:loc>
       <image:title>Thiết bị đo Ampe Kìm Hioki Model 24</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-23-588.html</loc>
+    <loc>https://localhost:44341/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-23-588.html</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/SanPham/--Ampe-kim--Kep-dong/638728181094281763.jpg</image:loc>
+      <image:loc>https://localhost:44341/uploads/SanPham/--Ampe-kim--Kep-dong/638728181094281763.jpg</image:loc>
       <image:title>Thiết bị đo Ampe Kìm Hioki Model 23</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-22-587.html</loc>
+    <loc>https://localhost:44341/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-22-587.html</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/SanPham/--Ampe-kim--Kep-dong/638442924498428529.jpg</image:loc>
+      <image:loc>https://localhost:44341/uploads/SanPham/--Ampe-kim--Kep-dong/638442924498428529.jpg</image:loc>
       <image:title>Thiết bị đo Ampe Kìm Hioki Model 22</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-21-586.html</loc>
+    <loc>https://localhost:44341/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-21-586.html</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/SanPham/--Ampe-kim--Kep-dong/638442919436758328.jpg</image:loc>
+      <image:loc>https://localhost:44341/uploads/SanPham/--Ampe-kim--Kep-dong/638442919436758328.jpg</image:loc>
       <image:title>Thiết bị đo Ampe Kìm Hioki Model 21</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-20-585.html</loc>
+    <loc>https://localhost:44341/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-20-585.html</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/SanPham/--Ampe-kim--Kep-dong/638442817927911194.jpg</image:loc>
+      <image:loc>https://localhost:44341/uploads/SanPham/--Ampe-kim--Kep-dong/638442817927911194.jpg</image:loc>
       <image:title>Thiết bị đo Ampe Kìm Hioki Model 20</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-19-584.html</loc>
+    <loc>https://localhost:44341/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-19-584.html</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/SanPham/--Ampe-kim--Kep-dong/638728181679620913.jpg</image:loc>
+      <image:loc>https://localhost:44341/uploads/SanPham/--Ampe-kim--Kep-dong/638728181679620913.jpg</image:loc>
       <image:title>Thiết bị đo Ampe Kìm Hioki Model 19</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-18-583.html</loc>
+    <loc>https://localhost:44341/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-18-583.html</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/SanPham/--Ampe-kim--Kep-dong/638728181094281763.jpg</image:loc>
+      <image:loc>https://localhost:44341/uploads/SanPham/--Ampe-kim--Kep-dong/638728181094281763.jpg</image:loc>
       <image:title>Thiết bị đo Ampe Kìm Hioki Model 18</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-17-582.html</loc>
+    <loc>https://localhost:44341/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-17-582.html</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/SanPham/--Ampe-kim--Kep-dong/638442924498428529.jpg</image:loc>
+      <image:loc>https://localhost:44341/uploads/SanPham/--Ampe-kim--Kep-dong/638442924498428529.jpg</image:loc>
       <image:title>Thiết bị đo Ampe Kìm Hioki Model 17</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-16-581.html</loc>
+    <loc>https://localhost:44341/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-16-581.html</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/SanPham/--Ampe-kim--Kep-dong/638442919436758328.jpg</image:loc>
+      <image:loc>https://localhost:44341/uploads/SanPham/--Ampe-kim--Kep-dong/638442919436758328.jpg</image:loc>
       <image:title>Thiết bị đo Ampe Kìm Hioki Model 16</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-15-580.html</loc>
+    <loc>https://localhost:44341/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-15-580.html</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/SanPham/--Ampe-kim--Kep-dong/638442817927911194.jpg</image:loc>
+      <image:loc>https://localhost:44341/uploads/SanPham/--Ampe-kim--Kep-dong/638442817927911194.jpg</image:loc>
       <image:title>Thiết bị đo Ampe Kìm Hioki Model 15</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-14-579.html</loc>
+    <loc>https://localhost:44341/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-14-579.html</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/SanPham/--Ampe-kim--Kep-dong/638728181679620913.jpg</image:loc>
+      <image:loc>https://localhost:44341/uploads/SanPham/--Ampe-kim--Kep-dong/638728181679620913.jpg</image:loc>
       <image:title>Thiết bị đo Ampe Kìm Hioki Model 14</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-13-578.html</loc>
+    <loc>https://localhost:44341/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-13-578.html</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/SanPham/--Ampe-kim--Kep-dong/638728181094281763.jpg</image:loc>
+      <image:loc>https://localhost:44341/uploads/SanPham/--Ampe-kim--Kep-dong/638728181094281763.jpg</image:loc>
       <image:title>Thiết bị đo Ampe Kìm Hioki Model 13</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-12-577.html</loc>
+    <loc>https://localhost:44341/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-12-577.html</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/SanPham/--Ampe-kim--Kep-dong/638442924498428529.jpg</image:loc>
+      <image:loc>https://localhost:44341/uploads/SanPham/--Ampe-kim--Kep-dong/638442924498428529.jpg</image:loc>
       <image:title>Thiết bị đo Ampe Kìm Hioki Model 12</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-11-576.html</loc>
+    <loc>https://localhost:44341/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-11-576.html</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/SanPham/--Ampe-kim--Kep-dong/638442919436758328.jpg</image:loc>
+      <image:loc>https://localhost:44341/uploads/SanPham/--Ampe-kim--Kep-dong/638442919436758328.jpg</image:loc>
       <image:title>Thiết bị đo Ampe Kìm Hioki Model 11</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-10-575.html</loc>
+    <loc>https://localhost:44341/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-10-575.html</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/SanPham/--Ampe-kim--Kep-dong/638442817927911194.jpg</image:loc>
+      <image:loc>https://localhost:44341/uploads/SanPham/--Ampe-kim--Kep-dong/638442817927911194.jpg</image:loc>
       <image:title>Thiết bị đo Ampe Kìm Hioki Model 10</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-9-574.html</loc>
+    <loc>https://localhost:44341/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-9-574.html</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/SanPham/--Ampe-kim--Kep-dong/638728181679620913.jpg</image:loc>
+      <image:loc>https://localhost:44341/uploads/SanPham/--Ampe-kim--Kep-dong/638728181679620913.jpg</image:loc>
       <image:title>Thiết bị đo Ampe Kìm Hioki Model 9</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-8-573.html</loc>
+    <loc>https://localhost:44341/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-8-573.html</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/SanPham/--Ampe-kim--Kep-dong/638728181094281763.jpg</image:loc>
+      <image:loc>https://localhost:44341/uploads/SanPham/--Ampe-kim--Kep-dong/638728181094281763.jpg</image:loc>
       <image:title>Thiết bị đo Ampe Kìm Hioki Model 8</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-7-572.html</loc>
+    <loc>https://localhost:44341/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-7-572.html</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/SanPham/--Ampe-kim--Kep-dong/638442924498428529.jpg</image:loc>
+      <image:loc>https://localhost:44341/uploads/SanPham/--Ampe-kim--Kep-dong/638442924498428529.jpg</image:loc>
       <image:title>Thiết bị đo Ampe Kìm Hioki Model 7</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-6-571.html</loc>
+    <loc>https://localhost:44341/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-6-571.html</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/SanPham/--Ampe-kim--Kep-dong/638442919436758328.jpg</image:loc>
+      <image:loc>https://localhost:44341/uploads/SanPham/--Ampe-kim--Kep-dong/638442919436758328.jpg</image:loc>
       <image:title>Thiết bị đo Ampe Kìm Hioki Model 6</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-5-570.html</loc>
+    <loc>https://localhost:44341/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-5-570.html</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/SanPham/--Ampe-kim--Kep-dong/638442817927911194.jpg</image:loc>
+      <image:loc>https://localhost:44341/uploads/SanPham/--Ampe-kim--Kep-dong/638442817927911194.jpg</image:loc>
       <image:title>Thiết bị đo Ampe Kìm Hioki Model 5</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-4-569.html</loc>
+    <loc>https://localhost:44341/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-4-569.html</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/SanPham/--Ampe-kim--Kep-dong/638728181679620913.jpg</image:loc>
+      <image:loc>https://localhost:44341/uploads/SanPham/--Ampe-kim--Kep-dong/638728181679620913.jpg</image:loc>
       <image:title>Thiết bị đo Ampe Kìm Hioki Model 4</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-3-568.html</loc>
+    <loc>https://localhost:44341/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-3-568.html</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/SanPham/--Ampe-kim--Kep-dong/638728181094281763.jpg</image:loc>
+      <image:loc>https://localhost:44341/uploads/SanPham/--Ampe-kim--Kep-dong/638728181094281763.jpg</image:loc>
       <image:title>Thiết bị đo Ampe Kìm Hioki Model 3</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-2-567.html</loc>
+    <loc>https://localhost:44341/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-2-567.html</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/SanPham/--Ampe-kim--Kep-dong/638442924498428529.jpg</image:loc>
+      <image:loc>https://localhost:44341/uploads/SanPham/--Ampe-kim--Kep-dong/638442924498428529.jpg</image:loc>
       <image:title>Thiết bị đo Ampe Kìm Hioki Model 2</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-1-566.html</loc>
+    <loc>https://localhost:44341/san-pham/detail/thiet-bi-do-ampe-kim-hioki-model-1-566.html</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/SanPham/--Ampe-kim--Kep-dong/638442919436758328.jpg</image:loc>
+      <image:loc>https://localhost:44341/uploads/SanPham/--Ampe-kim--Kep-dong/638442919436758328.jpg</image:loc>
       <image:title>Thiết bị đo Ampe Kìm Hioki Model 1</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/tin-tuc/detail/huong-dan-bao-tri-dien-tu-tap-1.html</loc>
+    <loc>https://localhost:44341/tin-tuc/detail/huong-dan-bao-tri-dien-tu-tap-1.html</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/UT202Plus.png</image:loc>
+      <image:loc>https://localhost:44341/uploads/UT202Plus.png</image:loc>
       <image:title>Hướng dẫn bảo trì thiết bị điện tử tập 1</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/tin-tuc/detail/cach-su-dung-dong-ho-van-nang.html</loc>
+    <loc>https://localhost:44341/tin-tuc/detail/cach-su-dung-dong-ho-van-nang.html</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/UT202Plus.png</image:loc>
+      <image:loc>https://localhost:44341/uploads/UT202Plus.png</image:loc>
       <image:title>Cách sử dụng đồng hồ vạn năng cho người mới</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/tin-tuc/detail/loi-thuong-gap-thiet-bi-do-dien.html</loc>
+    <loc>https://localhost:44341/tin-tuc/detail/loi-thuong-gap-thiet-bi-do-dien.html</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/UT202Plus.png</image:loc>
+      <image:loc>https://localhost:44341/uploads/UT202Plus.png</image:loc>
       <image:title>5 lỗi thường gặp khi sử dụng thiết bị đo điện</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/tin-tuc/detail/gioi-thieu-thiet-bi-moi-2026.html</loc>
+    <loc>https://localhost:44341/tin-tuc/detail/gioi-thieu-thiet-bi-moi-2026.html</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/UT202Plus.png</image:loc>
+      <image:loc>https://localhost:44341/uploads/UT202Plus.png</image:loc>
       <image:title>Giới thiệu thiết bị đo điện mới 2026</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/tin-tuc/detail/huong-dan-do-dien-an-toan.html</loc>
+    <loc>https://localhost:44341/tin-tuc/detail/huong-dan-do-dien-an-toan.html</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/UT202Plus.png</image:loc>
+      <image:loc>https://localhost:44341/uploads/UT202Plus.png</image:loc>
       <image:title>Hướng dẫn đo điện an toàn tại nhà</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/tin-tuc/detail/so-sanh-dong-ho-do-dien.html</loc>
+    <loc>https://localhost:44341/tin-tuc/detail/so-sanh-dong-ho-do-dien.html</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/UT202Plus.png</image:loc>
+      <image:loc>https://localhost:44341/uploads/UT202Plus.png</image:loc>
       <image:title>So sánh các loại đồng hồ đo điện phổ biến</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/tin-tuc/detail/kinh-nghiem-mua-thiet-bi.html</loc>
+    <loc>https://localhost:44341/tin-tuc/detail/kinh-nghiem-mua-thiet-bi.html</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/UT202Plus.png</image:loc>
+      <image:loc>https://localhost:44341/uploads/UT202Plus.png</image:loc>
       <image:title>Kinh nghiệm chọn mua thiết bị đo điện</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/tin-tuc/detail/top-thiet-bi-ban-chay.html</loc>
+    <loc>https://localhost:44341/tin-tuc/detail/top-thiet-bi-ban-chay.html</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/UT202Plus.png</image:loc>
+      <image:loc>https://localhost:44341/uploads/UT202Plus.png</image:loc>
       <image:title>Hướng dẫn sử dụng trạm hàn đúng cách để tăng tuổi thọ thiết bị</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/tin-tuc/detail/hieu-chuan-thiet-bi-do-dien.html</loc>
+    <loc>https://localhost:44341/tin-tuc/detail/hieu-chuan-thiet-bi-do-dien.html</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/UT202Plus.png</image:loc>
+      <image:loc>https://localhost:44341/uploads/UT202Plus.png</image:loc>
       <image:title>Hướng dẫn hiệu chuẩn thiết bị đo điện</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/tin-tuc/detail/xu-huong-thiet-bi-dien-2026.html</loc>
+    <loc>https://localhost:44341/tin-tuc/detail/xu-huong-thiet-bi-dien-2026.html</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/UT202Plus.png</image:loc>
+      <image:loc>https://localhost:44341/uploads/UT202Plus.png</image:loc>
       <image:title>Xu hướng thiết bị điện thông minh 2026</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/video/detail/nhac-nhe-nhang-thu-gian-giup-giam-cang-thang-ngung-suy-nghi-qua-muc-va-ho-tro-phuc-hoi</loc>
+    <loc>https://localhost:44341/video/detail/nhac-nhe-nhang-thu-gian-giup-giam-cang-thang-ngung-suy-nghi-qua-muc-va-ho-tro-phuc-hoi.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
     <image:image>
@@ -1276,7 +1259,7 @@
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/video/detail/review-dong-ho-van-nang</loc>
+    <loc>https://localhost:44341/video/detail/review-dong-ho-van-nang.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
     <image:image>
@@ -1285,7 +1268,7 @@
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/video/detail/huong-dan-do-dien</loc>
+    <loc>https://localhost:44341/video/detail/huong-dan-do-dien.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
     <image:image>
@@ -1294,7 +1277,7 @@
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/video/detail/su-dung-ampe-kim</loc>
+    <loc>https://localhost:44341/video/detail/su-dung-ampe-kim.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
     <image:image>
@@ -1303,7 +1286,7 @@
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/video/detail/test-thiet-bi-dien</loc>
+    <loc>https://localhost:44341/video/detail/test-thiet-bi-dien.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
     <image:image>
@@ -1312,7 +1295,7 @@
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/video/detail/gioi-thieu-thiet-bi</loc>
+    <loc>https://localhost:44341/video/detail/gioi-thieu-thiet-bi.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
     <image:image>
@@ -1321,7 +1304,7 @@
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/video/detail/do-dien-an-toan</loc>
+    <loc>https://localhost:44341/video/detail/do-dien-an-toan.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
     <image:image>
@@ -1330,7 +1313,7 @@
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/video/detail/kinh-nghiem-sua-dien</loc>
+    <loc>https://localhost:44341/video/detail/kinh-nghiem-sua-dien.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
     <image:image>
@@ -1339,7 +1322,7 @@
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/video/detail/so-sanh-thiet-bi</loc>
+    <loc>https://localhost:44341/video/detail/so-sanh-thiet-bi.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
     <image:image>
@@ -1348,7 +1331,7 @@
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/video/detail/unbox-thiet-bi</loc>
+    <loc>https://localhost:44341/video/detail/unbox-thiet-bi.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
     <image:image>
@@ -1357,7 +1340,7 @@
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/video/detail/thiet-bi-cong-nghiep</loc>
+    <loc>https://localhost:44341/video/detail/thiet-bi-cong-nghiep.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
     <image:image>
@@ -1366,282 +1349,102 @@
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/album/anh-cong-xuong-1</loc>
+    <loc>https://localhost:44341/album/anh-cong-xuong-1.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/SanPham/--Cam-bien-dong-mo-rong-cho-dong-ho-van-nang/638752245999693284.jpg</image:loc>
+      <image:loc>https://localhost:44341/uploads/SanPham/--Cam-bien-dong-mo-rong-cho-dong-ho-van-nang/638752245999693284.jpg</image:loc>
       <image:title>Ảnh công xưởng sản xuất thiết bị điện</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/album/anh-cong-xuong</loc>
+    <loc>https://localhost:44341/album/anh-cong-xuong.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/SanPham/--Cam-bien-dong-mo-rong-cho-dong-ho-van-nang/638752245999693284.jpg</image:loc>
+      <image:loc>https://localhost:44341/uploads/SanPham/--Cam-bien-dong-mo-rong-cho-dong-ho-van-nang/638752245999693284.jpg</image:loc>
       <image:title>ảnh công xưởng</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/album/anh-cong-xuong-2</loc>
+    <loc>https://localhost:44341/album/anh-cong-xuong-2.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/SanPham/--Cam-bien-dong-mo-rong-cho-dong-ho-van-nang/638752245999693284.jpg</image:loc>
+      <image:loc>https://localhost:44341/uploads/SanPham/--Cam-bien-dong-mo-rong-cho-dong-ho-van-nang/638752245999693284.jpg</image:loc>
       <image:title>Hoạt động trong xưởng sản xuất</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/album/anh-cong-xuong-3</loc>
+    <loc>https://localhost:44341/album/anh-cong-xuong-3.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/SanPham/--Cam-bien-dong-mo-rong-cho-dong-ho-van-nang/638752245999693284.jpg</image:loc>
+      <image:loc>https://localhost:44341/uploads/SanPham/--Cam-bien-dong-mo-rong-cho-dong-ho-van-nang/638752245999693284.jpg</image:loc>
       <image:title>Dây chuyền sản xuất hiện đại</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/album/anh-cong-xuong-4</loc>
+    <loc>https://localhost:44341/album/anh-cong-xuong-4.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/SanPham/--Cam-bien-dong-mo-rong-cho-dong-ho-van-nang/638752245999693284.jpg</image:loc>
+      <image:loc>https://localhost:44341/uploads/SanPham/--Cam-bien-dong-mo-rong-cho-dong-ho-van-nang/638752245999693284.jpg</image:loc>
       <image:title>Khu vực lắp ráp sản phẩm</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/album/anh-cong-xuong-5</loc>
+    <loc>https://localhost:44341/album/anh-cong-xuong-5.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/SanPham/--Cam-bien-dong-mo-rong-cho-dong-ho-van-nang/638752245999693284.jpg</image:loc>
+      <image:loc>https://localhost:44341/uploads/SanPham/--Cam-bien-dong-mo-rong-cho-dong-ho-van-nang/638752245999693284.jpg</image:loc>
       <image:title>Kho linh kiện và vật tư</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/album/anh-cong-xuong-6</loc>
+    <loc>https://localhost:44341/album/anh-cong-xuong-6.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/SanPham/--Cam-bien-dong-mo-rong-cho-dong-ho-van-nang/638752245999693284.jpg</image:loc>
+      <image:loc>https://localhost:44341/uploads/SanPham/--Cam-bien-dong-mo-rong-cho-dong-ho-van-nang/638752245999693284.jpg</image:loc>
       <image:title>Nhân viên làm việc tại xưởng</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/album/anh-cong-xuong-7</loc>
+    <loc>https://localhost:44341/album/anh-cong-xuong-7.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/SanPham/--Cam-bien-dong-mo-rong-cho-dong-ho-van-nang/638752245999693284.jpg</image:loc>
+      <image:loc>https://localhost:44341/uploads/SanPham/--Cam-bien-dong-mo-rong-cho-dong-ho-van-nang/638752245999693284.jpg</image:loc>
       <image:title>Kiểm tra chất lượng sản phẩm</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/album/anh-cong-xuong-8</loc>
+    <loc>https://localhost:44341/album/anh-cong-xuong-8.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/SanPham/--Cam-bien-dong-mo-rong-cho-dong-ho-van-nang/638752245999693284.jpg</image:loc>
+      <image:loc>https://localhost:44341/uploads/SanPham/--Cam-bien-dong-mo-rong-cho-dong-ho-van-nang/638752245999693284.jpg</image:loc>
       <image:title>Đóng gói và vận chuyển</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/album/anh-cong-xuong-9</loc>
+    <loc>https://localhost:44341/album/anh-cong-xuong-9.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/SanPham/--Cam-bien-dong-mo-rong-cho-dong-ho-van-nang/638752245999693284.jpg</image:loc>
+      <image:loc>https://localhost:44341/uploads/SanPham/--Cam-bien-dong-mo-rong-cho-dong-ho-van-nang/638752245999693284.jpg</image:loc>
       <image:title>Thiết bị máy móc tại xưởng</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://localhost:7057/album/anh-cong-xuong-10</loc>
+    <loc>https://localhost:44341/album/anh-cong-xuong-10.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
     <image:image>
-      <image:loc>https://localhost:7057/uploads/SanPham/--Cam-bien-dong-mo-rong-cho-dong-ho-van-nang/638752245999693284.jpg</image:loc>
+      <image:loc>https://localhost:44341/uploads/SanPham/--Cam-bien-dong-mo-rong-cho-dong-ho-van-nang/638752245999693284.jpg</image:loc>
       <image:title>Tổng quan nhà máy sản xuất</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://localhost:7057/faq/linh-kien-co-bao-hanh-khong</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-    <image:image>
-      <image:loc>https://localhost:7057/uploads/logo/logo_dak.png</image:loc>
-      <image:title>Linh kiện có bảo hành không?</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://localhost:7057/faq/thoi-gian-giao-hang</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-    <image:image>
-      <image:loc>https://localhost:7057/uploads/logo/logo_dak.png</image:loc>
-      <image:title>Thời gian giao hàng bao lâu?</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://localhost:7057/faq/kiem-tra-hang</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-    <image:image>
-      <image:loc>https://localhost:7057/uploads/logo/logo_dak.png</image:loc>
-      <image:title>Có hỗ trợ kiểm tra hàng trước khi nhận không?</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://localhost:7057/faq/doi-tra-san-pham</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-    <image:image>
-      <image:loc>https://localhost:7057/uploads/logo/logo_dak.png</image:loc>
-      <image:title>Cách đổi trả sản phẩm như thế nào?</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://localhost:7057/faq/xuat-hoa-don-vat</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-    <image:image>
-      <image:loc>https://localhost:7057/uploads/logo/logo_dak.png</image:loc>
-      <image:title>Có xuất hóa đơn VAT không?</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://localhost:7057/faq/san-pham-chinh-hang</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-    <image:image>
-      <image:loc>https://localhost:7057/uploads/logo/logo_dak.png</image:loc>
-      <image:title>Sản phẩm có chính hãng không?</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://localhost:7057/faq/ho-tro-ky-thuat</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-    <image:image>
-      <image:loc>https://localhost:7057/uploads/logo/logo_dak.png</image:loc>
-      <image:title>Có hỗ trợ kỹ thuật sau mua không?</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://localhost:7057/faq/khuyen-mai</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-    <image:image>
-      <image:loc>https://localhost:7057/uploads/logo/logo_dak.png</image:loc>
-      <image:title>Có chương trình khuyến mãi không?</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://localhost:7057/faq/huong-dan-dat-hang</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-    <image:image>
-      <image:loc>https://localhost:7057/uploads/logo/logo_dak.png</image:loc>
-      <image:title>Làm sao để đặt hàng?</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://localhost:7057/faq/giao-hang-toan-quoc</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-    <image:image>
-      <image:loc>https://localhost:7057/uploads/logo/logo_dak.png</image:loc>
-      <image:title>Có hỗ trợ giao hàng toàn quốc không?</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://localhost:7057/tai-lieu/bang-bao-gia-may-han-gordak-2026</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-    <image:image>
-      <image:loc>https://localhost:7057/uploads/logo/logo_dak.png</image:loc>
-      <image:title>Bảng báo giá máy hàn GORDAK 2026</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://localhost:7057/tai-lieu/huong-dan-su-dung-gordak-952</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-    <image:image>
-      <image:loc>https://localhost:7057/uploads/logo/logo_dak.png</image:loc>
-      <image:title>Hướng dẫn sử dụng trạm hàn GORDAK 952</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://localhost:7057/tai-lieu/tai-lieu-sua-chua-nguon-xung</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-    <image:image>
-      <image:loc>https://localhost:7057/uploads/logo/logo_dak.png</image:loc>
-      <image:title>Tài liệu sửa chữa nguồn xung</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://localhost:7057/tai-lieu/catalog-thiet-bi-do-hioki</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-    <image:image>
-      <image:loc>https://localhost:7057/uploads/logo/logo_dak.png</image:loc>
-      <image:title>Catalog thiết bị đo Hioki</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://localhost:7057/tai-lieu/tai-lieu-ky-thuat-may-kho-quick</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-    <image:image>
-      <image:loc>https://localhost:7057/uploads/logo/logo_dak.png</image:loc>
-      <image:title>Tài liệu kỹ thuật máy khò Quick</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://localhost:7057/tai-lieu/file-driver-may-in-nhiet</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-    <image:image>
-      <image:loc>https://localhost:7057/uploads/logo/logo_dak.png</image:loc>
-      <image:title>File driver máy in nhiệt</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://localhost:7057/tai-lieu/tai-lieu-arduino-co-ban</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-    <image:image>
-      <image:loc>https://localhost:7057/uploads/logo/logo_dak.png</image:loc>
-      <image:title>Tài liệu hướng dẫn Arduino cơ bản</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://localhost:7057/tai-lieu/bang-gia-linh-kien-dien-tu</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-    <image:image>
-      <image:loc>https://localhost:7057/uploads/logo/logo_dak.png</image:loc>
-      <image:title>Bảng giá linh kiện điện tử</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://localhost:7057/tai-lieu/video-huong-dan-sua-mainboard</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-    <image:image>
-      <image:loc>https://localhost:7057/uploads/logo/logo_dak.png</image:loc>
-      <image:title>Video hướng dẫn sửa mainboard - demo</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://localhost:7057/tai-lieu/tai-lieu-lap-trinh-stm32</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-    <image:image>
-      <image:loc>https://localhost:7057/uploads/logo/logo_dak.png</image:loc>
-      <image:title>Tài liệu lập trình STM32</image:title>
     </image:image>
   </url>
 </urlset>

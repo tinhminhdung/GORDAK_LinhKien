@@ -15,6 +15,9 @@ namespace Antigravity.ECommerce.Framework
 
         public async Task InvokeAsync(HttpContext context)
         {
+            // Lưu lại BaseUrl để dùng cho Sitemap background task
+            SSeo.CurrentBaseUrl = $"{context.Request.Scheme}://{context.Request.Host}";
+
             // Nếu là request vào Admin, đánh dấu BypassCache
             if (context.Request.Path.Value != null && 
                 (context.Request.Path.Value.StartsWith("/Admin", System.StringComparison.OrdinalIgnoreCase) ||

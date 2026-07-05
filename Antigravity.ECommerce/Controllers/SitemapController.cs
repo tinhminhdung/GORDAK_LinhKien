@@ -28,9 +28,9 @@ namespace Antigravity.ECommerce.Controllers
             AddUrl(sb, $"{baseUrl}/san-pham.html", "0.9", "daily", "Sản phẩm", null);
             AddUrl(sb, $"{baseUrl}/tin-tuc.html", "0.9", "daily", "Tin tức", null);
             AddUrl(sb, $"{baseUrl}/video.html", "0.8", "weekly", "Video", null);
-            AddUrl(sb, $"{baseUrl}/chu-de-anh.html", "0.8", "weekly", "Thư viện ảnh", null);
+            AddUrl(sb, $"{baseUrl}/thu-vien-anh.html", "0.8", "weekly", "Thư viện ảnh", null);
             AddUrl(sb, $"{baseUrl}/tai-lieu.html", "0.7", "weekly", "Tài liệu", null);
-            AddUrl(sb, $"{baseUrl}/faq.html", "0.7", "weekly", "Hỏi đáp", null);
+            // AddUrl(sb, $"{baseUrl}/faq.html", "0.7", "weekly", "Hỏi đáp", null);
 
             // 3. CATEGORIES
             try {
@@ -42,11 +42,11 @@ namespace Antigravity.ECommerce.Controllers
                     {
                         case 1: path = $"/san-pham/{cat.Slug}.html"; break;
                         case 2: path = $"/tin-tuc/{cat.Slug}.html"; break;
-                        case 3: path = $"/video/{cat.Slug}"; break;
+                        case 3: path = $"/video/{cat.Slug}.html"; break;
                         case 4: path = $"/bai-viet/{cat.Slug}.html"; break;
-                        case 6: path = $"/chu-de-anh/{cat.Slug}"; break;
-                        case 7: path = $"/faq/{cat.Slug}"; break;
-                        case 8: path = $"/tai-lieu/{cat.Slug}"; break;
+                        case 6: path = $"/thu-vien-anh/{cat.Slug}.html"; break;
+                        //case 7: path = $"/faq/{cat.Slug}"; break;
+                        case 8: path = $"/tai-lieu/{cat.Slug}.html"; break;
                     }
                     if (!string.IsNullOrEmpty(path)) {
                         AddUrl(sb, baseUrl + path, "0.8", "weekly", cat.Name, cat.Image);
@@ -78,7 +78,7 @@ namespace Antigravity.ECommerce.Controllers
                 foreach (var v in videos)
                 {
                     if (!string.IsNullOrEmpty(v.Slug))
-                        AddUrl(sb, $"{baseUrl}/video/detail/{v.Slug}", "0.6", "monthly", v.Title, v.ThumbnailUrl);
+                        AddUrl(sb, $"{baseUrl}/video/detail/{v.Slug}.html", "0.6", "monthly", v.Title, v.ThumbnailUrl);
                 }
             } catch { }
 
@@ -88,29 +88,29 @@ namespace Antigravity.ECommerce.Controllers
                 foreach (var g in galleries)
                 {
                     if (!string.IsNullOrEmpty(g.Slug))
-                        AddUrl(sb, $"{baseUrl}/album/{g.Slug}", "0.6", "monthly", g.AlbumName, g.CoverImage);
+                        AddUrl(sb, $"{baseUrl}/album/{g.Slug}.html", "0.6", "monthly", g.AlbumName, g.CoverImage);
                 }
             } catch { }
 
             // 8. FAQs (Detail)
-            try {
-                var faqs = SFAQ.GetAll().Where(x => x.Status == 1).ToList();
-                foreach (var f in faqs)
-                {
-                    if (!string.IsNullOrEmpty(f.Slug))
-                        AddUrl(sb, $"{baseUrl}/faq/{f.Slug}", "0.5", "monthly", f.Question, null);
-                }
-            } catch { }
+            //try {
+            //    var faqs = SFAQ.GetAll().Where(x => x.Status == 1).ToList();
+            //    foreach (var f in faqs)
+            //    {
+            //        if (!string.IsNullOrEmpty(f.Slug))
+            //            AddUrl(sb, $"{baseUrl}/faq/{f.Slug}", "0.5", "monthly", f.Question, null);
+            //    }
+            //} catch { }
 
             // 9. DOCUMENTS (Detail)
-            try {
-                var docs = SDocument.GetAll().Where(x => x.Status == 1).ToList();
-                foreach (var d in docs)
-                {
-                    if (!string.IsNullOrEmpty(d.Slug))
-                        AddUrl(sb, $"{baseUrl}/tai-lieu/{d.Slug}", "0.5", "monthly", d.Title, null);
-                }
-            } catch { }
+            //try {
+            //    var docs = SDocument.GetAll().Where(x => x.Status == 1).ToList();
+            //    foreach (var d in docs)
+            //    {
+            //        if (!string.IsNullOrEmpty(d.Slug))
+            //            AddUrl(sb, $"{baseUrl}/tai-lieu/{d.Slug}", "0.5", "monthly", d.Title, null);
+            //    }
+            //} catch { }
 
             sb.AppendLine("</urlset>");
             return Content(sb.ToString(), "application/xml", Encoding.UTF8);

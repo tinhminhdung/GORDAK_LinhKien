@@ -2,6 +2,7 @@
 @using Antigravity.ECommerce.Models
 @{
     var settings = SSetting.GetViewModel();
+    int cartCount = Context.Items.ContainsKey("CartCount") ? (int)Context.Items["CartCount"] : 0;
     var footerGroups = SCategory.GetMenuTree("Footer");
 
     // Helper: tạo URL đúng cho mọi loại menu item
@@ -110,7 +111,7 @@
     <a href="/" class="mnav-item @(Context.Request.Path == "/" ? "active" : "")"><i class="fa-solid fa-house"></i><span>Trang chủ</span></a>
     <a href="/san-pham.html" class="mnav-item"><i class="fa-solid fa-box"></i><span>Sản phẩm</span></a>
     <a href="/gio-hang.html" class="mnav-item position-relative">
-        <i class="fa-solid fa-cart-shopping"></i><span class="mnav-badge cart-badge">0</span><span>Giỏ hàng</span>
+        <i class="fa-solid fa-cart-shopping"></i><span class="mnav-badge cart-badge">@cartCount</span><span>Giỏ hàng</span>
     </a>
     <a href="/lien-he.html" class="mnav-item"><i class="fa-solid fa-address-book"></i><span>Liên hệ</span></a>
 </nav>

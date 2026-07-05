@@ -8,6 +8,8 @@ namespace Antigravity.ECommerce.Services
 {
     public static class SSeo
     {
+        public static string CurrentBaseUrl { get; set; } = "";
+
         /// <summary>
         /// Hàm tăng lượt xem một cách bất đồng bộ để không làm chậm việc tải trang
         /// </summary>
@@ -53,8 +55,7 @@ namespace Antigravity.ECommerce.Services
             {
                 if (string.IsNullOrEmpty(baseUrl))
                 {
-                    baseUrl = SSetting.GetValue("SiteUrl");
-                    if (string.IsNullOrEmpty(baseUrl)) baseUrl = "https://localhost:7057";
+                    baseUrl = CurrentBaseUrl;
                 }
                 if (baseUrl.EndsWith("/")) baseUrl = baseUrl.TrimEnd('/');
 
@@ -114,9 +115,9 @@ namespace Antigravity.ECommerce.Services
                 AddUrl("/san-pham.html", "0.9", "daily");
                 AddUrl("/tin-tuc.html", "0.9", "daily");
                 AddUrl("/video.html", "0.8", "weekly");
-                AddUrl("/chu-de-anh.html", "0.8", "weekly");
+                AddUrl("/thu-vien-anh.html", "0.8", "weekly");
                 AddUrl("/tai-lieu.html", "0.7", "weekly");
-                AddUrl("/faq.html", "0.7", "weekly");
+                // AddUrl("/faq.html", "0.7", "weekly");
 
                 // 2. Categories
                 var cats = FCategory.GetAll().Where(x => x.Status == 1);
@@ -125,11 +126,11 @@ namespace Antigravity.ECommerce.Services
                     string path = cat.CategoryType switch {
                         1 => $"/san-pham/{cat.Slug}.html",
                         2 => $"/tin-tuc/{cat.Slug}.html",
-                        3 => $"/video/{cat.Slug}",
+                        3 => $"/video/{cat.Slug}.html",
                         4 => $"/bai-viet/{cat.Slug}.html",
-                        6 => $"/chu-de-anh/{cat.Slug}",
-                        7 => $"/faq/{cat.Slug}",
-                        8 => $"/tai-lieu/{cat.Slug}",
+                        6 => $"/thu-vien-anh/{cat.Slug}.html",
+                        // 7 => $"/faq/{cat.Slug}.html",
+                        8 => $"/tai-lieu/{cat.Slug}.html",
                         _ => ""
                     };
                     if (!string.IsNullOrEmpty(path))
@@ -162,7 +163,7 @@ namespace Antigravity.ECommerce.Services
                 foreach (var v in videos)
                 {
                     if (!string.IsNullOrEmpty(v.Slug))
-                        AddUrl($"/video/detail/{v.Slug}", "0.6", "monthly", v.Title, new[] { v.ThumbnailUrl ?? "" });
+                        AddUrl($"/video/detail/{v.Slug}.html", "0.6", "monthly", v.Title, new[] { v.ThumbnailUrl ?? "" });
                 }
 
                 // 6. Galleries (Detail)
@@ -170,24 +171,24 @@ namespace Antigravity.ECommerce.Services
                 foreach (var g in galleries)
                 {
                     if (!string.IsNullOrEmpty(g.Slug))
-                        AddUrl($"/album/{g.Slug}", "0.6", "monthly", g.AlbumName, new[] { g.CoverImage ?? "" });
+                        AddUrl($"/album/{g.Slug}.html", "0.6", "monthly", g.AlbumName, new[] { g.CoverImage ?? "" });
                 }
 
                 // 7. FAQs (Detail)
-                var faqs = SFAQ.GetAll().Where(x => x.Status == 1);
-                foreach (var f in faqs)
-                {
-                    if (!string.IsNullOrEmpty(f.Slug))
-                        AddUrl($"/faq/{f.Slug}", "0.5", "monthly", f.Question, null);
-                }
+                //var faqs = SFAQ.GetAll().Where(x => x.Status == 1);
+                //foreach (var f in faqs)
+                //{
+                //    if (!string.IsNullOrEmpty(f.Slug))
+                //        AddUrl($"/faq/{f.Slug}", "0.5", "monthly", f.Question, null);
+                //}
 
                 // 8. Documents (Detail)
-                var docs = SDocument.GetAll().Where(x => x.Status == 1);
-                foreach (var d in docs)
-                {
-                    if (!string.IsNullOrEmpty(d.Slug))
-                        AddUrl($"/tai-lieu/{d.Slug}", "0.5", "monthly", d.Title, null);
-                }
+                //var docs = SDocument.GetAll().Where(x => x.Status == 1);
+                //foreach (var d in docs)
+                //{
+                //    if (!string.IsNullOrEmpty(d.Slug))
+                //        AddUrl($"/tai-lieu/{d.Slug}", "0.5", "monthly", d.Title, null);
+                //}
 
                 var doc = new XDocument(new XDeclaration("1.0", "utf-8", "yes"), root);
                 var wwwrootPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
