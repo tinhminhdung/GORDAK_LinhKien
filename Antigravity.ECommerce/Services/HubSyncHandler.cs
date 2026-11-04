@@ -100,7 +100,7 @@ namespace Antigravity.ECommerce.Services
             HubSyncPayload? payload;
             try
             {
-                payload = JsonSerializer.Deserialize<HubSyncPayload>(body);
+                payload = JsonSerializer.Deserialize<HubSyncPayload>(body, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
             }
             catch
             {
