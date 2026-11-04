@@ -199,61 +199,62 @@
                 <label class="fw-bold mb-2 d-flex align-items-center" style="color: #1a3c8a; font-size: 15px;">
                   <i class="fa-solid fa-truck-fast me-2"></i> PHƯƠNG THỨC GIAO HÀNG
                 </label>
+                <input type="hidden" id="DeliveryChosen" name="DeliveryChosen" value="false" />
                 <div class="delivery-options-list d-flex flex-column gap-2 mb-3">
                   <label class="delivery-option p-2 border rounded d-flex align-items-start gap-2 bg-light" style="cursor: pointer; font-size: 13px;">
-                    <input class="form-check-input mt-1" type="radio" name="DeliveryMethod" value="Chuẩn bị hàng để khách qua lấy và thanh toán tại cửa hàng" checked>
+                    <input class="form-check-input mt-1" type="radio" name="DeliveryMethod" value="Chuẩn bị hàng để khách qua lấy và thanh toán tại cửa hàng" checked onchange="$('#DeliveryChosen').val('false')">
                     <div>
                       <strong class="text-dark">1. Chuẩn bị hàng để khách qua lấy và thanh toán tại cửa hàng</strong>
                       <div class="text-muted small">Khách qua kho/cửa hàng kiểm tra hàng và thanh toán trực tiếp.</div>
                     </div>
                   </label>
                   <label class="delivery-option p-2 border rounded d-flex align-items-start gap-2" style="cursor: pointer; font-size: 13px;">
-                    <input class="form-check-input mt-1" type="radio" name="DeliveryMethod" value="Giao hàng qua bưu điện / chuyển phát nhanh (Viettel Post, EMS...)">
+                    <input class="form-check-input mt-1" type="radio" name="DeliveryMethod" value="Ship hàng cho khách về địa chỉ" onchange="$('#DeliveryChosen').val('true')">
                     <div>
-                      <strong class="text-dark">2. Giao hàng qua bưu điện / chuyển phát nhanh (Viettel Post, EMS...)</strong>
-                      <div class="text-muted small">Giao tận nơi toàn quốc qua bưu tá, cước phí theo biểu phí thực tế.</div>
+                      <strong class="text-dark">2. Ship hàng cho khách về địa chỉ</strong>
+                      <div class="text-muted small">Giao hàng tận nơi cho quý khách theo địa chỉ đã đăng ký.</div>
                     </div>
                   </label>
                   <label class="delivery-option p-2 border rounded d-flex align-items-start gap-2" style="cursor: pointer; font-size: 13px;">
-                    <input class="form-check-input mt-1" type="radio" name="DeliveryMethod" value="Giao hàng hỏa tốc trong ngày (AhaMove, Grab...)">
+                    <input class="form-check-input mt-1" type="radio" name="DeliveryMethod" value="Gửi qua dịch vụ chuyển phát (ViettelPost) - Ship COD – chuyển phát nhanh" onchange="$('#DeliveryChosen').val('true')">
                     <div>
-                      <strong class="text-dark">3. Giao hàng hỏa tốc trong ngày (AhaMove, Grab...)</strong>
-                      <div class="text-muted small">Giao gấp trong vòng 1-4 giờ (nội thành Hà Nội / TP.HCM).</div>
+                      <strong class="text-dark">3. Gửi qua dịch vụ chuyển phát (ViettelPost) - Ship COD – chuyển phát nhanh</strong>
+                      <div class="text-muted small">Chuyển phát nhanh ViettelPost, thanh toán tiền mặt khi nhận hàng (COD).</div>
                     </div>
                   </label>
                   <label class="delivery-option p-2 border rounded d-flex align-items-start gap-2" style="cursor: pointer; font-size: 13px;">
-                    <input class="form-check-input mt-1" type="radio" name="DeliveryMethod" value="Gửi hàng qua nhà xe / chành xe">
+                    <input class="form-check-input mt-1" type="radio" name="DeliveryMethod" value="Gửi qua dịch vụ chuyển phát (ViettelPost) - Ship COD – chuyển phát thường (tiết kiệm)" onchange="$('#DeliveryChosen').val('true')">
                     <div>
-                      <strong class="text-dark">4. Gửi hàng qua nhà xe / chành xe</strong>
-                      <div class="text-muted small">Gửi ra bến xe, chành xe theo yêu cầu của quý khách.</div>
+                      <strong class="text-dark">4. Gửi qua dịch vụ chuyển phát (ViettelPost) - Ship COD – chuyển phát thường (tiết kiệm)</strong>
+                      <div class="text-muted small">Chuyển phát tiết kiệm ViettelPost, thanh toán khi nhận hàng (cước phí tối ưu).</div>
                     </div>
                   </label>
                   <label class="delivery-option p-2 border rounded d-flex align-items-start gap-2" style="cursor: pointer; font-size: 13px;">
-                    <input class="form-check-input mt-1" type="radio" name="DeliveryMethod" value="Giao hàng và thu tiền tận nơi (COD)">
+                    <input class="form-check-input mt-1" type="radio" name="DeliveryMethod" value="Gửi qua dịch vụ chuyển phát (ViettelPost) - Chuyển khoản trước – chuyển phát nhanh" onchange="$('#DeliveryChosen').val('true')">
                     <div>
-                      <strong class="text-dark">5. Giao hàng và thu tiền tận nơi (COD)</strong>
-                      <div class="text-muted small">Nhận hàng, kiểm tra trước khi thanh toán cho nhân viên giao vận.</div>
+                      <strong class="text-dark">5. Gửi qua dịch vụ chuyển phát (ViettelPost) - Chuyển khoản trước – chuyển phát nhanh</strong>
+                      <div class="text-muted small">Quý khách chuyển khoản thanh toán trước, nhận hàng hỏa tốc/nhanh.</div>
                     </div>
                   </label>
                   <label class="delivery-option p-2 border rounded d-flex align-items-start gap-2" style="cursor: pointer; font-size: 13px;">
-                    <input class="form-check-input mt-1" type="radio" name="DeliveryMethod" value="Nhận hàng tại chi nhánh / đại lý ủy quyền">
+                    <input class="form-check-input mt-1" type="radio" name="DeliveryMethod" value="Gửi qua dịch vụ chuyển phát (ViettelPost) - Chuyển khoản trước – chuyển phát thường (tiết kiệm)" onchange="$('#DeliveryChosen').val('true')">
                     <div>
-                      <strong class="text-dark">6. Nhận hàng tại chi nhánh / đại lý ủy quyền</strong>
-                      <div class="text-muted small">Khách nhận tại các điểm phân phối, đại lý chính hãng.</div>
+                      <strong class="text-dark">6. Gửi qua dịch vụ chuyển phát (ViettelPost) - Chuyển khoản trước – chuyển phát thường (tiết kiệm)</strong>
+                      <div class="text-muted small">Quý khách chuyển khoản thanh toán trước, giao bưu tá tiết kiệm.</div>
                     </div>
                   </label>
                   <label class="delivery-option p-2 border rounded d-flex align-items-start gap-2" style="cursor: pointer; font-size: 13px;">
-                    <input class="form-check-input mt-1" type="radio" name="DeliveryMethod" value="Giao hàng theo chỉ định của khách hàng">
+                    <input class="form-check-input mt-1" type="radio" name="DeliveryMethod" value="Gửi hàng ra xe - Chuyển khoản trước và gửi hàng ra xe" onchange="$('#DeliveryChosen').val('true')">
                     <div>
-                      <strong class="text-dark">7. Giao hàng theo chỉ định của khách hàng</strong>
-                      <div class="text-muted small">Giao hàng theo đơn vị hoặc người nhận chỉ định riêng.</div>
+                      <strong class="text-dark">7. Gửi hàng ra xe - Chuyển khoản trước và gửi hàng ra xe</strong>
+                      <div class="text-muted small">Chuyển khoản thanh toán trước, gửi chành xe / nhà xe theo yêu cầu.</div>
                     </div>
                   </label>
                   <label class="delivery-option p-2 border rounded d-flex align-items-start gap-2" style="cursor: pointer; font-size: 13px;">
-                    <input class="form-check-input mt-1" type="radio" name="DeliveryMethod" value="Khác (thỏa thuận sau khi xác nhận đơn)">
+                    <input class="form-check-input mt-1" type="radio" name="DeliveryMethod" value="Gửi hàng ra xe - Gửi hàng ra và thu tiền tại nhà xe" onchange="$('#DeliveryChosen').val('true')">
                     <div>
-                      <strong class="text-dark">8. Khác (thỏa thuận sau khi xác nhận đơn)</strong>
-                      <div class="text-muted small">Nhân viên sẽ gọi điện tư vấn và chốt phương thức vận chuyển phù hợp nhất.</div>
+                      <strong class="text-dark">8. Gửi hàng ra xe - Gửi hàng ra và thu tiền tại nhà xe</strong>
+                      <div class="text-muted small">Gửi ra nhà xe, nhà xe thu tiền hộ khi quý khách nhận hàng tại bến.</div>
                     </div>
                   </label>
                 </div>
