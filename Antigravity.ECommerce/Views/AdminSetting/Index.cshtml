@@ -37,7 +37,8 @@
                             <button class="nav-link text-start py-3 px-4 border-bottom rounded-0" id="nav-rank-tab" data-bs-toggle="pill" data-bs-target="#nav-rank" type="button" role="tab"><i class="fas fa-crown me-2"></i> Hạng thành viên</button>
                             <button class="nav-link text-start py-3 px-4 border-bottom rounded-0" id="nav-image-tab" data-bs-toggle="pill" data-bs-target="#nav-image" type="button" role="tab"><i class="fas fa-image me-2"></i> Cài đặt Hình ảnh</button>
                             <button class="nav-link text-start py-3 px-4 border-bottom rounded-0" id="nav-news-tab" data-bs-toggle="pill" data-bs-target="#nav-news" type="button" role="tab"><i class="fas fa-newspaper me-2"></i> Cấu hình Tin tức</button>
-                            <button class="nav-link text-start py-3 px-4 rounded-0" id="nav-product-tab" data-bs-toggle="pill" data-bs-target="#nav-product" type="button" role="tab"><i class="fas fa-box me-2"></i> Cấu hình Sản phẩm</button>
+                            <button class="nav-link text-start py-3 px-4 border-bottom rounded-0" id="nav-product-tab" data-bs-toggle="pill" data-bs-target="#nav-product" type="button" role="tab"><i class="fas fa-box me-2"></i> Cấu hình Sản phẩm</button>
+                            <button class="nav-link text-start py-3 px-4 rounded-0 text-danger fw-bold" id="nav-hub-tab" data-bs-toggle="pill" data-bs-target="#nav-hub" type="button" role="tab"><i class="fas fa-network-wired me-2"></i> Cấu hình kết nối HUB</button>
                         </div>
                     </div>
                 </div>
@@ -746,6 +747,103 @@
                                                 <input type="number" asp-for="Product_PageSize" class="form-control form-control-lg rounded-3" min="1" max="100" />
                                                 <div class="small text-muted mt-2">
                                                     <i class="fas fa-info-circle me-1"></i> Số lượng sản phẩm hiển thị trên mỗi trang trong trang Danh mục hoặc Tất cả sản phẩm.
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- HUB Integration Settings -->
+                            <div class="tab-pane fade" id="nav-hub" role="tabpanel">
+                                <div class="d-flex align-items-center justify-content-between mb-4">
+                                    <h5 class="fw-bold mb-0 text-danger"><i class="fas fa-network-wired me-2"></i> Cấu hình kết nối Hệ Thống HUB POS</h5>
+                                    <span class="badge bg-danger bg-opacity-10 text-danger border border-danger px-3 py-2 rounded-pill">
+                                        <i class="fas fa-shield-alt me-1"></i> Tích hợp Webhook & API 2026
+                                    </span>
+                                </div>
+
+                                <div class="card border border-danger-subtle mb-4 rounded-4 shadow-none">
+                                    <div class="card-body bg-danger bg-opacity-10">
+                                        <div class="form-check form-switch mb-2">
+                                            <input class="form-check-input" type="checkbox" asp-for="Hub_Enable" id="switchHubEnable">
+                                            <label class="form-check-label fw-bold text-danger" for="switchHubEnable">KÍCH HOẠT ĐỒNG BỘ HUB</label>
+                                        </div>
+                                        <div class="small text-muted">
+                                            Khi bật, các đơn hàng mới đặt và yêu cầu "Báo cho tôi khi có hàng" sẽ tự động được gửi sang HUB POS. Dữ liệu cấu hình dưới đây được lưu vào Database và tự động đồng bộ vào file <code>appsettings.json</code>.
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row g-4">
+                                    <!-- Cột 1: Chiều Nhận Đồng Bộ Từ HUB -->
+                                    <div class="col-lg-6">
+                                        <div class="card border border-light-subtle rounded-4 h-100 shadow-none">
+                                            <div class="card-header bg-light border-0 py-3 rounded-top-4">
+                                                <h6 class="fw-bold mb-0 text-primary"><i class="fas fa-arrow-circle-down me-2"></i> 1. Chiều Nhận Đồng Bộ Từ HUB (Flow A: /hub-sync)</h6>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="mb-3">
+                                                    <label class="form-label fw-bold">Mã định danh Website (Source) <span class="text-danger">*</span></label>
+                                                    <input type="text" asp-for="Hub_Source" class="form-control" placeholder="Ví dụ: gordak.vn" required />
+                                                    <div class="small text-muted mt-1">Định danh website khi giao tiếp với HUB (vd: gordak.vn hoặc uni-trend.vn).</div>
+                                                </div>
+
+                                                <div class="mb-3">
+                                                    <label class="form-label fw-bold">Khóa bí mật Webhook (SyncKey) <span class="text-danger">*</span></label>
+                                                    <div class="input-group">
+                                                        <input type="text" asp-for="Hub_SyncKey" class="form-control font-monospace" placeholder="Nhập Secret Key HUB cấp để nhận /hub-sync" required />
+                                                        <button class="btn btn-outline-secondary" type="button" onclick="navigator.clipboard.writeText($('#Hub_SyncKey').val())" title="Copy"><i class="fas fa-copy"></i></button>
+                                                    </div>
+                                                    <div class="small text-muted mt-1">Dùng để xác thực chữ ký HMAC-SHA256 của HUB khi gọi vào webhook <code>/hub-sync</code>.</div>
+                                                </div>
+
+                                                <div class="mb-3">
+                                                    <label class="form-label fw-bold">Danh sách IP Whitelist của máy chủ HUB</label>
+                                                    <input type="text" asp-for="Hub_SyncAllowIp" class="form-control" placeholder="Ví dụ: 103.1.2.3, 118.69.1.2 (Để trống = Cho phép mọi IP)" />
+                                                    <div class="small text-muted mt-1">Các IP được phép gọi vào <code>/hub-sync</code>, cách nhau dấu phẩy. Để trống nếu HUB dùng IP động hoặc cloud.</div>
+                                                </div>
+
+                                                <div class="p-3 bg-light rounded-3 border">
+                                                    <div class="small fw-bold text-dark mb-1"><i class="fas fa-link me-1"></i> Webhook URL để cấu hình trên HUB:</div>
+                                                    <code class="small text-primary user-select-all">https://@(Context.Request.Host)/hub-sync</code>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Cột 2: Chiều Đẩy Dữ Liệu Sang HUB -->
+                                    <div class="col-lg-6">
+                                        <div class="card border border-light-subtle rounded-4 h-100 shadow-none">
+                                            <div class="card-header bg-light border-0 py-3 rounded-top-4">
+                                                <h6 class="fw-bold mb-0 text-success"><i class="fas fa-arrow-circle-up me-2"></i> 2. Chiều Đẩy Sang HUB (Flow B: Đơn hàng & Báo có hàng)</h6>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="mb-3">
+                                                    <label class="form-label fw-bold">URL Tiếp Nhận Đơn Hàng (OrderUrl) <span class="text-danger">*</span></label>
+                                                    <input type="url" asp-for="Hub_OrderUrl" class="form-control" placeholder="https://pos.nhatminhesc.com/api/web/orders" required />
+                                                    <div class="small text-muted mt-1">Đường dẫn API của HUB nhận dữ liệu đơn hàng (POST).</div>
+                                                </div>
+
+                                                <div class="mb-3">
+                                                    <label class="form-label fw-bold">Khóa bí mật Đơn hàng (OrderKey) <span class="text-danger">*</span></label>
+                                                    <div class="input-group">
+                                                        <input type="text" asp-for="Hub_OrderKey" class="form-control font-monospace" placeholder="Nhập khóa bí mật ký gửi đơn hàng" required />
+                                                        <button class="btn btn-outline-secondary" type="button" onclick="navigator.clipboard.writeText($('#Hub_OrderKey').val())" title="Copy"><i class="fas fa-copy"></i></button>
+                                                    </div>
+                                                    <div class="small text-muted mt-1">Dùng để tạo chữ ký <code>X-Hub-Signature</code> HMAC-SHA256 khi gửi đơn sang HUB.</div>
+                                                </div>
+
+                                                <div class="mb-3">
+                                                    <label class="form-label fw-bold">URL Nhận Đăng Ký Có Hàng (NotifyUrl)</label>
+                                                    <input type="url" asp-for="Hub_NotifyUrl" class="form-control" placeholder="https://pos.nhatminhesc.com/api/web/orders" />
+                                                    <div class="small text-muted mt-1">Đường dẫn API của HUB nhận yêu cầu "Báo cho tôi khi có hàng" (nếu để trống sẽ dùng chung OrderUrl).</div>
+                                                </div>
+
+                                                <div class="mb-3">
+                                                    <label class="form-label fw-bold">Khóa bí mật Báo Có Hàng (NotifyKey)</label>
+                                                    <input type="text" asp-for="Hub_NotifyKey" class="form-control font-monospace" placeholder="Để trống nếu dùng chung OrderKey" />
+                                                    <div class="small text-muted mt-1">Khóa bí mật ký gửi yêu cầu báo có hàng (để trống nếu dùng chung OrderKey).</div>
                                                 </div>
                                             </div>
                                         </div>

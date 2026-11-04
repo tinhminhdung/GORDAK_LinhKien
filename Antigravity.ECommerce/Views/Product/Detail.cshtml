@@ -137,11 +137,22 @@
 								<td class="pd2-meta-label">Tình trạng:</td>
 								@if (Model.ConditionId > 0)
 								{
-									<td class="pd2-status-green">@(Antigravity.ECommerce.Services.SProductOption.GetById(Model.ConditionId.Value)?.Name ?? (Model.Stock > 0 ? "Còn hàng" : "Hết hàng"))</td>
+									<td style="color:@(Model.Stock > 0 ? "#15a34a" : (Model.ExpectedDate.HasValue && Model.ExpectedDate.Value.Date >= DateTime.Today ? "#f39c12" : "#e30000"))">@(Antigravity.ECommerce.Services.SProductOption.GetById(Model.ConditionId.Value)?.Name ?? (Model.Stock > 0 ? "Còn hàng" : (Model.ExpectedDate.HasValue && Model.ExpectedDate.Value.Date >= DateTime.Today ? "Sắp có hàng" : "Hết hàng")))</td>
 								}
 								else
 								{
-									<td class="@(Model.Stock > 0 ? "pd2-status-green" : "text-danger")">@(Model.Stock > 0 ? "Còn hàng" : "Hết hàng")</td>
+									@if (Model.Stock > 0)
+									{
+										<td class="pd2-status-green">Còn hàng</td>
+									}
+									else if (Model.ExpectedDate.HasValue && Model.ExpectedDate.Value.Date >= DateTime.Today)
+									{
+										<td style="color: #f39c12; font-weight: 600;">Sắp có hàng</td>
+									}
+									else
+									{
+										<td class="text-danger">Tạm hết hàng</td>
+									}
 								}
 							</tr>
 							<tr>
@@ -170,6 +181,28 @@
 								<span class="pd2-price-red">@Model.Price.ToString("N0")đ</span>
 							</div>
 						</div>
+
+						@if (Model.Stock <= 0)
+						{
+							<div class="hub-expected-box mb-3 p-3 rounded" style="background: #fff8e6; border: 1px dashed #f59e0b; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; cursor: pointer;" onclick="openModalBaoChoToi('@Model.SKU', '@Html.Raw(Model.Name.Replace("'", "\\'"))', '@(Model.ExpectedDate?.ToString("dd/MM/yyyy") ?? "")', '@(Model.Unit ?? "Chiếc")')">
+								<div style="display: flex; align-items: center; gap: 8px; color: #b45309; font-size: 14px; font-weight: 600;">
+									<i class="fa-solid fa-calendar-check text-warning" style="font-size: 18px;"></i>
+									@if (Model.ExpectedDate.HasValue && Model.ExpectedDate.Value.Date >= DateTime.Today)
+									{
+										<span>Dự kiến về kho: <strong class="text-danger">@Model.ExpectedDate.Value.ToString("dd/MM/yyyy")</strong></span>
+									}
+									else
+									{
+										<span>Sản phẩm đang tạm hết hàng</span>
+									}
+								</div>
+								<div>
+									<button type="button" class="btn btn-warning btn-sm fw-bold text-dark" onclick="event.stopPropagation(); openModalBaoChoToi('@Model.SKU', '@Html.Raw(Model.Name.Replace("'", "\\'"))', '@(Model.ExpectedDate?.ToString("dd/MM/yyyy") ?? "")', '@(Model.Unit ?? "Chiếc")');" style="background: #f59e0b; border-color: #d97706; padding: 6px 14px; border-radius: 6px; font-size: 13px;">
+										<i class="fa-solid fa-bell"></i> BÁO CHO TÔI KHI CÓ HÀNG
+									</button>
+								</div>
+							</div>
+						}
 
 						<!-- Action Buttons -->
 						<a href="javascript:void(0)" onclick="addToCartAndBuy(@Model.ProductId)" class="pd2-btn-buy">
@@ -653,6 +686,173 @@
 					window.open(finalAffLink, "_blank");
 				}
 			});
-		});
 	</script>
+
+<!-- Modal Đăng ký Báo Có Hàng -->
+<div class="modal fade" id="modalBaoChoToi" tabindex="-1" aria-labelledby="modalBaoChoToiLabel" aria-hidden="true" style="z-index: 999999;">
+    <div class="modal-dialog modal-dialog-centered" style="max-width: 580px;">
+        <div class="modal-content border-0 shadow">
+            <div class="modal-header bg-warning bg-opacity-10 border-0 pb-2">
+                <div>
+                    <h5 class="modal-title fw-bold text-dark d-flex align-items-center gap-2" id="modalBaoChoToiLabel">
+                        <i class="fa-solid fa-bell text-warning"></i> ĐĂNG KÝ BÁO CÓ HÀNG
+                    </h5>
+                    <small class="text-muted">Hệ thống sẽ tự động thông báo ngay khi hàng về kho</small>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body pt-2">
+                <div class="p-2 mb-3 rounded bg-light border">
+                    <div class="fw-bold text-primary mb-1 d-flex align-items-center gap-2">
+                        <i class="fa-solid fa-box-open"></i> <span id="hub-notify-name">@Model.Name</span>
+                    </div>
+                    <div class="d-flex align-items-center gap-3 text-muted small">
+                        <span><i class="fa-solid fa-barcode"></i> SKU: <strong id="hub-notify-sku" class="text-dark">@Model.SKU</strong></span>
+                        <span id="hub-notify-expected-wrap">• <i class="fa-solid fa-calendar-check"></i> Dự kiến: <strong id="hub-notify-expected" class="text-danger">@(Model.ExpectedDate?.ToString("dd/MM/yyyy") ?? "")</strong></span>
+                    </div>
+                </div>
+
+                <div id="hub-notify-alert" style="display:none;" class="alert mb-3"></div>
+
+                <form id="frmHubNotify" onsubmit="return submitHubNotify();">
+                    <input type="text" name="hp_address_code" id="hp_address_code" style="display:none !important;" tabindex="-1" autocomplete="off" />
+                    <input type="hidden" id="hub_notify_sku_input" name="sku" value="@Model.SKU" />
+
+                    <div class="row g-2 mb-2">
+                        <div class="col-md-6">
+                            <label class="form-label small fw-bold mb-1">Họ và tên <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control form-control-sm" id="hub_notify_name_input" name="name" placeholder="Nguyễn Văn A" required minlength="2" maxlength="100" />
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label small fw-bold mb-1">Số điện thoại <span class="text-danger">*</span></label>
+                            <input type="tel" class="form-control form-control-sm" id="hub_notify_phone_input" name="phone" placeholder="0912345678" required />
+                        </div>
+                    </div>
+
+                    <div class="mb-2">
+                        <label class="form-label small fw-bold mb-1">Địa chỉ nhận hàng <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control form-control-sm" id="hub_notify_address_input" name="address" placeholder="Số nhà, đường, phường/xã, tỉnh/thành" required minlength="5" maxlength="300" />
+                    </div>
+
+                    <div class="row g-2 mb-2">
+                        <div class="col-md-5">
+                            <label class="form-label small fw-bold mb-1">Số lượng cần mua <span class="text-danger">*</span></label>
+                            <div class="input-group input-group-sm">
+                                <input type="number" class="form-control" id="hub_notify_qty_input" name="qty" value="1" min="1" max="999" required />
+                                <span class="input-group-text bg-light" id="hub-notify-unit">@(Model.Unit ?? "Chiếc")</span>
+                            </div>
+                        </div>
+                        <div class="col-md-7">
+                            <label class="form-label small fw-bold mb-1">Ghi chú thêm</label>
+                            <input type="text" class="form-control form-control-sm" id="hub_notify_note_input" name="note" placeholder="Yêu cầu gọi trước, thời gian nhận..." maxlength="300" />
+                        </div>
+                    </div>
+
+                    <div class="small text-muted mb-3">
+                        <i class="fa-solid fa-shield-halved text-success"></i> Thông tin của bạn được bảo mật tuyệt đối và chỉ dùng để thông báo khi có hàng.
+                    </div>
+
+                    <div class="d-flex justify-content-end gap-2">
+                        <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Đóng</button>
+                        <button type="button" id="btnHubNotifySubmit" onclick="submitHubNotify();" class="btn btn-warning btn-sm fw-bold">
+                            <i class="fa-solid fa-paper-plane"></i> <span>Gửi thông tin</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function openModalBaoChoToi(sku, name, expected, unit) {
+    if (name) $('#hub-notify-name').text(name);
+    if (sku) {
+        $('#hub-notify-sku').text(sku);
+        $('#hub_notify_sku_input').val(sku);
+    }
+    if (expected) {
+        $('#hub-notify-expected').text(expected);
+        $('#hub-notify-expected-wrap').show();
+    } else {
+        $('#hub-notify-expected-wrap').hide();
+    }
+    if (unit) $('#hub-notify-unit').text(unit);
+    $('#hub-notify-alert').hide().html('');
+    $('#btnHubNotifySubmit').prop('disabled', false).html('<i class="fa-solid fa-paper-plane"></i> <span>Gửi thông tin</span>');
+    var modalEl = document.getElementById('modalBaoChoToi');
+    if (window.bootstrap && bootstrap.Modal) {
+        var modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+        modal.show();
+    } else {
+        $('#modalBaoChoToi').modal('show');
+    }
+}
+
+function submitHubNotify() {
+    var $btn = $('#btnHubNotifySubmit');
+    var name = ($('#hub_notify_name_input').val() || '').trim();
+    var phone = ($('#hub_notify_phone_input').val() || '').trim();
+    var address = ($('#hub_notify_address_input').val() || '').trim();
+
+    if (name.length < 2) {
+        $('#hub-notify-alert').removeClass('alert-success').addClass('alert alert-danger')
+            .html('<i class="fa-solid fa-circle-exclamation"></i> Vui lòng nhập họ và tên (tối thiểu 2 ký tự).').show();
+        $('#hub_notify_name_input').focus();
+        return false;
+    }
+    if (!/^(0|\+84)\d{9,10}$/.test(phone.replace(/[\s.-]/g, ''))) {
+        $('#hub-notify-alert').removeClass('alert-success').addClass('alert alert-danger')
+            .html('<i class="fa-solid fa-circle-exclamation"></i> Số điện thoại không hợp lệ (yêu cầu 10 chữ số).').show();
+        $('#hub_notify_phone_input').focus();
+        return false;
+    }
+    if (address.length < 5) {
+        $('#hub-notify-alert').removeClass('alert-success').addClass('alert alert-danger')
+            .html('<i class="fa-solid fa-circle-exclamation"></i> Vui lòng nhập địa chỉ nhận hàng (tối thiểu 5 ký tự).').show();
+        $('#hub_notify_address_input').focus();
+        return false;
+    }
+
+    $btn.prop('disabled', true).html('<i class="fa-solid fa-spinner fa-spin"></i> <span>Đang gửi...</span>');
+
+    var formData = $('#frmHubNotify').serialize();
+    $.ajax({
+        type: 'POST',
+        url: '/api/hub-notify',
+        data: formData,
+        dataType: 'json',
+        success: function(res) {
+            if (res && res.success) {
+                $('#hub-notify-alert').removeClass('alert-danger').addClass('alert alert-success')
+                    .html('<i class="fa-solid fa-circle-check"></i> ' + res.message).show();
+                $('#hub_notify_name_input').val('');
+                $('#hub_notify_phone_input').val('');
+                $('#hub_notify_address_input').val('');
+                $('#hub_notify_note_input').val('');
+                $btn.prop('disabled', false).html('<i class="fa-solid fa-check"></i> <span>Đã gửi thành công</span>');
+                setTimeout(function() {
+                    var modalEl = document.getElementById('modalBaoChoToi');
+                    if (window.bootstrap && bootstrap.Modal) {
+                        var modal = bootstrap.Modal.getInstance(modalEl);
+                        if (modal) modal.hide();
+                    } else {
+                        $('#modalBaoChoToi').modal('hide');
+                    }
+                }, 2500);
+            } else {
+                $('#hub-notify-alert').removeClass('alert-success').addClass('alert alert-danger')
+                    .html('<i class="fa-solid fa-circle-exclamation"></i> ' + (res ? res.message : 'Có lỗi xảy ra, vui lòng thử lại.')).show();
+                $btn.prop('disabled', false).html('<i class="fa-solid fa-paper-plane"></i> <span>Gửi thông tin</span>');
+            }
+        },
+        error: function() {
+            $('#hub-notify-alert').removeClass('alert-success').addClass('alert alert-danger')
+                .html('<i class="fa-solid fa-triangle-exclamation"></i> Không thể kết nối máy chủ. Vui lòng thử lại sau!').show();
+            $btn.prop('disabled', false).html('<i class="fa-solid fa-paper-plane"></i> <span>Gửi thông tin</span>');
+        }
+    });
+    return false;
+}
+</script>
 }

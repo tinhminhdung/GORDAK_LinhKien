@@ -194,6 +194,76 @@
                 </div>
               </div>
 
+              <!-- Phương thức giao hàng chuẩn HUB (8 phương thức) -->
+              <div class="mt-4 pt-3 border-top">
+                <label class="fw-bold mb-2 d-flex align-items-center" style="color: #1a3c8a; font-size: 15px;">
+                  <i class="fa-solid fa-truck-fast me-2"></i> PHƯƠNG THỨC GIAO HÀNG
+                </label>
+                <div class="delivery-options-list d-flex flex-column gap-2 mb-3">
+                  <label class="delivery-option p-2 border rounded d-flex align-items-start gap-2 bg-light" style="cursor: pointer; font-size: 13px;">
+                    <input class="form-check-input mt-1" type="radio" name="DeliveryMethod" value="Chuẩn bị hàng để khách qua lấy và thanh toán tại cửa hàng" checked>
+                    <div>
+                      <strong class="text-dark">1. Chuẩn bị hàng để khách qua lấy và thanh toán tại cửa hàng</strong>
+                      <div class="text-muted small">Khách qua kho/cửa hàng kiểm tra hàng và thanh toán trực tiếp.</div>
+                    </div>
+                  </label>
+                  <label class="delivery-option p-2 border rounded d-flex align-items-start gap-2" style="cursor: pointer; font-size: 13px;">
+                    <input class="form-check-input mt-1" type="radio" name="DeliveryMethod" value="Giao hàng qua bưu điện / chuyển phát nhanh (Viettel Post, EMS...)">
+                    <div>
+                      <strong class="text-dark">2. Giao hàng qua bưu điện / chuyển phát nhanh (Viettel Post, EMS...)</strong>
+                      <div class="text-muted small">Giao tận nơi toàn quốc qua bưu tá, cước phí theo biểu phí thực tế.</div>
+                    </div>
+                  </label>
+                  <label class="delivery-option p-2 border rounded d-flex align-items-start gap-2" style="cursor: pointer; font-size: 13px;">
+                    <input class="form-check-input mt-1" type="radio" name="DeliveryMethod" value="Giao hàng hỏa tốc trong ngày (AhaMove, Grab...)">
+                    <div>
+                      <strong class="text-dark">3. Giao hàng hỏa tốc trong ngày (AhaMove, Grab...)</strong>
+                      <div class="text-muted small">Giao gấp trong vòng 1-4 giờ (nội thành Hà Nội / TP.HCM).</div>
+                    </div>
+                  </label>
+                  <label class="delivery-option p-2 border rounded d-flex align-items-start gap-2" style="cursor: pointer; font-size: 13px;">
+                    <input class="form-check-input mt-1" type="radio" name="DeliveryMethod" value="Gửi hàng qua nhà xe / chành xe">
+                    <div>
+                      <strong class="text-dark">4. Gửi hàng qua nhà xe / chành xe</strong>
+                      <div class="text-muted small">Gửi ra bến xe, chành xe theo yêu cầu của quý khách.</div>
+                    </div>
+                  </label>
+                  <label class="delivery-option p-2 border rounded d-flex align-items-start gap-2" style="cursor: pointer; font-size: 13px;">
+                    <input class="form-check-input mt-1" type="radio" name="DeliveryMethod" value="Giao hàng và thu tiền tận nơi (COD)">
+                    <div>
+                      <strong class="text-dark">5. Giao hàng và thu tiền tận nơi (COD)</strong>
+                      <div class="text-muted small">Nhận hàng, kiểm tra trước khi thanh toán cho nhân viên giao vận.</div>
+                    </div>
+                  </label>
+                  <label class="delivery-option p-2 border rounded d-flex align-items-start gap-2" style="cursor: pointer; font-size: 13px;">
+                    <input class="form-check-input mt-1" type="radio" name="DeliveryMethod" value="Nhận hàng tại chi nhánh / đại lý ủy quyền">
+                    <div>
+                      <strong class="text-dark">6. Nhận hàng tại chi nhánh / đại lý ủy quyền</strong>
+                      <div class="text-muted small">Khách nhận tại các điểm phân phối, đại lý chính hãng.</div>
+                    </div>
+                  </label>
+                  <label class="delivery-option p-2 border rounded d-flex align-items-start gap-2" style="cursor: pointer; font-size: 13px;">
+                    <input class="form-check-input mt-1" type="radio" name="DeliveryMethod" value="Giao hàng theo chỉ định của khách hàng">
+                    <div>
+                      <strong class="text-dark">7. Giao hàng theo chỉ định của khách hàng</strong>
+                      <div class="text-muted small">Giao hàng theo đơn vị hoặc người nhận chỉ định riêng.</div>
+                    </div>
+                  </label>
+                  <label class="delivery-option p-2 border rounded d-flex align-items-start gap-2" style="cursor: pointer; font-size: 13px;">
+                    <input class="form-check-input mt-1" type="radio" name="DeliveryMethod" value="Khác (thỏa thuận sau khi xác nhận đơn)">
+                    <div>
+                      <strong class="text-dark">8. Khác (thỏa thuận sau khi xác nhận đơn)</strong>
+                      <div class="text-muted small">Nhân viên sẽ gọi điện tư vấn và chốt phương thức vận chuyển phù hợp nhất.</div>
+                    </div>
+                  </label>
+                </div>
+
+                <div class="mb-3">
+                  <label class="fw-bold mb-1" style="color: #1a2b4c; font-size: 13px;">Ghi chú thêm về giao hàng (Tên nhà xe, bến xe, giờ nhận...)</label>
+                  <input type="text" asp-for="DeliveryNote" class="form-control" style="border-color: #e5e5e5; font-size: 13px; border-radius: 6px;" placeholder="Ví dụ: gửi xe Hoàng Long bến xe Giáp Bát, số xe 29B-12345...">
+                </div>
+              </div>
+
               <!-- Checkbox VAT -->
               <div class="mt-4 pt-3 border-top">
                 <div class="form-check">
@@ -213,7 +283,7 @@
                     <div class="col-md-6"><label class="fw-bold mb-1" style="color: #1a2b4c; font-size: 13px;">Tên công ty <span class="text-danger">*</span></label><input type="text" asp-for="VATCompanyName" class="form-control" style="font-size: 13px; border-radius: 4px;" placeholder="Nhập tên công ty"></div>
                     <div class="col-md-6"><label class="fw-bold mb-1" style="color: #1a2b4c; font-size: 13px;">Mã số thuế <span class="text-danger">*</span></label><input type="text" asp-for="VATTaxCode" class="form-control" style="font-size: 13px; border-radius: 4px;" placeholder="Nhập mã số thuế"></div>
                     <div class="col-12"><label class="fw-bold mb-1" style="color: #1a2b4c; font-size: 13px;">Địa chỉ công ty <span class="text-danger">*</span></label><input type="text" asp-for="VATCompanyAddress" class="form-control" style="font-size: 13px; border-radius: 4px;" placeholder="Nhập địa chỉ công ty"></div>
-                    <div class="col-12"><label class="fw-bold mb-1" style="color: #1a2b4c; font-size: 13px;">Email nhận hóa đơn</label><input type="email" asp-for="VATInvoiceEmail" class="form-control" style="font-size: 13px; border-radius: 4px;" placeholder="Nhập email nhận hóa đơn"></div>
+                    <div class="col-12"><label class="fw-bold mb-1" style="color: #1a2b4c; font-size: 13px;">Email nhận hóa đơn</label><input type="email" asp-for="VATInvoiceEmail" maxlength="100" class="form-control" style="font-size: 13px; border-radius: 4px;" placeholder="ví dụ: ketoan@congty.com (tối đa 100 ký tự)"></div>
                   </div>
                 </div>
               </div>

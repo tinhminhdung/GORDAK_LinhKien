@@ -104,7 +104,17 @@ namespace Antigravity.ECommerce.Services
                 NewsBigCount = int.TryParse(dict.GetValueOrDefault("NewsBigCount", "2"), out int nbc) ? nbc : 2,
 
                 Home_HotProductCount = int.TryParse(dict.GetValueOrDefault("Home_HotProductCount", "8"), out int hpc) ? hpc : 8,
-                Product_PageSize = int.TryParse(dict.GetValueOrDefault("Product_PageSize", "12"), out int pps) ? pps : 12
+                Product_PageSize = int.TryParse(dict.GetValueOrDefault("Product_PageSize", "12"), out int pps) ? pps : 12,
+
+                // Hub Settings
+                Hub_Enable = dict.GetValueOrDefault("Hub_Enable", "true").ToLower() == "true",
+                Hub_Source = dict.GetValueOrDefault("Hub_Source", "gordak.vn"),
+                Hub_SyncAllowIp = dict.GetValueOrDefault("Hub_SyncAllowIp", ""),
+                Hub_SyncKey = dict.GetValueOrDefault("Hub_SyncKey", "GORDAK_HUB_SYNC_KEY_2026"),
+                Hub_OrderUrl = dict.GetValueOrDefault("Hub_OrderUrl", "https://pos.nhatminhesc.com/api/web/orders"),
+                Hub_OrderKey = dict.GetValueOrDefault("Hub_OrderKey", "GORDAK_ORDER_KEY_2026"),
+                Hub_NotifyUrl = dict.GetValueOrDefault("Hub_NotifyUrl", "https://pos.nhatminhesc.com/api/web/orders"),
+                Hub_NotifyKey = dict.GetValueOrDefault("Hub_NotifyKey", "GORDAK_ORDER_KEY_2026")
             };
         }
 
@@ -187,6 +197,19 @@ namespace Antigravity.ECommerce.Services
             FSetting.UpdateValue("Home_HotProductCount", model.Home_HotProductCount.ToString(), updatedBy);
             FSetting.UpdateValue("Product_PageSize", model.Product_PageSize.ToString(), updatedBy);
 
+            // Cấu hình kết nối HUB
+            FSetting.UpdateValue("Hub_Enable", model.Hub_Enable.ToString().ToLower(), updatedBy);
+            FSetting.UpdateValue("Hub_Source", model.Hub_Source ?? "gordak.vn", updatedBy);
+            FSetting.UpdateValue("Hub_SyncAllowIp", model.Hub_SyncAllowIp ?? "", updatedBy);
+            FSetting.UpdateValue("Hub_SyncKey", model.Hub_SyncKey ?? "", updatedBy);
+            FSetting.UpdateValue("Hub_OrderUrl", model.Hub_OrderUrl ?? "", updatedBy);
+            FSetting.UpdateValue("Hub_OrderKey", model.Hub_OrderKey ?? "", updatedBy);
+            FSetting.UpdateValue("Hub_NotifyUrl", model.Hub_NotifyUrl ?? "", updatedBy);
+            FSetting.UpdateValue("Hub_NotifyKey", model.Hub_NotifyKey ?? "", updatedBy);
+
+            // Đồng bộ ghi đè vào file appsettings.json
+            SyncToAppSettings(model);
+
             // Áp dụng ngay vào Service runtime
             ImageOptimizerService.EnableOptimization = model.Image_EnableOptimization;
             ImageOptimizerService.MaxLongestSide = model.Image_MaxLongestSide;
@@ -196,6 +219,40 @@ namespace Antigravity.ECommerce.Services
             ImageOptimizerService.WatermarkOpacity = model.Image_WatermarkOpacity;
             ImageOptimizerService.WatermarkSize = model.Image_WatermarkSize;
             ImageOptimizerService.WatermarkExcludePaths = model.Image_WatermarkExcludePaths ?? "";
+        }
+
+        private static void SyncToAppSettings(GlobalSettingsViewModel model)
+        {
+            try
+            {
+                var candidates = new[]
+                {
+                    Path.Combine(Directory.GetCurrentDirectory(), "appsettings.json"),
+                    Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "appsettings.json")
+                };
+
+                foreach (var filePath in candidates)
+                {
+                    if (File.Exists(filePath))
+                    {
+                        var jsonString = File.ReadAllText(filePath);
+                        var dict = System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, object>>(jsonString) ?? new Dictionary<string, object>();
+                        dict["HubSettings"] = new Dictionary<string, string>
+                        {
+                            { "SyncAllowIp", model.Hub_SyncAllowIp ?? "" },
+                            { "SyncKey", model.Hub_SyncKey ?? "" },
+                            { "Source", model.Hub_Source ?? "" },
+                            { "OrderUrl", model.Hub_OrderUrl ?? "" },
+                            { "OrderKey", model.Hub_OrderKey ?? "" },
+                            { "NotifyUrl", model.Hub_NotifyUrl ?? "" },
+                            { "NotifyKey", model.Hub_NotifyKey ?? "" }
+                        };
+                        var options = new System.Text.Json.JsonSerializerOptions { WriteIndented = true };
+                        File.WriteAllText(filePath, System.Text.Json.JsonSerializer.Serialize(dict, options));
+                    }
+                }
+            }
+            catch { }
         }
     }
 

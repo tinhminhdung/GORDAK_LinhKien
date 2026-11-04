@@ -1,4 +1,4 @@
-﻿@model List<Antigravity.ECommerce.Models.Order>
+@model List<Antigravity.ECommerce.Models.Order>
 @{
     ViewData["Title"] = "Quản lý Đơn hàng";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
@@ -187,6 +187,15 @@
                                     <span class="badge bg-warning text-dark">Chưa trả</span>
                                 }
                                 <br/><small class="text-muted">@item.PaymentMethod</small>
+                                <br/>
+                                @if (item.HubSent)
+                                {
+                                    <span class="badge bg-soft-success text-success border border-success mt-1" title="@item.HubSentAt?.ToString("dd/MM/yyyy HH:mm")"><i class="ri-check-double-line"></i> HUB: Đã gửi</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-soft-danger text-danger border border-danger mt-1" role="button" onclick="syncOrderToHub(@item.OrderId)" title="@(string.IsNullOrEmpty(item.HubLastError) ? "Chưa gửi sang HUB, bấm để bắn ngay" : ("Lỗi HUB: " + item.HubLastError))"><i class="ri-refresh-line"></i> Bắn HUB (@item.HubTries)</span>
+                                }
                             </td>
                             <td class="text-center">
                                 <div class="d-flex justify-content-center gap-1">
@@ -326,6 +335,23 @@
                         }
                     });
                 }
+            });
+        }
+        function syncOrderToHub(id) {
+            Swal.fire({
+                title: 'Đang kết nối HUB...',
+                text: 'Vui lòng chờ trong giây lát',
+                allowOutsideClick: false,
+                didOpen: () => { Swal.showLoading(); }
+            });
+            $.post('/AdminOrder/SyncToHub', { id: id }, function(res) {
+                if (res.success) {
+                    Swal.fire('Thành công', res.message, 'success').then(() => { location.reload(); });
+                } else {
+                    Swal.fire('Lỗi đồng bộ HUB', res.message, 'error');
+                }
+            }).fail(function() {
+                Swal.fire('Lỗi', 'Không thể kết nối đến máy chủ web', 'error');
             });
         }
     </script>

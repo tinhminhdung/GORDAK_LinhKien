@@ -80,6 +80,27 @@ namespace Antigravity.ECommerce.Models
         /// <summary> Email nhận hóa đơn (VAT) </summary>
         public string? VATInvoiceEmail { get; set; }
 
+        /// <summary> Trạng thái gửi sang HUB (0: Chưa/Lỗi, 1: Đã gửi) </summary>
+        public bool HubSent { get; set; }
+
+        /// <summary> Số lần đã thử gửi HUB </summary>
+        public int HubTries { get; set; }
+
+        /// <summary> Lỗi cuối cùng khi gửi HUB </summary>
+        public string? HubLastError { get; set; }
+
+        /// <summary> Thời điểm gửi HUB thành công </summary>
+        public DateTime? HubSentAt { get; set; }
+
+        /// <summary> Phương thức giao hàng chuẩn HUB (1 trong 8 câu) </summary>
+        public string? DeliveryMethod { get; set; }
+
+        /// <summary> Ghi chú giao hàng (nhà xe, giờ giao...) </summary>
+        public string? DeliveryNote { get; set; }
+
+        /// <summary> Khách chủ động chọn phương thức hay để mặc định </summary>
+        public bool DeliveryChosen { get; set; }
+
         /// <summary> Ngày đặt hàng </summary>
         public DateTime CreatedAt { get; set; }
         

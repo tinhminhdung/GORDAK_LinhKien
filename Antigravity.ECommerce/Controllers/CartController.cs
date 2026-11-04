@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Mvc;
 using Antigravity.ECommerce.Models;
 using Antigravity.ECommerce.Framework;
 using Antigravity.ECommerce.Services;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Configuration;
 using System.Text.Json;
 using System.Linq;
 using System;
@@ -310,7 +312,10 @@ namespace Antigravity.ECommerce.Controllers
                 VATCompanyName = postModel.VATCompanyName,
                 VATTaxCode = postModel.VATTaxCode,
                 VATCompanyAddress = postModel.VATCompanyAddress,
-                VATInvoiceEmail = postModel.VATInvoiceEmail
+                VATInvoiceEmail = postModel.VATInvoiceEmail,
+                DeliveryMethod = !string.IsNullOrEmpty(postModel.DeliveryMethod) ? postModel.DeliveryMethod : HubDeliveryConstants.DefaultMethod,
+                DeliveryNote = postModel.DeliveryNote,
+                DeliveryChosen = postModel.DeliveryChosen || (!string.IsNullOrEmpty(postModel.DeliveryMethod) && postModel.DeliveryMethod != HubDeliveryConstants.DefaultMethod)
             };
 
             int orderId = FOrder.Insert(order);
@@ -324,6 +329,21 @@ namespace Antigravity.ECommerce.Controllers
                     TotalPrice = item.TotalPrice
                 });
             }
+
+            // Bắn đơn sang máy chủ HUB bán hàng (Luồng B - Chạy ngầm trong try/catch không ảnh hưởng giao dịch của khách)
+            var serviceProvider = HttpContext.RequestServices;
+            _ = Task.Run(async () =>
+            {
+                try
+                {
+                    var config = serviceProvider.GetRequiredService<IConfiguration>();
+                    await HubSender.SendOrderAsync(orderId, config).ConfigureAwait(false);
+                }
+                catch (Exception exHub)
+                {
+                    System.Diagnostics.Trace.TraceError("HubSender.SendOrderAsync background error: " + exHub.Message);
+                }
+            });
 
             ClearCart();
             

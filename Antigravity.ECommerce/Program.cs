@@ -270,6 +270,10 @@ app.MapControllerRoute(
 
 app.MapControllers();
 
+// ── HUB bán hàng Integration (Luồng A & Luồng B) ──
+app.MapPost("/hub-sync", Antigravity.ECommerce.Services.HubSyncHandler.Handle);
+app.MapPost("/api/hub-notify", Antigravity.ECommerce.Services.HubNotifyHandler.Handle);
+
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");

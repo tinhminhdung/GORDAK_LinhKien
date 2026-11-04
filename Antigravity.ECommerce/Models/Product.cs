@@ -109,6 +109,9 @@ namespace Antigravity.ECommerce.Models
         /// <summary> ID tình trạng sản phẩm (Từ bảng ProductOptions) </summary>
         public int? ConditionId { get; set; }
 
+        /// <summary> Ngày dự kiến có hàng (Đồng bộ từ HUB - Luồng A) </summary>
+        public DateTime? ExpectedDate { get; set; }
+
         // --- Chế độ bổ trợ (Không lưu DB) ---
         /// <summary> Chuỗi tên các danh mục để hiển thị nhanh </summary>
         public string? CategoryNames { get; set; }

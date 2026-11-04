@@ -163,17 +163,21 @@
                         </div>
                     </div>
                     <div class="row mb-3">
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <label class="form-label">Số lượng trong kho <i class="mdi mdi-information text-primary" data-bs-toggle="tooltip" title="Hiển thị hết hàng nếu bằng 0"></i></label>
                             <input type="number" class="form-control" asp-for="Stock">
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <label class="form-label">Đơn vị tính</label>
                             <input type="text" class="form-control" asp-for="Unit" placeholder="Cái, Hộp, Bộ...">
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <label class="form-label">Trọng lượng (gram)</label>
                             <input type="number" class="form-control" asp-for="Weight">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Ngày dự kiến có hàng (HUB)</label>
+                            <input type="date" class="form-control" asp-for="ExpectedDate" asp-format="{0:yyyy-MM-dd}">
                         </div>
                     </div>
 

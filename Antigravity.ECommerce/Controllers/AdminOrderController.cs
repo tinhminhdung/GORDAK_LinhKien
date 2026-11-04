@@ -387,6 +387,14 @@ namespace Antigravity.ECommerce.Controllers
             return File(System.Text.Encoding.UTF8.GetPreamble().Concat(System.Text.Encoding.UTF8.GetBytes(builder.ToString())).ToArray(), "text/csv", $"Orders_{DateTime.Now:yyyyMMddHHmm}.csv");
         }
 
+        [HttpPost]
+        public async Task<IActionResult> SyncToHub(int id)
+        {
+            var config = HttpContext.RequestServices.GetRequiredService<IConfiguration>();
+            var res = await HubSender.SendOrderAsync(id, config);
+            return Json(new { success = res.Success, message = res.Message, statusCode = res.StatusCode });
+        }
+
         public class OrderCreateModel
         {
             public Order Order { get; set; } = new Order();

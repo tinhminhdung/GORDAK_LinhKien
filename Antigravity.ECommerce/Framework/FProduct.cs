@@ -22,6 +22,14 @@ namespace Antigravity.ECommerce.Framework
             return list != null && list.Count > 0 ? list[0] : null;
         }
 
+        public static Product? GetBySku(string sku)
+        {
+            if (string.IsNullOrWhiteSpace(sku)) return null;
+            var prm = new SqlParameter[] { new SqlParameter("@SKU", sku.Trim()) };
+            var list = BaseConnectionSql.ExecuteStoredProcedure<Product>("SP_Products_GetBySku", prm);
+            return list != null && list.Count > 0 ? list[0] : null;
+        }
+
         public static List<Product> GetBySkus(IEnumerable<string> skus)
         {
             var skuList = System.Linq.Enumerable.ToList(System.Linq.Enumerable.Where(System.Linq.Enumerable.Select(skus, s => s.Trim()), s => !string.IsNullOrEmpty(s)));
@@ -94,6 +102,7 @@ namespace Antigravity.ECommerce.Framework
                 new SqlParameter("@BrandId", (object)obj.BrandId ?? DBNull.Value),
                 new SqlParameter("@WarrantyId", (object)obj.WarrantyId ?? DBNull.Value),
                 new SqlParameter("@ConditionId", (object)obj.ConditionId ?? DBNull.Value),
+                new SqlParameter("@ExpectedDate", (object?)obj.ExpectedDate ?? DBNull.Value),
                 new SqlParameter("@CreatedBy", (object)obj.CreatedBy ?? DBNull.Value)
             };
             var result = BaseConnectionSql.ExecuteScalar("SP_Products_Insert", prm);
@@ -137,6 +146,7 @@ namespace Antigravity.ECommerce.Framework
                 new SqlParameter("@BrandId", (object)obj.BrandId ?? DBNull.Value),
                 new SqlParameter("@WarrantyId", (object)obj.WarrantyId ?? DBNull.Value),
                 new SqlParameter("@ConditionId", (object)obj.ConditionId ?? DBNull.Value),
+                new SqlParameter("@ExpectedDate", (object?)obj.ExpectedDate ?? DBNull.Value),
                 new SqlParameter("@UpdatedBy", (object)obj.UpdatedBy ?? DBNull.Value)
             };
             return BaseConnectionSql.ExecuteNonQuery("SP_Products_Update", prm);

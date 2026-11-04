@@ -213,7 +213,11 @@
                                             </div>
                                         </td>
                                         <td class="text-center">
-                                            <span class="badge @(item.Stock <= 5 ? "bg-danger" : "bg-light text-dark")">@item.Stock</span>
+                                            <span class="badge @(item.Stock <= 0 ? "bg-danger" : (item.Stock <= 5 ? "bg-warning text-dark" : "bg-light text-dark"))">@item.Stock</span>
+                                            @if (item.Stock == 0 && item.ExpectedDate.HasValue && item.ExpectedDate.Value >= DateTime.Today)
+                                            {
+                                                <br/><small class="text-info fw-medium" title="Dự kiến hàng về từ HUB">Về: @item.ExpectedDate.Value.ToString("dd/MM")</small>
+                                            }
                                         </td>
                                         <td class="text-center">
                                             <span class="text-muted"><i class="ri-eye-line align-middle"></i> @item.Views</span>

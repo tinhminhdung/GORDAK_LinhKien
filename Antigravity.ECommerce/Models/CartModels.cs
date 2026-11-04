@@ -67,5 +67,14 @@ namespace Antigravity.ECommerce.Models
         
         /// <summary> Email nhận hóa đơn (VAT) </summary>
         public string? VATInvoiceEmail { get; set; }
+
+        /// <summary> Phương thức giao hàng (1 trong 8 câu chuẩn HUB) </summary>
+        public string? DeliveryMethod { get; set; }
+
+        /// <summary> Ghi chú giao hàng (nhà xe, địa điểm xe...) </summary>
+        public string? DeliveryNote { get; set; }
+
+        /// <summary> Cờ đánh dấu khách có tự chọn phương thức giao hàng hay không </summary>
+        public bool DeliveryChosen { get; set; }
     }
 }

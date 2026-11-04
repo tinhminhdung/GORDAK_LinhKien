@@ -114,5 +114,15 @@ namespace Antigravity.ECommerce.Models
         // Cấu hình hiển thị Sản phẩm
         public int Home_HotProductCount { get; set; } = 8; // Số lượng Sản phẩm Nổi bật trang chủ
         public int Product_PageSize { get; set; } = 12; // Số lượng Sản phẩm trên trang danh sách
+
+        // Cấu hình Kết nối HUB (pos.nhatminhesc.com)
+        public bool Hub_Enable { get; set; } = true;
+        public string? Hub_Source { get; set; } = "gordak.vn";
+        public string? Hub_SyncAllowIp { get; set; }
+        public string? Hub_SyncKey { get; set; } = "GORDAK_HUB_SYNC_KEY_2026";
+        public string? Hub_OrderUrl { get; set; } = "https://pos.nhatminhesc.com/api/web/orders";
+        public string? Hub_OrderKey { get; set; } = "GORDAK_ORDER_KEY_2026";
+        public string? Hub_NotifyUrl { get; set; } = "https://pos.nhatminhesc.com/api/web/orders";
+        public string? Hub_NotifyKey { get; set; } = "GORDAK_ORDER_KEY_2026";
     }
 }

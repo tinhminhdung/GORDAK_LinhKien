@@ -33,9 +33,23 @@ namespace Antigravity.ECommerce.Framework
                 new SqlParameter("@VATCompanyName", (object?)model.VATCompanyName ?? DBNull.Value),
                 new SqlParameter("@VATTaxCode", (object?)model.VATTaxCode ?? DBNull.Value),
                 new SqlParameter("@VATCompanyAddress", (object?)model.VATCompanyAddress ?? DBNull.Value),
-                new SqlParameter("@VATInvoiceEmail", (object?)model.VATInvoiceEmail ?? DBNull.Value)
+                new SqlParameter("@VATInvoiceEmail", (object?)model.VATInvoiceEmail ?? DBNull.Value),
+                new SqlParameter("@DeliveryMethod", (object?)model.DeliveryMethod ?? DBNull.Value),
+                new SqlParameter("@DeliveryNote", (object?)model.DeliveryNote ?? DBNull.Value),
+                new SqlParameter("@DeliveryChosen", model.DeliveryChosen)
             };
             return Convert.ToInt32(BaseConnectionSql.ExecuteScalar("SP_Orders_Insert", prms));
+        }
+
+        public static int UpdateHubStatus(int orderId, bool hubSent, string? error)
+        {
+            var prms = new SqlParameter[]
+            {
+                new SqlParameter("@OrderId", orderId),
+                new SqlParameter("@HubSent", hubSent),
+                new SqlParameter("@HubLastError", (object?)error ?? DBNull.Value)
+            };
+            return BaseConnectionSql.ExecuteNonQuery("SP_Orders_UpdateHubStatus", prms);
         }
 
         public static int Update(Order model)

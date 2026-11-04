@@ -1,4 +1,4 @@
-﻿@model Antigravity.ECommerce.Models.Order
+@model Antigravity.ECommerce.Models.Order
 @{
     ViewData["Title"] = "Chi tiết đơn hàng " + Model.OrderCode;
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
@@ -299,6 +299,43 @@
             </div>
         </div>
 
+        <!-- Trạng thái đồng bộ HUB -->
+        <div class="card border-info mb-4">
+            <div class="card-header bg-info-subtle text-info border-info d-flex justify-content-between align-items-center">
+                <h4 class="header-title mb-0"><i class="ri-refresh-line me-1"></i> Đồng bộ sang phần mềm HUB</h4>
+                @if (Model.HubSent)
+                {
+                    <span class="badge bg-success">Đã gửi HUB</span>
+                }
+                else
+                {
+                    <span class="badge bg-danger">Chưa gửi HUB</span>
+                }
+            </div>
+            <div class="card-body">
+                <p class="mb-2"><strong>Phương thức giao hàng:</strong> <span class="badge bg-light text-dark fs-13 d-block mt-1 text-wrap text-start">@(string.IsNullOrEmpty(Model.DeliveryMethod) ? "Mặc định (Nhận tại cửa hàng)" : Model.DeliveryMethod)</span></p>
+                @if (!string.IsNullOrEmpty(Model.DeliveryNote))
+                {
+                    <p class="mb-2"><strong>Ghi chú giao hàng:</strong> <span class="text-primary fw-medium">@Model.DeliveryNote</span></p>
+                }
+                <hr class="text-muted opacity-25">
+                <p class="mb-1"><strong>Số lần thử gửi:</strong> @Model.HubTries</p>
+                @if (Model.HubSent && Model.HubSentAt.HasValue)
+                {
+                    <p class="mb-1"><strong>Thời điểm gửi thành công:</strong> @Model.HubSentAt.Value.ToString("dd/MM/yyyy HH:mm:ss")</p>
+                }
+                @if (!string.IsNullOrEmpty(Model.HubLastError))
+                {
+                    <div class="alert alert-danger py-1 px-2 mb-2 mt-2">
+                        <small><strong>Lỗi HUB:</strong> @Model.HubLastError</small>
+                    </div>
+                }
+                <button type="button" class="btn btn-primary w-100 mt-2" onclick="syncOrderToHub(@Model.OrderId)">
+                    <i class="ri-send-plane-fill me-1"></i> Bắn đơn sang HUB ngay
+                </button>
+            </div>
+        </div>
+
         <!-- Thông tin Hóa đơn VAT -->
         @if (Model.RequiresVAT)
         {
@@ -536,5 +573,22 @@
                 }
             });
         });
+        function syncOrderToHub(id) {
+            Swal.fire({
+                title: 'Đang kết nối HUB...',
+                text: 'Vui lòng chờ trong giây lát',
+                allowOutsideClick: false,
+                didOpen: () => { Swal.showLoading(); }
+            });
+            $.post('/AdminOrder/SyncToHub', { id: id }, function(res) {
+                if (res.success) {
+                    Swal.fire('Thành công', res.message, 'success').then(() => { location.reload(); });
+                } else {
+                    Swal.fire('Lỗi đồng bộ HUB', res.message, 'error');
+                }
+            }).fail(function() {
+                Swal.fire('Lỗi', 'Không thể kết nối đến máy chủ web', 'error');
+            });
+        }
     </script>
 }

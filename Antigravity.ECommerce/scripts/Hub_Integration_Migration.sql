@@ -1,0 +1,633 @@
+-- ==============================================================================
+-- SCRIPT CẬP NHẬT CƠ SỞ DỮ LIỆU ĐỂ TÍCH HỢP HỆ THỐNG HUB BÁN HÀNG
+-- Áp dụng cho website: gordak.vn (Dự án: go)
+-- Database: [GORDAK]
+-- Thời điểm: Tích hợp HUB 01/11/2026 (Kèm cập nhật bổ sung 29/10/2026)
+-- Bao gồm: Bảng Products, Orders, HubNotifyQueue và các Stored Procedure chuẩn mực
+-- ==============================================================================
+
+USE [GORDAK];
+GO
+
+PRINT N'==============================================================================';
+PRINT N'BẮT ĐẦU CẬP NHẬT DATABASE CHO GORDAK.VN TÍCH HỢP HUB';
+PRINT N'==============================================================================';
+GO
+
+-- ------------------------------------------------------------------------------
+-- 1. BẢNG Products: Bổ sung cột ExpectedDate (Ngày hàng về dự kiến từ HUB - Luồng A)
+-- ------------------------------------------------------------------------------
+IF NOT EXISTS (
+    SELECT 1 FROM sys.columns 
+    WHERE object_id = OBJECT_ID(N'[dbo].[Products]') 
+      AND name = 'ExpectedDate'
+)
+BEGIN
+    ALTER TABLE [dbo].[Products]
+    ADD [ExpectedDate] DATE NULL;
+    PRINT N'-> Đã thêm cột [ExpectedDate] (DATE, NULL) vào bảng Products thành công.';
+END
+ELSE
+BEGIN
+    PRINT N'-> Cột [ExpectedDate] đã tồn tại trong bảng Products.';
+END
+GO
+
+-- Tạo chỉ mục IX_Products_SKU để tăng tốc tối đa khi HUB đồng bộ 1.000 mã/lần (Index Seek)
+IF NOT EXISTS (
+    SELECT 1 FROM sys.indexes 
+    WHERE name = 'IX_Products_SKU' AND object_id = OBJECT_ID(N'[dbo].[Products]')
+)
+BEGIN
+    CREATE NONCLUSTERED INDEX [IX_Products_SKU] ON [dbo].[Products] ([SKU]);
+    PRINT N'-> Đã tạo chỉ mục tìm kiếm [IX_Products_SKU] trên bảng Products.';
+END
+GO
+
+-- ------------------------------------------------------------------------------
+-- 2. BẢNG Orders: Bổ sung các cột theo dõi đồng bộ HUB và Phương thức giao hàng (Luồng B)
+-- ------------------------------------------------------------------------------
+IF NOT EXISTS (
+    SELECT 1 FROM sys.columns 
+    WHERE object_id = OBJECT_ID(N'[dbo].[Orders]') 
+      AND name = 'HubSent'
+)
+BEGIN
+    ALTER TABLE [dbo].[Orders]
+    ADD [HubSent] BIT NOT NULL CONSTRAINT DF_Orders_HubSent DEFAULT 0;
+    PRINT N'-> Đã thêm cột [HubSent] vào bảng Orders.';
+END
+GO
+
+IF NOT EXISTS (
+    SELECT 1 FROM sys.columns 
+    WHERE object_id = OBJECT_ID(N'[dbo].[Orders]') 
+      AND name = 'HubTries'
+)
+BEGIN
+    ALTER TABLE [dbo].[Orders]
+    ADD [HubTries] INT NOT NULL CONSTRAINT DF_Orders_HubTries DEFAULT 0;
+    PRINT N'-> Đã thêm cột [HubTries] vào bảng Orders.';
+END
+GO
+
+IF NOT EXISTS (
+    SELECT 1 FROM sys.columns 
+    WHERE object_id = OBJECT_ID(N'[dbo].[Orders]') 
+      AND name = 'HubLastError'
+)
+BEGIN
+    ALTER TABLE [dbo].[Orders]
+    ADD [HubLastError] NVARCHAR(500) NULL;
+    PRINT N'-> Đã thêm cột [HubLastError] vào bảng Orders.';
+END
+GO
+
+IF NOT EXISTS (
+    SELECT 1 FROM sys.columns 
+    WHERE object_id = OBJECT_ID(N'[dbo].[Orders]') 
+      AND name = 'HubSentAt'
+)
+BEGIN
+    ALTER TABLE [dbo].[Orders]
+    ADD [HubSentAt] DATETIME NULL;
+    PRINT N'-> Đã thêm cột [HubSentAt] vào bảng Orders.';
+END
+GO
+
+IF NOT EXISTS (
+    SELECT 1 FROM sys.columns 
+    WHERE object_id = OBJECT_ID(N'[dbo].[Orders]') 
+      AND name = 'DeliveryMethod'
+)
+BEGIN
+    ALTER TABLE [dbo].[Orders]
+    ADD [DeliveryMethod] NVARCHAR(255) NULL;
+    PRINT N'-> Đã thêm cột [DeliveryMethod] vào bảng Orders.';
+END
+GO
+
+IF NOT EXISTS (
+    SELECT 1 FROM sys.columns 
+    WHERE object_id = OBJECT_ID(N'[dbo].[Orders]') 
+      AND name = 'DeliveryNote'
+)
+BEGIN
+    ALTER TABLE [dbo].[Orders]
+    ADD [DeliveryNote] NVARCHAR(255) NULL;
+    PRINT N'-> Đã thêm cột [DeliveryNote] vào bảng Orders.';
+END
+GO
+
+IF NOT EXISTS (
+    SELECT 1 FROM sys.columns 
+    WHERE object_id = OBJECT_ID(N'[dbo].[Orders]') 
+      AND name = 'DeliveryChosen'
+)
+BEGIN
+    ALTER TABLE [dbo].[Orders]
+    ADD [DeliveryChosen] BIT NOT NULL CONSTRAINT DF_Orders_DeliveryChosen DEFAULT 0;
+    PRINT N'-> Đã thêm cột [DeliveryChosen] vào bảng Orders.';
+END
+GO
+
+-- ------------------------------------------------------------------------------
+-- 3. TẠO BẢNG HubNotifyQueue: Hàng đợi lưu tạm đăng ký "Báo cho tôi" (kind: notify)
+-- QUY TẮC BẢO MẬT: Sau khi gửi thành công sang HUB (200 OK), website sẽ XÓA NGAY
+-- dòng này khỏi bảng để không lưu trữ thông tin cá nhân khách hàng.
+-- ------------------------------------------------------------------------------
+IF NOT EXISTS (
+    SELECT 1 FROM sys.tables 
+    WHERE object_id = OBJECT_ID(N'[dbo].[HubNotifyQueue]')
+)
+BEGIN
+    CREATE TABLE [dbo].[HubNotifyQueue] (
+        [Id] INT IDENTITY(1,1) NOT NULL PRIMARY KEY,
+        [OrderCode] VARCHAR(50) NOT NULL UNIQUE,
+        [Json] NVARCHAR(MAX) NOT NULL,
+        [CreatedAt] DATETIME NOT NULL CONSTRAINT DF_HubNotifyQueue_CreatedAt DEFAULT GETDATE(),
+        [HubTries] INT NOT NULL CONSTRAINT DF_HubNotifyQueue_HubTries DEFAULT 0,
+        [HubLastError] NVARCHAR(500) NULL
+    );
+    PRINT N'-> Đã tạo bảng [HubNotifyQueue] thành công.';
+END
+ELSE
+BEGIN
+    PRINT N'-> Bảng [HubNotifyQueue] đã tồn tại.';
+END
+GO
+
+-- ------------------------------------------------------------------------------
+-- 4. STORED PROCEDURE ĐỒNG BỘ TỪ HUB (LUỒNG A): SP_Hub_SyncProduct
+-- Cập nhật tồn kho, giá bán lẻ, đơn vị tính, ngày dự kiến có hàng theo SKU
+-- ------------------------------------------------------------------------------
+PRINT N'-> Đang tạo/cập nhật thủ tục [dbo].[SP_Hub_SyncProduct]...';
+GO
+
+CREATE OR ALTER PROCEDURE [dbo].[SP_Hub_SyncProduct]
+    @SKU NVARCHAR(50),
+    @Stock INT,
+    @Price DECIMAL(18,0),
+    @Unit NVARCHAR(50) = NULL,
+    @ExpectedDate DATE = NULL
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    -- Nếu có tồn (>0) thì ExpectedDate tự động set NULL theo quy tắc nghiệp vụ HUB
+    IF @Stock > 0
+    BEGIN
+        SET @ExpectedDate = NULL;
+    END
+
+    UPDATE [dbo].[Products]
+    SET [Stock] = @Stock,
+        [Price] = CASE WHEN @Price > 0 THEN @Price ELSE [Price] END,
+        [Unit] = CASE WHEN @Unit IS NOT NULL AND RTRIM(@Unit) <> '' THEN @Unit ELSE [Unit] END,
+        [ExpectedDate] = @ExpectedDate,
+        [UpdatedAt] = GETDATE()
+    WHERE [SKU] = @SKU;
+
+    -- Trả về số dòng cập nhật (1 = tìm thấy & cập nhật, 0 = không tìm thấy SKU)
+    SELECT @@ROWCOUNT AS RowsAffected;
+END
+GO
+
+PRINT N'-> Đã hoàn thành thủ tục [dbo].[SP_Hub_SyncProduct].';
+GO
+
+-- ------------------------------------------------------------------------------
+-- 5. STORED PROCEDURE CẬP NHẬT TRẠNG THÁI GỬI ĐƠN HÀNG SANG HUB: SP_Orders_UpdateHubStatus
+-- ------------------------------------------------------------------------------
+PRINT N'-> Đang tạo/cập nhật thủ tục [dbo].[SP_Orders_UpdateHubStatus]...';
+GO
+
+CREATE OR ALTER PROCEDURE [dbo].[SP_Orders_UpdateHubStatus]
+    @OrderId INT,
+    @HubSent BIT,
+    @HubLastError NVARCHAR(500) = NULL
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    UPDATE [dbo].[Orders]
+    SET [HubSent] = @HubSent,
+        [HubTries] = [HubTries] + 1,
+        [HubLastError] = @HubLastError,
+        [HubSentAt] = CASE WHEN @HubSent = 1 THEN GETDATE() ELSE [HubSentAt] END,
+        [UpdatedAt] = GETDATE()
+    WHERE [OrderId] = @OrderId;
+END
+GO
+
+PRINT N'-> Đã hoàn thành thủ tục [dbo].[SP_Orders_UpdateHubStatus].';
+GO
+
+-- ------------------------------------------------------------------------------
+-- 6. CÁC STORED PROCEDURE QUẢN LÝ HÀNG ĐỢI HubNotifyQueue
+-- ------------------------------------------------------------------------------
+PRINT N'-> Đang tạo các thủ tục cho [dbo].[HubNotifyQueue]...';
+GO
+
+-- 6.1 Thêm vào hàng đợi
+CREATE OR ALTER PROCEDURE [dbo].[SP_HubNotifyQueue_Enqueue]
+    @OrderCode VARCHAR(50),
+    @Json NVARCHAR(MAX)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    IF NOT EXISTS (SELECT 1 FROM [dbo].[HubNotifyQueue] WHERE [OrderCode] = @OrderCode)
+    BEGIN
+        INSERT INTO [dbo].[HubNotifyQueue] ([OrderCode], [Json], [CreatedAt], [HubTries])
+        VALUES (@OrderCode, @Json, GETDATE(), 0);
+    END
+END
+GO
+
+-- 6.2 Xóa khỏi hàng đợi khi gửi HUB thành công (Bảo vệ thông tin khách hàng)
+CREATE OR ALTER PROCEDURE [dbo].[SP_HubNotifyQueue_Delete]
+    @OrderCode VARCHAR(50)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    DELETE FROM [dbo].[HubNotifyQueue] WHERE [OrderCode] = @OrderCode;
+END
+GO
+
+-- 6.3 Cập nhật lỗi và tăng số lần thử khi gửi thất bại
+CREATE OR ALTER PROCEDURE [dbo].[SP_HubNotifyQueue_UpdateError]
+    @OrderCode VARCHAR(50),
+    @HubLastError NVARCHAR(500)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    UPDATE [dbo].[HubNotifyQueue]
+    SET [HubTries] = [HubTries] + 1,
+        [HubLastError] = @HubLastError
+    WHERE [OrderCode] = @OrderCode;
+END
+GO
+
+-- 6.4 Lấy danh sách cần gửi lại (tối đa 20 bản ghi chưa vượt quá 20 lần thử)
+CREATE OR ALTER PROCEDURE [dbo].[SP_HubNotifyQueue_GetPending]
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT TOP 20 [Id], [OrderCode], [Json], [HubTries]
+    FROM [dbo].[HubNotifyQueue]
+    WHERE [HubTries] < 20
+    ORDER BY [Id] ASC;
+END
+GO
+
+-- 6.5 Dọn dẹp hàng đợi quá hạn (quá 7 ngày hoặc quá 20 lần thử)
+CREATE OR ALTER PROCEDURE [dbo].[SP_HubNotifyQueue_Cleanup]
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    DELETE FROM [dbo].[HubNotifyQueue]
+    WHERE [HubTries] >= 20 OR DATEDIFF(DAY, [CreatedAt], GETDATE()) >= 7;
+END
+GO
+
+PRINT N'-> Đã hoàn thành các thủ tục cho [dbo].[HubNotifyQueue].';
+GO
+
+-- ------------------------------------------------------------------------------
+-- 7. THỦ TỤC LẤY ĐƠN HÀNG ĐỂ ĐỒNG BỘ SANG HUB: SP_Orders_GetForHubSync
+-- ------------------------------------------------------------------------------
+PRINT N'-> Đang tạo thủ tục [dbo].[SP_Orders_GetForHubSync]...';
+GO
+
+CREATE OR ALTER PROCEDURE [dbo].[SP_Orders_GetForHubSync]
+    @OrderId INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    -- Lấy thông tin đơn hàng
+    SELECT TOP 1 *
+    FROM [dbo].[Orders]
+    WHERE [OrderId] = @OrderId;
+
+    -- Lấy danh sách chi tiết sản phẩm kèm SKU và Unit từ bảng Products
+    SELECT oi.*, p.[SKU] AS ProductSKU, p.[Unit] AS ProductUnit, p.[OldPrice] AS ProdOldPrice
+    FROM [dbo].[OrderItems] oi
+    LEFT JOIN [dbo].[Products] p ON oi.[ProductId] = p.[ProductId]
+    WHERE oi.[OrderId] = @OrderId;
+END
+GO
+
+-- 10. THỦ TỤC TRUY VẤN SẢN PHẨM THEO SKU (HỖ TRỢ BÁO CÓ HÀNG & SYNC)
+IF OBJECT_ID(N'[dbo].[SP_Products_GetBySku]', N'P') IS NOT NULL
+    DROP PROCEDURE [dbo].[SP_Products_GetBySku];
+GO
+
+CREATE PROCEDURE [dbo].[SP_Products_GetBySku]
+    @SKU NVARCHAR(100)
+AS
+BEGIN
+    SET NOCOUNT ON;
+    SELECT TOP 1 * FROM [dbo].[Products] WHERE [SKU] = @SKU;
+END
+GO
+
+-- 11. THỦ TỤC CẬP NHẬT CẤU HÌNH HỆ THỐNG (UPSERT BẢNG Settings)
+IF OBJECT_ID(N'[dbo].[SP_Settings_UpdateValue]', N'P') IS NOT NULL
+    DROP PROCEDURE [dbo].[SP_Settings_UpdateValue];
+GO
+
+CREATE PROCEDURE [dbo].[SP_Settings_UpdateValue]
+    @SettingKey NVARCHAR(100),
+    @SettingValue NVARCHAR(MAX),
+    @UpdatedBy NVARCHAR(100) = NULL
+AS
+BEGIN
+    SET NOCOUNT ON;
+    IF EXISTS (SELECT 1 FROM [dbo].[Settings] WHERE [SettingKey] = @SettingKey)
+    BEGIN
+        UPDATE [dbo].[Settings]
+        SET [SettingValue] = @SettingValue,
+            [UpdatedBy] = @UpdatedBy,
+            [UpdatedAt] = GETDATE()
+        WHERE [SettingKey] = @SettingKey;
+    END
+    ELSE
+    BEGIN
+        INSERT INTO [dbo].[Settings] ([SettingKey], [SettingValue], [GroupName], [Description], [CreatedBy], [CreatedAt])
+        VALUES (@SettingKey, @SettingValue, N'HubSettings', N'Cấu hình tích hợp HUB POS', @UpdatedBy, GETDATE());
+    END
+END
+GO
+
+-- 12. KHỞI TẠO CÁC GIÁ TRỊ CẤU HÌNH HUB MẶC ĐỊNH VÀO BẢNG Settings (NẾU CHƯA CÓ)
+IF NOT EXISTS (SELECT 1 FROM [dbo].[Settings] WHERE [SettingKey] = 'Hub_Enable')
+    INSERT INTO [dbo].[Settings] ([SettingKey], [SettingValue], [GroupName], [Description], [CreatedAt])
+    VALUES ('Hub_Enable', 'true', N'HubSettings', N'Kích hoạt đồng bộ HUB POS', GETDATE());
+
+IF NOT EXISTS (SELECT 1 FROM [dbo].[Settings] WHERE [SettingKey] = 'Hub_Source')
+    INSERT INTO [dbo].[Settings] ([SettingKey], [SettingValue], [GroupName], [Description], [CreatedAt])
+    VALUES ('Hub_Source', 'gordak.vn', N'HubSettings', N'Mã định danh Website trên HUB', GETDATE());
+
+IF NOT EXISTS (SELECT 1 FROM [dbo].[Settings] WHERE [SettingKey] = 'Hub_SyncAllowIp')
+    INSERT INTO [dbo].[Settings] ([SettingKey], [SettingValue], [GroupName], [Description], [CreatedAt])
+    VALUES ('Hub_SyncAllowIp', '', N'HubSettings', N'IP Whitelist máy chủ HUB', GETDATE());
+
+IF NOT EXISTS (SELECT 1 FROM [dbo].[Settings] WHERE [SettingKey] = 'Hub_SyncKey')
+    INSERT INTO [dbo].[Settings] ([SettingKey], [SettingValue], [GroupName], [Description], [CreatedAt])
+    VALUES ('Hub_SyncKey', 'GORDAK_HUB_SYNC_KEY_2026', N'HubSettings', N'Khóa bí mật Webhook Sync', GETDATE());
+
+IF NOT EXISTS (SELECT 1 FROM [dbo].[Settings] WHERE [SettingKey] = 'Hub_OrderUrl')
+    INSERT INTO [dbo].[Settings] ([SettingKey], [SettingValue], [GroupName], [Description], [CreatedAt])
+    VALUES ('Hub_OrderUrl', 'https://pos.nhatminhesc.com/api/web/orders', N'HubSettings', N'URL tiếp nhận đơn hàng HUB', GETDATE());
+
+IF NOT EXISTS (SELECT 1 FROM [dbo].[Settings] WHERE [SettingKey] = 'Hub_OrderKey')
+    INSERT INTO [dbo].[Settings] ([SettingKey], [SettingValue], [GroupName], [Description], [CreatedAt])
+    VALUES ('Hub_OrderKey', 'GORDAK_ORDER_KEY_2026', N'HubSettings', N'Khóa bí mật gửi đơn hàng', GETDATE());
+
+IF NOT EXISTS (SELECT 1 FROM [dbo].[Settings] WHERE [SettingKey] = 'Hub_NotifyUrl')
+    INSERT INTO [dbo].[Settings] ([SettingKey], [SettingValue], [GroupName], [Description], [CreatedAt])
+    VALUES ('Hub_NotifyUrl', 'https://pos.nhatminhesc.com/api/web/orders', N'HubSettings', N'URL nhận đăng ký báo có hàng HUB', GETDATE());
+
+IF NOT EXISTS (SELECT 1 FROM [dbo].[Settings] WHERE [SettingKey] = 'Hub_NotifyKey')
+    INSERT INTO [dbo].[Settings] ([SettingKey], [SettingValue], [GroupName], [Description], [CreatedAt])
+    VALUES ('Hub_NotifyKey', 'GORDAK_ORDER_KEY_2026', N'HubSettings', N'Khóa bí mật gửi báo có hàng', GETDATE());
+GO
+
+-- 13. THỦ TỤC THÊM MỚI SẢN PHẨM (BỔ SUNG ExpectedDate) - GORDAK
+CREATE OR ALTER PROCEDURE [dbo].[SP_Products_Insert]
+    @CategoryIds NVARCHAR(500) = NULL,
+    @SKU NVARCHAR(100) = NULL,
+    @Name NVARCHAR(500),
+    @Slug NVARCHAR(500) = NULL,
+    @ShortDescription NVARCHAR(MAX) = NULL,
+    @DetailDescription NVARCHAR(MAX) = NULL,
+    @Price DECIMAL(18,2) = 0,
+    @OldPrice DECIMAL(18,2) = 0,
+    @PurchasePrice DECIMAL(18,2) = 0,
+    @Stock INT = 0,
+    @Unit NVARCHAR(50) = NULL,
+    @Weight DECIMAL(18,2) = 0,
+    @MainImage NVARCHAR(500) = NULL,
+    @ImageGallery NVARCHAR(MAX) = NULL,
+    @YoutubeVideo NVARCHAR(MAX) = NULL,
+    @Tags NVARCHAR(500) = NULL,
+    @RelatedProducts NVARCHAR(500) = NULL,
+    @Accessories NVARCHAR(500) = NULL,
+    @IsHot BIT = 0,
+    @IsNew BIT = 0,
+    @IsBestSeller BIT = 0,
+    @Status INT = 1,
+    @SeoTitle NVARCHAR(500) = NULL,
+    @SeoDescription NVARCHAR(MAX) = NULL,
+    @SeoKeywords NVARCHAR(500) = NULL,
+    @ShopeeLink NVARCHAR(500) = NULL,
+    @LazadaLink NVARCHAR(500) = NULL,
+    @TechnicalSpecs NVARCHAR(MAX) = NULL,
+    @InstructionVideo NVARCHAR(MAX) = NULL,
+    @BrandId INT = NULL,
+    @WarrantyId INT = NULL,
+    @ConditionId INT = NULL,
+    @ExpectedDate DATETIME = NULL,
+    @CreatedBy NVARCHAR(100) = NULL
+AS
+BEGIN
+    SET NOCOUNT ON;
+    INSERT INTO [dbo].[Products]
+    (
+        [CategoryIds], [SKU], [Name], [Slug], [ShortDescription],
+        [DetailDescription], [Price], [OldPrice], [PurchasePrice],
+        [Stock], [Unit], [Weight], [MainImage], [ImageGallery], [YoutubeVideo],
+        [Tags], [RelatedProducts], [Accessories], [IsHot], [IsNew],
+        [IsBestSeller], [Status], [SeoTitle], [SeoDescription], [SeoKeywords],
+        [ShopeeLink], [LazadaLink], [TechnicalSpecs], [InstructionVideo],
+        [BrandId], [WarrantyId], [ConditionId],
+        [ExpectedDate], [CreatedBy], [CreatedAt]
+    )
+    VALUES
+    (
+        @CategoryIds, @SKU, @Name, @Slug, @ShortDescription,
+        @DetailDescription, @Price, @OldPrice, @PurchasePrice,
+        @Stock, @Unit, @Weight, @MainImage, @ImageGallery, @YoutubeVideo,
+        @Tags, @RelatedProducts, @Accessories, @IsHot, @IsNew,
+        @IsBestSeller, @Status, @SeoTitle, @SeoDescription, @SeoKeywords,
+        @ShopeeLink, @LazadaLink, @TechnicalSpecs, @InstructionVideo,
+        @BrandId, @WarrantyId, @ConditionId,
+        @ExpectedDate, @CreatedBy, GETDATE()
+    );
+
+    SELECT SCOPE_IDENTITY();
+END
+GO
+
+-- 14. THỦ TỤC CHỈNH SỬA SẢN PHẨM (BỔ SUNG ExpectedDate) - GORDAK
+CREATE OR ALTER PROCEDURE [dbo].[SP_Products_Update]
+    @ProductId INT,
+    @CategoryIds NVARCHAR(500) = NULL,
+    @SKU NVARCHAR(100) = NULL,
+    @Name NVARCHAR(500),
+    @Slug NVARCHAR(500) = NULL,
+    @ShortDescription NVARCHAR(MAX) = NULL,
+    @DetailDescription NVARCHAR(MAX) = NULL,
+    @Price DECIMAL(18,2) = 0,
+    @OldPrice DECIMAL(18,2) = 0,
+    @PurchasePrice DECIMAL(18,2) = 0,
+    @Stock INT = 0,
+    @Unit NVARCHAR(50) = NULL,
+    @Weight DECIMAL(18,2) = 0,
+    @MainImage NVARCHAR(500) = NULL,
+    @ImageGallery NVARCHAR(MAX) = NULL,
+    @YoutubeVideo NVARCHAR(MAX) = NULL,
+    @Tags NVARCHAR(500) = NULL,
+    @RelatedProducts NVARCHAR(500) = NULL,
+    @Accessories NVARCHAR(500) = NULL,
+    @IsHot BIT = 0,
+    @IsNew BIT = 0,
+    @IsBestSeller BIT = 0,
+    @Status INT = 1,
+    @SeoTitle NVARCHAR(500) = NULL,
+    @SeoDescription NVARCHAR(MAX) = NULL,
+    @SeoKeywords NVARCHAR(500) = NULL,
+    @ShopeeLink NVARCHAR(500) = NULL,
+    @LazadaLink NVARCHAR(500) = NULL,
+    @TechnicalSpecs NVARCHAR(MAX) = NULL,
+    @InstructionVideo NVARCHAR(MAX) = NULL,
+    @BrandId INT = NULL,
+    @WarrantyId INT = NULL,
+    @ConditionId INT = NULL,
+    @ExpectedDate DATETIME = NULL,
+    @UpdatedBy NVARCHAR(100) = NULL
+AS
+BEGIN
+    SET NOCOUNT ON;
+    UPDATE [dbo].[Products]
+    SET [CategoryIds] = @CategoryIds,
+        [SKU] = @SKU,
+        [Name] = @Name,
+        [Slug] = @Slug,
+        [ShortDescription] = @ShortDescription,
+        [DetailDescription] = @DetailDescription,
+        [Price] = @Price,
+        [OldPrice] = @OldPrice,
+        [PurchasePrice] = @PurchasePrice,
+        [Stock] = @Stock,
+        [Unit] = @Unit,
+        [Weight] = @Weight,
+        [MainImage] = @MainImage,
+        [ImageGallery] = @ImageGallery,
+        [YoutubeVideo] = @YoutubeVideo,
+        [Tags] = @Tags,
+        [RelatedProducts] = @RelatedProducts,
+        [Accessories] = @Accessories,
+        [IsHot] = @IsHot,
+        [IsNew] = @IsNew,
+        [IsBestSeller] = @IsBestSeller,
+        [Status] = @Status,
+        [SeoTitle] = @SeoTitle,
+        [SeoDescription] = @SeoDescription,
+        [SeoKeywords] = @SeoKeywords,
+        [ShopeeLink] = @ShopeeLink,
+        [LazadaLink] = @LazadaLink,
+        [TechnicalSpecs] = @TechnicalSpecs,
+        [InstructionVideo] = @InstructionVideo,
+        [BrandId] = @BrandId,
+        [WarrantyId] = @WarrantyId,
+        [ConditionId] = @ConditionId,
+        [ExpectedDate] = @ExpectedDate,
+        [UpdatedBy] = @UpdatedBy,
+        [UpdatedAt] = GETDATE()
+    WHERE [ProductId] = @ProductId;
+END
+GO
+
+-- 15. THỦ TỤC TẠO ĐƠN HÀNG (BỔ SUNG DeliveryMethod, DeliveryNote, DeliveryChosen)
+CREATE OR ALTER PROCEDURE [dbo].[SP_Orders_Insert]
+    @OrderCode NVARCHAR(50),
+    @CustomerId INT = NULL,
+    @CustomerName NVARCHAR(255),
+    @CustomerPhone NVARCHAR(50),
+    @CustomerEmail NVARCHAR(255) = NULL,
+    @ShippingAddress NVARCHAR(500),
+    @WardId INT = NULL,
+    @ProvinceId INT = NULL,
+    @SubTotal DECIMAL(18,2) = 0,
+    @ShippingFee DECIMAL(18,2) = 0,
+    @Discount DECIMAL(18,2) = 0,
+    @TotalAmount DECIMAL(18,2) = 0,
+    @OrderStatus INT = 1,
+    @PaymentMethod NVARCHAR(100) = 'COD',
+    @PaymentStatus INT = 0,
+    @CustomerNote NVARCHAR(MAX) = NULL,
+    @CreatedBy NVARCHAR(100) = NULL,
+    @RequiresVAT BIT = 0,
+    @VATCompanyName NVARCHAR(255) = NULL,
+    @VATTaxCode NVARCHAR(50) = NULL,
+    @VATCompanyAddress NVARCHAR(500) = NULL,
+    @VATInvoiceEmail NVARCHAR(255) = NULL,
+    @DeliveryMethod NVARCHAR(255) = NULL,
+    @DeliveryNote NVARCHAR(500) = NULL,
+    @DeliveryChosen BIT = 0
+AS
+BEGIN
+    SET NOCOUNT ON;
+    INSERT INTO [dbo].[Orders]
+    (
+        [OrderCode], [CustomerId], [CustomerName], [CustomerPhone], [CustomerEmail],
+        [ShippingAddress], [WardId], [ProvinceId], [SubTotal], [ShippingFee],
+        [Discount], [TotalAmount], [OrderStatus], [PaymentMethod], [PaymentStatus],
+        [CustomerNote], [CreatedBy], [CreatedAt],
+        [RequiresVAT], [VATCompanyName], [VATTaxCode], [VATCompanyAddress], [VATInvoiceEmail],
+        [DeliveryMethod], [DeliveryNote], [DeliveryChosen],
+        [HubSent], [HubTries]
+    )
+    VALUES
+    (
+        @OrderCode, @CustomerId, @CustomerName, @CustomerPhone, @CustomerEmail,
+        @ShippingAddress, @WardId, @ProvinceId, @SubTotal, @ShippingFee,
+        @Discount, @TotalAmount, @OrderStatus, @PaymentMethod, @PaymentStatus,
+        @CustomerNote, @CreatedBy, GETDATE(),
+        @RequiresVAT, @VATCompanyName, @VATTaxCode, @VATCompanyAddress, @VATInvoiceEmail,
+        @DeliveryMethod, @DeliveryNote, @DeliveryChosen,
+        0, 0
+    );
+
+    SELECT SCOPE_IDENTITY();
+END
+GO
+
+-- 16. THỦ TỤC THÊM CHI TIẾT ĐƠN HÀNG (OrderItems)
+CREATE OR ALTER PROCEDURE [dbo].[SP_OrderItems_Insert]
+    @OrderId INT,
+    @ProductId INT,
+    @ProductName NVARCHAR(500),
+    @ProductSKU NVARCHAR(100) = NULL,
+    @ProductImage NVARCHAR(500) = NULL,
+    @Price DECIMAL(18,2) = 0,
+    @Quantity INT = 1,
+    @TotalPrice DECIMAL(18,2) = 0
+AS
+BEGIN
+    SET NOCOUNT ON;
+    INSERT INTO [dbo].[OrderItems]
+    (
+        [OrderId], [ProductId], [ProductName], [ProductSKU], [ProductImage],
+        [Price], [Quantity], [TotalPrice]
+    )
+    VALUES
+    (
+        @OrderId, @ProductId, @ProductName, @ProductSKU, @ProductImage,
+        @Price, @Quantity, @TotalPrice
+    );
+END
+GO
+
+PRINT N'==============================================================================';
+PRINT N'HOÀN TẤT TOÀN BỘ CẬP NHẬT CSDL CHO HỆ THỐNG HUB TRÊN GORDAK.VN!';
+PRINT N'==============================================================================';
+GO
+
