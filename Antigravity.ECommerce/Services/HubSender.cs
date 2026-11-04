@@ -89,7 +89,7 @@ namespace Antigravity.ECommerce.Services
 
                 var orderItems = FOrder.GetItemsByOrderId(orderId);
                 string source = SSetting.GetValue("Hub_Source");
-                if (string.IsNullOrEmpty(source)) source = cfg["HubSettings:Source"] ?? "gordak.vn";
+                if (string.IsNullOrEmpty(source)) source = cfg["HubSettings:Source"] ?? "gordak";
 
                 string url = SSetting.GetValue("Hub_OrderUrl");
                 if (string.IsNullOrEmpty(url)) url = cfg["HubSettings:OrderUrl"] ?? "https://pos.nhatminhesc.com/api/web/orders";
@@ -238,7 +238,7 @@ namespace Antigravity.ECommerce.Services
                 }
 
                 string source = SSetting.GetValue("Hub_Source");
-                if (string.IsNullOrEmpty(source)) source = cfg["HubSettings:Source"] ?? "gordak.vn";
+                if (string.IsNullOrEmpty(source)) source = cfg["HubSettings:Source"] ?? "gordak";
 
                 string url = SSetting.GetValue("Hub_NotifyUrl");
                 if (string.IsNullOrEmpty(url)) url = SSetting.GetValue("Hub_OrderUrl");

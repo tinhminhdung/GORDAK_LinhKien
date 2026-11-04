@@ -372,7 +372,7 @@ IF NOT EXISTS (SELECT 1 FROM [dbo].[Settings] WHERE [SettingKey] = 'Hub_Enable')
 
 IF NOT EXISTS (SELECT 1 FROM [dbo].[Settings] WHERE [SettingKey] = 'Hub_Source')
     INSERT INTO [dbo].[Settings] ([SettingKey], [SettingValue], [GroupName], [Description], [CreatedAt])
-    VALUES ('Hub_Source', 'gordak.vn', N'HubSettings', N'Mã định danh Website trên HUB', GETDATE());
+    VALUES ('Hub_Source', 'gordak', N'HubSettings', N'Mã định danh Website trên HUB (gordak)', GETDATE());
 
 IF NOT EXISTS (SELECT 1 FROM [dbo].[Settings] WHERE [SettingKey] = 'Hub_SyncAllowIp')
     INSERT INTO [dbo].[Settings] ([SettingKey], [SettingValue], [GroupName], [Description], [CreatedAt])
