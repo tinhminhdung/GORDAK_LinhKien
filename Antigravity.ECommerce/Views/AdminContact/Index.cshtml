@@ -290,11 +290,57 @@
                                         </li>
                                     }
                                     
-                                    @for (int i = 1; i <= ViewBag.TotalPages; i++)
+                                    @{
+                                        int adminPage = ViewBag.Page;
+                                        int adminTotal = ViewBag.TotalPages;
+                                    }
+                                    @if (adminTotal <= 8)
                                     {
-                                        <li class="page-item @(i == ViewBag.Page ? "active" : "")">
-                                            <a class="page-link" href="?page=@i&status=@currentStatus&kw=@currentKw@dateQuery">@i</a>
-                                        </li>
+                                        @for (int i = 1; i <= adminTotal; i++)
+                                        {
+                                            <li class="page-item @(i == adminPage ? "active" : "")">
+                                                <a class="page-link" href="?page=@i&status=@currentStatus&kw=@currentKw@dateQuery">@i</a>
+                                            </li>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        int maxVisible = 5;
+                                        int startP = Math.Max(1, adminPage - 2);
+                                        int endP = Math.Min(adminTotal, startP + maxVisible - 1);
+                                        if (endP - startP < maxVisible - 1)
+                                        {
+                                            startP = Math.Max(1, endP - maxVisible + 1);
+                                        }
+
+                                        if (startP > 1)
+                                        {
+                                            <li class="page-item @(1 == adminPage ? "active" : "")">
+                                                <a class="page-link" href="?page=1&status=@currentStatus&kw=@currentKw@dateQuery">1</a>
+                                            </li>
+                                            if (startP > 2)
+                                            {
+                                                <li class="page-item disabled"><span class="page-link">...</span></li>
+                                            }
+                                        }
+
+                                        for (int i = startP; i <= endP; i++)
+                                        {
+                                            <li class="page-item @(i == adminPage ? "active" : "")">
+                                                <a class="page-link" href="?page=@i&status=@currentStatus&kw=@currentKw@dateQuery">@i</a>
+                                            </li>
+                                        }
+
+                                        if (endP < adminTotal)
+                                        {
+                                            if (endP < adminTotal - 1)
+                                            {
+                                                <li class="page-item disabled"><span class="page-link">...</span></li>
+                                            }
+                                            <li class="page-item @(adminTotal == adminPage ? "active" : "")">
+                                                <a class="page-link" href="?page=@adminTotal&status=@currentStatus&kw=@currentKw@dateQuery">@adminTotal</a>
+                                            </li>
+                                        }
                                     }
                                     
                                     @if (ViewBag.Page < ViewBag.TotalPages)

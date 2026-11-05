@@ -138,11 +138,58 @@
                 @if(ViewBag.TotalPages > 1) {
                     <div class="d-flex justify-content-end mt-3">
                         <ul class="pagination pagination-sm mb-0">
-                            @for (int i = 1; i <= ViewBag.TotalPages; i++)
+                            @{
+                                int logPage = ViewBag.Page;
+                                int logTotal = ViewBag.TotalPages;
+                                string logQuery = $"/AdminLog?module={ViewBag.CurrentModule}&username={ViewBag.CurrentUsername}&actionType={ViewBag.CurrentAction}&fromDate={ViewBag.FromDate}&toDate={ViewBag.ToDate}";
+                            }
+                            @if (logTotal <= 8)
                             {
-                                <li class="page-item @(i == ViewBag.Page ? "active" : "")">
-                                    <a class="page-link" href="/AdminLog?module=@ViewBag.CurrentModule&username=@ViewBag.CurrentUsername&actionType=@ViewBag.CurrentAction&fromDate=@ViewBag.FromDate&toDate=@ViewBag.ToDate&page=@i">@i</a>
-                                </li>
+                                @for (int i = 1; i <= logTotal; i++)
+                                {
+                                    <li class="page-item @(i == logPage ? "active" : "")">
+                                        <a class="page-link" href="@logQuery&page=@i">@i</a>
+                                    </li>
+                                }
+                            }
+                            else
+                            {
+                                int maxVisible = 5;
+                                int startP = Math.Max(1, logPage - 2);
+                                int endP = Math.Min(logTotal, startP + maxVisible - 1);
+                                if (endP - startP < maxVisible - 1)
+                                {
+                                    startP = Math.Max(1, endP - maxVisible + 1);
+                                }
+
+                                if (startP > 1)
+                                {
+                                    <li class="page-item @(1 == logPage ? "active" : "")">
+                                        <a class="page-link" href="@logQuery&page=1">1</a>
+                                    </li>
+                                    if (startP > 2)
+                                    {
+                                        <li class="page-item disabled"><span class="page-link">...</span></li>
+                                    }
+                                }
+
+                                for (int i = startP; i <= endP; i++)
+                                {
+                                    <li class="page-item @(i == logPage ? "active" : "")">
+                                        <a class="page-link" href="@logQuery&page=@i">@i</a>
+                                    </li>
+                                }
+
+                                if (endP < logTotal)
+                                {
+                                    if (endP < logTotal - 1)
+                                    {
+                                        <li class="page-item disabled"><span class="page-link">...</span></li>
+                                    }
+                                    <li class="page-item @(logTotal == logPage ? "active" : "")">
+                                        <a class="page-link" href="@logQuery&page=@logTotal">@logTotal</a>
+                                    </li>
+                                }
                             }
                         </ul>
                     </div>

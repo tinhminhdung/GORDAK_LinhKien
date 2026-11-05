@@ -134,15 +134,57 @@
                                 }
                                 
                                 @{
-                                    int startPage = Math.Max(1, ViewBag.CurrentPage - 2);
-                                    int endPage = Math.Min(ViewBag.TotalPages, startPage + 4);
+                                    int locPage = ViewBag.CurrentPage;
+                                    int locTotal = ViewBag.TotalPages;
+                                    string locQuery = $"/AdminLocation?type=ward&provinceId={ViewBag.ProvinceId}";
                                 }
-                                
-                                @for (int i = startPage; i <= endPage; i++)
+                                @if (locTotal <= 8)
                                 {
-                                    <li class="page-item @(i == ViewBag.CurrentPage ? "active" : "")">
-                                        <a class="page-link" href="/AdminLocation?type=ward&provinceId=@ViewBag.ProvinceId&page=@i">@i</a>
-                                    </li>
+                                    @for (int i = 1; i <= locTotal; i++)
+                                    {
+                                        <li class="page-item @(i == locPage ? "active" : "")">
+                                            <a class="page-link" href="@locQuery&page=@i">@i</a>
+                                        </li>
+                                    }
+                                }
+                                else
+                                {
+                                    int maxVisible = 5;
+                                    int startP = Math.Max(1, locPage - 2);
+                                    int endP = Math.Min(locTotal, startP + maxVisible - 1);
+                                    if (endP - startP < maxVisible - 1)
+                                    {
+                                        startP = Math.Max(1, endP - maxVisible + 1);
+                                    }
+
+                                    if (startP > 1)
+                                    {
+                                        <li class="page-item @(1 == locPage ? "active" : "")">
+                                            <a class="page-link" href="@locQuery&page=1">1</a>
+                                        </li>
+                                        if (startP > 2)
+                                        {
+                                            <li class="page-item disabled"><span class="page-link">...</span></li>
+                                        }
+                                    }
+
+                                    for (int i = startP; i <= endP; i++)
+                                    {
+                                        <li class="page-item @(i == locPage ? "active" : "")">
+                                            <a class="page-link" href="@locQuery&page=@i">@i</a>
+                                        </li>
+                                    }
+
+                                    if (endP < locTotal)
+                                    {
+                                        if (endP < locTotal - 1)
+                                        {
+                                            <li class="page-item disabled"><span class="page-link">...</span></li>
+                                        }
+                                        <li class="page-item @(locTotal == locPage ? "active" : "")">
+                                            <a class="page-link" href="@locQuery&page=@locTotal">@locTotal</a>
+                                        </li>
+                                    }
                                 }
                                 
                                 @if (ViewBag.CurrentPage < ViewBag.TotalPages)

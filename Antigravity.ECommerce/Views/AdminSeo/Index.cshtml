@@ -332,17 +332,55 @@
                                     <li class="page-item @(currentPage == 1 ? "disabled" : "")">
                                         <a class="page-link" href="?module=@currentModule&scoreFilter=@currentScoreFilter&kw=@currentKw&page=@(currentPage - 1)">Trước</a>
                                     </li>
-                                    @for (int i = 1; i <= totalPages; i++)
+                                    @{
+                                        string seoQuery = $"?module={currentModule}&scoreFilter={currentScoreFilter}&kw={currentKw}";
+                                    }
+                                    @if (totalPages <= 8)
                                     {
-                                        if (i == 1 || i == totalPages || (i >= currentPage - 2 && i <= currentPage + 2))
+                                        @for (int i = 1; i <= totalPages; i++)
                                         {
                                             <li class="page-item @(i == currentPage ? "active" : "")">
-                                                <a class="page-link" href="?module=@currentModule&scoreFilter=@currentScoreFilter&kw=@currentKw&page=@i">@i</a>
+                                                <a class="page-link" href="@seoQuery&page=@i">@i</a>
                                             </li>
                                         }
-                                        else if (i == currentPage - 3 || i == currentPage + 3)
+                                    }
+                                    else
+                                    {
+                                        int maxVisible = 5;
+                                        int startP = Math.Max(1, currentPage - 2);
+                                        int endP = Math.Min(totalPages, startP + maxVisible - 1);
+                                        if (endP - startP < maxVisible - 1)
                                         {
-                                            <li class="page-item disabled"><span class="page-link">...</span></li>
+                                            startP = Math.Max(1, endP - maxVisible + 1);
+                                        }
+
+                                        if (startP > 1)
+                                        {
+                                            <li class="page-item @(1 == currentPage ? "active" : "")">
+                                                <a class="page-link" href="@seoQuery&page=1">1</a>
+                                            </li>
+                                            if (startP > 2)
+                                            {
+                                                <li class="page-item disabled"><span class="page-link">...</span></li>
+                                            }
+                                        }
+
+                                        for (int i = startP; i <= endP; i++)
+                                        {
+                                            <li class="page-item @(i == currentPage ? "active" : "")">
+                                                <a class="page-link" href="@seoQuery&page=@i">@i</a>
+                                            </li>
+                                        }
+
+                                        if (endP < totalPages)
+                                        {
+                                            if (endP < totalPages - 1)
+                                            {
+                                                <li class="page-item disabled"><span class="page-link">...</span></li>
+                                            }
+                                            <li class="page-item @(totalPages == currentPage ? "active" : "")">
+                                                <a class="page-link" href="@seoQuery&page=@totalPages">@totalPages</a>
+                                            </li>
                                         }
                                     }
                                     <li class="page-item @(currentPage == totalPages ? "disabled" : "")">

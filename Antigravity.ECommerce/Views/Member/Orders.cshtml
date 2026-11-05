@@ -217,11 +217,53 @@
             <li class="page-item @(pageIndex <= 1 ? "disabled" : "")">
                 <a class="page-link" href="@Url.Action("Orders", "Member", new { page = pageIndex - 1 })"><i class="fa-solid fa-chevron-left"></i></a>
             </li>
-            @for (int i = 1; i <= totalPages; i++)
+            @if (totalPages <= 8)
             {
-                <li class="page-item @(i == pageIndex ? "active" : "")">
-                    <a class="page-link" href="@Url.Action("Orders", "Member", new { page = i })">@i</a>
-                </li>
+                @for (int i = 1; i <= totalPages; i++)
+                {
+                    <li class="page-item @(i == pageIndex ? "active" : "")">
+                        <a class="page-link" href="@Url.Action("Orders", "Member", new { page = i })">@i</a>
+                    </li>
+                }
+            }
+            else
+            {
+                int maxVisible = 5;
+                int startP = Math.Max(1, pageIndex - 2);
+                int endP = Math.Min(totalPages, startP + maxVisible - 1);
+                if (endP - startP < maxVisible - 1)
+                {
+                    startP = Math.Max(1, endP - maxVisible + 1);
+                }
+
+                if (startP > 1)
+                {
+                    <li class="page-item @(1 == pageIndex ? "active" : "")">
+                        <a class="page-link" href="@Url.Action("Orders", "Member", new { page = 1 })">1</a>
+                    </li>
+                    if (startP > 2)
+                    {
+                        <li class="page-item disabled"><span class="page-link">...</span></li>
+                    }
+                }
+
+                for (int i = startP; i <= endP; i++)
+                {
+                    <li class="page-item @(i == pageIndex ? "active" : "")">
+                        <a class="page-link" href="@Url.Action("Orders", "Member", new { page = i })">@i</a>
+                    </li>
+                }
+
+                if (endP < totalPages)
+                {
+                    if (endP < totalPages - 1)
+                    {
+                        <li class="page-item disabled"><span class="page-link">...</span></li>
+                    }
+                    <li class="page-item @(totalPages == pageIndex ? "active" : "")">
+                        <a class="page-link" href="@Url.Action("Orders", "Member", new { page = totalPages })">@totalPages</a>
+                    </li>
+                }
             }
             <li class="page-item @(pageIndex >= totalPages ? "disabled" : "")">
                 <a class="page-link" href="@Url.Action("Orders", "Member", new { page = pageIndex + 1 })"><i class="fa-solid fa-chevron-right"></i></a>

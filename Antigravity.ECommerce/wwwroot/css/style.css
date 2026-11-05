@@ -3802,11 +3802,21 @@ img {
         color: #1a3c8a;
     }
 
+    .vd-page-btn.disabled {
+        opacity: 0.35;
+        pointer-events: none;
+        cursor: default;
+    }
+
 .vd-page-dots {
-    display: flex;
+    display: inline-flex;
     align-items: center;
+    justify-content: center;
+    min-width: 34px;
+    height: 34px;
     font-size: 13px;
     color: #999;
+    user-select: none;
 }
 
 @media (max-width: 991px) {

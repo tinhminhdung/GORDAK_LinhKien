@@ -123,9 +123,45 @@
                     {
                         <a class="vd-page-btn disabled" href="javascript:void(0);"><i class="fa-solid fa-chevron-left" style="font-size:11px;"></i></a>
                     }
-                    @for (int i = 1; i <= Math.Max(1, totalPages); i++)
+                    @if (totalPages <= 8)
                     {
-                        <a class="vd-page-btn @(i == currentPage ? "active" : "")" href="?page=@i">@i</a>
+                        @for (int i = 1; i <= totalPages; i++)
+                        {
+                            <a class="vd-page-btn @(i == currentPage ? "active" : "")" href="?page=@i">@i</a>
+                        }
+                    }
+                    else
+                    {
+                        int maxVisible = 5;
+                        int startP = Math.Max(1, currentPage - 2);
+                        int endP = Math.Min(totalPages, startP + maxVisible - 1);
+                        if (endP - startP < maxVisible - 1)
+                        {
+                            startP = Math.Max(1, endP - maxVisible + 1);
+                        }
+
+                        if (startP > 1)
+                        {
+                            <a class="vd-page-btn @(1 == currentPage ? "active" : "")" href="?page=1">1</a>
+                            if (startP > 2)
+                            {
+                                <span class="vd-page-dots">...</span>
+                            }
+                        }
+
+                        for (int i = startP; i <= endP; i++)
+                        {
+                            <a class="vd-page-btn @(i == currentPage ? "active" : "")" href="?page=@i">@i</a>
+                        }
+
+                        if (endP < totalPages)
+                        {
+                            if (endP < totalPages - 1)
+                            {
+                                <span class="vd-page-dots">...</span>
+                            }
+                            <a class="vd-page-btn @(totalPages == currentPage ? "active" : "")" href="?page=@totalPages">@totalPages</a>
+                        }
                     }
                     @if (currentPage < totalPages)
                     {

@@ -35,35 +35,50 @@
                     </li>
                 }
 
-                @{
-                    int range = 2; // Number of pages around current page
-                    
-                    // Always show 1
-                    <li class="page-item @(pageIndex == 1 ? "active" : "")">
-                        <a class="page-link" href="javascript:void(0);" onclick="@(jsFunction + "(1)")">1</a>
-                    </li>
-
-                    if (pageIndex - range > 2)
+                @if (totalPages <= 8)
+                {
+                    @for (int i = 1; i <= totalPages; i++)
                     {
-                        <li class="page-item disabled"><span class="page-link">...</span></li>
+                        <li class="page-item @(i == pageIndex ? "active" : "")">
+                            <a class="page-link" href="javascript:void(0);" onclick="@(jsFunction + "(" + i + ")")">@i</a>
+                        </li>
+                    }
+                }
+                else
+                {
+                    int maxVisible = 5;
+                    int startP = Math.Max(1, pageIndex - 2);
+                    int endP = Math.Min(totalPages, startP + maxVisible - 1);
+                    if (endP - startP < maxVisible - 1)
+                    {
+                        startP = Math.Max(1, endP - maxVisible + 1);
                     }
 
-                    for (int i = Math.Max(2, pageIndex - range); i <= Math.Min(totalPages - 1, pageIndex + range); i++)
+                    if (startP > 1)
+                    {
+                        <li class="page-item @(1 == pageIndex ? "active" : "")">
+                            <a class="page-link" href="javascript:void(0);" onclick="@(jsFunction + "(1)")">1</a>
+                        </li>
+                        if (startP > 2)
+                        {
+                            <li class="page-item disabled"><span class="page-link">...</span></li>
+                        }
+                    }
+
+                    for (int i = startP; i <= endP; i++)
                     {
                         <li class="page-item @(i == pageIndex ? "active" : "")">
                             <a class="page-link" href="javascript:void(0);" onclick="@(jsFunction + "(" + i + ")")">@i</a>
                         </li>
                     }
 
-                    if (pageIndex + range < totalPages - 1)
+                    if (endP < totalPages)
                     {
-                        <li class="page-item disabled"><span class="page-link">...</span></li>
-                    }
-
-                    // Always show last if > 1
-                    if (totalPages > 1)
-                    {
-                        <li class="page-item @(pageIndex == totalPages ? "active" : "")">
+                        if (endP < totalPages - 1)
+                        {
+                            <li class="page-item disabled"><span class="page-link">...</span></li>
+                        }
+                        <li class="page-item @(totalPages == pageIndex ? "active" : "")">
                             <a class="page-link" href="javascript:void(0);" onclick="@(jsFunction + "(" + totalPages + ")")">@totalPages</a>
                         </li>
                     }
