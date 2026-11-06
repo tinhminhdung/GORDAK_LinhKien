@@ -289,9 +289,9 @@ BEGIN
       AND (
           @HubStatus IS NULL 
           OR (@HubStatus = 1 AND o.HubSent = 1)
-          OR (@HubStatus = 0 AND o.HubSent = 0)
-          OR (@HubStatus = 2 AND o.HubSent = 0 AND o.HubLastError IS NOT NULL AND o.HubLastError <> '')
-          OR (@HubStatus = 3 AND o.HubSent = 0 AND (o.HubLastError IS NULL OR o.HubLastError = ''))
+          OR (@HubStatus = 0 AND ISNULL(o.HubSent, 0) = 0)
+          OR (@HubStatus = 2 AND ISNULL(o.HubSent, 0) = 0 AND o.HubLastError IS NOT NULL AND o.HubLastError <> '')
+          OR (@HubStatus = 3 AND ISNULL(o.HubSent, 0) = 0 AND (o.HubLastError IS NULL OR o.HubLastError = ''))
       )
     ORDER BY 
         CASE WHEN @SortColumn = 'CreatedAt' AND @SortOrder = 'ASC' THEN o.CreatedAt END ASC,
