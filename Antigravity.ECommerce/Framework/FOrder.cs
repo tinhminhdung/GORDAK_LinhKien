@@ -84,9 +84,9 @@ namespace Antigravity.ECommerce.Framework
             return BaseConnectionSql.ExecuteNonQuery("SP_Orders_UpdateStatus", prms);
         }
 
-        public static List<Order> Search(string? kw, int? status, int? paymentStatus, int? provinceId, int? wardId, bool? requiresVat, DateTime? dateMin, DateTime? dateMax, string sort, string order, int page, int size)
+        public static List<Order> Search(string? kw, int? status, int? paymentStatus, int? provinceId, int? wardId, bool? requiresVat, DateTime? dateMin, DateTime? dateMax, string sort, string order, int page, int size, int? hubStatus = null)
         {
-            var prms = new SqlParameter[]
+            var prms = new List<SqlParameter>
             {
                 new SqlParameter("@Keyword", kw ?? (object)DBNull.Value),
                 new SqlParameter("@OrderStatus", status ?? (object)DBNull.Value),
@@ -101,7 +101,27 @@ namespace Antigravity.ECommerce.Framework
                 new SqlParameter("@PageIndex", page),
                 new SqlParameter("@PageSize", size)
             };
-            return BaseConnectionSql.ExecuteStoredProcedure<Order>("SP_Orders_Search", prms);
+            if (hubStatus.HasValue)
+            {
+                prms.Add(new SqlParameter("@HubStatus", hubStatus.Value));
+            }
+            try
+            {
+                return BaseConnectionSql.ExecuteStoredProcedure<Order>("SP_Orders_Search", prms.ToArray());
+            }
+            catch (SqlException ex) when (ex.Message.Contains("too many arguments") || ex.Message.Contains("has too many arguments"))
+            {
+                prms.RemoveAll(p => p.ParameterName == "@HubStatus");
+                var list = BaseConnectionSql.ExecuteStoredProcedure<Order>("SP_Orders_Search", prms.ToArray());
+                if (hubStatus.HasValue)
+                {
+                    if (hubStatus == 1) list = list.Where(o => o.HubSent).ToList();
+                    else if (hubStatus == 0) list = list.Where(o => !o.HubSent).ToList();
+                    else if (hubStatus == 2) list = list.Where(o => !o.HubSent && !string.IsNullOrEmpty(o.HubLastError)).ToList();
+                    else if (hubStatus == 3) list = list.Where(o => !o.HubSent && string.IsNullOrEmpty(o.HubLastError)).ToList();
+                }
+                return list;
+            }
         }
 
         public static Order? GetById(int orderId)

@@ -15,9 +15,9 @@ namespace Antigravity.ECommerce.Controllers
         public IActionResult Index(string kw = "", int? status = null, int? paymentStatus = null, 
             int? provinceId = null, int? wardId = null, bool? requiresVat = null,
             DateTime? dateMin = null, DateTime? dateMax = null,
-            string sort = "CreatedAt", string order = "DESC", int page = 1, int size = 20)
+            string sort = "CreatedAt", string order = "DESC", int page = 1, int size = 20, int? hubStatus = null)
         {
-            var data = SOrder.Search(kw, status, paymentStatus, provinceId, wardId, requiresVat, dateMin, dateMax, sort, order, page, size);
+            var data = SOrder.Search(kw, status, paymentStatus, provinceId, wardId, requiresVat, dateMin, dateMax, sort, order, page, size, hubStatus);
             
             ViewBag.Keyword = kw;
             ViewBag.Status = status;
@@ -25,6 +25,7 @@ namespace Antigravity.ECommerce.Controllers
             ViewBag.ProvinceId = provinceId;
             ViewBag.WardId = wardId;
             ViewBag.RequiresVat = requiresVat;
+            ViewBag.HubStatus = hubStatus;
             ViewBag.DateMin = dateMin?.ToString("yyyy-MM-dd");
             ViewBag.DateMax = dateMax?.ToString("yyyy-MM-dd");
             ViewBag.SortColumn = sort;
@@ -295,9 +296,9 @@ namespace Antigravity.ECommerce.Controllers
         [Permission("Orders", ActionType.Export)]
         public IActionResult ExportCSV(string kw = "", int? status = null, int? paymentStatus = null, 
             int? provinceId = null, int? wardId = null, bool? requiresVat = null,
-            DateTime? dateMin = null, DateTime? dateMax = null)
+            DateTime? dateMin = null, DateTime? dateMax = null, int? hubStatus = null)
         {
-            var orders = SOrder.Search(kw, status, paymentStatus, provinceId, wardId, requiresVat, dateMin, dateMax, "CreatedAt", "DESC", 1, 100000);
+            var orders = SOrder.Search(kw, status, paymentStatus, provinceId, wardId, requiresVat, dateMin, dateMax, "CreatedAt", "DESC", 1, 100000, hubStatus);
 
             string EscapeCsv(string? value)
             {

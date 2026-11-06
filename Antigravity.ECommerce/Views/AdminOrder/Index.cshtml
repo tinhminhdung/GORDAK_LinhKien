@@ -114,6 +114,15 @@
  </select>
  </div>
  <div class="col-xxl-2 col-sm-6">
+ <select class="form-control selectpicker" data-live-search="true" name="hubStatus" id="HubStatus">
+ <option value="">-- Trạng thái HUB --</option>
+ <option value="1" selected="@(ViewBag.HubStatus == 1 ? "selected" : null)">✓ HUB đã nhận (Thành công)</option>
+ <option value="0" selected="@(ViewBag.HubStatus == 0 ? "selected" : null)">⏳ HUB chưa nhận</option>
+ <option value="2" selected="@(ViewBag.HubStatus == 2 ? "selected" : null)">⚠ Bắn HUB thất bại (Lỗi)</option>
+ <option value="3" selected="@(ViewBag.HubStatus == 3 ? "selected" : null)">Chưa gửi HUB</option>
+ </select>
+ </div>
+ <div class="col-xxl-2 col-sm-6">
  <div class="input-group">
  <input type="date" name="dateMin" class="form-control" value="@ViewBag.DateMin" title="Từ ngày">
  <input type="date" name="dateMax" class="form-control" value="@ViewBag.DateMax" title="Đến ngày">
@@ -122,7 +131,7 @@
  <div class="col-xxl-2 col-sm-6 d-flex gap-1">
  <button type="submit" class="btn btn-primary flex-grow-1"><i class="mdi mdi-filter-variant"></i> Lọc</button>
  <a href="/AdminOrder" class="btn btn-light"><i class="mdi mdi-refresh"></i></a>
- <a href="/AdminOrder/ExportCSV?kw=@ViewBag.Keyword&status=@ViewBag.Status&provinceId=@ViewBag.ProvinceId&wardId=@ViewBag.WardId&dateMin=@ViewBag.DateMin&dateMax=@ViewBag.DateMax" class="btn btn-success"><i class="mdi mdi-download"></i></a>
+ <a href="/AdminOrder/ExportCSV?kw=@ViewBag.Keyword&status=@ViewBag.Status&provinceId=@ViewBag.ProvinceId&wardId=@ViewBag.WardId&requiresVat=@ViewBag.RequiresVat&dateMin=@ViewBag.DateMin&dateMax=@ViewBag.DateMax&hubStatus=@ViewBag.HubStatus" class="btn btn-success"><i class="mdi mdi-download"></i></a>
  <button type="button" class="btn btn-danger d-none" id="btnBulkDelete" onclick="bulkDelete()"><i class="mdi mdi-delete"></i></button>
  </div>
  </div>

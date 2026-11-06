@@ -224,6 +224,63 @@ PRINT N'-> Đã hoàn thành thủ tục [dbo].[SP_Orders_UpdateHubStatus].';
 GO
 
 -- ------------------------------------------------------------------------------
+-- 5b. STORED PROCEDURE TÌM KIẾM ĐƠN HÀNG KÈM BỘ LỌC TRẠNG THÁI HUB: SP_Orders_Search
+-- ------------------------------------------------------------------------------
+PRINT N'-> Đang tạo/cập nhật thủ tục [dbo].[SP_Orders_Search]...';
+GO
+
+CREATE OR ALTER PROCEDURE [dbo].[SP_Orders_Search]
+    @Keyword NVARCHAR(250) = NULL,
+    @OrderStatus INT = NULL,
+    @PaymentStatus INT = NULL,
+    @ProvinceId INT = NULL,
+    @WardId INT = NULL,
+    @RequiresVAT BIT = NULL,
+    @Ngay_Min DATETIME = NULL,
+    @Ngay_Max DATETIME = NULL,
+    @SortColumn NVARCHAR(50) = 'CreatedAt',
+    @SortOrder NVARCHAR(10) = 'DESC',
+    @PageIndex INT = 1,
+    @PageSize INT = 20,
+    @HubStatus INT = NULL
+AS
+BEGIN
+    SET NOCOUNT ON;
+    DECLARE @Offset INT = (@PageIndex - 1) * @PageSize;
+
+    SELECT o.*, COUNT(*) OVER() as TotalCount
+    FROM Orders o
+    WHERE (@Keyword IS NULL OR o.OrderCode LIKE '%' + @Keyword + '%' OR o.CustomerName LIKE '%' + @Keyword + '%' OR o.CustomerPhone LIKE '%' + @Keyword + '%')
+      AND (@OrderStatus IS NULL OR o.OrderStatus = @OrderStatus)
+      AND (@PaymentStatus IS NULL OR o.PaymentStatus = @PaymentStatus)
+      AND (@ProvinceId IS NULL OR o.ProvinceId = @ProvinceId)
+      AND (@WardId IS NULL OR o.WardId = @WardId)
+      AND (@RequiresVAT IS NULL OR o.RequiresVAT = @RequiresVAT)
+      AND (@Ngay_Min IS NULL OR o.CreatedAt >= @Ngay_Min)
+      AND (@Ngay_Max IS NULL OR o.CreatedAt <= @Ngay_Max)
+      AND (
+          @HubStatus IS NULL 
+          OR (@HubStatus = 1 AND o.HubSent = 1)
+          OR (@HubStatus = 0 AND o.HubSent = 0)
+          OR (@HubStatus = 2 AND o.HubSent = 0 AND o.HubLastError IS NOT NULL AND o.HubLastError <> '')
+          OR (@HubStatus = 3 AND o.HubSent = 0 AND (o.HubLastError IS NULL OR o.HubLastError = ''))
+      )
+    ORDER BY 
+        CASE WHEN @SortColumn = 'CreatedAt' AND @SortOrder = 'ASC' THEN o.CreatedAt END ASC,
+        CASE WHEN @SortColumn = 'CreatedAt' AND @SortOrder = 'DESC' THEN o.CreatedAt END DESC,
+        CASE WHEN @SortColumn = 'TotalAmount' AND @SortOrder = 'ASC' THEN o.TotalAmount END ASC,
+        CASE WHEN @SortColumn = 'TotalAmount' AND @SortOrder = 'DESC' THEN o.TotalAmount END DESC,
+        CASE WHEN @SortColumn = 'OrderId' AND @SortOrder = 'ASC' THEN o.OrderId END ASC,
+        CASE WHEN @SortColumn = 'OrderId' AND @SortOrder = 'DESC' THEN o.OrderId END DESC,
+        o.CreatedAt DESC
+    OFFSET @Offset ROWS FETCH NEXT @PageSize ROWS ONLY;
+END
+GO
+
+PRINT N'-> Đã hoàn thành thủ tục [dbo].[SP_Orders_Search].';
+GO
+
+-- ------------------------------------------------------------------------------
 -- 6. CÁC STORED PROCEDURE QUẢN LÝ HÀNG ĐỢI HubNotifyQueue
 -- ------------------------------------------------------------------------------
 PRINT N'-> Đang tạo các thủ tục cho [dbo].[HubNotifyQueue]...';
