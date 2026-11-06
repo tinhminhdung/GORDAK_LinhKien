@@ -2,8 +2,16 @@
 -- SCRIPT CẬP NHẬT CƠ SỞ DỮ LIỆU ĐỂ TÍCH HỢP HỆ THỐNG HUB BÁN HÀNG
 -- Áp dụng cho website: gordak.vn (Dự án: go)
 -- Database: [GORDAK]
--- Thời điểm: Tích hợp HUB 01/11/2026 (Kèm cập nhật bổ sung 29/10/2026)
--- Bao gồm: Bảng Products, Orders, HubNotifyQueue và các Stored Procedure chuẩn mực
+-- 
+-- NHẬT KÝ CẬP NHẬT / CHANGE LOG:
+-- ------------------------------------------------------------------------------
+-- [06/11/2026] - BỔ SUNG BỘ LỌC TRẠNG THÁI HUB TRÊN ADMIN QUẢN LÝ ĐƠN HÀNG:
+--   + Thêm mục 2.1: Tạo chỉ mục [IX_Orders_HubSent] trên bảng Orders để tối ưu tốc độ lọc đơn theo trạng thái Hub.
+--   + Thêm mục 5b: Stored Procedure [dbo].[SP_Orders_Search] hỗ trợ tham số @HubStatus (INT = NULL)
+--     Giá trị: 1 (HUB đã nhận), 0 (HUB chưa nhận), 2 (Bắn lỗi), 3 (Chưa gửi), NULL (Tất cả).
+-- [01/11/2026] - TÍCH HỢP HUB BAN ĐẦU:
+--   + Bảng Products (ExpectedDate), Orders (HubSent, HubTries, HubLastError, HubSentAt, DeliveryMethod...).
+--   + Bảng hàng đợi HubNotifyQueue và các Stored Procedure đồng bộ.
 -- ==============================================================================
 
 USE [GORDAK];
@@ -132,6 +140,23 @@ END
 GO
 
 -- ------------------------------------------------------------------------------
+-- 2.1 [BỔ SUNG MỚI - NGÀY 06/11/2026]
+-- TẠO CHỈ MỤC TỐI ƯU BỘ LỌC TRẠNG THÁI HUB: IX_Orders_HubSent
+-- Tối ưu hóa truy vấn tìm kiếm lọc đơn hàng theo HubSent trên Admin
+-- ------------------------------------------------------------------------------
+IF NOT EXISTS (
+    SELECT 1 FROM sys.indexes 
+    WHERE name = 'IX_Orders_HubSent' AND object_id = OBJECT_ID(N'[dbo].[Orders]')
+)
+BEGIN
+    CREATE NONCLUSTERED INDEX [IX_Orders_HubSent] 
+    ON [dbo].[Orders] ([HubSent]) 
+    INCLUDE ([OrderId], [OrderCode], [HubLastError], [CreatedAt]);
+    PRINT N'-> Đã tạo chỉ mục tìm kiếm [IX_Orders_HubSent] trên bảng Orders (Bổ sung 06/11/2026).';
+END
+GO
+
+-- ------------------------------------------------------------------------------
 -- 3. TẠO BẢNG HubNotifyQueue: Hàng đợi lưu tạm đăng ký "Báo cho tôi" (kind: notify)
 -- QUY TẮC BẢO MẬT: Sau khi gửi thành công sang HUB (200 OK), website sẽ XÓA NGAY
 -- dòng này khỏi bảng để không lưu trữ thông tin cá nhân khách hàng.
@@ -224,9 +249,12 @@ PRINT N'-> Đã hoàn thành thủ tục [dbo].[SP_Orders_UpdateHubStatus].';
 GO
 
 -- ------------------------------------------------------------------------------
--- 5b. STORED PROCEDURE TÌM KIẾM ĐƠN HÀNG KÈM BỘ LỌC TRẠNG THÁI HUB: SP_Orders_Search
+-- 5b. [BỔ SUNG MỚI - NGÀY 06/11/2026]
+-- STORED PROCEDURE TÌM KIẾM ĐƠN HÀNG KÈM BỘ LỌC TRẠNG THÁI HUB: SP_Orders_Search
+-- Nghiệp vụ: Lọc đơn hàng theo trạng thái gửi HUB (Đã nhận / Chưa nhận / Bị lỗi / Chưa gửi)
+-- Ngày cập nhật: 06/11/2026
 -- ------------------------------------------------------------------------------
-PRINT N'-> Đang tạo/cập nhật thủ tục [dbo].[SP_Orders_Search]...';
+PRINT N'-> Đang tạo/cập nhật thủ tục [dbo].[SP_Orders_Search] (Bổ sung 06/11/2026)...';
 GO
 
 CREATE OR ALTER PROCEDURE [dbo].[SP_Orders_Search]
@@ -242,7 +270,7 @@ CREATE OR ALTER PROCEDURE [dbo].[SP_Orders_Search]
     @SortOrder NVARCHAR(10) = 'DESC',
     @PageIndex INT = 1,
     @PageSize INT = 20,
-    @HubStatus INT = NULL
+    @HubStatus INT = NULL -- [BỔ SUNG 06/11/2026] 1: Đã nhận, 0: Chưa nhận, 2: Lỗi, 3: Chưa gửi
 AS
 BEGIN
     SET NOCOUNT ON;
