@@ -58,5 +58,46 @@ namespace Antigravity.ECommerce.Models
 
         public const string DefaultMethod = "Chuẩn bị hàng để khách qua lấy và thanh toán tại cửa hàng";
     }
+
+    /// <summary> Bản ghi đăng ký báo có hàng trong bảng HubNotifyQueue </summary>
+    public class HubNotifyItem
+    {
+        public int Id { get; set; }
+        public string OrderCode { get; set; } = string.Empty;
+        public string Json { get; set; } = string.Empty;
+        public DateTime CreatedAt { get; set; }
+        public int HubTries { get; set; }
+        public string? HubLastError { get; set; }
+        public string? CustomerName { get; set; }
+        public string? CustomerPhone { get; set; }
+        public string? CustomerAddress { get; set; }
+        public string? ProductSKU { get; set; }
+        public string? ProductName { get; set; }
+        public int Quantity { get; set; } = 1;
+        public string? Unit { get; set; }
+        public decimal Price { get; set; }
+        public DateTime? ExpectedDate { get; set; }
+        public string? Note { get; set; }
+        public bool HubSent { get; set; }
+        public DateTime? HubSentAt { get; set; }
+        public int Status { get; set; }
+
+        // Join từ bảng Products
+        public int? ProductId { get; set; }
+        public string? ProductSlug { get; set; }
+        public string? ProductImage { get; set; }
+        public int? CurrentStock { get; set; }
+        public int TotalCount { get; set; }
+    }
+
+    /// <summary> Thống kê số lượng theo trạng thái xử lý ĐK báo có hàng </summary>
+    public class HubNotifyStatusCounts
+    {
+        public int All { get; set; }
+        public int New { get; set; }
+        public int Contacted { get; set; }
+        public int Completed { get; set; }
+        public int Cancelled { get; set; }
+    }
 }
 

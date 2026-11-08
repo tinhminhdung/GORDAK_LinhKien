@@ -32,10 +32,13 @@ namespace Antigravity.ECommerce.Services
                 return Results.NotFound();
             }
 
-            // 3. Kiểm tra IP nguồn máy chủ HUB
+            // 3. Kiểm tra IP nguồn máy chủ HUB (cho phép loopback khi chạy trên localhost)
             string? allowIp = SSetting.GetValue("Hub_SyncAllowIp");
             if (string.IsNullOrEmpty(allowIp)) allowIp = cfg["HubSettings:SyncAllowIp"];
-            if (!string.IsNullOrEmpty(allowIp))
+            bool isLocalhost = ctx.Request.Host.Host.Contains("localhost", StringComparison.OrdinalIgnoreCase) &&
+                               ctx.Connection.RemoteIpAddress != null &&
+                               System.Net.IPAddress.IsLoopback(ctx.Connection.RemoteIpAddress);
+            if (!string.IsNullOrEmpty(allowIp) && !isLocalhost)
             {
                 string? clientIp = ctx.Connection.RemoteIpAddress?.MapToIPv4().ToString();
                 bool isAllowed = false;

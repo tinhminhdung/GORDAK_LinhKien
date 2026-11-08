@@ -276,9 +276,18 @@ BEGIN
     SET NOCOUNT ON;
     DECLARE @Offset INT = (@PageIndex - 1) * @PageSize;
 
-    SELECT o.*, COUNT(*) OVER() as TotalCount
+    SELECT 
+        o.*,
+        p.Name AS ProvinceName,
+        w.Name AS WardName,
+        c.MemberRank AS MemberRankName,
+        (SELECT COUNT(*) FROM OrderItems WHERE OrderId = o.OrderId) AS ItemCount,
+        COUNT(*) OVER() as TotalCount
     FROM Orders o
-    WHERE (@Keyword IS NULL OR o.OrderCode LIKE '%' + @Keyword + '%' OR o.CustomerName LIKE '%' + @Keyword + '%' OR o.CustomerPhone LIKE '%' + @Keyword + '%')
+    LEFT JOIN Provinces p ON o.ProvinceId = p.ProvinceId
+    LEFT JOIN Wards w ON o.WardId = w.WardId
+    LEFT JOIN Customers c ON o.CustomerId = c.CustomerId
+    WHERE (@Keyword IS NULL OR o.OrderCode LIKE N'%' + @Keyword + '%' OR o.CustomerName LIKE N'%' + @Keyword + '%' OR o.CustomerPhone LIKE N'%' + @Keyword + '%')
       AND (@OrderStatus IS NULL OR o.OrderStatus = @OrderStatus)
       AND (@PaymentStatus IS NULL OR o.PaymentStatus = @PaymentStatus)
       AND (@ProvinceId IS NULL OR o.ProvinceId = @ProvinceId)
@@ -298,6 +307,8 @@ BEGIN
         CASE WHEN @SortColumn = 'CreatedAt' AND @SortOrder = 'DESC' THEN o.CreatedAt END DESC,
         CASE WHEN @SortColumn = 'TotalAmount' AND @SortOrder = 'ASC' THEN o.TotalAmount END ASC,
         CASE WHEN @SortColumn = 'TotalAmount' AND @SortOrder = 'DESC' THEN o.TotalAmount END DESC,
+        CASE WHEN @SortColumn = 'OrderCode' AND @SortOrder = 'ASC' THEN o.OrderCode END ASC,
+        CASE WHEN @SortColumn = 'OrderCode' AND @SortOrder = 'DESC' THEN o.OrderCode END DESC,
         CASE WHEN @SortColumn = 'OrderId' AND @SortOrder = 'ASC' THEN o.OrderId END ASC,
         CASE WHEN @SortColumn = 'OrderId' AND @SortOrder = 'DESC' THEN o.OrderId END DESC,
         o.CreatedAt DESC
@@ -644,11 +655,11 @@ CREATE OR ALTER PROCEDURE [dbo].[SP_Orders_Insert]
     @ShippingFee DECIMAL(18,2) = 0,
     @Discount DECIMAL(18,2) = 0,
     @TotalAmount DECIMAL(18,2) = 0,
-    @OrderStatus INT = 1,
+    @OrderStatus INT = 0,
     @PaymentMethod NVARCHAR(100) = 'COD',
     @PaymentStatus INT = 0,
     @CustomerNote NVARCHAR(MAX) = NULL,
-    @CreatedBy NVARCHAR(100) = NULL,
+    @CreatedBy NVARCHAR(250) = NULL,
     @RequiresVAT BIT = 0,
     @VATCompanyName NVARCHAR(255) = NULL,
     @VATTaxCode NVARCHAR(50) = NULL,
@@ -660,12 +671,18 @@ CREATE OR ALTER PROCEDURE [dbo].[SP_Orders_Insert]
 AS
 BEGIN
     SET NOCOUNT ON;
+
+    IF @OrderCode IS NULL OR @OrderCode = ''
+    BEGIN
+        SET @OrderCode = 'ORD' + FORMAT(GETDATE(), 'yyMMdd') + CAST(CAST(RAND()*10000 AS INT) AS NVARCHAR(10));
+    END
+
     INSERT INTO [dbo].[Orders]
     (
         [OrderCode], [CustomerId], [CustomerName], [CustomerPhone], [CustomerEmail],
         [ShippingAddress], [WardId], [ProvinceId], [SubTotal], [ShippingFee],
         [Discount], [TotalAmount], [OrderStatus], [PaymentMethod], [PaymentStatus],
-        [CustomerNote], [CreatedBy], [CreatedAt],
+        [CustomerNote], [CreatedAt], [UpdatedAt], [UpdatedBy],
         [RequiresVAT], [VATCompanyName], [VATTaxCode], [VATCompanyAddress], [VATInvoiceEmail],
         [DeliveryMethod], [DeliveryNote], [DeliveryChosen],
         [HubSent], [HubTries]
@@ -675,7 +692,7 @@ BEGIN
         @OrderCode, @CustomerId, @CustomerName, @CustomerPhone, @CustomerEmail,
         @ShippingAddress, @WardId, @ProvinceId, @SubTotal, @ShippingFee,
         @Discount, @TotalAmount, @OrderStatus, @PaymentMethod, @PaymentStatus,
-        @CustomerNote, @CreatedBy, GETDATE(),
+        @CustomerNote, GETDATE(), GETDATE(), @CreatedBy,
         @RequiresVAT, @VATCompanyName, @VATTaxCode, @VATCompanyAddress, @VATInvoiceEmail,
         @DeliveryMethod, @DeliveryNote, @DeliveryChosen,
         0, 0

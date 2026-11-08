@@ -293,36 +293,47 @@ namespace Antigravity.ECommerce.Services
 
                 string json = JsonSerializer.Serialize(payload);
 
-                // 3. Tạm lưu vào hàng đợi HubNotifyQueue qua Stored Procedure
+                // 3. Lưu vào danh sách đăng ký HubNotifyQueue qua Stored Procedure
+                bool savedToDb = false;
                 try
                 {
-                    var prms = new SqlParameter[] { new SqlParameter("@OrderCode", orderCode), new SqlParameter("@Json", json) };
-                    BaseConnectionSql.ExecuteNonQuery("SP_HubNotifyQueue_Enqueue", prms);
+                    FHubNotify.Enqueue(
+                        orderCode,
+                        json,
+                        req.name.Trim(),
+                        cleanPhone,
+                        req.address.Trim(),
+                        product.SKU,
+                        product.Name,
+                        req.qty > 0 ? req.qty : 1,
+                        unit,
+                        priceWithoutVat,
+                        product.ExpectedDate,
+                        req.note?.Trim()
+                    );
+                    savedToDb = true;
                 }
                 catch { }
 
                 // 4. Gửi sang HUB
                 var sendRes = await SendJsonAsync(json, url, key).ConfigureAwait(false);
 
-                // 5. QUY TẮC AN TOÀN BẢO MẬT THÔNG TIN KHÁCH HÀNG:
-                // Nếu gửi thành công (200 OK) -> XÓA NGAY LẬP TỨC khỏi HubNotifyQueue
-                if (sendRes.Success)
+                // 5. Cập nhật trạng thái đồng bộ HUB vào bảng HubNotifyQueue để Admin quản lý
+                try
                 {
-                    try
-                    {
-                        var prmsDel = new SqlParameter[] { new SqlParameter("@OrderCode", orderCode) };
-                        BaseConnectionSql.ExecuteNonQuery("SP_HubNotifyQueue_Delete", prmsDel);
-                    }
-                    catch { }
+                    FHubNotify.UpdateHubStatus(orderCode, sendRes.Success, sendRes.Success ? null : sendRes.Message);
                 }
-                else
+                catch { }
+
+                if (savedToDb)
                 {
-                    try
+                    return new HubSendResult
                     {
-                        var prmsErr = new SqlParameter[] { new SqlParameter("@OrderCode", orderCode), new SqlParameter("@HubLastError", sendRes.Message ?? "") };
-                        BaseConnectionSql.ExecuteNonQuery("SP_HubNotifyQueue_UpdateError", prmsErr);
-                    }
-                    catch { }
+                        Success = true,
+                        StatusCode = sendRes.StatusCode > 0 ? sendRes.StatusCode : 200,
+                        Message = "Cảm ơn quý khách! Nhật Minh đã tiếp nhận yêu cầu và sẽ liên hệ ngay khi có hàng.",
+                        ErrorDetail = sendRes.Success ? null : sendRes.Message
+                    };
                 }
 
                 return sendRes;
@@ -330,6 +341,37 @@ namespace Antigravity.ECommerce.Services
             catch (Exception ex)
             {
                 return new HubSendResult { Success = false, StatusCode = 0, Message = "Lỗi gửi thông báo: " + ex.Message };
+            }
+        }
+
+        /// <summary>
+        /// Gửi lại bản ghi đăng ký "Báo có hàng" sang HUB từ trang quản trị Admin
+        /// </summary>
+        public static async Task<HubSendResult> ResendNotifyByIdAsync(int id, IConfiguration cfg)
+        {
+            try
+            {
+                var item = FHubNotify.GetById(id);
+                if (item == null)
+                {
+                    return new HubSendResult { Success = false, StatusCode = 404, Message = "Không tìm thấy phiếu đăng ký #" + id };
+                }
+
+                string url = SSetting.GetValue("Hub_NotifyUrl");
+                if (string.IsNullOrEmpty(url)) url = SSetting.GetValue("Hub_OrderUrl");
+                if (string.IsNullOrEmpty(url)) url = cfg["HubSettings:NotifyUrl"] ?? cfg["HubSettings:OrderUrl"] ?? "https://pos.nhatminhesc.com/api/web/orders";
+
+                string key = SSetting.GetValue("Hub_NotifyKey");
+                if (string.IsNullOrEmpty(key)) key = SSetting.GetValue("Hub_OrderKey");
+                if (string.IsNullOrEmpty(key)) key = cfg["HubSettings:NotifyKey"] ?? cfg["HubSettings:OrderKey"] ?? "";
+
+                var sendRes = await SendJsonAsync(item.Json, url, key).ConfigureAwait(false);
+                FHubNotify.UpdateHubStatus(item.OrderCode, sendRes.Success, sendRes.Success ? null : sendRes.Message);
+                return sendRes;
+            }
+            catch (Exception ex)
+            {
+                return new HubSendResult { Success = false, StatusCode = 0, Message = "Lỗi bắn lại HUB: " + ex.Message };
             }
         }
     }

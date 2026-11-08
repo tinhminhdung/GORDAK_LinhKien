@@ -1,56 +1,118 @@
-﻿@{
+@{
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
-    ViewData["Title"] = "SQL Terminal (Bí mật)";
+    ViewData["Title"] = "Cập nhật SQL & Database Terminal";
     var isAuthenticated = Context.Session.GetString("TerminalAuth") == "true";
+    var messages = ViewBag.Messages as List<string>;
 }
 
 <div class="row">
     <div class="col-12">
         <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-            <h4 class="mb-sm-0"><i class="ri-terminal-window-line me-1"></i> Database Terminal</h4>
+            <div>
+                <h4 class="mb-1"><i class="ri-database-2-line me-1 text-primary"></i> Cập nhật SQL Live & Database Terminal</h4>
+                <p class="text-muted mb-0 small">Chạy tự động file Migration HUB, tải lên file .sql hoặc thực thi câu lệnh SQL trực tiếp (Hỗ trợ tách lệnh GO tự động)</p>
+            </div>
         </div>
     </div>
 </div>
 
+@if (ViewBag.Error != null)
+{
+    <div class="alert alert-danger border-danger shadow-sm">
+        <i class="ri-error-warning-fill me-1 fs-16 align-middle"></i> <strong>Lỗi thực thi:</strong> @ViewBag.Error
+    </div>
+}
+@if (ViewBag.Success != null)
+{
+    <div class="alert alert-success border-success shadow-sm">
+        <i class="ri-checkbox-circle-fill me-1 fs-16 align-middle"></i> <strong>Thành công:</strong> @ViewBag.Success
+    </div>
+}
+
+@if (messages != null && messages.Count > 0)
+{
+    <div class="card border-info mb-3 shadow-sm">
+        <div class="card-header bg-info-subtle py-2">
+            <strong class="text-info"><i class="ri-terminal-box-line me-1"></i> Nhật ký phản hồi từ SQL Server (PRINT messages):</strong>
+        </div>
+        <div class="card-body py-2 bg-dark text-light font-monospace small" style="max-height: 220px; overflow-y: auto; border-radius: 0 0 8px 8px;">
+            @foreach (var msg in messages)
+            {
+                <div>@msg</div>
+            }
+        </div>
+    </div>
+}
+
 <div class="row">
+    <!-- CÁCH 1: NÚT BẤM 1 CHẠM CẬP NHẬT TỰ ĐỘNG FILE HUB_INTEGRATION_MIGRATION.SQL -->
+    <div class="col-xl-12 mb-3">
+        <div class="card shadow-sm border-0 border-top border-primary border-3 mb-0">
+            <div class="card-header bg-soft-primary d-flex align-items-center justify-content-between flex-wrap gap-2">
+                <div>
+                    <h6 class="card-title mb-0 text-primary fw-bold">
+                        <i class="ri-rocket-2-fill me-1"></i> CÁCH 1: CẬP NHẬT NHANH BẢNG & THỦ TỤC HUB LÊN DATABASE LIVE (1-CLICK)
+                    </h6>
+                    <small class="text-muted">Hệ thống tự động đọc file <code>scripts/Hub_Integration_Migration.sql</code> trên máy chủ, tự bỏ lệnh <code>USE [db]</code> cứng và chạy toàn bộ các cụm lệnh <code>GO</code> vào Database hiện tại.</small>
+                </div>
+                <span class="badge bg-primary fs-12">Khuyên dùng khi vừa up code lên Live</span>
+            </div>
+            <div class="card-body">
+                <form method="post" action="/AdminTerminal/RunHubMigration" onsubmit="return confirm('Bạn có chắc chắn muốn chạy tự động toàn bộ file scripts/Hub_Integration_Migration.sql vào Database hiện tại không?');">
+                    <div class="row g-3 align-items-end">
+                        @if (!isAuthenticated)
+                        {
+                            <div class="col-md-4">
+                                <label class="form-label fw-bold text-danger">Mật khẩu cấp 2 (*) <small class="text-muted fw-normal">(Mặc định: <code>Antigravity@2026</code>)</small></label>
+                                <input type="password" name="secretKey" class="form-control border-danger" required placeholder="Nhập Antigravity@2026..." value="Antigravity@2026" />
+                            </div>
+                        }
+                        <div class="col-md-8">
+                            <button type="submit" class="btn btn-primary fw-bold px-4 py-2">
+                                <i class="ri-flashlight-fill me-1"></i> Bấm để Cập nhật tự động file Hub_Integration_Migration.sql ngay
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- CÁCH 2 & 3: UPLOAD FILE .SQL HOẶC DÁN LỆNH SQL TRỰC TIẾP -->
     <div class="col-xl-12">
         <div class="card shadow-sm border-0 border-top border-danger border-3">
             <div class="card-header bg-soft-danger">
-                <h6 class="card-title mb-0 text-danger"><i class="ri-alert-line me-1"></i> KHU VỰC NGUY HIỂM - CHỈ DÀNH CHO ROOT ADMIN</h6>
+                <h6 class="card-title mb-0 text-danger fw-bold"><i class="ri-terminal-window-line me-1"></i> CÁCH 2 & 3: UPLOAD FILE .SQL HOẶC DÁN CÂU LỆNH SQL TRỰC TIẾP (HỖ TRỢ LỆNH GO)</h6>
             </div>
             <div class="card-body">
-                @if (ViewBag.Error != null)
-                {
-                    <div class="alert alert-danger">@ViewBag.Error</div>
-                }
-                @if (ViewBag.Success != null)
-                {
-                    <div class="alert alert-success">@ViewBag.Success</div>
-                }
-
-                <form method="post" action="/AdminTerminal/Execute">
+                <form method="post" action="/AdminTerminal/Execute" enctype="multipart/form-data">
                     <div class="row g-3">
                         @if (!isAuthenticated)
                         {
-                            <div class="col-md-3">
-                                <label class="form-label fw-bold text-danger">Mật khẩu cấp 2 (*)</label>
-                                <input type="password" name="secretKey" class="form-control border-danger" required placeholder="Nhập mã bí mật..." />
+                            <div class="col-md-4">
+                                <label class="form-label fw-bold text-danger">Mật khẩu cấp 2 (*) <small class="text-muted fw-normal">(Mặc định: <code>Antigravity@2026</code>)</small></label>
+                                <input type="password" name="secretKey" class="form-control border-danger" required placeholder="Nhập mã bí mật..." value="Antigravity@2026" />
                             </div>
-                            <div class="col-md-9">
-                                <label class="form-label fw-bold">Câu lệnh SQL</label>
-                                <textarea name="query" class="form-control font-monospace" rows="5" required placeholder="SELECT * FROM Users...">@(ViewBag.Query)</textarea>
+                            <div class="col-md-8">
+                                <label class="form-label fw-bold"><i class="ri-upload-cloud-2-line me-1 text-primary"></i> Chọn file <code>.sql</code> từ máy tính để tải lên và chạy (Tùy chọn)</label>
+                                <input type="file" name="sqlFile" accept=".sql,.txt" class="form-control" />
                             </div>
                         }
                         else
                         {
-                            <div class="col-12">
-                                <label class="form-label fw-bold">Câu lệnh SQL <span class="badge bg-success ms-2">Đã mở khóa</span></label>
-                                <textarea name="query" class="form-control font-monospace border-success" rows="5" required placeholder="SELECT * FROM Users...">@(ViewBag.Query)</textarea>
+                            <div class="col-md-12">
+                                <label class="form-label fw-bold"><i class="ri-upload-cloud-2-line me-1 text-primary"></i> Chọn file <code>.sql</code> từ máy tính để tải lên và chạy (Tùy chọn) <span class="badge bg-success ms-2">Đã mở khóa phiên</span></label>
+                                <input type="file" name="sqlFile" accept=".sql,.txt" class="form-control" />
                             </div>
                         }
-                        <div class="col-12 text-end">
-                            <button type="submit" class="btn btn-danger px-4">
-                                <i class="ri-flashlight-line me-1"></i> Thực thi (Execute)
+                        <div class="col-12">
+                            <label class="form-label fw-bold">Hoặc dán trực tiếp nội dung SQL vào đây (Hỗ trợ cả script dài có chứa từ khóa <code>GO</code>)</label>
+                            <textarea name="query" class="form-control font-monospace" rows="10" placeholder="-- Dán câu lệnh SQL hoặc nội dung file .sql vào đây (hoặc chọn file .sql ở trên)...">@(ViewBag.Query)</textarea>
+                        </div>
+                        <div class="col-12 d-flex justify-content-between align-items-center">
+                            <small class="text-muted"><i class="ri-information-line"></i> Lưu ý: Hệ thống tự động loại bỏ dòng <code>USE [Tên_DB]</code> cứng để luôn chạy chính xác vào Database cấu hình trên сервер Live.</small>
+                            <button type="submit" class="btn btn-danger px-4 fw-bold">
+                                <i class="ri-play-fill me-1"></i> Thực thi SQL (Execute)
                             </button>
                         </div>
                     </div>
@@ -61,42 +123,45 @@
         @if (ViewBag.Data != null)
         {
             var dt = ViewBag.Data as System.Data.DataTable;
-            <div class="card shadow-sm border-0 mt-4">
-                <div class="card-header">
-                    <h6 class="card-title mb-0">Kết quả Truy vấn (@dt.Rows.Count dòng)</h6>
-                </div>
-                <div class="card-body p-0">
-                    <div class="table-responsive" style="max-height: 500px;">
-                        <table class="table table-bordered table-striped table-hover mb-0 font-monospace" style="font-size: 0.85rem;">
-                            <thead class="table-light position-sticky top-0">
-                                <tr>
-                                    @foreach (System.Data.DataColumn col in dt.Columns)
-                                    {
-                                        <th>@col.ColumnName</th>
-                                    }
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach (System.Data.DataRow row in dt.Rows)
-                                {
+            if (dt != null)
+            {
+                <div class="card shadow-sm border-0 mt-4">
+                    <div class="card-header">
+                        <h6 class="card-title mb-0">Kết quả Truy vấn (@dt.Rows.Count dòng)</h6>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive" style="max-height: 500px;">
+                            <table class="table table-bordered table-striped table-hover mb-0 font-monospace" style="font-size: 0.85rem;">
+                                <thead class="table-light position-sticky top-0">
                                     <tr>
-                                        @foreach (var item in row.ItemArray)
+                                        @foreach (System.Data.DataColumn col in dt.Columns)
                                         {
-                                            <td>@(item?.ToString() ?? "NULL")</td>
+                                            <th>@col.ColumnName</th>
                                         }
                                     </tr>
-                                }
-                                @if(dt.Rows.Count == 0)
-                                {
-                                    <tr>
-                                        <td colspan="@dt.Columns.Count" class="text-center py-4 text-muted">Không có dữ liệu</td>
-                                    </tr>
-                                }
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody>
+                                    @foreach (System.Data.DataRow row in dt.Rows)
+                                    {
+                                        <tr>
+                                            @foreach (var item in row.ItemArray)
+                                            {
+                                                <td>@(item?.ToString() ?? "NULL")</td>
+                                            }
+                                        </tr>
+                                    }
+                                    @if (dt.Rows.Count == 0)
+                                    {
+                                        <tr>
+                                            <td colspan="@dt.Columns.Count" class="text-center py-4 text-muted">Không có dữ liệu</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
-            </div>
+            }
         }
     </div>
 </div>

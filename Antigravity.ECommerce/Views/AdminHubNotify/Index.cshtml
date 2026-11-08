@@ -1,0 +1,507 @@
+@model List<Antigravity.ECommerce.Models.HubNotifyItem>
+@{
+    ViewData["Title"] = "Danh sách Đăng ký Báo có hàng";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="row">
+    <div class="col-12">
+        <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+            <div>
+                <h4 class="page-title mb-1">Đăng ký Báo có hàng (HUB Notify)</h4>
+                <p class="text-muted mb-0 small">Quản lý danh sách khách hàng đăng ký nhận thông báo khi sản phẩm về kho và đồng bộ sang hệ thống POS HUB</p>
+            </div>
+            <div class="d-flex gap-2 mt-2 mt-sm-0">
+                <a href="/AdminTerminal" class="btn btn-danger btn-sm fw-bold">
+                    <i class="ri-database-2-line me-1"></i> Cập nhật SQL Live
+                </a>
+                <button type="button" class="btn btn-warning btn-sm fw-bold text-dark" onclick="testHubConnection()">
+                    <i class="ri-radar-line me-1"></i> Kiểm tra kết nối HUB
+                </button>
+                <a href="/AdminSetting" class="btn btn-outline-primary btn-sm fw-semibold">
+                    <i class="ri-settings-4-line me-1"></i> Cấu hình HUB
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Tabs -->
+<div class="card mb-4 border-0 shadow-sm" style="background: rgba(255, 255, 255, 0.6); backdrop-filter: blur(10px); border-radius: 12px;">
+    <div class="card-body p-2">
+        <ul class="nav nav-pills custom-nav-pills gap-2 flex-wrap">
+            <li class="nav-item">
+                <a href="?status=" class="nav-link @(ViewBag.Status == null ? "active" : "")">
+                    <i class="ri-list-unordered me-1"></i> Tất cả <span class="badge rounded-pill bg-soft-dark text-dark ms-1">@ViewBag.CountAll</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="?status=0" class="nav-link @(ViewBag.Status == 0 ? "active" : "")">
+                    <i class="ri-notification-3-line me-1"></i> Mới chờ xử lý <span class="badge rounded-pill bg-info ms-1">@ViewBag.CountNew</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="?status=1" class="nav-link @(ViewBag.Status == 1 ? "active" : "")">
+                    <i class="ri-phone-line me-1"></i> Đã liên hệ <span class="badge rounded-pill bg-primary ms-1">@ViewBag.CountContacted</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="?status=2" class="nav-link @(ViewBag.Status == 2 ? "active" : "")">
+                    <i class="ri-check-double-line me-1"></i> Đã báo / Hoàn tất <span class="badge rounded-pill bg-success ms-1">@ViewBag.CountCompleted</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="?status=3" class="nav-link @(ViewBag.Status == 3 ? "active" : "")">
+                    <i class="ri-close-circle-line me-1"></i> Đã hủy <span class="badge rounded-pill bg-danger ms-1">@ViewBag.CountCancelled</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<!-- Filter & Table -->
+<div class="card">
+    <div class="card-body">
+        <form id="filterForm" method="get">
+            <input type="hidden" name="status" value="@ViewBag.Status" />
+            <input type="hidden" name="page" id="pageIndex" value="@ViewBag.PageIndex" />
+            <div class="row g-3 mb-3">
+                <div class="col-xxl-4 col-md-4 col-sm-6">
+                    <div class="search-box">
+                        <input type="text" name="kw" class="form-control" value="@ViewBag.Keyword" placeholder="Tìm theo Mã phiếu, Tên KH, SĐT, Mã SKU, Tên SP...">
+                        <i class="ri-search-line search-icon"></i>
+                    </div>
+                </div>
+                <div class="col-xxl-3 col-md-3 col-sm-6">
+                    <select class="form-select" name="hubStatus" id="HubStatus">
+                        <option value="">-- Tất cả Trạng thái HUB --</option>
+                        <option value="1" selected="@(ViewBag.HubStatus == 1 ? "selected" : null)">✓ HUB đã nhận (Thành công)</option>
+                        <option value="0" selected="@(ViewBag.HubStatus == 0 ? "selected" : null)">⏳ HUB chưa nhận</option>
+                        <option value="2" selected="@(ViewBag.HubStatus == 2 ? "selected" : null)">⚠ Bắn HUB thất bại (Lỗi)</option>
+                        <option value="3" selected="@(ViewBag.HubStatus == 3 ? "selected" : null)">Chưa gửi HUB</option>
+                    </select>
+                </div>
+                <div class="col-xxl-3 col-md-3 col-sm-6">
+                    <div class="input-group">
+                        <input type="date" name="dateMin" class="form-control" value="@ViewBag.DateMin" title="Từ ngày">
+                        <input type="date" name="dateMax" class="form-control" value="@ViewBag.DateMax" title="Đến ngày">
+                    </div>
+                </div>
+                <div class="col-xxl-2 col-md-2 col-sm-6 d-flex gap-1">
+                    <button type="submit" class="btn btn-primary flex-grow-1"><i class="mdi mdi-filter-variant"></i> Lọc</button>
+                    <a href="/AdminHubNotify" class="btn btn-light" title="Làm mới"><i class="mdi mdi-refresh"></i></a>
+                    <a href="/AdminHubNotify/ExportCSV?kw=@ViewBag.Keyword&status=@ViewBag.Status&hubStatus=@ViewBag.HubStatus&dateMin=@ViewBag.DateMin&dateMax=@ViewBag.DateMax" class="btn btn-success" title="Xuất file CSV / Excel"><i class="mdi mdi-download"></i></a>
+                    <button type="button" class="btn btn-danger d-none" id="btnBulkDelete" onclick="bulkDelete()" title="Xóa các mục đã chọn"><i class="mdi mdi-delete"></i></button>
+                </div>
+            </div>
+        </form>
+
+        <div class="table-responsive">
+            <table class="table table-centered align-middle mb-0 table-hover">
+                <thead class="table-light">
+                    <tr>
+                        <th style="width: 36px;">
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="checkAll">
+                            </div>
+                        </th>
+                        <th>Mã phiếu / Ngày ĐK</th>
+                        <th>Khách hàng</th>
+                        <th style="min-width: 260px;">Sản phẩm đăng ký</th>
+                        <th class="text-center">SL & Đơn giá</th>
+                        <th>Ghi chú</th>
+                        <th style="width: 170px;">Trạng thái xử lý</th>
+                        <th class="text-center" style="width: 140px;">Đồng bộ HUB</th>
+                        <th class="text-center" style="width: 110px;">Hành động</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model == null || Model.Count == 0)
+                    {
+                        <tr>
+                            <td colspan="9" class="text-center py-5 text-muted">
+                                <i class="ri-inbox-line fs-24 d-block mb-2"></i>
+                                Chưa có phiếu đăng ký báo có hàng nào phù hợp với bộ lọc.
+                            </td>
+                        </tr>
+                    }
+                    else
+                    {
+                        foreach (var item in Model)
+                        {
+                            string prodUrl = item.ProductId > 0
+                                ? $"/san-pham/detail/{(string.IsNullOrEmpty(item.ProductSlug) ? "san-pham" : item.ProductSlug)}-{item.ProductId}.html"
+                                : "#";
+                            <tr>
+                                <td>
+                                    <div class="form-check">
+                                        <input type="checkbox" class="form-check-input checkItem" value="@item.Id">
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="fw-bold text-primary d-block">@item.OrderCode</span>
+                                    <small class="text-muted"><i class="ri-time-line"></i> @item.CreatedAt.ToString("dd/MM/yyyy HH:mm")</small>
+                                </td>
+                                <td>
+                                    <div class="fw-bold text-dark">@(string.IsNullOrEmpty(item.CustomerName) ? "Khách hàng" : item.CustomerName)</div>
+                                    <div>
+                                        <a href="tel:@item.CustomerPhone" class="text-success fw-semibold text-decoration-none">
+                                            <i class="ri-phone-fill"></i> @item.CustomerPhone
+                                        </a>
+                                    </div>
+                                    @if (!string.IsNullOrEmpty(item.CustomerAddress))
+                                    {
+                                        <small class="text-muted d-block text-wrap" style="max-width: 220px;">
+                                            <i class="ri-map-pin-line"></i> @item.CustomerAddress
+                                        </small>
+                                    }
+                                </td>
+                                <td>
+                                    <div class="d-flex align-items-center gap-2">
+                                        @if (!string.IsNullOrEmpty(item.ProductImage))
+                                        {
+                                            <img src="@item.ProductImage" alt="@item.ProductName" class="rounded border" style="width: 44px; height: 44px; object-fit: contain; background: #fff; flex-shrink: 0;" />
+                                        }
+                                        <div>
+                                            @if (item.ProductId > 0)
+                                            {
+                                                <a href="@prodUrl" target="_blank" class="fw-semibold text-dark text-decoration-none d-block text-wrap" style="max-width: 280px;">@item.ProductName</a>
+                                            }
+                                            else
+                                            {
+                                                <span class="fw-semibold text-dark d-block text-wrap" style="max-width: 280px;">@item.ProductName</span>
+                                            }
+                                            <div class="d-flex align-items-center flex-wrap gap-2 mt-1">
+                                                <span class="badge bg-light text-dark border">SKU: @item.ProductSKU</span>
+                                                @if (item.CurrentStock.HasValue)
+                                                {
+                                                    if (item.CurrentStock.Value > 0)
+                                                    {
+                                                        <span class="badge bg-soft-success text-success">Tồn kho: @item.CurrentStock.Value</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span class="badge bg-soft-danger text-danger">Hết hàng (0)</span>
+                                                    }
+                                                }
+                                                @if (item.ExpectedDate.HasValue)
+                                                {
+                                                    <span class="badge bg-soft-warning text-warning">Dự kiến: @item.ExpectedDate.Value.ToString("dd/MM/yyyy")</span>
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="text-center">
+                                    <span class="badge bg-primary fs-12">@item.Quantity @(string.IsNullOrEmpty(item.Unit) ? "Chiếc" : item.Unit)</span>
+                                    @if (item.Price > 0)
+                                    {
+                                        <div class="text-danger fw-bold mt-1 small">@item.Price.ToString("N0") ₫</div>
+                                        <small class="text-muted" style="font-size: 11px;">(Chưa VAT)</small>
+                                    }
+                                </td>
+                                <td>
+                                    @if (!string.IsNullOrEmpty(item.Note))
+                                    {
+                                        <span class="text-dark d-block text-wrap" style="max-width: 200px;">@item.Note</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted small">—</span>
+                                    }
+                                </td>
+                                <td>
+                                    <select class="form-select form-select-sm fw-semibold @(item.Status == 0 ? "border-info text-info" : item.Status == 1 ? "border-primary text-primary" : item.Status == 2 ? "border-success text-success" : "border-danger text-danger")"
+                                            onchange="updateNotifyStatus(@item.Id, this.value)">
+                                        <option value="0" selected="@(item.Status == 0 ? "selected" : null)">🔔 Mới chờ xử lý</option>
+                                        <option value="1" selected="@(item.Status == 1 ? "selected" : null)">📞 Đã liên hệ</option>
+                                        <option value="2" selected="@(item.Status == 2 ? "selected" : null)">✅ Đã báo / Hoàn tất</option>
+                                        <option value="3" selected="@(item.Status == 3 ? "selected" : null)">❌ Đã hủy</option>
+                                    </select>
+                                </td>
+                                <td class="text-center">
+                                    @if (item.HubSent)
+                                    {
+                                        <span class="badge bg-soft-success text-success border border-success" title="Đã gửi lúc: @item.HubSentAt?.ToString("dd/MM/yyyy HH:mm")">
+                                            <i class="ri-check-double-line"></i> HUB: Đã gửi
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-soft-danger text-danger border border-danger" role="button" onclick="syncNotifyToHub(@item.Id)"
+                                              title="@(string.IsNullOrEmpty(item.HubLastError) ? "Chưa gửi sang HUB, bấm để bắn ngay" : ("Lỗi HUB: " + item.HubLastError))">
+                                            <i class="ri-refresh-line"></i> Bắn HUB (@item.HubTries)
+                                        </span>
+                                        @if (!string.IsNullOrEmpty(item.HubLastError))
+                                        {
+                                            <div class="text-danger mt-1 text-truncate" style="max-width: 135px; font-size: 11px;" title="@item.HubLastError">
+                                                @item.HubLastError
+                                            </div>
+                                        }
+                                    }
+                                </td>
+                                <td class="text-center">
+                                    <div class="d-flex justify-content-center gap-1">
+                                        <button type="button" class="btn btn-sm btn-soft-primary" onclick="syncNotifyToHub(@item.Id)" title="Bắn lại sang HUB">
+                                            <i class="ri-send-plane-fill"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-sm btn-soft-danger" onclick="deleteNotify(@item.Id)" title="Xóa">
+                                            <i class="ri-delete-bin-line"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination -->
+        @await Html.PartialAsync("_Pagination", new { PageIndex = ViewBag.PageIndex, TotalPages = ViewBag.TotalPages, TotalCount = ViewBag.TotalCount, DisplayCount = Model?.Count ?? 0 })
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(function () {
+            $('#checkAll').on('change', function () {
+                $('.checkItem').prop('checked', $(this).is(':checked'));
+                toggleBulkDeleteBtn();
+            });
+
+            $('.checkItem').on('change', function () {
+                toggleBulkDeleteBtn();
+            });
+
+            function toggleBulkDeleteBtn() {
+                const count = $('.checkItem:checked').length;
+                if (count > 0) {
+                    $('#btnBulkDelete').removeClass('d-none');
+                } else {
+                    $('#btnBulkDelete').addClass('d-none');
+                }
+            }
+
+            $('#filterForm').on('submit', function () {
+                if ($(this).attr('data-paging') !== 'true') {
+                    $('#pageIndex').val(1);
+                }
+                $(this).removeAttr('data-paging');
+            });
+        });
+
+        function changePage(page) {
+            $('#pageIndex').val(page);
+            $('#filterForm').attr('data-paging', 'true').submit();
+        }
+
+        function updateNotifyStatus(id, status) {
+            $.post('/AdminHubNotify/UpdateStatus', { id: id, status: status }, function (res) {
+                if (res && res.success) {
+                    Swal.fire({
+                        toast: true,
+                        position: 'top-end',
+                        icon: 'success',
+                        title: 'Đã cập nhật trạng thái xử lý!',
+                        showConfirmButton: false,
+                        timer: 1500
+                    }).then(() => {
+                        location.reload();
+                    });
+                } else {
+                    Swal.fire('Lỗi', res ? res.message : 'Không thể cập nhật trạng thái', 'error');
+                }
+            });
+        }
+
+        function syncNotifyToHub(id) {
+            Swal.fire({
+                title: 'Đang bắn dữ liệu sang HUB...',
+                text: 'Vui lòng chờ trong giây lát',
+                allowOutsideClick: false,
+                didOpen: () => { Swal.showLoading(); }
+            });
+            $.post('/AdminHubNotify/SyncToHub', { id: id }, function (res) {
+                if (res && res.success) {
+                    Swal.fire('Thành công', res.message, 'success').then(() => { location.reload(); });
+                } else {
+                    Swal.fire('Chưa đồng bộ được HUB', (res ? res.message : 'Lỗi kết nối HUB') + ' (Bạn có thể kiểm tra lại cấu hình Hub_NotifyKey trong Cài đặt hệ thống)', 'warning').then(() => { location.reload(); });
+                }
+            }).fail(function () {
+                Swal.fire('Lỗi', 'Không thể kết nối đến máy chủ web', 'error');
+            });
+        }
+
+        function viewPayloadJson(btn) {
+            const code = btn.getAttribute('data-code') || '';
+            const rawJson = btn.getAttribute('data-json') || '';
+            const lastErr = btn.getAttribute('data-error') || '';
+            let pretty = rawJson;
+            try {
+                pretty = JSON.stringify(JSON.parse(rawJson), null, 2);
+            } catch (e) { }
+            let errHtml = lastErr
+                ? `<div class="alert alert-danger text-start small mb-2"><strong>Phản hồi lỗi từ HUB gần nhất:</strong><br/><code>${$('<div>').text(lastErr).html()}</code></div>`
+                : `<div class="alert alert-success text-start small mb-2">Đã gửi sang HUB thành công.</div>`;
+            Swal.fire({
+                title: 'Payload HUB: ' + code,
+                html: `${errHtml}<pre class="text-start bg-light p-3 rounded border small" style="max-height: 360px; overflow: auto;">${$('<div>').text(pretty).html()}</pre>`,
+                width: 650,
+                confirmButtonText: 'Đóng'
+            });
+        }
+
+        function testHubConnection() {
+            Swal.fire({
+                title: 'Đang kiểm tra kết nối máy chủ HUB...',
+                text: 'Đang kiểm tra cấu hình và bắn thử gói tin tới HUB POS',
+                allowOutsideClick: false,
+                didOpen: () => { Swal.showLoading(); }
+            });
+            $.post('/AdminHubNotify/TestHubConnection', function (res) {
+                if (!res) {
+                    Swal.fire('Lỗi', 'Không nhận được phản hồi từ máy chủ', 'error');
+                    return;
+                }
+                const serverAlive = res.statusCode > 0;
+                const statusBadge = res.success
+                    ? `<span class="badge bg-success">200 OK - Xác thực & Nhận dữ liệu thành công</span>`
+                    : (res.statusCode === 401
+                        ? `<span class="badge bg-warning text-dark">HTTP 401 Unauthorized (Máy chủ HUB đang sống nhưng từ chối khóa / IP)</span>`
+                        : `<span class="badge bg-danger">HTTP ${res.statusCode} - ${$('<div>').text(res.hubResponse || '').html()}</span>`);
+
+                let noteHtml = '';
+                if (res.statusCode === 401) {
+                    noteHtml = `
+                        <div class="alert alert-warning text-start small mt-3 mb-0">
+                            <strong><i class="ri-information-line"></i> Chẩn đoán nguyên nhân HTTP 401 từ HUB:</strong>
+                            <ul class="mb-0 ps-3 mt-1">
+                                <li><strong>Máy chủ HUB (<code>pos.nhatminhesc.com</code>) ĐANG SỐNG</strong> (phản hồi trong <b>${res.latencyMs}ms</b>, giờ máy chủ khớp 100%).</li>
+                                <li>Theo tài liệu HUB (Mục 5 & 5.6), lỗi <code>401 {"ok":false,"error":"unauthorized"}</code> xảy ra khi:
+                                    <br/>1. <b>IP mạng hiện tại của bạn (<code>${res.publicIp}</code>)</b> chưa được bên HUB thêm vào danh sách IP cho phép (HUB chỉ nhận từ IP máy chủ hosting đã đăng ký).
+                                    <br/>2. Hoặc <b>OrderKey / NotifyKey</b> của nguồn <code>${res.source}</code> chưa khớp với khóa riêng trên máy chủ HUB${res.sameKeyWarning ? ' <i>(Hiện tại OrderKey đang điền trùng với SyncKey)</i>' : ''}.
+                                </li>
+                            </ul>
+                        </div>`;
+                }
+
+                Swal.fire({
+                    title: res.success ? 'Kết nối HUB Thành Công!' : 'Kết quả kiểm tra cấu hình HUB',
+                    icon: res.success ? 'success' : (serverAlive ? 'info' : 'error'),
+                    width: 680,
+                    html: `
+                        <div class="table-responsive text-start small">
+                            <table class="table table-sm table-bordered mb-0">
+                                <tbody>
+                                    <tr><th style="width: 38%; background:#f8fafc;">Trạng thái máy chủ HUB</th><td>${serverAlive ? '<span class="text-success fw-bold">● Đang hoạt động (Online - ' + res.latencyMs + 'ms)</span>' : '<span class="text-danger fw-bold">● Không phản hồi</span>'}</td></tr>
+                                    <tr><th style="background:#f8fafc;">Mã định danh (Hub_Source)</th><td><code>${res.source}</code></td></tr>
+                                    <tr><th style="background:#f8fafc;">URL đích (Hub_NotifyUrl)</th><td><code class="text-break">${res.url}</code></td></tr>
+                                    <tr><th style="background:#f8fafc;">Khóa ký (OrderKey / NotifyKey)</th><td><code>${res.maskedOrderKey}</code></td></tr>
+                                    <tr><th style="background:#f8fafc;">IP Public máy hiện tại</th><td><code>${res.publicIp}</code></td></tr>
+                                    <tr><th style="background:#f8fafc;">IP Whitelist nhận /hub-sync</th><td><code>${res.syncAllowIp}</code></td></tr>
+                                    <tr><th style="background:#f8fafc;">Giờ hệ thống</th><td>${res.serverTime}</td></tr>
+                                    <tr><th style="background:#f8fafc;">Kết quả bắn thử Luồng B</th><td>${statusBadge}<div class="mt-1"><code>${$('<div>').text(res.hubResponse || '').html()}</code></div></td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        ${noteHtml}
+                    `,
+                    confirmButtonText: 'Đóng'
+                });
+            }).fail(function () {
+                Swal.fire('Lỗi', 'Không thể kết nối tới máy chủ web', 'error');
+            });
+        }
+
+        function deleteNotify(id) {
+            Swal.fire({
+                title: 'Xóa phiếu đăng ký này?',
+                text: 'Dữ liệu đã xóa sẽ không thể khôi phục!',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Đồng ý xóa',
+                cancelButtonText: 'Hủy'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.post('/AdminHubNotify/Delete', { id: id }, function (res) {
+                        if (res && res.success) {
+                            location.reload();
+                        } else {
+                            Swal.fire('Lỗi', res ? res.message : 'Không thể xóa', 'error');
+                        }
+                    });
+                }
+            });
+        }
+
+        function bulkDelete() {
+            const ids = [];
+            $('.checkItem:checked').each(function () {
+                ids.push(parseInt($(this).val()));
+            });
+            if (ids.length === 0) return;
+
+            Swal.fire({
+                title: 'Xóa ' + ids.length + ' phiếu đăng ký?',
+                text: 'Toàn bộ phiếu đã chọn sẽ bị xóa vĩnh viễn!',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Đồng ý xóa',
+                cancelButtonText: 'Hủy'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: '/AdminHubNotify/BulkDelete',
+                        type: 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify(ids),
+                        success: function (res) {
+                            if (res && res.success) {
+                                location.reload();
+                            } else {
+                                Swal.fire('Lỗi', res ? res.message : 'Không thể xóa', 'error');
+                            }
+                        }
+                    });
+                }
+            });
+        }
+    </script>
+}
+
+<style>
+    .custom-nav-pills .nav-link {
+        padding: 0.75rem 1.25rem;
+        font-weight: 600;
+        border-radius: 10px;
+        color: #495057;
+        background: #fff;
+        border: 1px solid #e9ebec;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        display: flex;
+        align-items: center;
+        font-size: 13px;
+    }
+    .custom-nav-pills .nav-link:hover {
+        background: #f3f6f9;
+        color: #405189;
+        border-color: #d1d9e3;
+        transform: translateY(-2px);
+    }
+    .custom-nav-pills .nav-link.active {
+        background: #405189 !important;
+        color: #fff !important;
+        box-shadow: 0 8px 15px rgba(64, 81, 137, 0.2);
+        border-color: #405189;
+    }
+    .custom-nav-pills .nav-link.active .badge {
+        background: rgba(255,255,255,0.2) !important;
+        color: #fff !important;
+    }
+</style>
+

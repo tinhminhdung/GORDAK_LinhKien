@@ -157,9 +157,7 @@ END
 GO
 
 -- ------------------------------------------------------------------------------
--- 3. TẠO BẢNG HubNotifyQueue: Hàng đợi lưu tạm đăng ký "Báo cho tôi" (kind: notify)
--- QUY TẮC BẢO MẬT: Sau khi gửi thành công sang HUB (200 OK), website sẽ XÓA NGAY
--- dòng này khỏi bảng để không lưu trữ thông tin cá nhân khách hàng.
+-- 3. TẠO BẢNG HubNotifyQueue: Quản lý danh sách đăng ký "Báo cho tôi" (kind: notify)
 -- ------------------------------------------------------------------------------
 IF NOT EXISTS (
     SELECT 1 FROM sys.tables 
@@ -172,13 +170,52 @@ BEGIN
         [Json] NVARCHAR(MAX) NOT NULL,
         [CreatedAt] DATETIME NOT NULL CONSTRAINT DF_HubNotifyQueue_CreatedAt DEFAULT GETDATE(),
         [HubTries] INT NOT NULL CONSTRAINT DF_HubNotifyQueue_HubTries DEFAULT 0,
-        [HubLastError] NVARCHAR(500) NULL
+        [HubLastError] NVARCHAR(500) NULL,
+        [CustomerName] NVARCHAR(200) NULL,
+        [CustomerPhone] NVARCHAR(50) NULL,
+        [CustomerAddress] NVARCHAR(500) NULL,
+        [ProductSKU] NVARCHAR(100) NULL,
+        [ProductName] NVARCHAR(500) NULL,
+        [Quantity] INT NOT NULL CONSTRAINT DF_HubNotifyQueue_Quantity DEFAULT 1,
+        [Unit] NVARCHAR(50) NULL,
+        [Price] DECIMAL(18,2) NOT NULL CONSTRAINT DF_HubNotifyQueue_Price DEFAULT 0,
+        [ExpectedDate] DATE NULL,
+        [Note] NVARCHAR(500) NULL,
+        [HubSent] BIT NOT NULL CONSTRAINT DF_HubNotifyQueue_HubSent DEFAULT 0,
+        [HubSentAt] DATETIME NULL,
+        [Status] INT NOT NULL CONSTRAINT DF_HubNotifyQueue_Status DEFAULT 0
     );
     PRINT N'-> Đã tạo bảng [HubNotifyQueue] thành công.';
 END
 ELSE
 BEGIN
-    PRINT N'-> Bảng [HubNotifyQueue] đã tồn tại.';
+    IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id = OBJECT_ID(N'[dbo].[HubNotifyQueue]') AND name = 'CustomerName')
+        ALTER TABLE [dbo].[HubNotifyQueue] ADD [CustomerName] NVARCHAR(200) NULL;
+    IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id = OBJECT_ID(N'[dbo].[HubNotifyQueue]') AND name = 'CustomerPhone')
+        ALTER TABLE [dbo].[HubNotifyQueue] ADD [CustomerPhone] NVARCHAR(50) NULL;
+    IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id = OBJECT_ID(N'[dbo].[HubNotifyQueue]') AND name = 'CustomerAddress')
+        ALTER TABLE [dbo].[HubNotifyQueue] ADD [CustomerAddress] NVARCHAR(500) NULL;
+    IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id = OBJECT_ID(N'[dbo].[HubNotifyQueue]') AND name = 'ProductSKU')
+        ALTER TABLE [dbo].[HubNotifyQueue] ADD [ProductSKU] NVARCHAR(100) NULL;
+    IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id = OBJECT_ID(N'[dbo].[HubNotifyQueue]') AND name = 'ProductName')
+        ALTER TABLE [dbo].[HubNotifyQueue] ADD [ProductName] NVARCHAR(500) NULL;
+    IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id = OBJECT_ID(N'[dbo].[HubNotifyQueue]') AND name = 'Quantity')
+        ALTER TABLE [dbo].[HubNotifyQueue] ADD [Quantity] INT NOT NULL CONSTRAINT DF_HubNotifyQueue_Quantity DEFAULT 1;
+    IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id = OBJECT_ID(N'[dbo].[HubNotifyQueue]') AND name = 'Unit')
+        ALTER TABLE [dbo].[HubNotifyQueue] ADD [Unit] NVARCHAR(50) NULL;
+    IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id = OBJECT_ID(N'[dbo].[HubNotifyQueue]') AND name = 'Price')
+        ALTER TABLE [dbo].[HubNotifyQueue] ADD [Price] DECIMAL(18,2) NOT NULL CONSTRAINT DF_HubNotifyQueue_Price DEFAULT 0;
+    IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id = OBJECT_ID(N'[dbo].[HubNotifyQueue]') AND name = 'ExpectedDate')
+        ALTER TABLE [dbo].[HubNotifyQueue] ADD [ExpectedDate] DATE NULL;
+    IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id = OBJECT_ID(N'[dbo].[HubNotifyQueue]') AND name = 'Note')
+        ALTER TABLE [dbo].[HubNotifyQueue] ADD [Note] NVARCHAR(500) NULL;
+    IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id = OBJECT_ID(N'[dbo].[HubNotifyQueue]') AND name = 'HubSent')
+        ALTER TABLE [dbo].[HubNotifyQueue] ADD [HubSent] BIT NOT NULL CONSTRAINT DF_HubNotifyQueue_HubSent DEFAULT 0;
+    IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id = OBJECT_ID(N'[dbo].[HubNotifyQueue]') AND name = 'HubSentAt')
+        ALTER TABLE [dbo].[HubNotifyQueue] ADD [HubSentAt] DATETIME NULL;
+    IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id = OBJECT_ID(N'[dbo].[HubNotifyQueue]') AND name = 'Status')
+        ALTER TABLE [dbo].[HubNotifyQueue] ADD [Status] INT NOT NULL CONSTRAINT DF_HubNotifyQueue_Status DEFAULT 0;
+    PRINT N'-> Bảng [HubNotifyQueue] đã tồn tại và được cập nhật đầy đủ các cột.';
 END
 GO
 
@@ -276,9 +313,18 @@ BEGIN
     SET NOCOUNT ON;
     DECLARE @Offset INT = (@PageIndex - 1) * @PageSize;
 
-    SELECT o.*, COUNT(*) OVER() as TotalCount
+    SELECT 
+        o.*,
+        p.Name AS ProvinceName,
+        w.Name AS WardName,
+        c.MemberRank AS MemberRankName,
+        (SELECT COUNT(*) FROM OrderItems WHERE OrderId = o.OrderId) AS ItemCount,
+        COUNT(*) OVER() as TotalCount
     FROM Orders o
-    WHERE (@Keyword IS NULL OR o.OrderCode LIKE '%' + @Keyword + '%' OR o.CustomerName LIKE '%' + @Keyword + '%' OR o.CustomerPhone LIKE '%' + @Keyword + '%')
+    LEFT JOIN Provinces p ON o.ProvinceId = p.ProvinceId
+    LEFT JOIN Wards w ON o.WardId = w.WardId
+    LEFT JOIN Customers c ON o.CustomerId = c.CustomerId
+    WHERE (@Keyword IS NULL OR o.OrderCode LIKE N'%' + @Keyword + '%' OR o.CustomerName LIKE N'%' + @Keyword + '%' OR o.CustomerPhone LIKE N'%' + @Keyword + '%')
       AND (@OrderStatus IS NULL OR o.OrderStatus = @OrderStatus)
       AND (@PaymentStatus IS NULL OR o.PaymentStatus = @PaymentStatus)
       AND (@ProvinceId IS NULL OR o.ProvinceId = @ProvinceId)
@@ -298,6 +344,8 @@ BEGIN
         CASE WHEN @SortColumn = 'CreatedAt' AND @SortOrder = 'DESC' THEN o.CreatedAt END DESC,
         CASE WHEN @SortColumn = 'TotalAmount' AND @SortOrder = 'ASC' THEN o.TotalAmount END ASC,
         CASE WHEN @SortColumn = 'TotalAmount' AND @SortOrder = 'DESC' THEN o.TotalAmount END DESC,
+        CASE WHEN @SortColumn = 'OrderCode' AND @SortOrder = 'ASC' THEN o.OrderCode END ASC,
+        CASE WHEN @SortColumn = 'OrderCode' AND @SortOrder = 'DESC' THEN o.OrderCode END DESC,
         CASE WHEN @SortColumn = 'OrderId' AND @SortOrder = 'ASC' THEN o.OrderId END ASC,
         CASE WHEN @SortColumn = 'OrderId' AND @SortOrder = 'DESC' THEN o.OrderId END DESC,
         o.CreatedAt DESC
@@ -314,23 +362,55 @@ GO
 PRINT N'-> Đang tạo các thủ tục cho [dbo].[HubNotifyQueue]...';
 GO
 
--- 6.1 Thêm vào hàng đợi
+-- 6.1 Thêm vào danh sách đăng ký báo có hàng
 CREATE OR ALTER PROCEDURE [dbo].[SP_HubNotifyQueue_Enqueue]
     @OrderCode VARCHAR(50),
-    @Json NVARCHAR(MAX)
+    @Json NVARCHAR(MAX),
+    @CustomerName NVARCHAR(200) = NULL,
+    @CustomerPhone NVARCHAR(50) = NULL,
+    @CustomerAddress NVARCHAR(500) = NULL,
+    @ProductSKU NVARCHAR(100) = NULL,
+    @ProductName NVARCHAR(500) = NULL,
+    @Quantity INT = 1,
+    @Unit NVARCHAR(50) = NULL,
+    @Price DECIMAL(18,2) = 0,
+    @ExpectedDate DATE = NULL,
+    @Note NVARCHAR(500) = NULL
 AS
 BEGIN
     SET NOCOUNT ON;
 
+    IF @CustomerName IS NULL AND ISJSON(@Json) = 1
+    BEGIN
+        SET @CustomerName = JSON_VALUE(@Json, '$.customer.name');
+        SET @CustomerPhone = JSON_VALUE(@Json, '$.customer.phone');
+        SET @CustomerAddress = JSON_VALUE(@Json, '$.customer.address');
+        SET @ProductSKU = JSON_VALUE(@Json, '$.items[0].sku');
+        SET @ProductName = JSON_VALUE(@Json, '$.items[0].name');
+        SET @Quantity = ISNULL(TRY_CAST(JSON_VALUE(@Json, '$.items[0].qty') AS INT), 1);
+        SET @Unit = JSON_VALUE(@Json, '$.items[0].unit');
+        SET @Price = ISNULL(TRY_CAST(JSON_VALUE(@Json, '$.items[0].price') AS DECIMAL(18,2)), 0);
+        SET @ExpectedDate = TRY_CAST(JSON_VALUE(@Json, '$.items[0].expected') AS DATE);
+        SET @Note = JSON_VALUE(@Json, '$.note');
+    END
+
     IF NOT EXISTS (SELECT 1 FROM [dbo].[HubNotifyQueue] WHERE [OrderCode] = @OrderCode)
     BEGIN
-        INSERT INTO [dbo].[HubNotifyQueue] ([OrderCode], [Json], [CreatedAt], [HubTries])
-        VALUES (@OrderCode, @Json, GETDATE(), 0);
+        INSERT INTO [dbo].[HubNotifyQueue] (
+            [OrderCode], [Json], [CreatedAt], [HubTries], [HubSent], [Status],
+            [CustomerName], [CustomerPhone], [CustomerAddress],
+            [ProductSKU], [ProductName], [Quantity], [Unit], [Price], [ExpectedDate], [Note]
+        )
+        VALUES (
+            @OrderCode, @Json, GETDATE(), 0, 0, 0,
+            @CustomerName, @CustomerPhone, @CustomerAddress,
+            @ProductSKU, @ProductName, ISNULL(@Quantity, 1), @Unit, ISNULL(@Price, 0), @ExpectedDate, @Note
+        );
     END
 END
 GO
 
--- 6.2 Xóa khỏi hàng đợi khi gửi HUB thành công (Bảo vệ thông tin khách hàng)
+-- 6.2 Xóa theo OrderCode
 CREATE OR ALTER PROCEDURE [dbo].[SP_HubNotifyQueue_Delete]
     @OrderCode VARCHAR(50)
 AS
@@ -338,6 +418,24 @@ BEGIN
     SET NOCOUNT ON;
 
     DELETE FROM [dbo].[HubNotifyQueue] WHERE [OrderCode] = @OrderCode;
+END
+GO
+
+-- 6.2b Cập nhật trạng thái gửi HUB cho phiếu đăng ký báo có hàng
+CREATE OR ALTER PROCEDURE [dbo].[SP_HubNotifyQueue_UpdateHubStatus]
+    @OrderCode VARCHAR(50),
+    @HubSent BIT,
+    @HubLastError NVARCHAR(500) = NULL
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    UPDATE [dbo].[HubNotifyQueue]
+    SET [HubSent] = @HubSent,
+        [HubTries] = [HubTries] + 1,
+        [HubLastError] = @HubLastError,
+        [HubSentAt] = CASE WHEN @HubSent = 1 THEN GETDATE() ELSE [HubSentAt] END
+    WHERE [OrderCode] = @OrderCode;
 END
 GO
 
@@ -350,7 +448,8 @@ BEGIN
     SET NOCOUNT ON;
 
     UPDATE [dbo].[HubNotifyQueue]
-    SET [HubTries] = [HubTries] + 1,
+    SET [HubSent] = 0,
+        [HubTries] = [HubTries] + 1,
         [HubLastError] = @HubLastError
     WHERE [OrderCode] = @OrderCode;
 END
@@ -364,19 +463,116 @@ BEGIN
 
     SELECT TOP 20 [Id], [OrderCode], [Json], [HubTries]
     FROM [dbo].[HubNotifyQueue]
-    WHERE [HubTries] < 20
+    WHERE [HubSent] = 0 AND [HubTries] < 20
     ORDER BY [Id] ASC;
 END
 GO
 
--- 6.5 Dọn dẹp hàng đợi quá hạn (quá 7 ngày hoặc quá 20 lần thử)
+-- 6.5 Dọn dẹp hàng đợi quá hạn
 CREATE OR ALTER PROCEDURE [dbo].[SP_HubNotifyQueue_Cleanup]
 AS
 BEGIN
     SET NOCOUNT ON;
+END
+GO
 
-    DELETE FROM [dbo].[HubNotifyQueue]
-    WHERE [HubTries] >= 20 OR DATEDIFF(DAY, [CreatedAt], GETDATE()) >= 7;
+-- 6.6 Tìm kiếm & Phân trang danh sách đăng ký báo có hàng cho Admin
+CREATE OR ALTER PROCEDURE [dbo].[SP_HubNotifyQueue_Search]
+    @Keyword NVARCHAR(200) = NULL,
+    @Status INT = NULL,
+    @HubStatus INT = NULL,
+    @Ngay_Min DATETIME = NULL,
+    @Ngay_Max DATETIME = NULL,
+    @PageIndex INT = 1,
+    @PageSize INT = 20
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT q.*,
+           p.[ProductId],
+           p.[Slug] AS ProductSlug,
+           p.[MainImage] AS ProductImage,
+           p.[Stock] AS CurrentStock,
+           COUNT(*) OVER() AS TotalCount
+    FROM [dbo].[HubNotifyQueue] q
+    LEFT JOIN [dbo].[Products] p ON p.[SKU] = q.[ProductSKU]
+    WHERE (@Keyword IS NULL OR @Keyword = ''
+           OR q.[OrderCode] LIKE '%' + @Keyword + '%'
+           OR q.[CustomerName] LIKE '%' + @Keyword + '%'
+           OR q.[CustomerPhone] LIKE '%' + @Keyword + '%'
+           OR q.[ProductSKU] LIKE '%' + @Keyword + '%'
+           OR q.[ProductName] LIKE '%' + @Keyword + '%')
+      AND (@Status IS NULL OR q.[Status] = @Status)
+      AND (@Ngay_Min IS NULL OR q.[CreatedAt] >= @Ngay_Min)
+      AND (@Ngay_Max IS NULL OR q.[CreatedAt] <= DATEADD(SECOND, 86399, CAST(CAST(@Ngay_Max AS DATE) AS DATETIME)))
+      AND (
+          @HubStatus IS NULL
+          OR (@HubStatus = 1 AND q.[HubSent] = 1)
+          OR (@HubStatus = 0 AND q.[HubSent] = 0)
+          OR (@HubStatus = 2 AND q.[HubSent] = 0 AND q.[HubLastError] IS NOT NULL AND q.[HubLastError] <> '')
+          OR (@HubStatus = 3 AND q.[HubSent] = 0 AND (q.[HubLastError] IS NULL OR q.[HubLastError] = ''))
+      )
+    ORDER BY q.[CreatedAt] DESC, q.[Id] DESC
+    OFFSET (@PageIndex - 1) * @PageSize ROWS
+    FETCH NEXT @PageSize ROWS ONLY;
+END
+GO
+
+-- 6.7 Đếm số lượng theo trạng thái xử lý trên Admin
+CREATE OR ALTER PROCEDURE [dbo].[SP_HubNotifyQueue_GetStatusCounts]
+AS
+BEGIN
+    SET NOCOUNT ON;
+    SELECT
+        COUNT(*) AS [All],
+        ISNULL(SUM(CASE WHEN [Status] = 0 THEN 1 ELSE 0 END), 0) AS [New],
+        ISNULL(SUM(CASE WHEN [Status] = 1 THEN 1 ELSE 0 END), 0) AS [Contacted],
+        ISNULL(SUM(CASE WHEN [Status] = 2 THEN 1 ELSE 0 END), 0) AS [Completed],
+        ISNULL(SUM(CASE WHEN [Status] = 3 THEN 1 ELSE 0 END), 0) AS [Cancelled]
+    FROM [dbo].[HubNotifyQueue];
+END
+GO
+
+-- 6.8 Lấy chi tiết theo Id
+CREATE OR ALTER PROCEDURE [dbo].[SP_HubNotifyQueue_GetById]
+    @Id INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+    SELECT TOP 1 q.*,
+           p.[ProductId],
+           p.[Slug] AS ProductSlug,
+           p.[MainImage] AS ProductImage,
+           p.[Stock] AS CurrentStock
+    FROM [dbo].[HubNotifyQueue] q
+    LEFT JOIN [dbo].[Products] p ON p.[SKU] = q.[ProductSKU]
+    WHERE q.[Id] = @Id;
+END
+GO
+
+-- 6.9 Cập nhật trạng thái xử lý & ghi chú
+CREATE OR ALTER PROCEDURE [dbo].[SP_HubNotifyQueue_UpdateStatus]
+    @Id INT,
+    @Status INT,
+    @Note NVARCHAR(500) = NULL
+AS
+BEGIN
+    SET NOCOUNT ON;
+    UPDATE [dbo].[HubNotifyQueue]
+    SET [Status] = @Status,
+        [Note] = CASE WHEN @Note IS NOT NULL THEN @Note ELSE [Note] END
+    WHERE [Id] = @Id;
+END
+GO
+
+-- 6.10 Xóa bản ghi theo Id
+CREATE OR ALTER PROCEDURE [dbo].[SP_HubNotifyQueue_DeleteById]
+    @Id INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+    DELETE FROM [dbo].[HubNotifyQueue] WHERE [Id] = @Id;
 END
 GO
 
@@ -644,11 +840,11 @@ CREATE OR ALTER PROCEDURE [dbo].[SP_Orders_Insert]
     @ShippingFee DECIMAL(18,2) = 0,
     @Discount DECIMAL(18,2) = 0,
     @TotalAmount DECIMAL(18,2) = 0,
-    @OrderStatus INT = 1,
+    @OrderStatus INT = 0,
     @PaymentMethod NVARCHAR(100) = 'COD',
     @PaymentStatus INT = 0,
     @CustomerNote NVARCHAR(MAX) = NULL,
-    @CreatedBy NVARCHAR(100) = NULL,
+    @CreatedBy NVARCHAR(250) = NULL,
     @RequiresVAT BIT = 0,
     @VATCompanyName NVARCHAR(255) = NULL,
     @VATTaxCode NVARCHAR(50) = NULL,
@@ -660,12 +856,18 @@ CREATE OR ALTER PROCEDURE [dbo].[SP_Orders_Insert]
 AS
 BEGIN
     SET NOCOUNT ON;
+
+    IF @OrderCode IS NULL OR @OrderCode = ''
+    BEGIN
+        SET @OrderCode = 'ORD' + FORMAT(GETDATE(), 'yyMMdd') + CAST(CAST(RAND()*10000 AS INT) AS NVARCHAR(10));
+    END
+
     INSERT INTO [dbo].[Orders]
     (
         [OrderCode], [CustomerId], [CustomerName], [CustomerPhone], [CustomerEmail],
         [ShippingAddress], [WardId], [ProvinceId], [SubTotal], [ShippingFee],
         [Discount], [TotalAmount], [OrderStatus], [PaymentMethod], [PaymentStatus],
-        [CustomerNote], [CreatedBy], [CreatedAt],
+        [CustomerNote], [CreatedAt], [UpdatedAt], [UpdatedBy],
         [RequiresVAT], [VATCompanyName], [VATTaxCode], [VATCompanyAddress], [VATInvoiceEmail],
         [DeliveryMethod], [DeliveryNote], [DeliveryChosen],
         [HubSent], [HubTries]
@@ -675,7 +877,7 @@ BEGIN
         @OrderCode, @CustomerId, @CustomerName, @CustomerPhone, @CustomerEmail,
         @ShippingAddress, @WardId, @ProvinceId, @SubTotal, @ShippingFee,
         @Discount, @TotalAmount, @OrderStatus, @PaymentMethod, @PaymentStatus,
-        @CustomerNote, @CreatedBy, GETDATE(),
+        @CustomerNote, GETDATE(), GETDATE(), @CreatedBy,
         @RequiresVAT, @VATCompanyName, @VATTaxCode, @VATCompanyAddress, @VATInvoiceEmail,
         @DeliveryMethod, @DeliveryNote, @DeliveryChosen,
         0, 0

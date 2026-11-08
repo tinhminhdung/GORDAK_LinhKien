@@ -11,6 +11,7 @@
     <Content Remove="scratch\**" />
     <EmbeddedResource Remove="scratch\**" />
     <None Remove="scratch\**" />
+    <Content Include="scripts\**\*.sql" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="Always" />
   </ItemGroup>
 
   <ItemGroup>

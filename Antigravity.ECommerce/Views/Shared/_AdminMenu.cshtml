@@ -5,6 +5,7 @@
 
 	// Đếm đơn hàng mới
 	int newOrders = Antigravity.ECommerce.Framework.FOrder.GetStatusCounts().New;
+	int newHubNotifies = Antigravity.ECommerce.Framework.FHubNotify.GetStatusCounts().New;
 }
 <!-- ========== App Menu ========== -->
 <div class="app-menu navbar-menu">
@@ -57,6 +58,15 @@
 							@if (newOrders > 0)
 							{
 								<span class="badge badge-pill bg-danger ms-auto">@newOrders Mới</span>
+							}
+						</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link menu-link @(Context.Request.Path.Value.StartsWith("/AdminHubNotify") ? "active" : "")" href="/AdminHubNotify">
+							<i class="ri-notification-badge-line"></i> <span>ĐK Báo có hàng</span>
+							@if (newHubNotifies > 0)
+							{
+								<span class="badge badge-pill bg-warning text-dark ms-auto">@newHubNotifies Mới</span>
 							}
 						</a>
 					</li>
@@ -295,6 +305,11 @@
 										<a href="/AdminLog" class="nav-link @(Context.Request.Path.Value.StartsWith("/AdminLog") ? "active" : "")">Nhật ký Hoạt động (Log)</a>
 									</li>
 								}
+								<li class="nav-item">
+									<a href="/AdminTerminal" class="nav-link @(Context.Request.Path.Value.StartsWith("/AdminTerminal") ? "active" : "") text-warning fw-semibold">
+										<i class="ri-database-2-line me-1"></i> Cập nhật SQL / Terminal
+									</a>
+								</li>
 							</ul>
 						</div>
 					</li>

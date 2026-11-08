@@ -2,8 +2,16 @@
 -- SCRIPT CẬP NHẬT CƠ SỞ DỮ LIỆU ĐỂ TÍCH HỢP HỆ THỐNG HUB BÁN HÀNG
 -- Áp dụng cho website: uni-trend.vn (Dự án: uni)
 -- Database: [uni-trend_vn_NEW_T93]
--- Thời điểm: Tích hợp HUB 01/11/2026 (Kèm cập nhật bổ sung 29/10/2026)
--- Bao gồm: Bảng Products, Orders, HubNotifyQueue và các Stored Procedure chuẩn mực
+-- 
+-- NHẬT KÝ CẬP NHẬT / CHANGE LOG:
+-- ------------------------------------------------------------------------------
+-- [06/11/2026] - BỔ SUNG BỘ LỌC TRẠNG THÁI HUB TRÊN ADMIN QUẢN LÝ ĐƠN HÀNG:
+--   + Thêm mục 2.1: Tạo chỉ mục [IX_Orders_HubSent] trên bảng Orders để tối ưu tốc độ lọc đơn theo trạng thái Hub.
+--   + Thêm mục 5b: Stored Procedure [dbo].[SP_Orders_Search] hỗ trợ tham số @HubStatus (INT = NULL)
+--     Giá trị: 1 (HUB đã nhận), 0 (HUB chưa nhận), 2 (Bắn lỗi), 3 (Chưa gửi), NULL (Tất cả).
+-- [01/11/2026] - TÍCH HỢP HUB BAN ĐẦU:
+--   + Bảng Products (ExpectedDate), Orders (HubSent, HubTries, HubLastError, HubSentAt, DeliveryMethod...).
+--   + Bảng hàng đợi HubNotifyQueue và các Stored Procedure đồng bộ.
 -- ==============================================================================
 
 USE [uni-trend_vn_NEW_T93];
@@ -132,6 +140,23 @@ END
 GO
 
 -- ------------------------------------------------------------------------------
+-- 2.1 [BỔ SUNG MỚI - NGÀY 06/11/2026]
+-- TẠO CHỈ MỤC TỐI ƯU BỘ LỌC TRẠNG THÁI HUB: IX_Orders_HubSent
+-- Tối ưu hóa truy vấn tìm kiếm lọc đơn hàng theo HubSent trên Admin
+-- ------------------------------------------------------------------------------
+IF NOT EXISTS (
+    SELECT 1 FROM sys.indexes 
+    WHERE name = 'IX_Orders_HubSent' AND object_id = OBJECT_ID(N'[dbo].[Orders]')
+)
+BEGIN
+    CREATE NONCLUSTERED INDEX [IX_Orders_HubSent] 
+    ON [dbo].[Orders] ([HubSent]) 
+    INCLUDE ([OrderId], [OrderCode], [HubLastError], [CreatedAt]);
+    PRINT N'-> Đã tạo chỉ mục tìm kiếm [IX_Orders_HubSent] trên bảng Orders (Bổ sung 06/11/2026).';
+END
+GO
+
+-- ------------------------------------------------------------------------------
 -- 3. TẠO BẢNG HubNotifyQueue: Hàng đợi lưu tạm đăng ký "Báo cho tôi" (kind: notify)
 -- QUY TẮC BẢO MẬT: Sau khi gửi thành công sang HUB (200 OK), website sẽ XÓA NGAY
 -- dòng này khỏi bảng để không lưu trữ thông tin cá nhân khách hàng.
@@ -221,6 +246,77 @@ END
 GO
 
 PRINT N'-> Đã hoàn thành thủ tục [dbo].[SP_Orders_UpdateHubStatus].';
+GO
+
+-- ------------------------------------------------------------------------------
+-- 5b. [BỔ SUNG MỚI - NGÀY 06/11/2026]
+-- STORED PROCEDURE TÌM KIẾM ĐƠN HÀNG KÈM BỘ LỌC TRẠNG THÁI HUB: SP_Orders_Search
+-- Nghiệp vụ: Lọc đơn hàng theo trạng thái gửi HUB (Đã nhận / Chưa nhận / Bị lỗi / Chưa gửi)
+-- Ngày cập nhật: 06/11/2026
+-- ------------------------------------------------------------------------------
+PRINT N'-> Đang tạo/cập nhật thủ tục [dbo].[SP_Orders_Search] (Bổ sung 06/11/2026)...';
+GO
+
+CREATE OR ALTER PROCEDURE [dbo].[SP_Orders_Search]
+    @Keyword NVARCHAR(250) = NULL,
+    @OrderStatus INT = NULL,
+    @PaymentStatus INT = NULL,
+    @ProvinceId INT = NULL,
+    @WardId INT = NULL,
+    @RequiresVAT BIT = NULL,
+    @Ngay_Min DATETIME = NULL,
+    @Ngay_Max DATETIME = NULL,
+    @SortColumn NVARCHAR(50) = 'CreatedAt',
+    @SortOrder NVARCHAR(10) = 'DESC',
+    @PageIndex INT = 1,
+    @PageSize INT = 20,
+    @HubStatus INT = NULL -- [BỔ SUNG 06/11/2026] 1: Đã nhận, 0: Chưa nhận, 2: Lỗi, 3: Chưa gửi
+AS
+BEGIN
+    SET NOCOUNT ON;
+    DECLARE @Offset INT = (@PageIndex - 1) * @PageSize;
+
+    SELECT 
+        o.*,
+        p.Name AS ProvinceName,
+        w.Name AS WardName,
+        c.MemberRank AS MemberRankName,
+        (SELECT COUNT(*) FROM OrderItems WHERE OrderId = o.OrderId) AS ItemCount,
+        COUNT(*) OVER() as TotalCount
+    FROM Orders o
+    LEFT JOIN Provinces p ON o.ProvinceId = p.ProvinceId
+    LEFT JOIN Wards w ON o.WardId = w.WardId
+    LEFT JOIN Customers c ON o.CustomerId = c.CustomerId
+    WHERE (@Keyword IS NULL OR o.OrderCode LIKE N'%' + @Keyword + '%' OR o.CustomerName LIKE N'%' + @Keyword + '%' OR o.CustomerPhone LIKE N'%' + @Keyword + '%')
+      AND (@OrderStatus IS NULL OR o.OrderStatus = @OrderStatus)
+      AND (@PaymentStatus IS NULL OR o.PaymentStatus = @PaymentStatus)
+      AND (@ProvinceId IS NULL OR o.ProvinceId = @ProvinceId)
+      AND (@WardId IS NULL OR o.WardId = @WardId)
+      AND (@RequiresVAT IS NULL OR o.RequiresVAT = @RequiresVAT)
+      AND (@Ngay_Min IS NULL OR o.CreatedAt >= @Ngay_Min)
+      AND (@Ngay_Max IS NULL OR o.CreatedAt <= @Ngay_Max)
+      AND (
+          @HubStatus IS NULL 
+          OR (@HubStatus = 1 AND o.HubSent = 1)
+          OR (@HubStatus = 0 AND ISNULL(o.HubSent, 0) = 0)
+          OR (@HubStatus = 2 AND ISNULL(o.HubSent, 0) = 0 AND o.HubLastError IS NOT NULL AND o.HubLastError <> '')
+          OR (@HubStatus = 3 AND ISNULL(o.HubSent, 0) = 0 AND (o.HubLastError IS NULL OR o.HubLastError = ''))
+      )
+    ORDER BY 
+        CASE WHEN @SortColumn = 'CreatedAt' AND @SortOrder = 'ASC' THEN o.CreatedAt END ASC,
+        CASE WHEN @SortColumn = 'CreatedAt' AND @SortOrder = 'DESC' THEN o.CreatedAt END DESC,
+        CASE WHEN @SortColumn = 'TotalAmount' AND @SortOrder = 'ASC' THEN o.TotalAmount END ASC,
+        CASE WHEN @SortColumn = 'TotalAmount' AND @SortOrder = 'DESC' THEN o.TotalAmount END DESC,
+        CASE WHEN @SortColumn = 'OrderCode' AND @SortOrder = 'ASC' THEN o.OrderCode END ASC,
+        CASE WHEN @SortColumn = 'OrderCode' AND @SortOrder = 'DESC' THEN o.OrderCode END DESC,
+        CASE WHEN @SortColumn = 'OrderId' AND @SortOrder = 'ASC' THEN o.OrderId END ASC,
+        CASE WHEN @SortColumn = 'OrderId' AND @SortOrder = 'DESC' THEN o.OrderId END DESC,
+        o.CreatedAt DESC
+    OFFSET @Offset ROWS FETCH NEXT @PageSize ROWS ONLY;
+END
+GO
+
+PRINT N'-> Đã hoàn thành thủ tục [dbo].[SP_Orders_Search].';
 GO
 
 -- ------------------------------------------------------------------------------
@@ -574,11 +670,11 @@ CREATE OR ALTER PROCEDURE [dbo].[SP_Orders_Insert]
     @ShippingFee DECIMAL(18,2) = 0,
     @Discount DECIMAL(18,2) = 0,
     @TotalAmount DECIMAL(18,2) = 0,
-    @OrderStatus INT = 1,
+    @OrderStatus INT = 0,
     @PaymentMethod NVARCHAR(100) = 'COD',
     @PaymentStatus INT = 0,
     @CustomerNote NVARCHAR(MAX) = NULL,
-    @CreatedBy NVARCHAR(100) = NULL,
+    @CreatedBy NVARCHAR(250) = NULL,
     @RequiresVAT BIT = 0,
     @VATCompanyName NVARCHAR(255) = NULL,
     @VATTaxCode NVARCHAR(50) = NULL,
@@ -590,12 +686,18 @@ CREATE OR ALTER PROCEDURE [dbo].[SP_Orders_Insert]
 AS
 BEGIN
     SET NOCOUNT ON;
+
+    IF @OrderCode IS NULL OR @OrderCode = ''
+    BEGIN
+        SET @OrderCode = 'ORD' + FORMAT(GETDATE(), 'yyMMdd') + CAST(CAST(RAND()*10000 AS INT) AS NVARCHAR(10));
+    END
+
     INSERT INTO [dbo].[Orders]
     (
         [OrderCode], [CustomerId], [CustomerName], [CustomerPhone], [CustomerEmail],
         [ShippingAddress], [WardId], [ProvinceId], [SubTotal], [ShippingFee],
         [Discount], [TotalAmount], [OrderStatus], [PaymentMethod], [PaymentStatus],
-        [CustomerNote], [CreatedBy], [CreatedAt],
+        [CustomerNote], [CreatedAt], [UpdatedAt], [UpdatedBy],
         [RequiresVAT], [VATCompanyName], [VATTaxCode], [VATCompanyAddress], [VATInvoiceEmail],
         [DeliveryMethod], [DeliveryNote], [DeliveryChosen],
         [HubSent], [HubTries]
@@ -605,7 +707,7 @@ BEGIN
         @OrderCode, @CustomerId, @CustomerName, @CustomerPhone, @CustomerEmail,
         @ShippingAddress, @WardId, @ProvinceId, @SubTotal, @ShippingFee,
         @Discount, @TotalAmount, @OrderStatus, @PaymentMethod, @PaymentStatus,
-        @CustomerNote, @CreatedBy, GETDATE(),
+        @CustomerNote, GETDATE(), GETDATE(), @CreatedBy,
         @RequiresVAT, @VATCompanyName, @VATTaxCode, @VATCompanyAddress, @VATInvoiceEmail,
         @DeliveryMethod, @DeliveryNote, @DeliveryChosen,
         0, 0
