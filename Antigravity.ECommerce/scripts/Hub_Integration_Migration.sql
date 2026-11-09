@@ -229,12 +229,21 @@ GO
 CREATE OR ALTER PROCEDURE [dbo].[SP_Hub_SyncProduct]
     @SKU NVARCHAR(50),
     @Stock INT,
-    @Price DECIMAL(18,0),
+    @Price DECIMAL(18,0), -- Giá do HUB gửi xuống là GIÁ CHƯA VAT
     @Unit NVARCHAR(50) = NULL,
     @ExpectedDate DATE = NULL
 AS
 BEGIN
     SET NOCOUNT ON;
+
+    -- =========================================================================
+    -- CHANGE LOG:
+    -- Ngày sửa: 2026-11-09
+    -- Người sửa: Coder / Antigravity
+    -- Lý do sửa: Dữ liệu @Price từ HUB đẩy xuống là Giá CHƯA VAT. Cập nhật đúng
+    --            trường [OldPrice] = Giá chưa VAT, và tính [Price] = Giá sau VAT (8%)
+    --            để tránh lỗi giá VAT và chưa VAT bị trùng nhau trên website.
+    -- =========================================================================
 
     -- Nếu có tồn (>0) thì ExpectedDate tự động set NULL theo quy tắc nghiệp vụ HUB
     IF @Stock > 0
@@ -242,9 +251,20 @@ BEGIN
         SET @ExpectedDate = NULL;
     END
 
+    /* [START OLD CODE - 2026-11-09]
     UPDATE [dbo].[Products]
     SET [Stock] = @Stock,
         [Price] = CASE WHEN @Price > 0 THEN @Price ELSE [Price] END,
+        [Unit] = CASE WHEN @Unit IS NOT NULL AND RTRIM(@Unit) <> '' THEN @Unit ELSE [Unit] END,
+        [ExpectedDate] = @ExpectedDate,
+        [UpdatedAt] = GETDATE()
+    WHERE [SKU] = @SKU;
+    [END OLD CODE] */
+
+    UPDATE [dbo].[Products]
+    SET [Stock] = @Stock,
+        [OldPrice] = CASE WHEN @Price > 0 THEN @Price ELSE [OldPrice] END,
+        [Price] = CASE WHEN @Price > 0 THEN ROUND(@Price * 1.08, 0) ELSE [Price] END,
         [Unit] = CASE WHEN @Unit IS NOT NULL AND RTRIM(@Unit) <> '' THEN @Unit ELSE [Unit] END,
         [ExpectedDate] = @ExpectedDate,
         [UpdatedAt] = GETDATE()

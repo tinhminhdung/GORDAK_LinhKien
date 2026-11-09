@@ -161,17 +161,34 @@
 							}
 						</table>
 
+						@{
+							// Xử lý chuẩn hóa Giá chưa VAT và Giá bán sau VAT (8%)
+							decimal priceBeforeVat = Model.OldPrice;
+							decimal priceAfterVat = Model.Price;
+
+							if (priceBeforeVat > 0 && (priceAfterVat <= 0 || priceAfterVat == priceBeforeVat))
+							{
+								// Nếu DB bị trùng 2 giá bằng nhau (do dữ liệu cũ hoặc HUB đẩy đè), tự động tính Giá sau VAT = Giá chưa VAT * 1.08
+								priceAfterVat = Math.Round(priceBeforeVat * 1.08m, MidpointRounding.AwayFromZero);
+							}
+							else if (priceBeforeVat <= 0 && priceAfterVat > 0)
+							{
+								// Nếu DB chỉ có Giá sau VAT, tự động tính ngược lại Giá chưa VAT
+								priceBeforeVat = Math.Round(priceAfterVat / 1.08m, MidpointRounding.AwayFromZero);
+							}
+						}
+
 						<div class="pd2-price-wrap">
-							@if (Model.OldPrice > 0)
+							@if (priceBeforeVat > 0)
 							{
 								<div class="pd2-price-row">
 									<span style="color:#666;"><b style="color:#e30000;">Giá</b> (Chưa VAT):</span>
-									<span class="pd2-price-red">@Model.OldPrice.ToString("N0")đ</span>
+									<span class="pd2-price-red">@priceBeforeVat.ToString("N0")đ</span>
 								</div>
 							}
 							<div class="pd2-price-row">
-								<span style="color:#666;"><b style="color:#e30000;">Giá bán</b>@(Model.Price > 0 ? " (Sau VAT)" : ""):</span>
-								<span class="pd2-price-red">@Model.Price.ToString("N0")đ</span>
+								<span style="color:#666;"><b style="color:#e30000;">Giá bán</b>@(priceAfterVat > 0 ? " (Sau VAT)" : ""):</span>
+								<span class="pd2-price-red">@(priceAfterVat > 0 ? priceAfterVat.ToString("N0") + "đ" : "Liên hệ")</span>
 							</div>
 						</div>
 

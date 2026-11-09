@@ -113,7 +113,7 @@ namespace Antigravity.ECommerce.Services
                     string sku = !string.IsNullOrEmpty(item.ProductSKU) ? item.ProductSKU : (product?.SKU ?? "SKU-" + item.ProductId);
                     string unit = product?.Unit ?? "Chiếc";
 
-                    // Đơn giá chưa VAT: Ưu tiên OldPrice nếu có, ngược lại tính từ Price / 1.1
+                    // Đơn giá chưa VAT: Ưu tiên OldPrice nếu có, ngược lại tính từ Price / 1.08 (VAT 8%)
                     long priceWithoutVat = 0;
                     if (product != null && product.OldPrice > 0)
                     {
@@ -121,7 +121,7 @@ namespace Antigravity.ECommerce.Services
                     }
                     else if (item.Price > 0)
                     {
-                        priceWithoutVat = (long)Math.Round(item.Price / 1.1m);
+                        priceWithoutVat = (long)Math.Round(item.Price / 1.08m);
                     }
 
                     int qty = item.Quantity > 0 ? item.Quantity : 1;
@@ -249,7 +249,7 @@ namespace Antigravity.ECommerce.Services
                 if (string.IsNullOrEmpty(key)) key = cfg["HubSettings:NotifyKey"] ?? cfg["HubSettings:OrderKey"] ?? "";
 
                 // Đơn giá chưa VAT
-                long priceWithoutVat = (product.OldPrice > 0) ? (long)Math.Round(product.OldPrice) : (long)Math.Round(product.Price / 1.1m);
+                long priceWithoutVat = (product.OldPrice > 0) ? (long)Math.Round(product.OldPrice) : (long)Math.Round(product.Price / 1.08m);
                 string unit = !string.IsNullOrEmpty(product.Unit) ? product.Unit : "Chiếc";
                 string? expectedDateStr = product.ExpectedDate.HasValue ? product.ExpectedDate.Value.ToString("yyyy-MM-dd") : null;
 
