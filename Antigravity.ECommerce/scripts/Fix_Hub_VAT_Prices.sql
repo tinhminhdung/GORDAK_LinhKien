@@ -1,11 +1,16 @@
 -- ==============================================================================
--- KỊCH BẢN KHẮC PHỤC LỖI GIÁ HUB VÀ CHUẨN HÓA GIÁ VAT (8%)
--- Ngày thực hiện: 2026-11-09
--- Áp dụng cho: CSDL UNI-TREND & GORDAK
+-- KỊCH BẢN CẬP NHẬT DATABASE NGÀY 09/11/2026 (CHỈ CÁC MỤC SỬA HÔM NAY)
+-- Áp dụng cho: CSDL LIVE CẢ 2 TRANG UNI-TREND.VN & GORDAK.VN
+-- Nội dung sửa:
+--   1. Cập nhật lại thủ tục [dbo].[SP_Hub_SyncProduct]:
+--      Dữ liệu @Price do HUB đẩy xuống là Giá CHƯA VAT -> Lưu vào [OldPrice],
+--      tự động tính [Price] = Giá sau VAT 8% (ROUND(@Price * 1.08, 0)).
+--   2. Chuẩn hóa dữ liệu cũ: Cập nhật lại Giá sau VAT 8% cho các sản phẩm
+--      đang bị trùng giá (Price = OldPrice) do lần đồng bộ trước từ HUB.
 -- ==============================================================================
 
 PRINT N'==============================================================================';
-PRINT N'1. CẬP NHẬT LẠI THỦ TỤC ĐỒNG BỘ HUB: [dbo].[SP_Hub_SyncProduct]';
+PRINT N'1. CẬP NHẬT LẠI STORED PROCEDURE: [dbo].[SP_Hub_SyncProduct] (NGÀY 09/11/2026)';
 PRINT N'==============================================================================';
 GO
 
@@ -66,27 +71,44 @@ PRINT N'2. CHUẨN HÓA DỮ LIỆU CŨ: CẬP NHẬT GIÁ BÁN SAU VAT (8%) CHO
 PRINT N'==============================================================================';
 GO
 
--- Trường hợp 1: Sản phẩm có OldPrice > 0 và Price bị trùng đúng bằng OldPrice (hoặc Price = 0)
+-- 2.1 Cập nhật Price = OldPrice * 1.08 cho các sản phẩm đang bị Price = OldPrice
 UPDATE [dbo].[Products]
 SET [Price] = ROUND([OldPrice] * 1.08, 0),
     [UpdatedAt] = GETDATE()
 WHERE [OldPrice] > 0 AND ([Price] = [OldPrice] OR [Price] = 0);
 
-PRINT N'-> Đã cập nhật Price = ROUND(OldPrice * 1.08, 0) cho các sản phẩm bị trùng giá.';
+PRINT N'-> Đã tính lại Price (Sau VAT 8%) cho ' + CAST(@@ROWCOUNT AS NVARCHAR(20)) + N' sản phẩm bị trùng giá.';
 GO
 
--- Trường hợp 2: Sản phẩm có Price > 0 nhưng OldPrice = 0 (bị thiếu giá chưa VAT)
+-- 2.2 Bổ sung OldPrice = Price / 1.08 cho các sản phẩm có Price nhưng thiếu OldPrice
 UPDATE [dbo].[Products]
 SET [OldPrice] = ROUND([Price] / 1.08, 0),
     [UpdatedAt] = GETDATE()
 WHERE [Price] > 0 AND ([OldPrice] IS NULL OR [OldPrice] = 0);
 
-PRINT N'-> Đã cập nhật OldPrice = ROUND(Price / 1.08, 0) cho các sản phẩm thiếu giá chưa VAT.';
+PRINT N'-> Đã tính lại OldPrice (Chưa VAT) cho ' + CAST(@@ROWCOUNT AS NVARCHAR(20)) + N' sản phẩm thiếu giá chưa VAT.';
 GO
 
-SELECT COUNT(1) AS TotalProducts,
-       SUM(CASE WHEN [Price] > [OldPrice] AND [OldPrice] > 0 THEN 1 ELSE 0 END) AS ProductsWithCorrectVat,
-       SUM(CASE WHEN [Price] = [OldPrice] AND [Price] > 0 THEN 1 ELSE 0 END) AS ProductsWithSamePrice
-FROM [dbo].[Products];
+PRINT N'==============================================================================';
+PRINT N'3. KIỂM TRA MẪU CÁC SẢN PHẨM SAU KHI CẬP NHẬT GIÁ';
+PRINT N'==============================================================================';
 GO
 
+-- Hiển thị kiểm tra các sản phẩm tiêu biểu (ví dụ NM00115 và 10 SP khác)
+SELECT TOP 10 
+    [SKU], 
+    [Name] AS [Tên sản phẩm], 
+    [OldPrice] AS [Giá (Chưa VAT)], 
+    [Price] AS [Giá bán (Sau VAT 8%)],
+    CAST(ROUND([Price] - [OldPrice], 0) AS DECIMAL(18,0)) AS [Tiền thuế VAT 8%],
+    [Stock] AS [Tồn kho],
+    [Unit] AS [ĐVT]
+FROM [dbo].[Products]
+WHERE [OldPrice] > 0
+ORDER BY [UpdatedAt] DESC, [ProductId] DESC;
+GO
+
+PRINT N'==============================================================================';
+PRINT N'✅ HOÀN TẤT CẬP NHẬT CSDL HÔM NAY (09/11/2026)!';
+PRINT N'==============================================================================';
+GO
