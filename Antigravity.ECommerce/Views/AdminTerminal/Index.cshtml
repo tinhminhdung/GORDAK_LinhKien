@@ -45,6 +45,39 @@
 }
 
 <div class="row">
+    <!-- NÚT BẤM 1 CHẠM: CẬP NHẬT FIX_HUB_VAT_PRICES.SQL (ƯU TIÊN HÔM NAY) -->
+    <div class="col-xl-12 mb-3">
+        <div class="card shadow-sm border-0 border-top border-danger border-3 mb-0" style="background: #fffdfd;">
+            <div class="card-header bg-danger-subtle d-flex align-items-center justify-content-between flex-wrap gap-2">
+                <div>
+                    <h6 class="card-title mb-0 text-danger fw-bold fs-15">
+                        <i class="ri-fire-fill me-1"></i> [09/11/2026] CẬP NHẬT THỦ TỤC HUB & CHUẨN HÓA GIÁ VAT (8%) TRÊN LIVE (1-CLICK)
+                    </h6>
+                    <small class="text-dark">Tự động đọc và chạy file <code>scripts/Fix_Hub_VAT_Prices.sql</code> để cập nhật Stored Procedure <code>SP_Hub_SyncProduct</code> và chuẩn hóa lại toàn bộ giá bán sau VAT (8%) cho sản phẩm bị trùng giá.</small>
+                </div>
+                <span class="badge bg-danger fs-12 px-2 py-1"><i class="ri-star-fill me-1"></i> Cần bấm chạy hôm nay</span>
+            </div>
+            <div class="card-body">
+                <form method="post" action="/AdminTerminal/RunFixHubVatPrices" onsubmit="return confirm('Bạn có chắc chắn muốn thực thi kịch bản Fix_Hub_VAT_Prices.sql để cập nhật SP_Hub_SyncProduct và chuẩn hóa giá VAT cho toàn bộ sản phẩm trên Live không?');">
+                    <div class="row g-3 align-items-end">
+                        @if (!isAuthenticated)
+                        {
+                            <div class="col-md-4">
+                                <label class="form-label fw-bold text-danger">Mật khẩu cấp 2 (*) <small class="text-muted fw-normal">(Mặc định: <code>Antigravity@2026</code>)</small></label>
+                                <input type="password" name="secretKey" class="form-control border-danger" required placeholder="Nhập Antigravity@2026..." value="Antigravity@2026" />
+                            </div>
+                        }
+                        <div class="col-md-8">
+                            <button type="submit" class="btn btn-danger fw-bold px-4 py-2 shadow-sm fs-14">
+                                <i class="ri-flashlight-fill me-1"></i> Bấm để chạy Fix_Hub_VAT_Prices.sql ngay lập tức
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <!-- CÁCH 1: NÚT BẤM 1 CHẠM CẬP NHẬT TỰ ĐỘNG FILE HUB_INTEGRATION_MIGRATION.SQL -->
     <div class="col-xl-12 mb-3">
         <div class="card shadow-sm border-0 border-top border-primary border-3 mb-0">

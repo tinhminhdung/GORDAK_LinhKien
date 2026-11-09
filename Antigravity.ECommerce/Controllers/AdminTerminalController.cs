@@ -28,6 +28,7 @@ namespace Antigravity.ECommerce.Controllers
         public IActionResult Index()
         {
             ViewBag.ScriptExists = System.IO.File.Exists(Path.Combine(_env.ContentRootPath, "scripts", "Hub_Integration_Migration.sql"));
+            ViewBag.FixScriptExists = System.IO.File.Exists(Path.Combine(_env.ContentRootPath, "scripts", "Fix_Hub_VAT_Prices.sql"));
             return View();
         }
 
@@ -136,6 +137,45 @@ namespace Antigravity.ECommerce.Controllers
             {
                 ViewBag.Error = res.error;
                 ViewBag.Messages = res.messages;
+            }
+
+            return View("Index");
+        }
+
+        [HttpPost]
+        public IActionResult RunFixHubVatPrices(string secretKey)
+        {
+            string scriptPath = Path.Combine(_env.ContentRootPath, "scripts", "Fix_Hub_VAT_Prices.sql");
+            ViewBag.ScriptExists = System.IO.File.Exists(Path.Combine(_env.ContentRootPath, "scripts", "Hub_Integration_Migration.sql"));
+            ViewBag.FixScriptExists = System.IO.File.Exists(scriptPath);
+
+            if (!CheckAuth(secretKey))
+            {
+                ViewBag.Error = "Sai mật khẩu cấp 2 (Mật khẩu mặc định: Antigravity@2026). Truy cập bị từ chối.";
+                return View("Index");
+            }
+
+            if (!System.IO.File.Exists(scriptPath))
+            {
+                ViewBag.Error = $"Không tìm thấy file kịch bản tại: {scriptPath}";
+                return View("Index");
+            }
+
+            string sqlText = System.IO.File.ReadAllText(scriptPath, Encoding.UTF8);
+            ViewBag.Query = sqlText;
+
+            var res = ExecuteSqlScript(sqlText, stripUseDatabase: true);
+            if (res.ok)
+            {
+                ViewBag.Success = $"✅ Đã thực thi thành công file Fix_Hub_VAT_Prices.sql ({res.batchesExecuted} cụm lệnh GO)! Thủ tục SP_Hub_SyncProduct đã được cập nhật và toàn bộ sản phẩm đã được chuẩn hóa giá VAT 8%.";
+                ViewBag.Messages = res.messages;
+                ViewBag.Data = res.lastTable;
+            }
+            else
+            {
+                ViewBag.Error = res.error;
+                ViewBag.Messages = res.messages;
+                ViewBag.Data = res.lastTable;
             }
 
             return View("Index");
