@@ -115,6 +115,19 @@ namespace Antigravity.ECommerce.Services
                 return Results.BadRequest("error");
             }
 
+            // Ghi nhật ký gói tin HUB gửi sang vào file logs/hub_sync.log để đối soát trực quan
+            try
+            {
+                string logDir = Path.Combine(AppContext.BaseDirectory, "logs");
+                if (!Directory.Exists(logDir)) Directory.CreateDirectory(logDir);
+                string logFile = Path.Combine(logDir, "hub_sync.log");
+                string clientIp = ctx.Connection.RemoteIpAddress?.ToString() ?? "unknown";
+                string rawJson = Encoding.UTF8.GetString(body);
+                string logEntry = $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] [IP: {clientIp}] [Items: {payload.items.Count}] => {rawJson}{Environment.NewLine}";
+                File.AppendAllText(logFile, logEntry, Encoding.UTF8);
+            }
+            catch { }
+
             // 8. Cập nhật dữ liệu vào CSDL qua Stored Procedure
             int updated = 0, unknown = 0;
             try

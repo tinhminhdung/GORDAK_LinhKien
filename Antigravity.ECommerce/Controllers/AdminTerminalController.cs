@@ -30,6 +30,19 @@ namespace Antigravity.ECommerce.Controllers
             ViewBag.ScriptExists = System.IO.File.Exists(Path.Combine(_env.ContentRootPath, "scripts", "Hub_Integration_Migration.sql"));
             ViewBag.FixScriptExists = System.IO.File.Exists(Path.Combine(_env.ContentRootPath, "scripts", "Fix_Hub_VAT_Prices.sql"));
             ViewBag.FixNameScriptExists = System.IO.File.Exists(Path.Combine(_env.ContentRootPath, "scripts", "Fix_Hub_ProductName.sql"));
+
+            // Đọc 30 dòng nhật ký mới nhất từ logs/hub_sync.log để đối soát trực tiếp
+            try
+            {
+                string logFile = Path.Combine(AppContext.BaseDirectory, "logs", "hub_sync.log");
+                if (System.IO.File.Exists(logFile))
+                {
+                    var lines = System.IO.File.ReadAllLines(logFile, Encoding.UTF8);
+                    ViewBag.HubSyncLogs = lines.Reverse().Take(30).ToList();
+                }
+            }
+            catch { }
+
             return View();
         }
 
