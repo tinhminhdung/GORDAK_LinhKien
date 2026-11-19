@@ -7,10 +7,12 @@ namespace Antigravity.ECommerce.Models
     public class HubSyncItem
     {
         public string code { get; set; } = string.Empty;
+        public string? name { get; set; }
         public int stock { get; set; }
         public long price { get; set; }
         public string? unit { get; set; }
         public string? expected { get; set; }
+        public bool? orderable { get; set; }
     }
 
     /// <summary> Payload danh sách sản phẩm nhận từ HUB (Luồng A) </summary>

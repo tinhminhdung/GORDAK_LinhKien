@@ -45,6 +45,39 @@
 }
 
 <div class="row">
+    <!-- NÚT BẤM 1 CHẠM: CẬP NHẬT FIX_HUB_PRODUCTNAME.SQL (MỚI 18/11/2026) -->
+    <div class="col-xl-12 mb-3">
+        <div class="card shadow-sm border-0 border-top border-success border-3 mb-0" style="background: #fcfdfc;">
+            <div class="card-header bg-success-subtle d-flex align-items-center justify-content-between flex-wrap gap-2">
+                <div>
+                    <h6 class="card-title mb-0 text-success fw-bold fs-15">
+                        <i class="ri-checkbox-circle-fill me-1"></i> [18/11/2026] CẬP NHẬT THỦ TỤC HUB ĐỒNG BỘ TÊN SẢN PHẨM (@@Name) (1-CLICK)
+                    </h6>
+                    <small class="text-dark">Tự động đọc và chạy file <code>scripts/Fix_Hub_ProductName.sql</code> để nâng cấp Stored Procedure <code>SP_Hub_SyncProduct</code> tiếp nhận và đồng bộ trường tên sản phẩm từ HUB về website.</small>
+                </div>
+                <span class="badge bg-success fs-12 px-2 py-1"><i class="ri-flashlight-line me-1"></i> Bổ sung 18/11/2026</span>
+            </div>
+            <div class="card-body">
+                <form method="post" action="/AdminTerminal/RunFixHubProductName" onsubmit="return confirm('Bạn có chắc chắn muốn thực thi kịch bản Fix_Hub_ProductName.sql để cập nhật SP_Hub_SyncProduct đồng bộ trường tên sản phẩm từ HUB không?');">
+                    <div class="row g-3 align-items-end">
+                        @if (!isAuthenticated)
+                        {
+                            <div class="col-md-4">
+                                <label class="form-label fw-bold text-success">Mật khẩu cấp 2 (*) <small class="text-muted fw-normal">(Mặc định: <code>Antigravity@2026</code>)</small></label>
+                                <input type="password" name="secretKey" class="form-control border-success" required placeholder="Nhập Antigravity@2026..." value="Antigravity@2026" />
+                            </div>
+                        }
+                        <div class="col-md-8">
+                            <button type="submit" class="btn btn-success fw-bold px-4 py-2 shadow-sm fs-14">
+                                <i class="ri-flashlight-fill me-1"></i> Bấm để chạy Fix_Hub_ProductName.sql ngay lập tức
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <!-- NÚT BẤM 1 CHẠM: CẬP NHẬT FIX_HUB_VAT_PRICES.SQL (ƯU TIÊN HÔM NAY) -->
     <div class="col-xl-12 mb-3">
         <div class="card shadow-sm border-0 border-top border-danger border-3 mb-0" style="background: #fffdfd;">

@@ -19,13 +19,19 @@ CREATE OR ALTER PROCEDURE [dbo].[SP_Hub_SyncProduct]
     @Stock INT,
     @Price DECIMAL(18,0), -- Giá do HUB gửi xuống là GIÁ CHƯA VAT
     @Unit NVARCHAR(50) = NULL,
-    @ExpectedDate DATE = NULL
+    @ExpectedDate DATE = NULL,
+    @Name NVARCHAR(300) = NULL -- Bổ sung ngày 18/11/2026: Tên sản phẩm trên HUB
 AS
 BEGIN
     SET NOCOUNT ON;
 
     -- =========================================================================
     -- CHANGE LOG:
+    -- Ngày sửa: 2026-11-19
+    -- Người sửa: Coder / Antigravity
+    -- Lý do sửa: Bổ sung cập nhật trường [Name] (Tên sản phẩm) đồng bộ từ HUB theo
+    --            thông báo ngày 18/11/2026. Nếu @Name rỗng hoặc quá 300 ký tự thì
+    --            giữ tên cũ. Giữ nguyên đường dẫn (Slug).
     -- Ngày sửa: 2026-11-09
     -- Người sửa: Coder / Antigravity
     -- Lý do sửa: Dữ liệu @Price từ HUB đẩy xuống là Giá CHƯA VAT. Cập nhật đúng
@@ -39,10 +45,11 @@ BEGIN
         SET @ExpectedDate = NULL;
     END
 
-    /* [START OLD CODE - 2026-11-09]
+    /* [START OLD CODE - 2026-11-19]
     UPDATE [dbo].[Products]
     SET [Stock] = @Stock,
-        [Price] = CASE WHEN @Price > 0 THEN @Price ELSE [Price] END,
+        [OldPrice] = CASE WHEN @Price > 0 THEN @Price ELSE [OldPrice] END,
+        [Price] = CASE WHEN @Price > 0 THEN ROUND(@Price * 1.08, 0) ELSE [Price] END,
         [Unit] = CASE WHEN @Unit IS NOT NULL AND RTRIM(@Unit) <> '' THEN @Unit ELSE [Unit] END,
         [ExpectedDate] = @ExpectedDate,
         [UpdatedAt] = GETDATE()
@@ -55,6 +62,7 @@ BEGIN
         [Price] = CASE WHEN @Price > 0 THEN ROUND(@Price * 1.08, 0) ELSE [Price] END,
         [Unit] = CASE WHEN @Unit IS NOT NULL AND RTRIM(@Unit) <> '' THEN @Unit ELSE [Unit] END,
         [ExpectedDate] = @ExpectedDate,
+        [Name] = CASE WHEN @Name IS NOT NULL AND LTRIM(RTRIM(@Name)) <> '' AND LEN(@Name) <= 300 THEN LTRIM(RTRIM(@Name)) ELSE [Name] END,
         [UpdatedAt] = GETDATE()
     WHERE [SKU] = @SKU;
 

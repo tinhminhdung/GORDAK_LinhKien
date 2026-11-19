@@ -139,8 +139,16 @@ namespace Antigravity.ECommerce.Services
                         }
                     }
 
+                    // Xử lý trường name (Bổ sung HUB 18/11/2026): UTF-8 có dấu, <= 300 ký tự. Nếu rỗng hoặc > 300 thì giữ tên cũ
+                    string? validName = null;
+                    if (!string.IsNullOrWhiteSpace(it.name))
+                    {
+                        string trimmedName = it.name.Trim();
+                        if (trimmedName.Length <= 300) validName = trimmedName;
+                    }
+
                     // Gọi Stored Procedure SP_Hub_SyncProduct (Compact Single-line)
-                    var prms = new SqlParameter[] { new SqlParameter("@SKU", it.code.Trim()), new SqlParameter("@Stock", it.stock), new SqlParameter("@Price", it.price), new SqlParameter("@Unit", (object?)it.unit ?? DBNull.Value), new SqlParameter("@ExpectedDate", (object?)expectedDate ?? DBNull.Value) };
+                    var prms = new SqlParameter[] { new SqlParameter("@SKU", it.code.Trim()), new SqlParameter("@Stock", it.stock), new SqlParameter("@Price", it.price), new SqlParameter("@Unit", (object?)it.unit ?? DBNull.Value), new SqlParameter("@ExpectedDate", (object?)expectedDate ?? DBNull.Value), new SqlParameter("@Name", (object?)validName ?? DBNull.Value) };
                     var res = BaseConnectionSql.ExecuteScalar("SP_Hub_SyncProduct", prms);
                     if (res != null && Convert.ToInt32(res) > 0)
                     {
